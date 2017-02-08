@@ -6,9 +6,9 @@
       <h1 style="font-family: 'Roboto', sans-serif;font-size:30px;font-weight:400;margin-bottom:50px;margin-top:40px;line-height:60px;">
         World-Class Open Source CRM
         <Br />
-        <a href="/j" style="color:grey;">Written with Phoenix Framework</a>
+        <a href="/#" style="color:grey;">Written with Phoenix Framework</a>
         <Br />
-        <span style="font-size:22px;color:grey;" >Coming soon on Github
+        <a href="" style="color:grey;font-size:22px;color:grey;">Coming soon on Github</a>
         </span>
       </h1>
       <h2 style="font-family: 'Roboto', sans-serif;font-size:40px;font-weight:300;margin-bottom:40px;">Old fashioned CRMs end here. </h2>
