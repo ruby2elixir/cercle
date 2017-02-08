@@ -1,0 +1,40 @@
+<div class='referral-container'>
+  <div class='referral-header'>
+    <div class='company-title'>
+      <h1>New Contact
+      </h1>
+    </div>
+  </div>
+
+  <div class='referral-form-container' style="min-height:800px;">
+    <div class='referral-form-header'>
+      <div class='line2'></div>
+    </div>
+
+    <div class='referral-form-content'>
+      <form id='referral-form'>
+        <input type='hidden' name='contact[company_id]' value='<%= @company.id %>' />
+        <input type='hidden' name='contact[user_id]' value='<%=assigns[:current_user].id%>' />
+
+        <div class='referral-form-title'>
+          Please, enter below
+        </div>
+        <Br />
+        <div class='referral-form-body'>
+          <input class='form-control' name='contact[name]' type='text' placeholder='Name' class='user_name'  style="max-width:300px;margin-bottom:10px;"/>
+          <input class='form-control' name='contact[email]' type='text' placeholder='Email' class='email'  style="max-width:300px;margin-bottom:10px;" />
+          <input class='form-control' name='contact[phone]' type='text' placeholder='Phone' class='phone'  style="max-width:300px;margin-bottom:10px;" />
+          <input class='form-control' name='contact[organization_id]' type='hidden'  />
+        </div>
+        <br />
+         <div class='referral-form-title'>
+           <input checked="checked"  name="add_to_opportunity" type="checkbox" value="true"> Add into the Opportunity Pipeline
+        </div>
+        <br />
+        <div class='referral-form-footer'>
+          <input type='submit' value='CREATE' class="btn btn-primary"
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

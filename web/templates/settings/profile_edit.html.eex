@@ -1,0 +1,110 @@
+<section class="content-header">
+</section>
+
+<!-- Main content -->
+<section class="content">
+   <div class="row">
+     
+     
+      <div class="col-md-3">
+         <div class="box box-solid">
+           <div class="box-header with-border">
+             <h3 class="box-title" style="">Settings</h3>
+           </div>
+           <div class="box-body no-padding">
+             <ul class="nav nav-pills nav-stacked">
+               <li class="active" ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
+               <%=if @company do %>
+                <li><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a>
+                <li><a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a></li>
+                <!-- <li class="active"><a href="/companies/<%= @company.id %>/benifits"><i class="fa fa-edit"></i> Benefits</a></li>-->
+              <%end%>
+             </ul>
+           </div><!-- /.box-body -->
+         </div><!-- /. box -->
+         
+       </div><!-- /.col -->
+       
+       <div class="col-md-9">
+         <!-- Horizontal Form -->
+         <!-- general form elements disabled -->
+         <div class="box box-primary">
+           <%= form_for @changeset, "/settings/profile_update", [multipart: true], fn f -> %>
+              <%= if f.errors != [] do %>
+                <div class="alert alert-danger">
+                  <p>Oops, something went wrong!<br> Please check the errors below:</p>
+                  <ul>
+                    <%= for {attr, message} <- f.errors do %>
+                        <li><%= humanize(attr) %> <%= translate_error(message) %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+             <div class="box-header with-border">
+               <h3 class="box-title">Profile</h3>
+             </div><!-- /.box-header -->
+             <div class="box-body">
+               <!-- text input -->
+                <div class="form-group">
+                  <%= label f, :user_name, "Full Name", class: "control-label" %>
+                  <%= text_input f, :user_name, class: "form-control" %>
+                  <%= error_tag f, :user_name %>
+                </div>
+               <br />
+                <div class="form-group">
+                  <%= label f, :name, "Username", class: "control-label" %>
+                  <%= text_input f, :name, class: "form-control" %>
+                  <%= error_tag f, :name %>
+                </div>
+                <br />
+               <!-- text input -->
+                <div class="form-group">
+                  <%= label f, :login, "Email", class: "control-label" %>
+                  <%= email_input f, :login, class: "form-control" %>
+                  <%= error_tag f, :login %>
+                </div>
+
+               <br />
+
+                <div class="form-group">
+                  <%= label f, :password, "Password", class: "control-label" %>
+                  <%= text_input f, :password, class: "form-control" %>
+                  <%= error_tag f, :password %>
+                </div>
+
+               <br />
+
+                  <div class="form-group">
+                    <div class='row'>
+                      <div class='col-md-10'>
+                        <%= label f, :profile_image, "Profile image", class: "control-label" %>
+                        <%= file_input f, :profile_image %>
+                        <%= error_tag f, :profile_image %>
+                      </div>
+                      <div class='col-md-2'>
+                        <%= if f.data.profile_image do %>
+                          <img src="<%= CercleApi.UserProfileImage.url({f.data.profile_image, f.data}, :small) %>" style="max-width: 100%;" />
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+               
+               
+
+               <br />
+
+             </div><!-- /.box-body -->
+             <div class="box-footer">
+                <%if @company do %>
+                  <a href="/companies/<%= @company.id %>/referrals" class="btn btn-default">Cancel</a>
+                <%end%>
+               <input type="submit" class="btn btn-primary pull-right" value="Save" />
+             </div>
+          <% end %>
+         </div><!-- /.box -->
+       </div> 
+         
+  </div>
+    
+</section><!-- /.content -->

@@ -1,0 +1,33 @@
+<h2>
+  <a href="/admin/users">User</a>
+  <a href="/admin/companies">Companies</a> ·
+  <a href="/admin/contacts">Contacts</a> ·
+  <a href="/admin/organizations">Organizations</a> ·
+</h2>
+
+<br />
+<table class="table" style="background-color:white;">
+  <thead>
+    <tr>
+      <th>User name</th>
+      <th>Login</th>
+      <th>AppId</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for user <- @users do %>
+    <tr>
+      <td><%= user.user_name %></td>
+      <td><%= user.login %></td>
+      <td><%= user.app_id %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: admin_user_path(@conn, :show, user), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: admin_user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: admin_user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

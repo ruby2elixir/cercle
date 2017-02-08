@@ -1,0 +1,65 @@
+<h2>Show company</h2>
+
+<ul>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @company.title %>
+  </li>
+
+  <li>
+    <strong>Admin email:</strong>
+    <%= @company.admin_email %>
+  </li>
+
+  <li>
+    <strong>Image url:</strong>
+    <img src="<%= CercleApi.Image.url({@company.image, @company}, :thumb) %>" />
+  </li>
+
+  <li>
+    <strong>Subtitle1:</strong>
+    <%= @company.subtitle1 %>
+  </li>
+
+  <li>
+    <strong>Description1:</strong>
+    <%= @company.description1 %>
+  </li>
+
+  <li>
+    <strong>Subtitle2:</strong>
+    <%= @company.subtitle2 %>
+  </li>
+
+  <li>
+    <strong>Description2:</strong>
+    <%= @company.description2 %>
+  </li>
+
+  <li>
+    <strong>Reward:</strong>
+    <%= @company.reward %>
+  </li>
+
+  <li>
+    <strong>Previlege code:</strong>
+    <%= if @company.id && (code = CercleApi.Repo.get_by(CercleApi.Code, company_id: @company.id)) do %>
+      <%= code.code %>
+    <% end %>
+  </li>
+
+  <li>
+    <strong>Individual:</strong>
+    <%= @company.individual %>
+  </li>
+
+  <li>
+    <strong>Referrals:</strong>
+    <a href="/companies/<%= @company.id %>/referrals?token=<%= @company.app_secret_key %>">http://www.appcercle.com/companies/<%= @company.id %>/referrals?token=<%= @company.app_secret_key %></a>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: admin_company_path(@conn, :edit, @company) %>
+<%= link "Back", to: admin_company_path(@conn, :index) %>

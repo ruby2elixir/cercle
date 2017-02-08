@@ -1,0 +1,93 @@
+<!-- Content Header (Page header) -->
+<section class="content-header" style="margin-top:20px;margin-bottom:0px;max-width:700px;margin-right: auto;margin-left: auto;">
+
+  
+  <h2>Inbox<br /> <span style="font-size:16px;color:grey;"></h2>
+
+           <select name="select" id="change_filter_user_id" style="float:right;" >
+  <%= for u <- @company.users do %>
+  
+        <option value="<%=u.id%>" <%= if u.id == @current_user_id do %>selected<%= end %>><%= u.user_name %> </option> 
+      <%end%>
+              </select>
+      <Br /><Br />
+</section>
+
+<!-- Main content -->
+<section class="content" style="max-width:700px;">
+   <%=if Enum.count(@activities_overdue) > 0 do %>
+    <div class="row">
+       <div class="col-xs-12">
+         <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;color:red;font-weight:bold;margin-top :0px;padding-top:0px;" >
+               Overdue
+         </h4>
+         <div class="box" style="border:0px solid grey;">
+           <!-- /.box-header -->
+  
+           <div class="nav-tabs-custom ">
+             
+             <table class="table">
+               <%= for activity <- @activities_overdue do %>
+                <%= render "_activity.html", activity: activity, hour: false %>   
+               <% end %>
+             </table>
+           </div><!-- /.box-body -->
+         </div><!-- /.box -->
+       </div>
+     </div>
+    <%end%>
+
+   <div class="row">
+     <div class="col-xs-12">
+       <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;margin-top :0px;padding-top:0px;" class="">
+          Today
+       </h4>
+       <%=if Enum.count(@activities_today) > 0 do %>
+       <div class="box" style="border:0px solid grey;">
+         <!-- /.box-header -->
+         
+         <div class="nav-tabs-custom ">
+           
+           
+              <table class="table">
+                <%= for activity <- @activities_today do %>
+                 <%= render "_activity.html", activity: activity, hour: true %>   
+                <% end %>
+              </table>
+          
+         </div><!-- /.box-body -->
+         
+       </div><!-- /.box -->
+       <% else %>
+          <spam style="font-size:16px;">Nothing to do... Go to the park!</spam>
+          <%end%>
+     </div>
+   </div>
+   <%=if Enum.count(@activities_later) > 0 do %>
+   <div class="row">
+     <div class="col-xs-12">
+       <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;" class="">
+          Scheduled
+       </h4>
+       <div class="box" style="border:0px solid grey;">
+         <!-- /.box-header -->
+
+         <div class="nav-tabs-custom ">
+           
+           <table class="table">
+             <%= for activity <- @activities_later do %>
+              <%= render "_activity.html", activity: activity, hour: false %>   
+             <% end %>
+           </table>
+         </div><!-- /.box-body -->
+       </div><!-- /.box -->
+     </div>
+   </div>
+   <%end%>
+</section><!-- /.content -->
+<script>
+  $(document).ready(function(){
+    require("web/static/js/app").App.activity_init();
+  });
+</script>
+

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cercle</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <!-- ICONS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/plugins/iCheck/square/blue.css") %>">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/dist/css/AdminLTE.min.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/dist/css/skins/_all-skins.min.css") %>">
+    <link rel="stylesheet" href="http://selectize.github.io/selectize.js/css/selectize.default.css">
+    <link href="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  </head>
+  <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+  <body class="hold-transition skin-blue layout-top-nav">
+    <div class="wrapper">
+
+      <header class="main-header">
+        <nav class="navbar navbar-static-top" style="background-color:black;">
+          <div class="container">
+            <div class="navbar-header">
+              <a href="/statistics" class="navbar-brand">
+                <img src="/images/logo_cercle2.png" style="width:56px;position:relative;top:-14px;left:10px;">
+              </a>
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                <i class="fa fa-bars"></i>
+              </button>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+              
+              <ul class="nav navbar-nav">
+                <%= if is_integer(assigns[:current_user].company_id) do %>
+                <li>
+                <a href="/activity">Inbox</a>
+                </li>
+                <li>
+                <a href="/opportunity">Opportunity</a>
+                </li>
+                <li>
+                <a href="/contacts">People</a>
+                </li>
+                <%end%>
+              </ul>
+            
+            </div><!-- /.navbar-collapse -->
+            <!-- Navbar Right Menu -->
+              <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                  <!-- Messages: style can be found in dropdown.less-->
+
+                    <!-- User Account Menu -->
+                  <li class="dropdown user user-menu">
+                    <!-- Menu Toggle Button -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                      <!-- The user image in the navbar-->
+                      <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
+                        <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="user-image" alt="User Image">
+                      <%= end %>
+                      <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                      <span class="hidden-xs"><%= @conn.assigns[:current_user].user_name %></span>
+                    </a>
+                    
+                    <ul class="dropdown-menu">
+                      <!-- The user image in the menu -->
+                      <li class="user-header" style="background-color:#3C8DBC;">
+                        <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
+                          <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="img-circle" alt="User Image">
+                        <%= end %>
+                        <p style="color:#FFFFFF;">
+                          <%= @conn.assigns[:current_user].user_name %>
+                          <small style="color:#FFFFFF;">
+                            (<%= @conn.assigns[:current_user].name %>)
+                          </small>
+                        </p>
+                      </li> 
+                      <li class="user-footer">
+                        <div class="pull-left">
+                          <a href="/settings/profile_edit" class="btn btn-default btn-flat">Settings</a>
+                        </div>
+                        <div class="pull-right">
+                          <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
+                        </div>
+                      </li>
+                    </ul>
+                    
+                  </li>
+
+
+                  
+                  <li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-bell-o"></i>
+              <span class="label label-warning">10</span></a>
+          </li>
+                  <!-- Tasks Menu -->
+                  
+                
+                </ul>
+              </div><!-- /.navbar-custom-menu -->
+          </div><!-- /.container-fluid -->
+        </nav>
+      </header>
+      <!-- Full Width Column -->
+      <div class="content-wrapper">
+         <%= if get_flash(@conn, :info) do %>
+            <p class="alert alert-info" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :info) %></p>
+          <% end %>
+          <%= if get_flash(@conn, :success) do %>
+            <p class="alert alert-success" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :success) %></p>
+          <% end %>
+          <%= if get_flash(@conn, :error) do %>
+            <p class="alert alert-danger" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :error) %></p>
+          <% end %>
+        <div class="container">
+          <%= render @view_module, @view_template, assigns %>
+        </div><!-- /.container -->
+      </div><!-- /.content-wrapper -->
+
+
+
+<aside class="control-sidebar control-sidebar-light" style="right: -430px;width: 430px;transition: none;">
+    <!-- Create the tabs -->
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane active" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">Recent Activity</h3>
+        <ul class="control-sidebar-menu">
+             <li>
+            <a href="javascript:void(0)">
+              <img src="https://cercle-prod.s3.amazonaws.com/uploads/users/profile_images/12/small_5.png" style="max-width:40px;border-radius:40px;float:left;" />
+
+              <div class="menu-info" style="margin-left:55px;">
+                <h4 class="control-sidebar-subheading" style="font-size:16px;"><span style="font-weight:600;">Antoine Herzog</span> <span style="font-weight:normal;">mentioned you on the contact</span>
+                <span style="font-weight:normal;text-decoration:underline;"> Bello Mama</span></h4>
+
+                <p style="font-size:16px;background-color:white;border-radius:5px;margin-top:10px;padding:5px;"> <span style="color:blue;"> @azeem</span> ok</p>
+              </div>
+            </a>
+          </li>
+         <li>
+            <a href="javascript:void(0)">
+              <img src="https://cercle-prod.s3.amazonaws.com/uploads/users/profile_images/12/small_5.png" style="max-width:40px;border-radius:40px;float:left;" />
+
+              <div class="menu-info" style="margin-left:55px;">
+                <h4 class="control-sidebar-subheading" style="font-size:16px;"><span style="font-weight:600;">Antoine Herzog</span> <span style="font-weight:normal;">mentioned you on the contact</span>
+                <span style="font-weight:normal;text-decoration:underline;"> Bello Mama</span></h4>
+
+                <p style="font-size:16px;background-color:white;border-radius:5px;margin-top:10px;padding:5px;"> <span style="color:blue;"> @azeem</span> ok</p>
+              </div>
+            </a>
+          </li>
+             <li>
+            <a href="javascript:void(0)">
+              <img src="https://cercle-prod.s3.amazonaws.com/uploads/users/profile_images/12/small_5.png" style="max-width:40px;border-radius:40px;float:left;" />
+
+              <div class="menu-info" style="margin-left:55px;">
+                <h4 class="control-sidebar-subheading" style="font-size:16px;"><span style="font-weight:600;">Antoine Herzog</span> <span style="font-weight:normal;">mentioned you on the contact</span>
+                <span style="font-weight:normal;text-decoration:underline;"> Bello Mama</span></h4>
+
+                <p style="font-size:16px;background-color:white;border-radius:5px;margin-top:10px;padding:5px;"> <span style="color:blue;"> @azeem</span> ok</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+      </div>
+      <!-- /.tab-pane -->
+      <!-- Settings tab content -->
+      <div class="tab-pane" id="control-sidebar-settings-tab">
+        <form method="post">
+          <h3 class="control-sidebar-heading">General Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Report panel usage
+              <input type="checkbox" class="pull-right" checked="">
+            </label>
+
+            <p>
+              Some information about this general settings option
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Allow mail redirect
+              <input type="checkbox" class="pull-right" checked="">
+            </label>
+
+            <p>
+              Other sets of options are available
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Expose author name in posts
+              <input type="checkbox" class="pull-right" checked="">
+            </label>
+
+            <p>
+              Allow the user to show his name in blog posts
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Show me as online
+              <input type="checkbox" class="pull-right" checked="">
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Turn off notifications
+              <input type="checkbox" class="pull-right">
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Delete chat history
+              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+            </label>
+          </div>
+          <!-- /.form-group -->
+        </form>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+  </aside>
+
+    </div><!-- ./wrapper -->
+
+<div style="position:fixed;bottom:0px;width:100%;height:120px;background-color:grey;visibility:hidden;text-align:center;" id="opportunity_basket" >
+<div style="float:none;display:inline-block;padding:40px;background-color:white;margin-right:30px;height:100px;margin-top:10px;background-color:white;font-weight:800;width:200px;font-size:22px;" class="column" data-id="delete">
+DELETE
+</div>
+<div style="float:none;display:inline-block;padding:40px;background-color:white;margin-right:30px;height:100px;margin-top:10px;background-color:red;font-weight:800;width:200px;font-size:22px;" class="column" data-id="lost">
+LOST
+</div>
+<div style="float:none;display:inline-block;padding:40px;background-color:white;margin-right:30px;height:100px;margin-top:10px;background-color:green;font-weight:800;width:200px;font-size:22px;" class="column" data-id="win">
+WIN
+</div>
+<script>window.userToken = "<%= assigns[:user_token] %>";</script>
+     
+  </body>
+</html>
+

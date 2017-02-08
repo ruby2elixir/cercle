@@ -1,0 +1,61 @@
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="/images/logo_cercle3.png" style="width:106px;">
+    </div><!-- /.login-logo -->
+
+
+    <div class="nav-tabs-custom">
+      <ul class="nav nav-tabs logintabs">
+         <li  class="active"  style="width: 50%; margin: 0; text-align: center;"><a href="/login" >Login</a></li>
+        <li style="width: 50%; margin: 0; text-align: center;"><a href="/register" >Signup</a></li>
+      </ul>
+      <div class="tab-content no-padding">
+        <div id="login-tab-content" class='tab-pane  active'>
+
+          <div class="login-box-body">
+            <p class="login-box-msg">Please type your credentials</p>
+            <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f -> %>
+              <%= if get_flash(@conn, :info) do %>
+                <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+              <% end %>
+              <%= if get_flash(@conn, :error) do %>
+                <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+              <% end %>
+
+              <div class="form-group has-feedback">
+                <%= text_input f, :login, name: "login", placeholder: "Email", class: "form-control" %>
+              </div>
+              <div class="form-group has-feedback">
+                <%= password_input f, :password, name: "password", placeholder: "Password", class: "form-control" %>
+              </div>
+              <div class="row">
+                <div class="col-xs-8">
+                  <div class="checkbox icheck">
+                    <label>
+                      <input type="checkbox" checked>&nbsp;&nbsp;Remember me
+                    </label>
+                  </div>
+                </div><!-- /.col -->
+                <div class="col-xs-4">
+                  <button type="submit" class="btn btn-primary btn-block btn-flat login-button" style="background-color:#00ADFF;border:0px solid grey;">Sign In</button>
+                </div><!-- /.col -->
+              </div>
+            <% end %>
+            <a href="/forget-password">I forgot my password</a><br>
+          </div><!-- /.login-box-body -->
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.login-box -->
+<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+<script>
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+
+</script>

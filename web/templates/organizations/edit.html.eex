@@ -1,0 +1,40 @@
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+  <div class="row">
+    <div class="col-md-4">
+
+      <!-- Profile Image -->
+      <div class="box box-primary">
+        <div class="box-body box-profile">
+
+          <h3 class="profile-username text-center">
+            <span class='inline-editable' data-type='PUT' data-param-name="contact[data][cercle_name]" data-inline-editurl="/api/v2/organizations/<%= @organization.id %>">
+              <%= if Map.has_key?(@organization.data, "cercle_name") do %>
+                <%= @organization.data["cercle_name"] %>
+              <% end %>
+            </span>
+          </h3>
+
+        </div><!-- /.box-body -->
+      </div><!-- /.box -->
+      <div style="font-weight:bold;margin-bottom:5px;border-bottom:1px #cecece solid;padding:4px;">MORE ACTIONS</div>
+        <button type="button" class="btn btn-block btn-default" style="margin-top:10px;" id="organization_delete" data-id="<%=@organization.id%>">Delete this Company</button>
+
+    </div><!-- /.col -->
+    <div class="col-md-8">
+      <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;">
+        <div class="user-block" style="padding:10px;">
+          <img class="img-circle img-bordered-sm" src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" alt="user image">
+              <span class="username">
+                <a href="#"><%=@conn.assigns[:current_user].user_name%></a>
+              </span>
+        </div>
+      </div>
+
+    </div><!-- /.col -->
+  </div>
+</section><!-- /.content -->
+
+
+
+

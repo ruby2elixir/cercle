@@ -1,0 +1,83 @@
+<section class="content-header">
+</section>
+
+<!-- Main content -->
+<section class="content">
+   <div class="row">
+      <div class="col-md-3">
+         <div class="box box-solid">
+           <div class="box-header with-border">
+             <h3 class="box-title" style="">Settings</h3>
+           </div>
+           <div class="box-body no-padding">
+             <ul class="nav nav-pills nav-stacked">
+               <li ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
+               <li ><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a>
+               <li><a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a></li>
+               <li class='active'><a href="#"><i class="fa fa-edit"></i>Fields</a></li>
+             </ul>
+           </div><!-- /.box-body -->
+         </div><!-- /. box -->
+         
+       </div><!-- /.col -->
+       
+       <div class="col-md-9">
+         <!-- Horizontal Form -->
+         <!-- general form elements disabled -->
+         <div class="box box-primary">
+            <%= form_for @changeset, "/settings/company_update", [multipart: true], fn f -> %>
+              <%= if f.errors != [] do %>
+                <div class="alert alert-danger">
+                  <p>Oops, something went wrong!<br> Please check the errors below:</p>
+                  <ul>
+                    <%= for {attr, message} <- f.errors do %>
+                        <li><%= humanize(attr) %> <%= translate_error(message) %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+             <div class="box-header with-border">
+               <h3 class="box-title">Organize your fields from your Third Parties</h3>
+             </div><!-- /.box-header -->
+             <div class="box-body">
+               <!-- text input -->
+                <div class="form-group">
+                  <div id="jsoneditor" style="width: 100%; height: 400px;"></div>
+
+    <script>
+        // create the editor
+        var container = document.getElementById("jsoneditor");
+        var options = {
+          mode: 'tree',
+          modes: ['code', 'form', 'text', 'tree', 'view'], // allowed modes
+          onError: function (err) {
+            alert(err.toString());
+          },
+          onModeChange: function (newMode, oldMode) {
+            console.log('Mode switched from', oldMode, 'to', newMode);
+          }
+        };
+        var editor = new JSONEditor(container, options);
+
+        // set json
+        var json = <%= Poison.encode! @company.data_fields %>;
+        editor.set(json);
+
+        // get json
+        var json = editor.get();
+    </script>
+                  
+                </div>
+                 <br />
+                <br />
+             </div><!-- /.box-body -->
+             <div class="box-footer">
+               <input type="submit" class="btn btn-primary pull-right" value="Save" />
+             </div>
+          <% end %>
+       </div> 
+         
+  </div>
+    
+</section><!-- /.content -->

@@ -1,0 +1,31 @@
+ <tr id="row_task_<%=@activity.id%>">
+  <td style="width:30px;">
+    <img src="/images/letters/<%=String.downcase(String.slice(@activity.contact.name, 0..0 ))%>.png" style="border-radius:14px;" />
+  </td>
+  
+  <td style="font-size:16px;">
+  <a href="/contacts/<%=@activity.contact_id%>" style="color: #565656;">
+  <%=@activity.contact.data["cercle_name"] %>
+  </a>
+  <br />
+  &nbsp;
+  </td>
+    <td style="font-size:16px;">
+  <a href="/contacts/<%=@activity.contact_id%>" style="color: #565656;">
+  <span style=""> <%=@activity.title %></span>
+  </a>
+  <br />
+  &nbsp;
+  </td>
+  <td style="width:150px;">
+  <%=if @hour do %>
+    <%=timex_hour_format(@activity.due_date)%>
+  <%end%>
+  <%=if !@hour do %>
+    <%=timex_date_format(@activity.due_date)%>
+  <%end%>
+  </td>
+  <td style="width:30px;">
+    <input type="checkbox" class="flat-green activity_page_toggle" data-id="<%=@activity.id%>" <%= if @activity.is_done do %>checked<%end%>>
+  </td>
+</tr>
