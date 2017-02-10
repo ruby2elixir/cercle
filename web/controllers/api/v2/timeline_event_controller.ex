@@ -61,7 +61,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
   def notification_email(emailTo, reward, status, comment, company, user, user2) do
       %Mailman.Email{
-        subject: user.user_name <> " commented on "<> reward.data["cercle_name"],
+        subject: user.user_name <> " commented on "<> reward.name,
         from: "referral@cercle.co",
         to: [emailTo],
         html: Phoenix.View.render_to_string(CercleApi.EmailView, "lead_notification.html", reward: reward, status: status, comment: comment, company: company, user: user, user2: user2)
