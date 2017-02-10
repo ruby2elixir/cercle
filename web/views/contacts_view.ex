@@ -10,7 +10,7 @@ defmodule CercleApi.ContactsView do
 
   defp build_selectize_options(collection) do
     Enum.map collection, fn(element) ->
-      {element.data["cercle_name"], element.id}
+      {element.name, element.id}
     end
   end
 end
