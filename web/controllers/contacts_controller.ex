@@ -31,7 +31,6 @@ defmodule CercleApi.ContactsController do
 
 
   def new(conn, _params) do
-    
     company_id = conn.assigns[:current_user].company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
@@ -68,11 +67,19 @@ defmodule CercleApi.ContactsController do
     activities = Repo.all(query) |> Repo.preload [:user]
 
     opportunity = List.first(opportunities)
+    if opportunity do 
+      contact_ids = opportunity.contact_ids
+      query = from contact in CercleApi.Contact,
+        where: contact.id in ^contact_ids
+      opportunity_contacts = Repo.all(query)
+    end
+
+    
 
     changeset = Contact.changeset(contact)
 		conn
 		  |> put_layout("adminlte.html")
-		  |> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations)
+		  |> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts)
   end
 
 

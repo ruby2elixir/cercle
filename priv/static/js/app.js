@@ -18432,54 +18432,44 @@ var App = exports.App = {
 
 $(function () {
 
-  $('.referred-by-no').click(function () {
-    $('.referred-by-selection .active').removeClass('active');
-    $(this).addClass('active');
-    $('.referred-by-form-body').hide();
-    $('.referred-by-form-body input[type=text]').val('');
-  }).trigger('click');
-
-  $('.referred-by-yes').click(function () {
-    $('.referred-by-selection .active').removeClass('active');
-    $(this).addClass('active');
-    $('.referred-by-form-body').show();
-  });
-
   $('#referral-form').submit(function (e) {
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
 
-    $.ajax('/api/v2/contact', {
-      method: 'POST',
-      data: new FormData(this),
-      processData: false,
-      contentType: false,
-      complete: function complete(xhr, status) {
-        $(this).find('input[type=submit]').removeAttr('disabled');
-        console.log([xhr, status]);
-
-        if (xhr.responseJSON.data && xhr.responseJSON.data.id) {
-          var contact_id = xhr.responseJSON.data.id;
-          window.location = "/contacts/" + contact_id;
-        } else {
-          if (xhr.responseJSON.errors) {
-            messages = [];
-            $.each(xhr.responseJSON.errors, function (index, value) {
-              $.each(value, function (i, m) {
-                messages.push(index + ' ' + m);
-              });
+    if ($("#contact_name").val() != "") {
+      var user_id = $("#user_id").val();
+      var company_id = $("#company_id").val();
+      $.ajax('/api/v2/contact', {
+        method: 'POST',
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        success: function success(result) {
+          var contact_id = result.data.id;
+          if ($("#add_to_opportunity")[0].checked) {
+            var url = '/api/v2/opportunity/';
+            $.ajax(url, {
+              method: 'POST',
+              data: {
+                'opportunity[main_contact_id]': contact_id,
+                'opportunity[contact_ids]': [contact_id],
+                'opportunity[user_id]': user_id,
+                'opportunity[company_id]': company_id,
+                'opportunity[name]': ''
+              },
+              complete: function complete(xhr, status) {
+                window.location = "/contacts/" + contact_id;
+              }
             });
-            alert(messages.join("\n"));
           } else {
-            if (xhr.responseJSON.message) {
-              alert(xhr.responseJSON.message);
-            } else {
-              alert('Error occured');
-            }
+            window.location = "/contacts/" + contact_id;
           }
         }
-      }
-    });
+      });
+    } else {
+      $(this).find('input[type=submit]').removeAttr('disabled');
+      alert("Name can't be blank");
+    }
   });
 });
 });
@@ -18584,7 +18574,9 @@ var ContactEdit = exports.ContactEdit = {
       var url = '/api/v2/opportunity/';
       $.ajax(url, {
         method: 'POST',
-        data: { 'opportunity[main_contact_id]': $(this).data('contact_id'),
+        data: {
+          'opportunity[main_contact_id]': $(this).data('contact_id'),
+          'opportunity[contact_ids]': [$(this).data('contact_id')],
           'opportunity[user_id]': $(this).data('user_id'),
           'opportunity[company_id]': $(this).data('company_id'),
           'opportunity[name]': ''
