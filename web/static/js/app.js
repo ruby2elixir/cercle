@@ -38,14 +38,11 @@ export var App = {
   pipeline_init: function(){
     Pipeline.start()
   },
-  contact_edit_init: function(){
-    ContactEdit.start();
+  contact_edit_init: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids){
+    ContactEdit.start(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids);
   },
-  contact_socket_init: function(){
-    // LOAD SOCKET
-    var contact_id = $('#contact_id').data("id");
+  contact_socket_init: function(contact_id){
     contact_live.init(socket, contact_id );
-    // LOAD CHANGE COMPANY SELECTOR
   }
 }
 

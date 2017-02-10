@@ -1,5 +1,5 @@
 export var ContactEdit = {
-  start: function(){
+  start: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids){
     $("#organization_remove_link").click(function(){
       $('#without_organization').show();
       $('#with_organization').hide();
@@ -12,11 +12,41 @@ export var ContactEdit = {
     $( "#edit_contact_options" ).click(function(){
       $('#myModal2').modal('show');
     });
+
+    $( "#add_contact_to_opportunity" ).click(function(){
+      $('#myModal3').modal('show');
+    });
+
+    $("#submit_contact_to_opportunity").click(function(){
+      var contact_name =$("#contact_name").val();
+      $.ajax('/api/v2/contact', {
+        method: 'POST',
+        data: { 
+          'contact[name]': contact_name,
+          'contact[user_id]': user_id,
+          'contact[company_id]': company_id, 
+          'contact[organization_id]': organization_id, 
+         },
+        success: function(result){
+          var contact_id = result.data.id;
+          opportunity_contact_ids.push(contact_id);
+          var url = '/api/v2/opportunity/'+opportunity_id;
+          $.ajax( url , {
+            method: 'PUT',
+            data: { 
+              'opportunity[contact_ids]': opportunity_contact_ids
+            },
+            complete: function(xhr, status){
+              window.location = "/contacts/" + contact_id;
+            }
+          });
+        }
+      });
+      
+    });
   
     $("#submit_change_company").click(function(){
       var organization_name = $("#contact_word_id").val();
-      var contact_id =$("#submit_change_company").data('contact_id');
-      var company_id =$("#submit_change_company").data('company_id');
       if (!isNaN(organization_name)){
         var organization_id = organization_name;
         var url = '/api/v2/contact/' + contact_id;
@@ -58,7 +88,7 @@ export var ContactEdit = {
   
     //EDIT OPPORTUNITY IN CONTACT PAGE
     $( "#change_opportunity_stage" ).change(function(){
-        var url = '/api/v2/opportunity/' + $(this).data('id');
+        var url = '/api/v2/opportunity/' + opportunity_id;
         $.ajax( url , {
           method: 'PUT',
           data: { 'opportunity[stage]': $(this).val() },
@@ -69,7 +99,7 @@ export var ContactEdit = {
     });
   
     $( "#change_opportunity_user_id" ).change(function(){
-        var url = '/api/v2/opportunity/' + $(this).data('id');
+        var url = '/api/v2/opportunity/' + opportunity_id;
         $.ajax( url , {
           method: 'PUT',
           data: { 'opportunity[user_id]': $(this).val() },
@@ -80,7 +110,7 @@ export var ContactEdit = {
     });
   
     $('#opportunity_lost').click(function(){
-      var url = '/api/v2/opportunity/' + $(this).data('id');
+      var url = '/api/v2/opportunity/' + opportunity_id;
       $.ajax( url , {
           method: 'PUT',
           data: { 'opportunity[status]': 2 },
@@ -96,10 +126,10 @@ export var ContactEdit = {
       $.ajax( url , {
           method: 'POST',
           data: { 
-            'opportunity[main_contact_id]': $(this).data('contact_id'), 
-            'opportunity[contact_ids]': [$(this).data('contact_id')], 
-            'opportunity[user_id]': $(this).data('user_id'), 
-            'opportunity[company_id]': $(this).data('company_id'), 
+            'opportunity[main_contact_id]': contact_id, 
+            'opportunity[contact_ids]': [contact_id], 
+            'opportunity[user_id]': user_id, 
+            'opportunity[company_id]': company_id, 
             'opportunity[name]': '', 
           },
           complete: function(xhr, status){
@@ -110,7 +140,7 @@ export var ContactEdit = {
     });
   
     $('#opportunity_win').click(function(){
-      var url = '/api/v2/opportunity/' + $(this).data('id');
+      var url = '/api/v2/opportunity/' + opportunity_id;
       $.ajax( url , {
           method: 'PUT',
           data: { 'opportunity[status]': 1 },
@@ -127,10 +157,10 @@ export var ContactEdit = {
       var url = '/api/v2/activity/';
       $.ajax( url , {
           method: 'POST',
-          data: { 'activity[contact_id]': $(this).data('contact_id'), 
-            'activity[user_id]': $(this).data('user_id'), 
+          data: { 'activity[contact_id]': contact_id, 
+            'activity[user_id]': user_id, 
             'activity[due_date]': new Date().toISOString(), 
-            'activity[company_id]': $(this).data('company_id'), 
+            'activity[company_id]': company_id, 
             'activity[title]': 'Call', 
           },
           complete: function(xhr, status){
@@ -154,7 +184,7 @@ export var ContactEdit = {
     });
   
     $('#organization_delete').click(function(){
-      var url = '/api/v2/organizations/' + $(this).data('id');
+      var url = '/api/v2/organizations/' + organization_id;
       $.ajax( url , {
           method: 'DELETE',
           complete: function(xhr, status){

@@ -55,7 +55,7 @@ defmodule CercleApi.ContactsController do
     events = Repo.all(query) |> Repo.preload [:user]
 
     query = from opportunity in CercleApi.Opportunity,
-      where: opportunity.main_contact_id == ^contact.id,
+      where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
       where: opportunity.status == 0,
       order_by: [desc: opportunity.inserted_at]
     opportunities = Repo.all(query)
