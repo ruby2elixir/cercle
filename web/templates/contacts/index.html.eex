@@ -19,9 +19,9 @@
                     <tr style="cursor: pointer;" onclick="location.href='/contacts/<%= reward.id %>'">
                       
                       <td>
-                      <b><%= reward.data["cercle_name"] %></b>
+                      <b><%= reward.name %></b>
                       <Br />
-                      <%= if (reward.organization && reward.organization.data && Map.has_key?(reward.organization.data, "cercle_name")  && reward.organization.data["cercle_name"]) do %><%= reward.organization.data["cercle_name"] %><%end%>
+                      <%= if (reward.organization) do %><%= reward.organization.name %><%end%>
                       </td>
                       <td>
                       </td>
