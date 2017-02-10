@@ -95,7 +95,9 @@ export var ContactEdit = {
       var url = '/api/v2/opportunity/';
       $.ajax( url , {
           method: 'POST',
-          data: { 'opportunity[main_contact_id]': $(this).data('contact_id'), 
+          data: { 
+            'opportunity[main_contact_id]': $(this).data('contact_id'), 
+            'opportunity[contact_ids]': [$(this).data('contact_id')], 
             'opportunity[user_id]': $(this).data('user_id'), 
             'opportunity[company_id]': $(this).data('company_id'), 
             'opportunity[name]': '', 

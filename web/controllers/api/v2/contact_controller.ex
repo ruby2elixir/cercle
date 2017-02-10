@@ -28,15 +28,10 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def create(conn, %{"contact" => contact_params}) do
-    ### CHECK IF COMPANY
     company_id = contact_params["company_id"]
-    opportunity_name = contact_params["name"] <> " deal"
     if contact_params["email"] do 
       domain_email = List.first(Enum.take(String.split(contact_params["email"], "@"), -1))
-      opportunity_name = domain_email <> " deal"
-      Logger.info  "==> Logging this text!"
-      Logger.info domain_email
-  
+
       query = from organization in Organization,
         where: organization.website == ^domain_email,
         where: organization.company_id == ^company_id
@@ -53,25 +48,14 @@ defmodule CercleApi.APIV2.ContactController do
       end
   
       organizations = Repo.all(query)
-  
       organization = Enum.at(organizations, 0)
       organization_id = organization.id
-
-      
-
-  
       contact_params = %{contact_params | "organization_id" => organization_id}
     end
 
-    ## AND ADD COMPANY PARAMETER INTO CONTACTS
-    #contact_params = %{ contact_params | "organization_id" => organization_id }
     changeset = Contact.changeset(%Contact{}, contact_params)
     case Repo.insert(changeset) do
       {:ok, contact} ->
-        
-        changeset = Opportunity.changeset(%Opportunity{}, %{"name" => opportunity_name, "company_id" => contact.company_id , "main_contact_id" => contact.id, "user_id" => contact.user_id  })
-        Repo.insert(changeset)
-
         conn
         |> put_status(:created)
         |> render("show.json", contact: contact)

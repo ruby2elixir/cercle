@@ -63,6 +63,15 @@
       </span>
       <Br />
       <Br />
+       <div style="margin-right:20px;margin-bottom:10px;">
+      Managed by:
+      <select name="select" id="change_opportunity_user_id" data-id="<%=@opportunity.id%>">
+        <%= for u <- @company.users do %>
+        <option value="<%=u.id%>" <%= if @opportunity.user_id == u.id do %>selected<%= end %>><%= u.user_name %> </option> 
+        <%end%>
+      </select>
+
+    </div>
       Status:
       <select name="select" id="change_opportunity_stage" data-id="<%=@opportunity.id%>">
         <option value="0" <%= if @opportunity.stage == 0 do %>selected<%= end %>>Untouched Contact </option> 
@@ -71,14 +80,13 @@
         <option value="3" <%= if @opportunity.stage == 3 do %>selected<%= end %>>Proposal Made</option>
         <option value="4" <%= if @opportunity.stage == 4 do %>selected<%= end %>>Negotations Started</option>
       </select>
-       <div style="margin-top:14px;margin-right:20px;">
-      Managed by:
-      <select name="select" id="change_opportunity_user_id" data-id="<%=@opportunity.id%>">
-        <%= for u <- @company.users do %>
-        <option value="<%=u.id%>" <%= if @opportunity.user_id == u.id do %>selected<%= end %>><%= u.user_name %> </option> 
-        <%end%>
-      </select>
-    </div>
+      <Br />
+      <Br />
+      Contacts Involved: 
+      <%= for o <- @opportunity_contacts do %>
+        <a href ="/contacts/<%=o.id%>" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;"><%= o.name %> </a>
+      <% end %>
+      <a href ="/contacts/new?o=<%=@opportunity.id%>" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;">+ Add ...</a>
     </div>
   </div>
   </div>

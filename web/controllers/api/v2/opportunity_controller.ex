@@ -15,16 +15,14 @@ defmodule CercleApi.APIV2.OpportunityController do
 
 
   def create(conn, %{"opportunity" => opportunity_params}) do
-    ### CHECK IF COMPANY
-
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
     name = ""
     if contact.organization do
-      name = contact.organization.data["cercle_name"] <> " deal"
+      name = contact.organization.name <> " deal"
     else
-      name = contact.data["cercle_name"] <> " deal"
+      name = contact.name <> " deal"
     end
-    ## AND ADD COMPANY PARAMETER INTO CONTACTS
+    
     opportunity_params = %{ opportunity_params | "name" => name }
     changeset = Opportunity.changeset(%Opportunity{}, opportunity_params)
     case Repo.insert(changeset) do

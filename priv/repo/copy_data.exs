@@ -11,19 +11,19 @@
 # and so on) as they will fail if something goes wrong.
 alias CercleApi.Contact
 alias CercleApi.Organization
+alias CercleApi.Opportunity
 
-contacts = CercleApi.Repo.all(Contact)
-Enum.each contacts, fn (u) ->
-	if !is_nil(u.data) do
-    	user_params = %{:email => u.data["cercle_email"], :name => u.data["cercle_name"] , :phone => u.data["cercle_phone"], :description => u.data["cercle_description"] , :job_title => u.data["cercle_job_title"]  }
-    	changeset = Contact.changeset(u, user_params)
-    	CercleApi.Repo.update(changeset)
-	end	
+ops = CercleApi.Repo.all(Opportunity)
+Enum.each ops, fn (u) ->
+    user_params = %{:contact_ids => [u.main_contact_id] }
+    changeset = Opportunity.changeset(u, user_params)
+    CercleApi.Repo.update(changeset)
 end
 
-organizations = CercleApi.Repo.all(Organization)
-Enum.each organizations, fn (o) ->
-	user_params = %{:name => o.data["cercle_name"], :description => o.data["cercle_description"], :website => o.data["cercle_url"]  }
-	changeset = Organization.changeset(o, user_params)
-	CercleApi.Repo.update(changeset)
-end
+#organizations = CercleApi.Repo.all(Organization)
+#Enum.each organizations, fn (o) ->
+#	user_params = %{:name => o.data["cercle_name"], :description => o.data["cercle_description"], :website => o.data["cercle_url"]  }
+#	changeset = Organization.changeset(o, user_params)
+#	CercleApi.Repo.update(changeset)
+#end
+#
