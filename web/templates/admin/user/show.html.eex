@@ -17,11 +17,6 @@
     <%= @user.emails %>
   </li>
 
-  <li>
-    <strong>App:</strong>
-    <%= @user.app_id %>
-  </li>
-
 </ul>
 
 <%= link "Edit", to: admin_user_path(@conn, :edit, @user) %>
