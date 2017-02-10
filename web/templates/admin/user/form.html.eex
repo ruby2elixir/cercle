@@ -35,12 +35,6 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :app_id, class: "control-label" %>
-    <%= textarea f, :app_id, class: "form-control" %>
-    <%= error_tag f, :app_id %>
-  </div>
-
-  <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
