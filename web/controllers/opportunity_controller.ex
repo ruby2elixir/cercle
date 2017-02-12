@@ -52,11 +52,11 @@ defmodule CercleApi.OpportunityController do
     #order_by: [desc: p.rating]
     #from(CercleApi.TimelineEvent], order_by: [desc: :inserted_at])
 
-		stage0 = Repo.all(query0)   |> Repo.preload([:user, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage1 = Repo.all(query1)   |> Repo.preload([:user,{:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage2 = Repo.all(query2)   |> Repo.preload([:user,{:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage3 = Repo.all(query3)   |> Repo.preload([:user,{:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage4 = Repo.all(query4)   |> Repo.preload([:user,{:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
+		stage0 = Repo.all(query0)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false) }, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
+    stage1 = Repo.all(query1)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
+    stage2 = Repo.all(query2)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
+    stage3 = Repo.all(query3)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
+    stage4 = Repo.all(query4)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
 
 
 		conn

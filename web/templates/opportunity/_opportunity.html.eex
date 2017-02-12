@@ -12,8 +12,13 @@
         </span>
       <%end%>
       </div>
-      <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({@opportunity.user.profile_image, @opportunity.user}, :small) %>" alt="user image" style="width:25px;float:right;">
-      <div style="font-size:12px;margin-top:5px;color:grey;"><%= time_ago_in_words @opportunity.main_contact.updated_at %></div>
+      <div style="font-size:11px;margin-top:5px;color:grey;float:right;">
+        
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+        0/<%=length(@opportunity.main_contact.activities)%>
+      </div>
+      <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({@opportunity.user.profile_image, @opportunity.user}, :small) %>" alt="user image" style="width:25px;">
+      
 
     </div>
   </div>

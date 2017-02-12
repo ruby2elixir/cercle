@@ -13,6 +13,10 @@ defmodule CercleApi.User do
     field :profile_image, CercleApi.UserProfileImage.Type
     field :name, :string #is username
     timestamps
+
+    has_many :activities, CercleApi.Activity, on_delete: :delete_all
+    has_many :timeline_event, CercleApi.TimelineEvent
+    has_many :opportunities, CercleApi.Opportunity
   end
 
   @required_fields ~w()
