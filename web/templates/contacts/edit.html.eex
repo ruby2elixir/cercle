@@ -203,7 +203,7 @@
     require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, <%=@opportunity.id%>, <%=Poison.encode!(@opportunity.contact_ids)%>);
     <%end%>
     <%=if !@opportunity do %>
-      require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=@contact.organization_id%>, null, null);
+      require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, null, null);
     <%end%>
     $('#contact_word_id').selectize({sortField: 'text', create: true});
   });
