@@ -8,7 +8,7 @@ defmodule CercleApi.DateHelpers do
 
 
   def timex_date_format(datetime) do
-    Timex.format!(Ecto.DateTime.to_erl(datetime), "%a %d %b @ %H:%M", :strftime)
+    Timex.format!(Ecto.DateTime.to_erl(datetime), "%a %d %b - %H:%M", :strftime)
   end
 
   def timex_hour_format(datetime) do
