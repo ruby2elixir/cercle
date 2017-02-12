@@ -44,8 +44,8 @@ defmodule CercleApi.Router do
 
     get "/", PageController, :index   
 
-    get "/settings/profile_edit", SettingsController, :edit
-    put "/settings/profile_update", SettingsController, :update
+    get "/settings/profile_edit", SettingsController, :profile_edit
+    put "/settings/profile_update", SettingsController, :profile_update
     get "/settings/company_edit", SettingsController, :company_edit
     put "/settings/company_update", SettingsController, :company_update
     get "/settings/team_edit", SettingsController, :team_edit

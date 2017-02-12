@@ -6,7 +6,7 @@ defmodule CercleApi.SettingsController do
   alias CercleApi.User
   alias Passport.Session
 
-  def edit(conn, _params) do
+  def profile_edit(conn, _params) do
     user = conn.assigns[:current_user]
     changeset = User.changeset(conn.assigns[:current_user])
     if conn.assigns[:current_user].company_id do
@@ -18,9 +18,12 @@ defmodule CercleApi.SettingsController do
     |> render("profile_edit.html", changeset: changeset, company: company, user: user)
   end
 
-  def update(conn, %{"user" => user_params}) do
+  def profile_update(conn, %{"user" => user_params}) do
     user = conn.assigns[:current_user]
-    changeset = User.changeset(user, user_params)
+    changeset = User.update_changeset(user, user_params)
+    if conn.assigns[:current_user].company_id do
+      company = CercleApi.Repo.get(CercleApi.Company, conn.assigns[:current_user].company_id) 
+    end
 
     case Repo.update(changeset) do
       {:ok, user} ->
@@ -28,7 +31,9 @@ defmodule CercleApi.SettingsController do
           |> put_flash(:info, "User updated successfully.")
           |> redirect(to: "/settings/profile_edit")
       {:error, changeset} ->
-        redirect(conn, to: "/settings/profile_edit")
+        conn
+          |> put_layout("adminlte.html")
+          |> render("profile_edit.html", changeset: changeset, company: company, user: user)
     end
   end
 

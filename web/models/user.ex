@@ -41,7 +41,7 @@ defmodule CercleApi.User do
   end
 
   def update_changeset(model, params) do
-    if params["password"] do
+    if params["password"] !="" do
       model
       |> changeset(params)
       |> cast(params, ~w(password), [])
