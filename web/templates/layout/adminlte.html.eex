@@ -132,7 +132,7 @@
 
 
 
-<aside class="control-sidebar control-sidebar-light" style="right: -430px;width: 430px;transition: none;">
+<aside class="control-sidebar control-sidebar-light" >
     <!-- Create the tabs -->
 
     <!-- Tab panes -->
