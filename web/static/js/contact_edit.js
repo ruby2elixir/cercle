@@ -65,7 +65,7 @@ export var ContactEdit = {
           method: 'POST',
           datatype: 'json',
           data: { 
-            'organization[data][cercle_name]': organization_name,
+            'organization[name]': organization_name,
             'organization[company_id]': company_id,
           },
           success: function(result){
