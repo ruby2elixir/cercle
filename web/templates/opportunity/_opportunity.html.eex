@@ -13,10 +13,14 @@
       <%end%>
       </div>
       <div style="font-size:11px;margin-top:5px;color:grey;float:right;">
-        
-        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+        <%=if(length(@opportunity.main_contact.activities) == 0) do %>
+        <a href="/contacts/<%=@opportunity.main_contact.id%>"><i class="fa fa-circle" aria-hidden="true" style="color:yellow;"></i></a>
+        <% else %>
+          <i class="fa fa-check-square-o" aria-hidden="true"></i>
         0/<%=length(@opportunity.main_contact.activities)%>
-      </div>
+      
+        <% end %>
+        </div>
       <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({@opportunity.user.profile_image, @opportunity.user}, :small) %>" alt="user image" style="width:25px;">
       
 
