@@ -5,7 +5,7 @@
   
   <td style="font-size:16px;">
   <a href="/contacts/<%=@activity.contact_id%>" style="color: #565656;">
-  <%=@activity.contact.data["cercle_name"] %>
+  <%=@activity.contact.name %>
   </a>
   <br />
   &nbsp;
