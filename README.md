@@ -2,6 +2,8 @@
 
 Cercle is an open source CRM easy to use and inspired by Trello. No bullshit.
 
+[To test it, You can go here http://www.cercle.co/register](http://www.cercle.co/register)
+
 ## To install Cercle on Local
 1. Rename to dev.secret_example.exs to dev.secret.exs
 2. Fill out the parameters
