@@ -1,6 +1,6 @@
 # Cercle - World-Class Open Source CRM
 
-Cercle is an open source CRM very very easy to use inspired by Trello. No bullshit.
+Cercle is an open source CRM easy to use and inspired by Trello. No bullshit.
 
 ## To install Cercle on Local
 1. Rename to dev.secret_example.exs to dev.secret.exs
