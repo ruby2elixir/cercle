@@ -6,9 +6,9 @@
         </a>
       </div>
       <div style="font-size:12px;">
-         <%= if Enum.find(@opportunity.main_contact.timeline_event, fn(x) -> x.action_type != "comment" end) do  %>
+         <%= if Enum.find(@opportunity.main_contact.timeline_event, fn(x) -> x.event_name != "comment" end) do  %>
           <span style="background-color:#fdfdfd;padding:3px;color:blue;">
-            <%=String.slice(Enum.find(@opportunity.main_contact.timeline_event, fn(x) -> x.action_type != "comment" end).content, 0..250)%>
+            <%=String.slice(Enum.find(@opportunity.main_contact.timeline_event, fn(x) -> x.event_name != "comment" end).content, 0..250)%>
         </span>
       <%end%>
       </div>

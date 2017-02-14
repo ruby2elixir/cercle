@@ -64,41 +64,6 @@ defmodule CercleApi.OpportunityController do
 		  |> render "index.html",  company: company, stage0: stage0, stage1: stage1, stage2: stage2, stage3: stage3, stage4: stage4
   end
 
-  def statistics(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
-    users = company.users
-    map = Enum.reduce users, %{}, fn x, acc ->
-      user_id =  x.id
-      query = from p in TimelineEvent,
-        where: p.user_id == ^user_id,
-        where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.action_type == "meeting",
-        order_by: [desc: p.updated_at]
-      nb_meetings = length(Repo.all(query))
-      
-
-      query = from p in TimelineEvent,
-        where: p.user_id == ^user_id,
-        where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.action_type == "call",
-        order_by: [desc: p.updated_at]
-      nb_calls = length(Repo.all(query))
-      
-
-      query = from p in TimelineEvent,
-        where: p.user_id == ^user_id,
-        where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.action_type == "email",
-        order_by: [desc: p.updated_at]
-      nb_emails = length(Repo.all(query))
-      Map.put(acc, x.id, [nb_meetings, nb_calls, nb_emails])
-    end
-    conn
-      |> put_layout("adminlte.html")
-      |> render "statistics.html", company: company, stat: map
-  end
-
   def new(conn, _params) do
     
     company_id = conn.assigns[:current_user].company_id

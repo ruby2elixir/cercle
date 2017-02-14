@@ -5,14 +5,14 @@ defmodule CercleApi.TimelineEvent do
     belongs_to :contact, CercleApi.Contact
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
-    field :action_type, :string
-    field :content, :string
-
+    field :event_name, :string
+    field :content, :string #DEPRECATED USE
+    field :metadata, :map #JSONB FIELD in POSTRESQL DB  %{}
     timestamps
   end
 
-  @required_fields ~w(contact_id content action_type)
-  @optional_fields ~w(user_id company_id)
+  @required_fields ~w(contact_id content event_name)
+  @optional_fields ~w(user_id company_id metadata)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

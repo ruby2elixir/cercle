@@ -28,13 +28,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
       	company = contact.company
       	company_id = company.id
       	parts = String.split(comment, " ")
-        
-        
-      	if timeline_event_params["action_type"] == "meeting" or timeline_event_params["action_type"] == "call" or timeline_event_params["action_type"] == "email"  do
-      		changeset = CercleApi.Contact.changeset(contact, %{})
-      		Repo.update!(changeset, force: true)
-      	end
-        
+          
+            
         query = from p in User,
           where: p.company_id == ^company_id
         users = Repo.all(query)

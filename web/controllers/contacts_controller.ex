@@ -97,7 +97,7 @@ defmodule CercleApi.ContactsController do
       query = from p in TimelineEvent,
         where: p.user_id == ^user_id,
         where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.action_type == "meeting",
+        where: p.event_name == "meeting",
         order_by: [desc: p.updated_at]
       nb_meetings = length(Repo.all(query))
       
@@ -105,7 +105,7 @@ defmodule CercleApi.ContactsController do
       query = from p in TimelineEvent,
         where: p.user_id == ^user_id,
         where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.action_type == "call",
+        where: p.event_name == "call",
         order_by: [desc: p.updated_at]
       nb_calls = length(Repo.all(query))
       
@@ -113,7 +113,7 @@ defmodule CercleApi.ContactsController do
       query = from p in TimelineEvent,
         where: p.user_id == ^user_id,
         where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.action_type == "email",
+        where: p.event_name == "email",
         order_by: [desc: p.updated_at]
       nb_emails = length(Repo.all(query))
       Map.put(acc, x.id, [nb_meetings, nb_calls, nb_emails])

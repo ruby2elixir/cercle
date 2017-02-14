@@ -11,7 +11,7 @@ defmodule CercleApi.APIV2.TimelineEventView do
 
   def render("timeline_event.json", %{timeline_event: timeline_event}) do
     %{id: timeline_event.id,
-      action_type: timeline_event.action_type,
+      event_name: timeline_event.event_name,
       contact_id: timeline_event.contact_id,
       content: timeline_event.content}
   end

@@ -14,7 +14,7 @@
         <%=@timeline_event.user.user_name%>
         <%end%>
       </span>
-      <span class="description"><%= @timeline_event.action_type %></span>
+      <span class="description"><%= @timeline_event.event_name %></span>
     </div>
     <div style="padding:15px;font-size:15px;color:#292929;background-color:white;border-radius:5px;margin-bottom:5px;">
       <%= @timeline_event.content %>

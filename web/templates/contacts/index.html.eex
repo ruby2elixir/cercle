@@ -15,23 +15,18 @@
           <!-- /.box-header -->
           <div class="nav-tabs-custom ">
                 <table class="table">
-                  <%= for reward <- @leads_pending do %>
-                    <tr style="cursor: pointer;" onclick="location.href='/contacts/<%= reward.id %>'">
+                  <%= for c <- @leads_pending do %>
+                    <tr style="cursor: pointer;" onclick="location.href='/contacts/<%= c.id %>'">
                       
                       <td>
-                      <b><%= reward.name %></b>
+                      <b><%= c.name %></b>
                       <Br />
-                      <%= if (reward.organization) do %><%= reward.organization.name %><%end%>
+                      <%= if (c.organization) do %><%= c.organization.name %><%end%>
                       </td>
                       <td>
                       </td>
-                     <td>
-                      <%= if List.first(reward.timeline_event) do  %>
-                        <p style="margin-top:10px;margin-bottom:5px;color:blue;">
-                        <span style="background-color:#ececec;padding:5px;"><%= if Enum.find(reward.timeline_event, fn(x) -> x.action_type != "comment" end) do  %><%=String.slice(Enum.find(reward.timeline_event, fn(x) -> x.action_type != "comment" end).content, 0..250)%><%end%><span></p>
-                      <%end%>
-                      </td><td>
-                      <span style="color:grey;font-size:14px;"><%= time_ago_in_words reward.updated_at %></span> </td>
+                     <td style="width:120px;">
+                      <span style="color:grey;font-size:14px;"><%= time_ago_in_words c.updated_at %></span> </td>
                     </tr>
                   <% end %>
                 </table>

@@ -139,10 +139,10 @@
               Comment
             </h3>
             <div class="btn-group">
-              <button type="button" class="btn btn-actiontype btn-default submit-commit-active" style="margin:3px;border-radius:20px;" data-action_type="comment">Add a Note</button>
-              <button type="button" class="btn btn-actiontype btn-default" style="margin:3px;border-radius:20px;" data-action_type="email">Log an Activity</button>
+              <button type="button" class="btn btn-actiontype btn-default submit-commit-active" style="margin:3px;border-radius:20px;" data-event_name="comment">Add a Note</button>
+              <button type="button" class="btn btn-actiontype btn-default" style="margin:3px;border-radius:20px;" data-event_name="email">Log an Activity</button>
             </div>
-            <input type="hidden" name="timeline_event[action_type]" value="comment">
+            <input type="hidden" name="timeline_event[event_name]" value="comment">
             <input type="hidden" name="timeline_event[contact_id]" value="<%=@contact.id%>">
             <input type="hidden" name="timeline_event[user_id]" value="<%=@conn.assigns[:current_user].id%>">
             <input type="hidden" name="timeline_event[company_id]" value="<%=@conn.assigns[:current_user].company_id%>">

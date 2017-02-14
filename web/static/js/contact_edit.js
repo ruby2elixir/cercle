@@ -257,7 +257,7 @@ export var ContactEdit = {
     $('.btn-actiontype').click(function(){
       $('.btn-actiontype').removeClass('submit-commit-active');
       $(this).addClass('submit-commit-active');
-      $('#te_action_type').val($(this).data('action_type'));
+      $('#te_action_type').val($(this).data('event_name'));
     });
   
     $('#contact-form').submit(function(e){
