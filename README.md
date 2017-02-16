@@ -21,4 +21,7 @@ You need to setup a postgresql DB.
 4. add others parameters from dev.secret into Heroku config:set
 5. You're good to go!
 
+## Contribution
+Feel free to send your PR with proposals, improvements or corrections!
+
 

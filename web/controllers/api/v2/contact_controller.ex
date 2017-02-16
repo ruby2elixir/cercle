@@ -8,18 +8,11 @@ defmodule CercleApi.APIV2.ContactController do
   alias CercleApi.Opportunity
   alias CercleApi.User
   alias CercleApi.Activity
+  alias CercleApi.Tag
+  alias CercleApi.ContactTag
 
   plug :scrub_params, "contact" when action in [:create, :update]
 
-
-  def testing_email(company, contact) do
-      %Mailman.Email{
-        subject: "You received a new referral",
-        from: "referral@cercle.co",
-        to: [company.admin_email],
-				html: Phoenix.View.render_to_string(CercleApi.EmailView, "new_referral.html", contact: contact, company: company)
-        }
-  end
 
 
   def index(conn, _params) do
@@ -92,6 +85,48 @@ defmodule CercleApi.APIV2.ContactController do
         |> put_status(:unprocessable_entity)
         |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
     end
+  end
+
+  def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id_string}) do
+    contact = Repo.get!(Contact, id)
+    {company_id, _rest} = Integer.parse(company_id_string)
+    #tag_params
+    query = from c in ContactTag,
+        where: c.contact_id == ^id
+      Repo.delete_all(query)
+    
+    if tag_params == "" do
+      render(conn, "show.json", contact: contact)
+    else
+      tag_ids = Enum.map tag_params, fn tag ->
+        #tag
+        if Regex.run(~r/^[\d]+$/, tag) do 
+          {tag_id, _rest} = Integer.parse(tag)
+          tag_id
+        else
+          Repo.insert!(%Tag{name: tag, company_id: company_id}).id
+        end
+      end
+      query = from tag in Tag,
+        where: tag.id in ^tag_ids
+      tags = Repo.all(query)
+          changeset = contact
+        |> Repo.preload(:tags) # Load existing data
+        |> Ecto.Changeset.change() # Build the changeset
+        |> Ecto.Changeset.put_assoc(:tags, tags) # Set the association
+  
+      case Repo.update(changeset) do
+        {:ok, contact} ->
+          render(conn, "show.json", contact: contact)
+        {:error, changeset} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+      end
+    end
+
+  
+
   end
 
   def delete(conn, %{"id" => id}) do

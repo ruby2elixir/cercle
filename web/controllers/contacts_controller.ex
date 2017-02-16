@@ -7,8 +7,8 @@ defmodule CercleApi.ContactsController do
   alias CercleApi.Organization
   alias CercleApi.TimelineEvent
   alias CercleApi.Activity
-	
   alias CercleApi.Company
+  alias CercleApi.Tag
 
 	require Logger
 	
@@ -41,7 +41,7 @@ defmodule CercleApi.ContactsController do
 
   def edit(conn, %{"id" => id}) do
     company_id = conn.assigns[:current_user].company_id
-    contact = Repo.get!(Contact, id) |> Repo.preload([:organization, :company])
+    contact = Repo.get!(Contact, id) |> Repo.preload([:organization, :company, :tags])
     company = Repo.get!(CercleApi.Company, contact.company_id) |> Repo.preload([:users])
 
     query = from p in Organization,
@@ -74,12 +74,18 @@ defmodule CercleApi.ContactsController do
       opportunity_contacts = Repo.all(query)
     end
 
+    query = from p in Tag,
+      where: p.company_id == ^company_id
+    tags = Repo.all(query)
+
+    tag_ids = Enum.map(contact.tags, fn(t) -> t.id end)
+
     
 
     changeset = Contact.changeset(contact)
 		conn
 		  |> put_layout("adminlte.html")
-		  |> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts)
+		  |> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids)
   end
 
 

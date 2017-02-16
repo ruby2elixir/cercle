@@ -18403,8 +18403,8 @@ var App = exports.App = {
   pipeline_init: function pipeline_init() {
     _opportunity_pipeline.Pipeline.start();
   },
-  contact_edit_init: function contact_edit_init(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids) {
-    _contact_edit.ContactEdit.start(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids);
+  contact_edit_init: function contact_edit_init(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids) {
+    _contact_edit.ContactEdit.start(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids);
   },
   contact_socket_init: function contact_socket_init(contact_id) {
     _contact_live2.default.init(_socket2.default, contact_id);
@@ -18478,14 +18478,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var ContactEdit = exports.ContactEdit = {
-  start: function start(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids) {
+  start: function start(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids) {
+
     $("#organization_remove_link").click(function () {
       $('#without_organization').show();
       $('#with_organization').hide();
-    });
-
-    $("#change_company_modal").click(function () {
-      $('#myModal').modal('show');
     });
 
     $("#edit_contact_options").click(function () {
@@ -18521,6 +18518,35 @@ var ContactEdit = exports.ContactEdit = {
           });
         }
       });
+    });
+
+    /// MODAL TAGS
+    $("#add_tags").click(function () {
+      $('#myModal4').modal('show');
+    });
+
+    $('#contact_word2_id').selectize({ delimiter: ',', create: true, items: tag_ids });
+
+    $("#submit_tag_id").click(function () {
+      var organization_name = $("#contact_word2_id").val();
+      var url = '/api/v2/contact/' + contact_id + "/update_tags";
+      $.ajax(url, {
+        method: 'PUT',
+        data: { 'tags': organization_name,
+          'company_id': company_id
+        },
+        complete: function complete(xhr, status) {
+          location.reload();
+          return true;
+        }
+      });
+    });
+
+    /// MODAL COMPANY
+    $('#contact_word_id').selectize({ sortField: 'text', create: true });
+
+    $("#change_company_modal").click(function () {
+      $('#myModal').modal('show');
     });
 
     $("#submit_change_company").click(function () {

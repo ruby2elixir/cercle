@@ -12,7 +12,7 @@ defmodule CercleApi.FormView do
   
   defp default_autosubmit_selectize_options do
     [
-      prompt: "Type the name of the company",
+      prompt: "Type the name",
       data: [
         selectize: "single",
         autosubmit: "true",

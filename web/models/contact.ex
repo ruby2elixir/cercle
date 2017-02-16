@@ -10,7 +10,7 @@ defmodule CercleApi.Contact do
     field :phone, :string
     field :description, :string
     field :job_title, :string
-
+    many_to_many :tags, CercleApi.Tag, join_through: CercleApi.ContactTag
     field :data, :map #JSONB FIELD in POSTRESQL DB  %{ cercle_string_name, }
 
     ## FIELDS CERCLE AVAILABLE

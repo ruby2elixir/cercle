@@ -1,13 +1,15 @@
 export var ContactEdit = {
-  start: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids){
+  start: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids){
+    
+
+    
+
     $("#organization_remove_link").click(function(){
       $('#without_organization').show();
       $('#with_organization').hide();
     });
   
-    $( "#change_company_modal" ).click(function(){
-      $('#myModal').modal('show');
-    });
+    
   
     $( "#edit_contact_options" ).click(function(){
       $('#myModal2').modal('show');
@@ -16,6 +18,8 @@ export var ContactEdit = {
     $( "#add_contact_to_opportunity" ).click(function(){
       $('#myModal3').modal('show');
     });
+
+    
 
     $("#submit_contact_to_opportunity").click(function(){
       var contact_name =$("#contact_name").val();
@@ -44,7 +48,37 @@ export var ContactEdit = {
       });
       
     });
-  
+
+    /// MODAL TAGS
+    $( "#add_tags" ).click(function(){
+      $('#myModal4').modal('show');
+    });
+
+    $('#contact_word2_id').selectize({delimiter: ',', create: true, items: tag_ids});
+
+    $("#submit_tag_id").click(function(){
+      var organization_name = $("#contact_word2_id").val();
+      var url = '/api/v2/contact/' + contact_id+"/update_tags";
+        $.ajax( url , {
+          method: 'PUT',
+          data: { 'tags': organization_name,
+                  'company_id': company_id
+           },
+          complete: function(xhr, status){
+            location.reload();
+            return true;
+          }
+        });
+    });
+
+
+    /// MODAL COMPANY
+    $('#contact_word_id').selectize({sortField: 'text', create: true});
+    
+    $( "#change_company_modal" ).click(function(){
+      $('#myModal').modal('show');
+    });
+
     $("#submit_change_company").click(function(){
       var organization_name = $("#contact_word_id").val();
       if (!isNaN(organization_name)){

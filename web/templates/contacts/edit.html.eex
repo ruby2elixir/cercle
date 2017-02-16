@@ -13,7 +13,7 @@
               <button type="button" class="btn btn-box-tool" id="edit_contact_options" ><i class="fa fa-fw fa-angle-down"></i></button>
             </div>
             <h3 class="profile-username text-center"><span class='inline-editable' data-type='PUT' data-param-name="contact[name]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>"><%= @contact.name %></span></h3>
-            <ul class="list-group list-group-unbordered">
+            <ul class="list-group list-group-unbordered" style="margin-bottom:5px;">
               <li class="list-group-item" >
                 <b class="label_field">Job Title</b> </i> <span class="pull-right"><span class='inline-editable' data-type='PUT' data-param-name="contact[job_title]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>"><%= @contact.job_title %></span></span>
               </li>
@@ -23,8 +23,20 @@
               <li class="list-group-item" >
                 <b class="label_field">Email</b> <span class="pull-right"><span class='inline-editable' data-type='PUT' data-param-name="contact[email]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>"><%= @contact.email %></span></span>
               </li>
+               <li class="list-group-item" >
+                <b class="label_field">Tags</b><div style="margin-top:5px;">
+
+                <%= for tag <- @contact.tags do %>
+                <a href ="#" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;"><%=tag.name%> </a>
+              <%end%>
+               <a id="add_tags" href ="javascript:void(0);" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;">+ Add ...</a>
+              </div>
+              </li>
             </ul>
+            <b class="label_field">Notes</b>
+            <div style="margin-top:5px;">
             <span class='inline-editable' data-type='PUT' data-input-type="textarea" data-param-name="contact[description]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>"><%= @contact.description %></span>
+            </div>
           </div><!-- /.box-body -->
         </div><!-- /.box -->
       </div>
@@ -196,16 +208,45 @@
     </div>
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal4">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Tags</h4>
+      </div>
+      <div class="modal-body">
+        <div style="font-weight:bold;color:grey;margin-bottom:10px;display:none;">Which company is the contact currently working?</div>
+        <%= form_for @changeset, "#", fn form -> %>
+        <%= auto_submit_selectize form, :word2_id, build_selectize_options2(@tags), multiple: "multiple" %>
+        <% end %>
+      </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"  data-company_id="<%=@contact.company_id%>" data-contact_id="<%=@contact.id%>" id="submit_tag_id">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script>
   $(document).ready(function(){
     require("web/static/js/app").App.contact_socket_init(<%=@contact.id%>);
     <%=if @opportunity do %>
-    require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, <%=@opportunity.id%>, <%=Poison.encode!(@opportunity.contact_ids)%>);
+    require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, <%=@opportunity.id%>, <%=Poison.encode!(@opportunity.contact_ids)%>, <%=Poison.encode!(@tag_ids)%> );
     <%end%>
     <%=if !@opportunity do %>
     require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, null, null);
     <%end%>
-    $('#contact_word_id').selectize({sortField: 'text', create: true});
   });
 </script>
 

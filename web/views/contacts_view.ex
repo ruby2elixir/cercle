@@ -13,4 +13,10 @@ defmodule CercleApi.ContactsView do
       {element.name, element.id}
     end
   end
+
+  defp build_selectize_options2(collection) do
+    Enum.map collection, fn(element) ->
+      {element.name, element.id}
+    end
+  end
 end

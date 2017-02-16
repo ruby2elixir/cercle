@@ -87,6 +87,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/organizations", APIV2.OrganizationController
     resources "/api/v2/opportunity", APIV2.OpportunityController
     resources "/api/v2/activity", APIV2.ActivityController
+    put "/api/v2/contact/:id/update_tags", APIV2.ContactController, :update_tags
 
   end
 
