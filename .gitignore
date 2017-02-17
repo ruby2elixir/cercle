@@ -22,6 +22,6 @@ erl_crash.dump
 # variables.
 /config/prod.secret.exs
 /config/dev.secret.exs
-
+/priv/static/
 
 /tmp
