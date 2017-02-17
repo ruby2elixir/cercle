@@ -28,7 +28,7 @@
              
              <table class="table">
                <%= for activity <- @activities_overdue do %>
-                <%= render "_activity.html", activity: activity, hour: false %>   
+                <%= render "_activity.html", activity: activity, hour: false,current_user_time_zone: @current_user_time_zone %>
                <% end %>
              </table>
            </div><!-- /.box-body -->
@@ -51,7 +51,7 @@
            
               <table class="table">
                 <%= for activity <- @activities_today do %>
-                 <%= render "_activity.html", activity: activity, hour: true %>   
+                 <%= render "_activity.html", activity: activity, hour: true, current_user_time_zone: @current_user_time_zone  %>   
                 <% end %>
               </table>
           
@@ -76,7 +76,7 @@
            
            <table class="table">
              <%= for activity <- @activities_later do %>
-              <%= render "_activity.html", activity: activity, hour: false %>   
+              <%= render "_activity.html", activity: activity, hour: false, current_user_time_zone: @current_user_time_zone %>   
              <% end %>
            </table>
          </div><!-- /.box-body -->

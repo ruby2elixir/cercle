@@ -9,9 +9,11 @@ defmodule CercleApi.SessionController do
     |> render(:new)
   end
 
-  def create(conn, %{"login" => login, "password" => pass}) do
-    case Session.login(conn, login, pass) do
+  def create(conn, %{"login" => login, "password" => pass, "time_zone" => time_zone}) do
+    case Session.login(conn, login, pass,time_zone) do
     {:ok, conn} ->
+      changeset = User.changeset(conn.assigns[:current_user], %{time_zone: time_zone})
+      Repo.update(changeset) 
       path = get_session(conn, :redirect_url) || "/activity"
       conn
       |> put_flash(:info, "Welcome back!")
