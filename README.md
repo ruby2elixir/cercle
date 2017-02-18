@@ -7,7 +7,7 @@ Cercle is an open source CRM easy to use and inspired by Trello. No bullshit.
 
 ## To install Cercle on Local
 
-You need to setup a postgresql DB.
+You need to setup a postgresql DB version 9.5
 
 1. Rename to dev.secret_example.exs to dev.secret.exs
 2. Fill out the parameters
