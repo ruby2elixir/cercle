@@ -17,6 +17,7 @@
                 <table class="table table-bordered">
                    <tr>
                    <th>Name</th>
+                   <th>Job Title</th>
                    <th>Organization</th>
                    <th>Email</th>
                    <th>Phone</th>
@@ -26,6 +27,9 @@
                     <tr style="cursor: pointer;" onclick="location.href='/contacts/<%= c.id %>'">
                       <td>
                       <%= c.name %>
+                      </td>
+                      <td>
+                      <%= c.job_title %>
                       </td>
                       <td>
                        <%= if (c.organization) do %><%= c.organization.name %><%end%>
