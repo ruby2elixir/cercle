@@ -66,12 +66,14 @@
 
   Opportunity Pipeline<br /> <span style="font-size:16px;color:grey;"></span>
   </h2>
+  <!-- 
   <select name="select" id="change_filter_user_id" style="float:right;" >
   <option value="" >All </option> 
   <%= for u <- @company.users do %>
         <option value="<%=u.id%>" ><%= u.user_name %> </option> 
       <%end%>
               </select>
+              -->
    <a href="/contacts/new" class="btn btn-primary">+ Add a Contact</a>
 </section>
 <section>
