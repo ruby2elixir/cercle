@@ -1,5 +1,5 @@
 <div class="" style="padding:5px;padding-top:0px;margin-bottom:20px;">
-  <div class="user-block" style="float:left;width:45px;">
+  <div class="user-block" style="float:left;width:45px;margin-left:10px;">
     <%=if @timeline_event.user_id != 479 and @timeline_event.user_id do %>
       <img class="img-circle img-bordered-sm" src="<%= CercleApi.UserProfileImage.url({@timeline_event.user.profile_image, @timeline_event.user}, :small) %>" alt="user image">
     <%end%>
@@ -7,7 +7,7 @@
       <img class="img-circle img-bordered-sm" src="/images/pp_2.png" alt="user image">
     <%end%>
   </div>
-  <div style="margin-left:45px;">
+  <div style="margin-left:60px;">
     <div style="padding:5px;font-size:15px;padding-bottom:15px;">
       <span class="username" style="">
         <%=if @timeline_event.user_id != 479  and @timeline_event.user_id do %>
