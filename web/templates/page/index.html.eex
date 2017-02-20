@@ -4,7 +4,8 @@
   <a href="/login" style="color:white;">Register</a>
 </div>
 <script>
-if (window.location == "www.cerle.co") {
+alert(window.location);
+if (window.location == "http://www.cerle.co/") {
    window.location.href = 'http://get.cercle.co'; 
 }
 </script>
