@@ -4,7 +4,7 @@
   
   <h2>Inbox<br /> <span style="font-size:16px;color:grey;"></h2>
 
-           <select name="select" id="change_filter_user_id" style="float:right;" >
+      <!--     <select name="select" id="change_filter_user_id" style="float:right;" >
   <%= for u <- @company.users do %>
   
         <option value="<%=u.id%>" <%= if u.id == @current_user_id do %>selected<%= end %>><%= u.user_name %> </option> 
@@ -12,6 +12,7 @@
               </select>
       <Br /><Br />
 </section>
+-->
 
 <!-- Main content -->
 <section class="content" style="max-width:700px;">
