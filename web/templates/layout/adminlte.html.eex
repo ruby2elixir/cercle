@@ -268,6 +268,12 @@ WIN
   analytics.load("TCdNDp7IntXSxH6fAs3rru6mMQJa6dln");
   analytics.page();
   }}();
+  <%= if (@conn.assigns[:current_user].id) do %>
+  analytics.identify('<%=@conn.assigns[:current_user].id%>', {
+  name: '<%=@conn.assigns[:current_user].user_name%>',
+  email: '<%=@conn.assigns[:current_user].login%>'
+});
+  <%end%>
 </script>
   </body>
 </html>
