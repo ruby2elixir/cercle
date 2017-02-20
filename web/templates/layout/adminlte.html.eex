@@ -263,8 +263,7 @@ LOST
 WIN
 </div>
 <script>window.userToken = "<%= assigns[:user_token] %>";</script>
-<script type="text/javascript">
-<script>
+      <script>
            (function(i, d, s, id, r) {
              i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
              var js, fjs = d.getElementsByTagName(s)[0];
@@ -274,8 +273,8 @@ WIN
              js.src = '//www.lewini.com/js/sdk.js';
              fjs.parentNode.insertBefore(js, fjs);
            }(window, document, 'script', 'lewini-jssdk', 'lwn'));
-           lwn('init', '1189f09c-a85a-4de2-86f9-8650f477c967'); 
-</script>
+           lwn('init', '1189f09c-a85a-4de2-86f9-8650f477c967');
+          </script>
   </body>
 </html>
 
