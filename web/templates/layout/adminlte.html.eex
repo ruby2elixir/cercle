@@ -264,16 +264,17 @@ WIN
 </div>
 <script>window.userToken = "<%= assigns[:user_token] %>";</script>
 <script type="text/javascript">
-  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
-  analytics.load("TCdNDp7IntXSxH6fAs3rru6mMQJa6dln");
-  analytics.page();
-  }}();
-  <%= if (@conn.assigns[:current_user].id) do %>
-  analytics.identify('<%=@conn.assigns[:current_user].id%>', {
-  name: '<%=@conn.assigns[:current_user].user_name%>',
-  email: '<%=@conn.assigns[:current_user].login%>'
-});
-  <%end%>
+<script>
+           (function(i, d, s, id, r) {
+             i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();
+             var js, fjs = d.getElementsByTagName(s)[0];
+             if (d.getElementById(id)) return;
+             js = d.createElement(s);
+             js.id = id; js.async=1;
+             js.src = '//www.lewini.com/js/sdk.js';
+             fjs.parentNode.insertBefore(js, fjs);
+           }(window, document, 'script', 'lewini-jssdk', 'lwn'));
+           lwn('init', '1189f09c-a85a-4de2-86f9-8650f477c967'); 
 </script>
   </body>
 </html>
