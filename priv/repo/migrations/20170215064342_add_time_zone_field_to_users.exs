@@ -3,7 +3,7 @@ defmodule CercleApi.Repo.Migrations.AddTimeZoneFieldToUsers do
 
   def change do
   	alter table(:users) do
-      add :time_zone, :string
+      add :time_zone, :string, default: "America/New_York"
     end
   end
 end
