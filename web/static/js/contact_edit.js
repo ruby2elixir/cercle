@@ -194,7 +194,8 @@ export var ContactEdit = {
           data: { 'activity[contact_id]': contact_id, 
             'activity[user_id]': user_id, 
             'activity[due_date]': new Date().toISOString(), 
-            'activity[company_id]': company_id, 
+            'activity[company_id]': company_id,
+            'activity[current_user_time_zone]': $(this).data('current_user_time_zone'),
             'activity[title]': 'Call', 
           },
           complete: function(xhr, status){

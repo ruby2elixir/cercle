@@ -138,11 +138,11 @@
             </h3>
             <div id="tasks" style="padding:15px;">
               <%= for activity <- @activities do %>
-              <%= render "_task.html", id: activity.id, is_done: activity.is_done, title: activity.title, due_date: activity.due_date, user_name: activity.user.user_name, user_id: activity.user_id, company: @company %>
+              <%= render "_task.html", id: activity.id, is_done: activity.is_done, title: activity.title, due_date: activity.due_date, user_name: activity.user.user_name, user_id: activity.user_id, company: @company, current_user_time_zone: @conn.assigns[:current_user].time_zone %>
               <%end%>
             </div>
             <div style="padding-left:15px;">
-              <a style="letter-spacing: 1px;color:grey;font-weight:bold;" id="activity_add" href="javascript:void(0);" id="activity_add" data-contact_id="<%=@contact.id%>" data-user_id="<%=@conn.assigns[:current_user].id%>" data-company_id="<%=@company.id%>">Schedule a Task...</a>
+              <a style="letter-spacing: 1px;color:grey;font-weight:bold;" id="activity_add" href="javascript:void(0);" id="activity_add" data-contact_id="<%=@contact.id%>" data-user_id="<%=@conn.assigns[:current_user].id%>" data-company_id="<%=@company.id%>" data-current_user_time_zone="<%=@conn.assigns[:current_user].time_zone%>" >Schedule a Task...</a>
             </div>
             <Br />
             <Br />
