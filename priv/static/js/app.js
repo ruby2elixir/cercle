@@ -18342,86 +18342,6 @@ require.register("web/static/js/adminlte/plugins/slimScroll/jquery.slimscroll.mi
 
 require.register("web/static/js/app", function(exports, require, module) {
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.App = undefined;
-
-require("phoenix_html");
-
-require("bootstrap-datepicker");
-
-var _icheck = require("./adminlte/plugins/iCheck/icheck.min");
-
-var _icheck2 = _interopRequireDefault(_icheck);
-
-var _jquerySlimscroll = require("./adminlte/plugins/slimScroll/jquery.slimscroll.min");
-
-var _jquerySlimscroll2 = _interopRequireDefault(_jquerySlimscroll);
-
-var _fastclick = require("./adminlte/plugins/fastclick/fastclick");
-
-var _fastclick2 = _interopRequireDefault(_fastclick);
-
-var _app = require("./adminlte/dist/js/app.min");
-
-var _app2 = _interopRequireDefault(_app);
-
-var _socket = require("./socket");
-
-var _socket2 = _interopRequireDefault(_socket);
-
-var _selectize = require("./selectize");
-
-var _selectize2 = _interopRequireDefault(_selectize);
-
-var _activity = require("./activity");
-
-var _contact_add = require("./contact_add");
-
-var _contact_add2 = _interopRequireDefault(_contact_add);
-
-var _contact_edit = require("./contact_edit");
-
-var _contact_live = require("./contact_live");
-
-var _contact_live2 = _interopRequireDefault(_contact_live);
-
-var _opportunity_pipeline = require("./opportunity_pipeline");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
-var App = exports.App = {
-  activity_init: function activity_init() {
-    _activity.Activity.start();
-  },
-  pipeline_init: function pipeline_init() {
-    _opportunity_pipeline.Pipeline.start();
-  },
-  contact_edit_init: function contact_edit_init(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids) {
-    _contact_edit.ContactEdit.start(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids);
-  },
-  contact_socket_init: function contact_socket_init(contact_id) {
-    _contact_live2.default.init(_socket2.default, contact_id);
-  }
-}; // Brunch automatically concatenates all files in your
-// watched paths. Those paths can be configured at
-// config.paths.watched in "brunch-config.js".
-//
-// However, those files will only be executed if
-// explicitly imported. The only exception are files
-// in vendor, which are never wrapped in imports and
-// therefore are always executed.
-
-// Import dependencies
-//
-// If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
 });
 
 ;require.register("web/static/js/contact_add", function(exports, require, module) {
@@ -18707,7 +18627,7 @@ var ContactEdit = exports.ContactEdit = {
 
       ele.click(function () {
         ele.hide();
-        var editContainer = $("<span class='editable-container'><form class='form-inline editableform'><div class='editable-input'></div><div class='editable-buttons'><button class='btn btn-primary btn-xs editable-submit'><i class='glyphicon glyphicon-ok'></i></button><a class='btn btn-default btn-xs editable-cancel'><i class='glyphicon glyphicon-remove'></i></a></div></form</span>");
+        var editContainer = $("<span class='editable-container'><form class='form-inline editableform'><div class='editable-input'></div><div class='editable-buttons'><button class='btn btn-primary btn-xs editable-submit'><i class='fa fa-check'></i></button><a class='btn btn-default btn-xs editable-cancel'><i class='fa fa-times'></i></a></div></form</span>");
         var inputElement;
         if (ele.data('input-type') == 'textarea') {
           inputElement = $("<textarea style='width:100%;height:80px;' ></textarea>");
