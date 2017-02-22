@@ -67,6 +67,8 @@ defmodule CercleApi.Router do
     get "/statistics", ContactsController, :statistics
 
     get "/redirect_app", PageController, :redirect_app 
+    get "/import", ContactsController, :import 
+    
 
   end
 		

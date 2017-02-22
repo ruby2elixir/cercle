@@ -130,4 +130,13 @@ defmodule CercleApi.ContactsController do
       |> render("statistics.html", company: company, stat: map)
   end
 
+  def import(conn, _params) do
+    company_id = conn.assigns[:current_user].company_id
+    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+
+    conn
+      |> put_layout("adminlte.html")
+      |> render("import.html", company: company)
+  end
+
 end
