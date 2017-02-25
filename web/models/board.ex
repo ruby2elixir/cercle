@@ -4,6 +4,7 @@ defmodule CercleApi.Board do
   schema "boards" do
     field :name, :string
     belongs_to :company, CercleApi.Company
+    has_many :board_columns, CercleApi.User
     timestamps
   end
 

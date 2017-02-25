@@ -33,54 +33,23 @@ defmodule CercleApi.BoardController do
     company_id = conn.assigns[:current_user].company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
-    query0 = from p in Opportunity,
+    query_cards = from p in Opportunity,
         where: p.company_id == ^company_id,
         where: p.board_id == ^board_id,
         where: p.status == 0,
-        where: p.stage == 0,
         order_by: [desc: p.updated_at]
 
-    query1 = from p in Opportunity,
-        where: p.company_id == ^company_id,
-        where: p.board_id == ^board_id,
-        where: p.status == 0,
-        where: p.stage == 1,
-        order_by: [desc: p.updated_at]
-
-    query2 = from p in Opportunity,
-        where: p.company_id == ^company_id,
-        where: p.board_id == ^board_id,
-        where: p.status == 0,
-        where: p.stage == 2,
-        order_by: [desc: p.updated_at]
-
-    query3 = from p in Opportunity,
-        where: p.company_id == ^company_id,
-        where: p.board_id == ^board_id,
-        where: p.status == 0,
-        where: p.stage == 3,
-        order_by: [desc: p.updated_at]
-
-    query4 = from p in Opportunity,
-        where: p.company_id == ^company_id,
-        where: p.board_id == ^board_id,
-        where: p.status == 0,
-        where: p.stage == 4,
-        order_by: [desc: p.updated_at]
 
     #order_by: [desc: p.rating]
     #from(CercleApi.TimelineEvent], order_by: [desc: :inserted_at])
 
-		stage0 = Repo.all(query0)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false) }, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage1 = Repo.all(query1)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage2 = Repo.all(query2)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage3 = Repo.all(query3)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
-    stage4 = Repo.all(query4)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false)}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
+		cards = Repo.all(query_cards)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false) }, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
+
 
 
 		conn
 		  |> put_layout("adminlte.html")
-		  |> render "show.html",  company: company, stage0: stage0, stage1: stage1, stage2: stage2, stage3: stage3, stage4: stage4
+		  |> render "show.html",  company: company, cards: cards
   end
 
   def new(conn, _params) do
