@@ -65,10 +65,13 @@ defmodule CercleApi.ContactsController do
 
     opportunity = List.first(opportunities)
     if opportunity do
-    contact_ids = opportunity.contact_ids
+      contact_ids = opportunity.contact_ids
       query = from contact in CercleApi.Contact,
         where: contact.id in ^contact_ids
       opportunity_contacts = Repo.all(query)
+
+      board = Repo.get!(CercleApi.Board, opportunity.board_id)  |> Repo.preload [:board_columns]
+
     end
 
     query = from p in Tag,
@@ -82,7 +85,7 @@ defmodule CercleApi.ContactsController do
     changeset = Contact.changeset(contact)
 		conn
 		|> put_layout("adminlte.html")
-		|> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids)
+		|> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board)
   end
 
 

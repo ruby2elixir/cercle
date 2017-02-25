@@ -109,11 +109,9 @@
     </div>
       Status:
       <select name="select" id="change_opportunity_stage" data-id="<%=@opportunity.id%>">
-        <option value="0" <%= if @opportunity.stage == 0 do %>selected<%= end %>>Untouched Contact </option> 
-        <option value="1" <%= if @opportunity.stage == 1 do %>selected<%= end %>>Contact Made</option> 
-        <option value="2"<%= if @opportunity.stage == 2 do %>selected<%= end %>>Needs Defined</option>
-        <option value="3" <%= if @opportunity.stage == 3 do %>selected<%= end %>>Proposal Made</option>
-        <option value="4" <%= if @opportunity.stage == 4 do %>selected<%= end %>>Negotations Started</option>
+      <%= for col <- @board.board_columns do %>
+        <option value="<%=col.id%>" <%= if @opportunity.board_column_id == col.id  do %>selected<%= end %>><%=col.name%> </option> 
+      <%end%>
       </select>
       <Br />
       <Br />

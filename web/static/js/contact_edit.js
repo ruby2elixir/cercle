@@ -125,7 +125,7 @@ export var ContactEdit = {
         var url = '/api/v2/opportunity/' + opportunity_id;
         $.ajax( url , {
           method: 'PUT',
-          data: { 'opportunity[stage]': $(this).val() },
+          data: { 'opportunity[board_column_id]': $(this).val() },
           complete: function(xhr, status){
             return true;
           }

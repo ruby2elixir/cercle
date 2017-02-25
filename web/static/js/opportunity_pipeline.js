@@ -39,7 +39,7 @@ export var Pipeline = {
           });
         }else{
           $.ajax({
-            data: {opportunity : {stage: stage}},
+            data: {opportunity : {board_column_id: stage}},
             type: 'PUT',
             url: '/api/v2/opportunity/'+ id
           });

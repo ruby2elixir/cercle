@@ -15,19 +15,15 @@
     min-width: 1240px !important;
   }
   .column_title {
-    width: 220px;
-    float: left;
     height: 50px;
     line-height:50px;
-    padding-left:20px;
     color:#525252;
-    margin-bottom:30px;
+    margin-bottom:10px;
     text-align:center;
     font-size:18px;
   }
   .column {
     width: 220px;
-    float: left;
     padding-bottom: 100px;
     border-right:1px solid #c5c5c5;
     padding-left:20px;
@@ -77,58 +73,23 @@
               -->
    
 </section>
-<section>
-<div style="width:100%;">
-<div class="column_title">
-  Untouched Contact
-</div>
-<div class="column_title">
-  Contact Made
-</div>
-<div class="column_title">
-   Needs Defined
-</div>
-<div class="column_title">
-  Proposal Made
-</div>
-<div class="column_title">
-  Negotations Started
-</div>
-</div>
-
-</section>
-
 <!-- Main content -->
 <section class="content">
-<div class="column" data-id="0">
+<%= for col <- @board.board_columns do %>
+<div class="column_master" style="width: 220px;display:inline-block;vertical-align:top;">
+<div class="column_title">
+    <%=col.name%>
+  </div>
+<div class="column" data-id="<%=col.id%>">
 
-  
-<%= for opportunity <- @stage0 do %>
-  <%= render "_opportunity.html", opportunity: opportunity %>
+<%= for card <- @cards do %>
+  <%=if card.board_column_id == col.id do %>
+  <%= render "_opportunity.html", opportunity: card %>
   <%=end%>
+  <%end%>
 </div>
-
-<div class="column" data-id="1">
-<%= for opportunity <- @stage1 do %>
-  <%= render "_opportunity.html", opportunity: opportunity %>
-  <%=end%>
 </div>
-
-<div class="column" data-id="2">
-<%= for opportunity <- @stage2 do %>
-  <%= render "_opportunity.html", opportunity: opportunity %>
-  <%=end%>
-</div>
-<div class="column" data-id="3">
-<%= for opportunity <- @stage3 do %>
-    <%= render "_opportunity.html", opportunity: opportunity %>
-  <%=end%>
-</div>
-<div class="column" data-id="4">
-<%= for opportunity <- @stage4 do %>
-  <%= render "_opportunity.html", opportunity: opportunity %>
-  <%=end%>
-</div>
+<%=end%>
 </section><!-- /.content -->
 <script>
 $(document).ready(function(){
