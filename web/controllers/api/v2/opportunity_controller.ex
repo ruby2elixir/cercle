@@ -10,10 +10,7 @@ defmodule CercleApi.APIV2.OpportunityController do
 
   plug :scrub_params, "opportunity" when action in [:create, :update]
 
-
-
-
-
+  
   def create(conn, %{"opportunity" => opportunity_params}) do
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
     name = ""

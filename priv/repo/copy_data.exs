@@ -12,12 +12,29 @@
 alias CercleApi.Contact
 alias CercleApi.Organization
 alias CercleApi.Opportunity
+alias CercleApi.Company
+alias CercleApi.Board
 
-ops = CercleApi.Repo.all(Opportunity)
-Enum.each ops, fn (u) ->
-    user_params = %{:contact_ids => [u.main_contact_id] }
-    changeset = Opportunity.changeset(u, user_params)
-    CercleApi.Repo.update(changeset)
+cs = CercleApi.Repo.all(Company)
+
+Enum.each cs, fn (c) ->
+    company_id = c.id
+    board_params = %{:company_id => c.id }
+    changeset = Board.changeset(%Board{}, board_params)
+    board = CercleApi.Repo.insert!(changeset)
+
+
+    query = from p in Opportunity,
+        where: p.company_id == ^company_id
+
+    opportunitinies = CercleApi.Repo.all(query)
+	Enum.each opportunitinies, fn (o) ->
+		
+	end
+
+    #user_params = %{:contact_ids => [u.main_contact_id] }
+    #changeset = Opportunity.changeset(u, user_params)
+    #CercleApi.Repo.update(changeset)
 end
 
 #organizations = CercleApi.Repo.all(Organization)

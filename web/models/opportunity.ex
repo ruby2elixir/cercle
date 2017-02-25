@@ -2,7 +2,6 @@ defmodule CercleApi.Opportunity do
   use CercleApi.Web, :model
 	
   schema "opportunities" do
-
     field :name, :string
     field :stage, :integer, default: 0
     field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED WIN, 2 CLOSED LOST

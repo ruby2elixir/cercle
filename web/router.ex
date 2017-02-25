@@ -62,6 +62,7 @@ defmodule CercleApi.Router do
 	  put "/contacts/:id/update", ContactsController, :update
 
     get "/opportunity", OpportunityController, :index
+    get "/board", BoardController, :show
     get "/activity", ActivityController, :index
 
     get "/statistics", ContactsController, :statistics
