@@ -1,13 +1,13 @@
-defmodule CercleApi.Board do
+defmodule CercleApi.BoardColumn do
   use CercleApi.Web, :model
 	
-  schema "boards" do
+  schema "board_columns" do
     field :name, :string
-    belongs_to :company, CercleApi.Company
+    belongs_to :board, CercleApi.Board
     timestamps
   end
 
-  @required_fields ~w(company_id)
+  @required_fields ~w(board_id)
   @optional_fields ~w()
 
   @doc """

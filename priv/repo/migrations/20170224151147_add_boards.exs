@@ -3,10 +3,17 @@ defmodule CercleApi.Repo.Migrations.AddBoards do
 
   def change do
   	create table(:boards) do
+      add :name, :string
       add :company_id, :integer
-      add :metadata, :map, default: fragment("json_build_object()::jsonb")
       timestamps
   	end
+
+    create table(:board_columns) do
+      add :name, :string
+      add :board_id, :integer
+      add :order, :integer
+      timestamps
+    end
 
   	alter table(:users) do
      	add :last_opened_board_id, :integer
@@ -14,6 +21,7 @@ defmodule CercleApi.Repo.Migrations.AddBoards do
 
     alter table(:opportunities) do
      	add :board_id, :integer
+      add :board_column_id, :integer
     end
 
   end

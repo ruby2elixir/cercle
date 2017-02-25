@@ -9,7 +9,7 @@ defmodule CercleApi.Opportunity do
     field :contact_ids, {:array, :integer}
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
-
+    belongs_to :board, CercleApi.Board
     timestamps
   end
 

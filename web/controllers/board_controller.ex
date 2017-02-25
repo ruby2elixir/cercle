@@ -1,8 +1,6 @@
 defmodule CercleApi.BoardController do
   use CercleApi.Web, :controller
 
-  plug CercleApi.Plugs.RequireAuth
-
   alias CercleApi.User
   alias CercleApi.Contact
   alias CercleApi.Organization
@@ -16,35 +14,42 @@ defmodule CercleApi.BoardController do
 	
   def show(conn, %{"id" => id}) do
     
+    board = Repo.get!(CercleApi.Board, id)
+    board_id = board.id
     company_id = conn.assigns[:current_user].company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
     query0 = from p in Opportunity,
         where: p.company_id == ^company_id,
+        where: p.board_id == ^board_id,
         where: p.status == 0,
         where: p.stage == 0,
         order_by: [desc: p.updated_at]
 
     query1 = from p in Opportunity,
         where: p.company_id == ^company_id,
+        where: p.board_id == ^board_id,
         where: p.status == 0,
         where: p.stage == 1,
         order_by: [desc: p.updated_at]
 
     query2 = from p in Opportunity,
         where: p.company_id == ^company_id,
+        where: p.board_id == ^board_id,
         where: p.status == 0,
         where: p.stage == 2,
         order_by: [desc: p.updated_at]
 
     query3 = from p in Opportunity,
         where: p.company_id == ^company_id,
+        where: p.board_id == ^board_id,
         where: p.status == 0,
         where: p.stage == 3,
         order_by: [desc: p.updated_at]
 
     query4 = from p in Opportunity,
         where: p.company_id == ^company_id,
+        where: p.board_id == ^board_id,
         where: p.status == 0,
         where: p.stage == 4,
         order_by: [desc: p.updated_at]
@@ -61,7 +66,7 @@ defmodule CercleApi.BoardController do
 
 		conn
 		  |> put_layout("adminlte.html")
-		  |> render "index.html",  company: company, stage0: stage0, stage1: stage1, stage2: stage2, stage3: stage3, stage4: stage4
+		  |> render "show.html",  company: company, stage0: stage0, stage1: stage1, stage2: stage2, stage3: stage3, stage4: stage4
   end
 
   def new(conn, _params) do
