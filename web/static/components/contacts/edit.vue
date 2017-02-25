@@ -6,7 +6,7 @@
         <div class="row">
           <profile-edit v-bind:contact="contact" v-bind:tags="tags" v-on:update="updateContact" />
           <div class="col-md-6">
-            <organization-edit v-bind:company="organization" v-on:update="updateContact" />
+            <organization-edit v-bind:organization="organization" v-on:update="updateOrganization" />
             <company-edit v-bind:company="company" v-on:update="updateContact" />
           </div><!-- /.col -->
 
@@ -52,11 +52,12 @@ export default {
     },
     methods: {
         updateContact(data) {
-            console.log('update-contact', data)
             this.contact = data
             var url = '/api/v2/contact/' + this.contact_id;
             $.ajax( url , { method: 'PUT', data: { contact: data }  });
-        },
+            },
+        updateOrganization(data){
+            },
         connectToSocket() {
             this.socket = new Socket("/socket", {params: {token: window.userToken}});
             this.socket.connect();
@@ -76,7 +77,8 @@ export default {
                 }
                 if (payload.organization) {
                     this.organization = payload.organization
-                }
+                    }
+
             });
         }
     },

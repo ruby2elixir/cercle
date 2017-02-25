@@ -5,16 +5,14 @@
         <button type="button" class="btn btn-box-tool" id="edit_contact_options" ><i class="fa fa-fw fa-angle-down"></i></button>
       </div>
       <h3 class="profile-username">
-
-        <span class='inline-editable' data-type='PUT' data-param-name="organization[name]" data-inline-editurl="/api/v2/organizations/">ORGANIZATION NAME</span>
+         <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit>
       </h3>
       <ul class="list-group list-group-unbordered" style="margin-bottom:5px;">
         <li class="list-group-item" style="padding-bottom:4px;">
-          <input type="text" placeholder="Website" style="border:0px solid grey;width:100%;line-height:30px;" />
+         <inline-edit v-model="organization.website" v-on:input="update" placeholder="WebSite"></inline-edit>
         </li>
       </ul>
-      <input type="text" placeholder="Note" style="border:0px solid grey;width:100%;line-height:30px;" />
-
+      <inline-edit v-model="organization.description" v-on:input="update" placeholder="Note"></inline-edit>
     </div><!-- /.box-body -->
   </div><!-- /.box -->
 
@@ -24,11 +22,13 @@
 <script>
   import InlineEdit from "../inline-common-edit.vue"
   export default {
-  props: ['company'],
+      props: {
+          organization: {type: Object, default: function() { return {} }     } },
   methods: {
-  update: function(){  this.$emit('update', this.company)  }
+  update: function(){  this.$emit('update', this.organization)  }
   },
   components: { 'inline-edit': InlineEdit  }
+
   }
 </script>
 
