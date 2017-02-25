@@ -1,14 +1,15 @@
 defmodule CercleApi.BoardColumn do
   use CercleApi.Web, :model
 	
-  schema "board_columns" do
+  schema "boards_columns" do
     field :name, :string
+    field :order, :integer
     belongs_to :board, CercleApi.Board
     timestamps
   end
 
   @required_fields ~w(board_id)
-  @optional_fields ~w()
+  @optional_fields ~w(name order)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

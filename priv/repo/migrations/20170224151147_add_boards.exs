@@ -8,15 +8,11 @@ defmodule CercleApi.Repo.Migrations.AddBoards do
       timestamps
   	end
 
-    create table(:board_columns) do
+    create table(:boards_columns) do
       add :name, :string
       add :board_id, :integer
       add :order, :integer
       timestamps
-    end
-
-  	alter table(:users) do
-     	add :last_opened_board_id, :integer
     end
 
     alter table(:opportunities) do

@@ -6,11 +6,25 @@ defmodule CercleApi.BoardController do
   alias CercleApi.Organization
   alias CercleApi.Opportunity
   alias CercleApi.TimelineEvent
-  alias Passport.Session
+  alias CercleApi.Board
 	
   alias CercleApi.Company
 
 	require Logger
+
+  def index(conn, _params) do
+    company_id = conn.assigns[:current_user].company_id
+
+    query = from p in Board,
+      where: p.company_id == ^company_id,
+      order_by: [desc: p.updated_at]
+
+    boards = Repo.all(query) 
+
+    conn
+      |> put_layout("adminlte.html")
+      |> render "index.html", boards: boards
+  end
 	
   def show(conn, %{"id" => id}) do
     
