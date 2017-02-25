@@ -46,3 +46,19 @@ export var App = {
   }
 }
 
+import ContactAppEdit from "../components/contacts/edit.vue";
+
+
+if ($("#contact-app-edit").length > 0){
+    new Vue({
+        el: "#contact-app-edit",
+        components: {
+            'contact-app-edit' : ContactAppEdit
+        }
+    });
+};
+
+
+if ($("#opportunity_pipeline").length > 0){
+  App.pipeline_init();
+}

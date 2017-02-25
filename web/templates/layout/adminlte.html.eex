@@ -18,9 +18,7 @@
     <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-    
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav">
@@ -40,7 +38,7 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-              
+
               <ul class="nav navbar-nav">
                 <%= if is_integer(assigns[:current_user].company_id) do %>
                 <li>
@@ -54,7 +52,7 @@
                 </li>
                 <%end%>
               </ul>
-            
+
             </div><!-- /.navbar-collapse -->
             <!-- Navbar Right Menu -->
               <div class="navbar-custom-menu">
@@ -72,7 +70,7 @@
                       <!-- hidden-xs hides the username on small devices so only the image appears. -->
                       <span class="hidden-xs"><%= @conn.assigns[:current_user].user_name %></span>
                     </a>
-                    
+
                     <ul class="dropdown-menu">
                       <!-- The user image in the menu -->
                       <li class="user-header" style="background-color:#3C8DBC;">
@@ -85,7 +83,7 @@
                             (<%= @conn.assigns[:current_user].name %>)
                           </small>
                         </p>
-                      </li> 
+                      </li>
                       <li class="user-footer">
                         <div class="pull-left">
                           <a href="/settings/profile_edit" class="btn btn-default btn-flat">Settings</a>
@@ -95,17 +93,17 @@
                         </div>
                       </li>
                     </ul>
-                    
+
                   </li>
 
 
-             
+
                   <li>
             <a href="#" data-toggle="control-sidebar"><i class="fa fa-bell-o"></i>
               <span class="label label-warning">10</span></a>
           </li>
-                 
-                
+
+
                 </ul>
               </div><!-- /.navbar-custom-menu -->
           </div><!-- /.container-fluid -->
@@ -262,20 +260,7 @@ LOST
 <div style="float:none;display:inline-block;padding:40px;background-color:white;margin-right:30px;height:100px;margin-top:10px;background-color:green;font-weight:800;width:200px;font-size:22px;" class="column" data-id="win">
 WIN
 </div>
-<script>window.userToken = "<%= assigns[:user_token] %>";</script>
-
- <%= if (@conn.assigns[:current_user].id) do %>
-<script>
-  if (window.location.hostname == "www.cercle.co") {
-  window.intercomSettings = {
-    app_id: "mkbrkdwj",
-    name: "<%=@conn.assigns[:current_user].user_name%>", // Full name
-    email: "<%=@conn.assigns[:current_user].login%>" // Email address
-  };
-}
-</script>
-<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/mkbrkdwj';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
-<%end%>
+    <script>window.userToken = "<%= assigns[:user_token] %>";</script>
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
-

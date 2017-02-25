@@ -1,6 +1,11 @@
 defmodule CercleApi.Organization do
   use CercleApi.Web, :model
-	
+
+  @derive {Poison.Encoder, only: [
+              :id, :user_id, :copany_id, :name, :website,
+              :description, :data
+            ]}
+
   schema "organizations" do
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
@@ -31,5 +36,5 @@ defmodule CercleApi.Organization do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
+
 end

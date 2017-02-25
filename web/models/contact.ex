@@ -1,6 +1,11 @@
 defmodule CercleApi.Contact do
   use CercleApi.Web, :model
-	
+  alias CercleApi.Contact
+
+   @derive {Poison.Encoder, only: [
+               :id, :name, :email, :phone, :job_title, :description
+             ]}
+
   schema "contacts" do
     belongs_to :user, CercleApi.User
     belongs_to :organization, CercleApi.Organization
@@ -42,5 +47,9 @@ defmodule CercleApi.Contact do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
+
+  def preload_data(query \\ %Contact{}) do
+    from q in query, preload: [:company, :organization, :tags]
+  end
+
 end

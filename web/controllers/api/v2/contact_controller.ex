@@ -22,15 +22,15 @@ defmodule CercleApi.APIV2.ContactController do
 
   def create(conn, %{"contact" => contact_params}) do
     company_id = contact_params["company_id"]
-    if contact_params["email"] do 
+    if contact_params["email"] do
       domain_email = List.first(Enum.take(String.split(contact_params["email"], "@"), -1))
 
       query = from organization in Organization,
         where: organization.website == ^domain_email,
         where: organization.company_id == ^company_id
-  
+
       organizations = Repo.all(query)
-  
+
       if Enum.count(organizations) == 0 do
         organization_params = %{"name" => domain_email, "website" => domain_email, "company_id" => company_id}
         changeset = Organization.changeset(%Organization{}, organization_params)
@@ -39,7 +39,7 @@ defmodule CercleApi.APIV2.ContactController do
             organization_id = org.id
         end
       end
-  
+
       organizations = Repo.all(query)
       organization = Enum.at(organizations, 0)
       organization_id = organization.id
@@ -60,7 +60,7 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def show(conn, %{"user_id" => user_id, "company_id" => company_id}) do
-    
+
     query = from contact in Contact,
       where: contact.user_id == ^user_id and contact.company_id == ^company_id,
       order_by: [desc: contact.id]
@@ -79,6 +79,8 @@ defmodule CercleApi.APIV2.ContactController do
 
     case Repo.update(changeset) do
       {:ok, contact} ->
+        channel = "contacts:"  <> to_string(contact.id)
+        CercleApi.Endpoint.broadcast!( channel, "state", %{contact: contact})
         render(conn, "show.json", contact: contact)
       {:error, changeset} ->
         conn
@@ -94,13 +96,13 @@ defmodule CercleApi.APIV2.ContactController do
     query = from c in ContactTag,
         where: c.contact_id == ^id
       Repo.delete_all(query)
-    
+
     if tag_params == "" do
       render(conn, "show.json", contact: contact)
     else
       tag_ids = Enum.map tag_params, fn tag ->
         #tag
-        if Regex.run(~r/^[\d]+$/, tag) do 
+        if Regex.run(~r/^[\d]+$/, tag) do
           {tag_id, _rest} = Integer.parse(tag)
           tag_id
         else
@@ -114,7 +116,7 @@ defmodule CercleApi.APIV2.ContactController do
         |> Repo.preload(:tags) # Load existing data
         |> Ecto.Changeset.change() # Build the changeset
         |> Ecto.Changeset.put_assoc(:tags, tags) # Set the association
-  
+
       case Repo.update(changeset) do
         {:ok, contact} ->
           render(conn, "show.json", contact: contact)
@@ -125,7 +127,7 @@ defmodule CercleApi.APIV2.ContactController do
       end
     end
 
-  
+
 
   end
 
