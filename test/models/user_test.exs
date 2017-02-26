@@ -3,8 +3,8 @@ defmodule CercleApi.UserTest do
 
   alias CercleApi.User
 
-  @valid_attrs %{user_name: "some content"}
-  @invalid_attrs %{}
+  @valid_attrs %{login: "test@example.com"}
+  @invalid_attrs %{zinzin: "test"}
 
   test "changeset with valid attributes" do
     changeset = User.changeset(%User{}, @valid_attrs)

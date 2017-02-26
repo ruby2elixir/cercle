@@ -32,6 +32,7 @@ defmodule CercleApi.Router do
 
   scope "/", CercleApi do
     pipe_through [:browser, :browser_auth, :already_authenticated]
+    get "/", PageController, :index
     get "/login", SessionController, :new
     post "/login", SessionController, :create
     get "/register", RegistrationController, :new
@@ -47,7 +48,6 @@ defmodule CercleApi.Router do
     pipe_through [:browser, :browser_auth, :require_login]
 
     get "/logout", SessionController, :delete
-    get "/", PageController, :index
     get "/settings/profile_edit", SettingsController, :profile_edit
     put "/settings/profile_update", SettingsController, :profile_update
     get "/settings/company_edit", SettingsController, :company_edit
