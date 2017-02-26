@@ -25,6 +25,16 @@ defmodule CercleApi.BoardController do
       |> put_layout("adminlte.html")
       |> render "index.html", boards: boards
   end
+
+  def new(conn, _params) do
+
+    company_id = conn.assigns[:current_user].company_id
+    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+
+    conn
+      |> put_layout("adminlte.html")
+      |> render "new.html", company: company
+  end
 	
   def show(conn, %{"id" => id}) do
     

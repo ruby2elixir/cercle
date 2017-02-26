@@ -60,7 +60,7 @@
 <section class="content-header" style="margin-top:20px;margin-bottom:20px;margin-left:20px;">
   
   <h2>
-  Deals
+    <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>"><%= @board.name %></span>
   </h2>
   <a href="/contacts/new" class="btn btn-primary">+ Add a Contact</a>
   <!-- 

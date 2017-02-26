@@ -7,6 +7,7 @@ $(function() {
     if($("#contact_name").val() != ""){
       var user_id = $("#user_id").val();
       var company_id = $("#company_id").val();
+      var board_column = $("#board_column").val();
       $.ajax('/api/v2/contact', {
         method: 'POST',
         data: new FormData(this),
@@ -23,6 +24,8 @@ $(function() {
                 'opportunity[contact_ids]': [contact_id],
                 'opportunity[user_id]': user_id, 
                 'opportunity[company_id]': company_id, 
+                'opportunity[board_id]': board_column.split("--")[0],
+                'opportunity[board_column_id]': board_column.split("--")[1],
                 'opportunity[name]': '',  
               },
               complete: function(xhr, status){

@@ -9,7 +9,7 @@ defmodule CercleApi.Board do
   end
 
   @required_fields ~w(company_id)
-  @optional_fields ~w()
+  @optional_fields ~w(name)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

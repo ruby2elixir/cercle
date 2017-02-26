@@ -30,7 +30,7 @@
         <nav class="navbar navbar-static-top" style="background-color:black;">
           <div class="container">
             <div class="navbar-header">
-              <a href="/statistics" class="navbar-brand">
+              <a href="/" class="navbar-brand">
                 <img src="/images/logo_cercle2.png" style="width:56px;position:relative;top:-14px;left:10px;">
               </a>
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">

@@ -15,9 +15,9 @@ defmodule CercleApi.APIV2.OpportunityController do
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
     name = ""
     if contact.organization do
-      name = contact.organization.name <> " deal"
+      name = contact.organization.name <> " Card"
     else
-      name = contact.name <> " deal"
+      name = contact.name <> " Card"
     end
     
     opportunity_params = %{ opportunity_params | "name" => name }

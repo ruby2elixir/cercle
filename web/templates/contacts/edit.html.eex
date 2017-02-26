@@ -1,9 +1,16 @@
 <div style="max-width:800px;margin: 0px auto;" id="contact_id" data-id="<%=@contact.id%>">
   <section style="padding:20px;height:60px;padding-bottom:0px;display:<%= if (@opportunity ) do %>none<%end%>;;">
-    <button type="button" class="btn btn-primary" style="margin-top:10px;" id="opportunity_add" data-contact_id="<%=@contact.id%>" data-user_id="<%=@conn.assigns[:current_user].id%>" data-company_id="<%=@company.id%>">Add into Opportunity Pipeline</button>
+    Add into the board: &nbsp;&nbsp;
+    <select name="select" id="add_to_board" style="margin-top:10px;">
+              <%= for board <- @boards do %>
+                <option value="<%=board.id%>--<%= Enum.at(board.board_columns,0).id%>" id="board_column" name="board_column" ><%=board.name%> </option> 
+              <%end%>
+            </select>
+            &nbsp;&nbsp;
+    <button type="button" class="" style="margin-top:10px;border-radius:5px;    margin-top: 10px;border-radius: 5px;background-color: #f8f8f8;border: 1px solid #c5c5c5;" id="opportunity_add" >Add</button>
   </section>
   <!-- Main content -->
-  <section class="content" style="margin-top:20px;">
+  <section class="content" style="margin-top:10px;">
     <div class="row">
       <div class="col-md-6">
         <!-- Profile Image -->
