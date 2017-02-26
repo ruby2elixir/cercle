@@ -92,7 +92,6 @@ defmodule CercleApi.Router do
     resources "/api/v2/companies", APIV2.CompanyController
     resources "/api/v2/organizations", APIV2.OrganizationController
     resources "/api/v2/opportunity", APIV2.OpportunityController
-    resources "/api/v2/activity", APIV2.ActivityController
     resources "/api/v2/board", APIV2.BoardController
     resources "/api/v2/board_column", APIV2.BoardColumnController
     
