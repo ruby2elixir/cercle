@@ -1,7 +1,7 @@
-defmodule CercleApi.API.UserControllerTest do
+defmodule CercleApi.APIV2.UserControllerTest do
   use CercleApi.ConnCase
 
-  alias CercleApi.API.User
+  alias CercleApi.User
   @valid_attrs %{user_name: "some content"}
   @invalid_attrs %{}
 
