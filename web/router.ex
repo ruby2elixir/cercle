@@ -69,10 +69,6 @@ defmodule CercleApi.Router do
     resources "/board", BoardController
     get "/activity", ActivityController, :index
 
-    get "/statistics", ContactsController, :statistics
-
-    get "/redirect_app", PageController, :redirect_app
-
   end
 
   scope "/", CercleApi do
