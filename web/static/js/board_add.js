@@ -2,7 +2,6 @@ $(function() {
 
   $('#board-form').submit(function(e){
     e.preventDefault();
-    alert(1);
     $(this).find('input[type=submit]').attr('disabled', true);
 
     if($("#contact_name").val() != ""){
