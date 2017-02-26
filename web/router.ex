@@ -94,6 +94,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/opportunity", APIV2.OpportunityController
     resources "/api/v2/activity", APIV2.ActivityController
     resources "/api/v2/board", APIV2.BoardController
+    resources "/api/v2/board_column", APIV2.BoardColumnController
     
     post "/api/v2/webhook", APIV2.WebhookController, :create
 

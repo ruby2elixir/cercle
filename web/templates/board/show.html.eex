@@ -78,7 +78,8 @@
 <%= for col <- @board.board_columns do %>
 <div class="column_master" style="width: 220px;display:inline-block;vertical-align:top;">
 <div class="column_title">
-    <%=col.name%>
+ <span class='inline-editable' data-type='PUT' data-param-name="board_column[name]" data-inline-editurl="/api/v2/board_column/<%= col.id %>"> <%=col.name%></span>
+   
   </div>
 <div class="column" data-id="<%=col.id%>">
 
