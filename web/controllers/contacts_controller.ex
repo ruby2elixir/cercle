@@ -35,7 +35,7 @@ defmodule CercleApi.ContactsController do
       where: p.company_id == ^company_id,
       order_by: [desc: p.updated_at]
 
-    boards = Repo.all(query)  |> Repo.preload [:board_columns]
+    boards = Repo.all(query)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
 
     conn
     |> put_layout("adminlte.html")
