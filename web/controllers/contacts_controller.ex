@@ -77,8 +77,7 @@ defmodule CercleApi.ContactsController do
         where: contact.id in ^contact_ids
       opportunity_contacts = Repo.all(query)
 
-      board = Repo.get!(CercleApi.Board, opportunity.board_id)  |> Repo.preload [:board_columns]
-
+      board = Repo.get!(CercleApi.Board, opportunity.board_id)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
     end
 
     query = from p in Board,
