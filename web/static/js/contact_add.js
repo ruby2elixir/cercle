@@ -7,7 +7,7 @@ $(function() {
     if($("#contact_name").val() != ""){
       var user_id = $("#user_id").val();
       var company_id = $("#company_id").val();
-      var board_column = $("#board_column").val();
+      var board_column = $("#add_to_board").val();
       $.ajax('/api/v2/contact', {
         method: 'POST',
         data: new FormData(this),
