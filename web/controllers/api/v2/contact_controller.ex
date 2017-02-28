@@ -89,6 +89,14 @@ defmodule CercleApi.APIV2.ContactController do
     end
   end
 
+  def delete_tags(conn, %{"id" => id, "company_id" => company_id_string}) do
+    contact = Repo.get!(Contact, id)
+    query = from c in ContactTag,
+      where: c.contact_id == ^id
+    Repo.delete_all(query)
+    render(conn, "show.json", contact: contact)
+  end
+
   def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id_string}) do
     contact = Repo.get!(Contact, id)
     {company_id, _rest} = Integer.parse(company_id_string)

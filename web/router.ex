@@ -64,7 +64,7 @@ defmodule CercleApi.Router do
 	  get "/contacts/new", ContactsController, :new
     get "/contacts/:id", ContactsController, :edit
 	  put "/contacts/:id/update", ContactsController, :update
-    
+
     resources "/board", BoardController
     get "/activity", ActivityController, :index
 
@@ -77,12 +77,13 @@ defmodule CercleApi.Router do
 
     get "/api/v2/timeline_events", APIV2.TimelineEventController, :index
     post "/api/v2/timeline_events", APIV2.TimelineEventController, :create
-    
+
     post "/api/v2/register", APIV2.UserController, :create
     post "/api/v2/login", APIV2.SessionController, :create
 
     resources "/api/v2/contact", APIV2.ContactController
     put "/api/v2/contact/:id/update_tags", APIV2.ContactController, :update_tags
+    put "/api/v2/contact/:id/delete_tags", APIV2.ContactController, :delete_tags
 
     resources "/api/v2/companies", APIV2.CompanyController
     resources "/api/v2/organizations", APIV2.OrganizationController
@@ -90,7 +91,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/opportunity", APIV2.OpportunityController
     resources "/api/v2/board", APIV2.BoardController
     resources "/api/v2/board_column", APIV2.BoardColumnController
-    
+
     post "/api/v2/webhook", APIV2.WebhookController, :create
 
   end

@@ -21,8 +21,8 @@
             <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone"></inline-edit>
           </li>
           <li class="list-group-item" style="padding-bottom:4px;">
-    <div style="margin-top:5px;">
-
+           <div class="contact-tags-box">
+             <v-selectize :selected="tags" v-on:input="updateTags" ></v-selectize>
             </div>
           </li>
         </ul>
@@ -37,26 +37,37 @@ import {Socket, Presence} from "phoenix"
 
 import InlineEdit from "../inline-common-edit.vue"
 import InlineTextEdit from "../inline-textedit.vue"
+import vSelectize from "../vue-selectize.vue"
 export default {
     props: ['contact', 'tags'],
-    data() {
-        return {
-
-        }
-    },
     methods: {
-
+        updateTags: function(data){
+            this.$emit('updateTags', data)
+        },
         updateContact: function(){
             this.$emit('update', this.contact)
         }
     },
     components: {
         'inline-edit': InlineEdit,
-        'inline-text-edit': InlineTextEdit
+        'inline-text-edit': InlineTextEdit,
+        'v-selectize': vSelectize
     }
 }
 </script>
 
 <style lang="sass">
-
+    .contact-tags-box {
+            .selectize-control {
+                border: none;
+                box-shadow: none;
+                    .selectize-input{
+                        border: none;
+                        box-shadow: none;
+                            .item {
+                                background-image: none !important;
+                            }
+                    }
+            }
+    }
 </style>

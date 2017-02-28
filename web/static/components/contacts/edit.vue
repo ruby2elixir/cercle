@@ -4,7 +4,7 @@
       <!-- Main content -->
       <section class="content" style="margin-top:20px;">
         <div class="row">
-          <profile-edit v-bind:contact="contact" v-bind:tags="tags" v-on:update="updateContact" />
+          <profile-edit v-bind:contact="contact" v-bind:tags="tags" v-on:update="updateContact" v-on:updateTags="updateTags" />
           <div class="col-md-6">
             <organization-edit v-bind:organization="organization" v-on:update="updateOrganization" />
             <company-edit :company="company" v-on:update="updateCompany" v-on:buildCompany="buildCompany" />
@@ -54,7 +54,17 @@ export default {
         'opportunity-edit': OpportunityEdit,
         'to-do': ToDo
     },
-    methods: {
+methods: {
+        updateTags(data) {
+          var tag_ids = data
+          if (tag_ids.length  == 0) {
+             var url = '/api/v2/contact/' + this.contact_id + '/delete_tags';
+             $.ajax( url , { method: 'PUT', data: { company_id: '1' }  });
+           } else {
+             var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
+             $.ajax( url , { method: 'PUT', data: { tags: tag_ids, company_id: '1' }  });
+           }
+        },
         updateContact(data) {
             this.contact = data
             var url = '/api/v2/contact/' + this.contact_id;
