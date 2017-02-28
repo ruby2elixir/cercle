@@ -19,8 +19,8 @@ defmodule CercleApi.User do
     has_many :opportunities, CercleApi.Opportunity
   end
 
-  @required_fields ~w()
-  @optional_fields ~w(user_name password_reset_code company_id login name time_zone)
+  @required_fields ~w(login)
+  @optional_fields ~w(user_name password_reset_code company_id name time_zone)
   @required_file_fields ~w()
   @optional_file_fields ~w(profile_image)
 

@@ -10,26 +10,26 @@ defmodule CercleApi.APIV2.OpportunityController do
 
   plug :scrub_params, "opportunity" when action in [:create, :update]
 
-
-
-
-
+  
   def create(conn, %{"opportunity" => opportunity_params}) do
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
+    
+    board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
+
     name = ""
     if contact.organization do
-      name = contact.organization.name <> " deal"
+      name = contact.organization.name <> " / " <> board.name
     else
-      name = contact.name <> " deal"
+      name = contact.name <> " / " <> board.name
     end
     
     opportunity_params = %{ opportunity_params | "name" => name }
     changeset = Opportunity.changeset(%Opportunity{}, opportunity_params)
     case Repo.insert(changeset) do
-      {:ok, contact} ->
+      {:ok, opportunity} ->
         conn
         |> put_status(:created)
-        |> render("show.json", contact: contact)
+        |> render("show.json", opportunity: opportunity)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

@@ -21,3 +21,9 @@ config :cercleApi, CercleApi.Repo,
 # Guardian configuration
 config :guardian, Guardian,
   secret_key: "W9cDv9fjPtsYv2gItOcFb5PzmRzqGkrOsJGmby0KpBOlHJIlhxMKFmIlcCG9PVFQ"
+
+config :cercleApi, basic_auth: [
+    username: "admin",
+    password: "admin",
+    realm: "Admin Area"
+  ]

@@ -7,6 +7,7 @@ defmodule CercleApi.ContactsController do
   alias CercleApi.Activity
   alias CercleApi.Company
   alias CercleApi.Tag
+  alias CercleApi.Board
 
 	require Logger
 
@@ -30,9 +31,15 @@ defmodule CercleApi.ContactsController do
     company_id = conn.assigns[:current_user].company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
+    query = from p in Board,
+      where: p.company_id == ^company_id,
+      order_by: [desc: p.updated_at]
+
+    boards = Repo.all(query)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
+
     conn
     |> put_layout("adminlte.html")
-    |> render("new.html", company: company)
+    |> render("new.html", company: company, boards: boards)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -65,11 +72,19 @@ defmodule CercleApi.ContactsController do
 
     opportunity = List.first(opportunities)
     if opportunity do
-    contact_ids = opportunity.contact_ids
+      contact_ids = opportunity.contact_ids
       query = from contact in CercleApi.Contact,
         where: contact.id in ^contact_ids
       opportunity_contacts = Repo.all(query)
+
+      board = Repo.get!(CercleApi.Board, opportunity.board_id)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
     end
+
+    query = from p in Board,
+      where: p.company_id == ^company_id,
+      order_by: [desc: p.updated_at]
+
+    boards = Repo.all(query)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
 
     query = from p in Tag,
       where: p.company_id == ^company_id
@@ -78,11 +93,10 @@ defmodule CercleApi.ContactsController do
     tag_ids = Enum.map(contact.tags, fn(t) -> t.id end)
 
 
-
     changeset = Contact.changeset(contact)
 		conn
 		|> put_layout("adminlte.html")
-		|> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids)
+		|> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
   end
 
 

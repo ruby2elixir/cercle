@@ -12,18 +12,35 @@
 alias CercleApi.Contact
 alias CercleApi.Organization
 alias CercleApi.Opportunity
+alias CercleApi.Company
+alias CercleApi.Board
+alias CercleApi.BoardColumn
+alias CercleApi.User
+import Ecto.Query
 
-ops = CercleApi.Repo.all(Opportunity)
-Enum.each ops, fn (u) ->
-    user_params = %{:contact_ids => [u.main_contact_id] }
-    changeset = Opportunity.changeset(u, user_params)
-    CercleApi.Repo.update(changeset)
+cs = CercleApi.Repo.all(Company)
+
+Enum.each cs, fn (c) ->
+    company_id = c.id
+    board_params = %{:company_id => c.id }
+    changeset = Board.changeset(%Board{:name => "Deals"}, board_params)
+    board = CercleApi.Repo.insert!(changeset)
+    steps = ["Lead in", "Contact Made", "Needs Defined", "Proposal Made", "Negotiation Started"]
+    Enum.each [0,1,2,3,4], fn (index) ->
+        boardcol_params = %{:board_id => board.id, :order => index, :name => Enum.at(steps, index)}
+        changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
+        board_column = CercleApi.Repo.insert!(changeset)
+
+        query = from p in Opportunity,
+            where: p.stage == ^index,   
+            where: p.company_id == ^company_id
+    
+        opportunitinies = CercleApi.Repo.all(query)
+        Enum.each opportunitinies, fn (o) ->
+            changeset = Opportunity.changeset(o, %{:board_column_id => board_column.id, :board_id => board.id })
+            CercleApi.Repo.update!(changeset)
+        end
+    end
+
+    
 end
-
-#organizations = CercleApi.Repo.all(Organization)
-#Enum.each organizations, fn (o) ->
-#	user_params = %{:name => o.data["cercle_name"], :description => o.data["cercle_description"], :website => o.data["cercle_url"]  }
-#	changeset = Organization.changeset(o, user_params)
-#	CercleApi.Repo.update(changeset)
-#end
-#

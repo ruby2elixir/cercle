@@ -32,6 +32,7 @@ defmodule CercleApi.Router do
 
   scope "/", CercleApi do
     pipe_through [:browser, :browser_auth, :already_authenticated]
+    get "/", PageController, :index
     get "/login", SessionController, :new
     post "/login", SessionController, :create
     get "/register", RegistrationController, :new
@@ -47,7 +48,6 @@ defmodule CercleApi.Router do
     pipe_through [:browser, :browser_auth, :require_login]
 
     get "/logout", SessionController, :delete
-    get "/", PageController, :index
     get "/settings/profile_edit", SettingsController, :profile_edit
     put "/settings/profile_update", SettingsController, :profile_update
     get "/settings/company_edit", SettingsController, :company_edit
@@ -64,13 +64,9 @@ defmodule CercleApi.Router do
 	  get "/contacts/new", ContactsController, :new
     get "/contacts/:id", ContactsController, :edit
 	  put "/contacts/:id/update", ContactsController, :update
-
-    get "/opportunity", OpportunityController, :index
+    
+    resources "/board", BoardController
     get "/activity", ActivityController, :index
-
-    get "/statistics", ContactsController, :statistics
-
-    get "/redirect_app", PageController, :redirect_app
 
   end
 
@@ -90,8 +86,10 @@ defmodule CercleApi.Router do
 
     resources "/api/v2/companies", APIV2.CompanyController
     resources "/api/v2/organizations", APIV2.OrganizationController
-    resources "/api/v2/opportunity", APIV2.OpportunityController
     resources "/api/v2/activity", APIV2.ActivityController
+    resources "/api/v2/opportunity", APIV2.OpportunityController
+    resources "/api/v2/board", APIV2.BoardController
+    resources "/api/v2/board_column", APIV2.BoardColumnController
     
     post "/api/v2/webhook", APIV2.WebhookController, :create
 

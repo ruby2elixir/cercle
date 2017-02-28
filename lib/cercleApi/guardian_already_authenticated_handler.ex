@@ -4,6 +4,6 @@ defmodule CercleApi.GuardianAlreadyAuthenticatedHandler do
 
   def already_authenticated(conn, _params) do
     conn
-    |> Phoenix.Controller.redirect(to: opportunity_path(conn, :index))
+    |> Phoenix.Controller.redirect(to: board_path(conn, :index))
   end
 end

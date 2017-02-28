@@ -30,7 +30,7 @@
         <nav class="navbar navbar-static-top" style="background-color:black;">
           <div class="container">
             <div class="navbar-header">
-              <a href="/statistics" class="navbar-brand">
+              <a href="/" class="navbar-brand">
                 <img src="/images/logo_cercle2.png" style="width:56px;position:relative;top:-14px;left:10px;">
               </a>
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
@@ -44,10 +44,15 @@
               <ul class="nav navbar-nav">
                 <%= if is_integer(assigns[:current_user].company_id) do %>
                 <li>
-                <a href="/activity">Inbox</a>
+                <a href="/activity">
+                 <!-- 
+                  <span class="label label-primary">4</span>
+                  -->
+                  Inbox
+                </a>
                 </li>
                 <li>
-                <a href="/opportunity">Opportunity</a>
+                <a href="/board">Boards</a>
                 </li>
                 <li>
                 <a href="/contacts">People</a>
