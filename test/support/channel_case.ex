@@ -25,6 +25,8 @@ defmodule CercleApi.ChannelCase do
       import Ecto.Changeset
       import Ecto.Query, only: [from: 1, from: 2]
 
+      import CercleApi.TestHelpers
+
 
       # The default endpoint for testing
       @endpoint CercleApi.Endpoint
