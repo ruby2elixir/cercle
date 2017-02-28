@@ -24,7 +24,6 @@ import fastclick from "./adminlte/plugins/fastclick/fastclick"
 import adminlte from "./adminlte/dist/js/app.min"
 
 import socket from "./socket"
-import selectize from "./selectize"
 import { Activity } from "./activity"
 import inline_edit from "./inline_edit"
 import board_add from "./board_add"

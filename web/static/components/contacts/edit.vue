@@ -7,7 +7,7 @@
           <profile-edit v-bind:contact="contact" v-bind:tags="tags" v-on:update="updateContact" />
           <div class="col-md-6">
             <organization-edit v-bind:organization="organization" v-on:update="updateOrganization" />
-            <company-edit v-bind:company="company" v-on:update="updateContact" />
+            <company-edit :company="company" v-on:update="updateCompany" v-on:buildCompany="buildCompany" />
           </div><!-- /.col -->
 
         </div>
@@ -39,7 +39,11 @@ export default {
         return {
             socket: null,
             channel: null,
-            contact: { }
+            contact: { },
+            company: {},
+            organization: {},
+            tags: {}
+
         }
     },
     components: {
@@ -56,8 +60,17 @@ export default {
             var url = '/api/v2/contact/' + this.contact_id;
             $.ajax( url , { method: 'PUT', data: { contact: data }  });
             },
+
         updateOrganization(data){
+            console.log('update org', data);
+            this.organization = data
+            var url = '/api/v2/contact/' + this.contact_id;
+            //$.ajax( url , { method: 'PUT', data: { contact: data }  });
             },
+         updateCompany(data) {
+             console.log('update comp', data);
+         },
+        buildCompany(){ this.company = { title: '' } },
         connectToSocket() {
             this.socket = new Socket("/socket", {params: {token: window.userToken}});
             this.socket.connect();

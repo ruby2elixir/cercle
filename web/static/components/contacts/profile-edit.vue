@@ -7,7 +7,7 @@
           <button type="button" class="btn btn-box-tool" id="edit_contact_options" ><i class="fa fa-fw fa-angle-down"></i></button>
         </div>
         <h3 class="profile-username" style="margin-right:30px;">
-           <inline-edit v-model="contact.name" v-on:input="updateContact" placeholder="Name"></inline-edit>
+          <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name"></inline-edit>
         </h3>
 
         <ul class="list-group list-group-unbordered" style="margin-bottom:5px;">
@@ -21,36 +21,40 @@
             <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone"></inline-edit>
           </li>
           <li class="list-group-item" style="padding-bottom:4px;">
-            <div style="margin-top:5px;">
-             <ul id="contact-tags">
-               <li v-for="tag in tags">
-                 {{ tag.name }}
-               </li>
-             </ul>
-              <a id="add_tags" href ="javascript:void(0);" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;">+ Add ...</a>
+    <div style="margin-top:5px;">
+
             </div>
           </li>
         </ul>
-        <inline-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-edit>
+        <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
       </div><!-- /.box-body -->
     </div><!-- /.box -->
   </div>
 </template>
 
 <script>
-  import {Socket, Presence} from "phoenix"
-  import InlineEdit from "../inline-common-edit.vue"
-  export default {
-  props: ['contact', 'tags'],
-  methods: {
-  updateContact: function(){
-    this.$emit('update', this.contact)
-  }
-  },
+import {Socket, Presence} from "phoenix"
+
+import InlineEdit from "../inline-common-edit.vue"
+import InlineTextEdit from "../inline-textedit.vue"
+export default {
+    props: ['contact', 'tags'],
+    data() {
+        return {
+
+        }
+    },
+    methods: {
+
+        updateContact: function(){
+            this.$emit('update', this.contact)
+        }
+    },
     components: {
-      'inline-edit': InlineEdit
+        'inline-edit': InlineEdit,
+        'inline-text-edit': InlineTextEdit
     }
-  }
+}
 </script>
 
 <style lang="sass">

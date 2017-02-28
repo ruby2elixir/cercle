@@ -12,7 +12,7 @@
          <inline-edit v-model="organization.website" v-on:input="update" placeholder="WebSite"></inline-edit>
         </li>
       </ul>
-      <inline-edit v-model="organization.description" v-on:input="update" placeholder="Note"></inline-edit>
+      <inline-text-edit v-model="organization.description" v-on:input="update" placeholder="Note"></inline-text-edit>
     </div><!-- /.box-body -->
   </div><!-- /.box -->
 
@@ -21,13 +21,17 @@
 
 <script>
   import InlineEdit from "../inline-common-edit.vue"
+  import InlineTextEdit from "../inline-textedit.vue"
+
   export default {
       props: {
           organization: {type: Object, default: function() { return {} }     } },
   methods: {
-  update: function(){  this.$emit('update', this.organization)  }
+  update: function(){
+   this.$emit('update', this.organization)
+  }
   },
-  components: { 'inline-edit': InlineEdit  }
+  components: { 'inline-edit': InlineEdit, 'inline-text-edit': InlineTextEdit  }
 
   }
 </script>

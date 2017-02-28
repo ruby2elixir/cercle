@@ -1,5 +1,5 @@
 <template>
-  <input type="text" v-bind:value="value"  v-on:blur="updateValue($event.target.value)" class="inline-input"  />
+  <textarea v-bind:value="value"  v-on:blur="updateValue($event.target.value)" class="inline-textarea"  />
 </template>
 
 <script>
@@ -12,16 +12,17 @@ export default {
 </script>
 
 <style lang="sass">
-  .inline-input {
+  .inline-textarea {
   border:0px solid grey;
   width:100%;
   line-height:30px;
-  height:30px;
+  height:60px;
+  overflow: hidden;
   }
-  input.inline-input:focus {
+  .inline-textarea:focus {
     outline-width: 0;
   }
-  textarea.inline-input{
+  textarea.inline-textarea{
     resize: none;
   }
 </style>
