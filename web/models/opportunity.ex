@@ -15,7 +15,7 @@ defmodule CercleApi.Opportunity do
   end
 
   @required_fields ~w(main_contact_id user_id company_id)
-  @optional_fields ~w(name stage status contact_ids board_id board_column_id)
+  @optional_fields ~w(name status contact_ids board_id board_column_id)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

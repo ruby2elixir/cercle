@@ -16,17 +16,7 @@ defmodule CercleApi.Contact do
     field :description, :string
     field :job_title, :string
     many_to_many :tags, CercleApi.Tag, join_through: CercleApi.ContactTag
-    field :data, :map #JSONB FIELD in POSTRESQL DB  %{ cercle_string_name, }
-
-    ## FIELDS CERCLE AVAILABLE
-    #cercle_name
-
-    #cercle_phone
-    #cercle_email
-    #cercle_job_title
-    #cercle_rating
-    #cercle_description
-    #cercle_status
+    field :data, :map #JSONB FIELD in POSTRESQL DB  for Custom Fields
 
     has_many :activities, CercleApi.Activity, foreign_key: :contact_id, on_delete: :delete_all
     has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :contact_id, on_delete: :delete_all
