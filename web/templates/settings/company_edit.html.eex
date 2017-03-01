@@ -1,11 +1,8 @@
 <section class="content-header">
 </section>
-
 <!-- Main content -->
 <section class="content">
    <div class="row">
-     
-     
       <div class="col-md-3">
          <div class="box box-solid">
            <div class="box-header with-border">
@@ -20,9 +17,7 @@
              </ul>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
-         
        </div><!-- /.col -->
-       
        <div class="col-md-9">
          <!-- Horizontal Form -->
          <!-- general form elements disabled -->
@@ -38,7 +33,6 @@
                   </ul>
                 </div>
               <% end %>
-
              <div class="box-header with-border">
                <h3 class="box-title">Company</h3>
              </div><!-- /.box-header -->
@@ -49,10 +43,7 @@
                   <%= text_input f, :title, class: "form-control", placeholder: "ex: Google" %>
                   <%= error_tag f, :title %>
                 </div>
-
-               <br />
-              
-
+                <br />
                   <div class="form-group">
                     <div class='row'>
                       <div class='col-md-10'>
@@ -76,8 +67,6 @@
              </div>
           <% end %>
          </div><!-- /.box -->
-       </div> 
-         
+       </div>  
   </div>
-    
 </section><!-- /.content -->
