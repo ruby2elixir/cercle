@@ -1,4 +1,4 @@
-defmodule CercleApi.ContactsControllerTest do
+defmodule CercleApi.ContactControllerTest do
   use CercleApi.ConnCase
 
   setup %{conn: conn} do
@@ -7,7 +7,7 @@ defmodule CercleApi.ContactsControllerTest do
   end
 
   test "GET /contacts without Authentification", %{conn: conn} do
-    conn = get conn, "/contacts"
+    conn = get conn, "/contact"
     assert html_response(conn, 302) =~ "redirected"
   end
 end
