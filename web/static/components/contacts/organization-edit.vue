@@ -2,13 +2,13 @@
   <div class="box">
 
     <div class="box-body box-profile" style="text-align:center;" v-if="!organization">
-      <a href="#sd" style="font-size:16px;" v-on:click="buildOrganization">+Add a rganization</a>
+      <a href="#" class="add-organization" v-on:click="buildOrganization($event)">+Add a organization</a>
     </div>
     
     <div class="box-body box-profile" v-if="organization">
-      <div class="box-tools pull-right">
-        <button type="button" class="btn btn-box-tool" id="edit_contact_options" ><i class="fa fa-fw fa-angle-down"></i></button>
-      </div>
+      <dropdown>
+        <li><a href="#" v-on:click="removeOrganization">Remove</a></li>
+      </dropdown>
       <h3 class="profile-username">
          <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit>
       </h3>
@@ -28,19 +28,27 @@
 <script>
   import InlineEdit from "../inline-common-edit.vue"
   import InlineTextEdit from "../inline-textedit.vue"
-
+  import DropDown from "./dropdown.vue"
   export default {
       props: {
-          organization: {type: Object, default: function() { return {} }     } },
+          organization: {type: Object, default: function() { return null }     }
+          },
   methods: {
-    buildOrganization: function(){  this.$emit('buildOrganization') },
-    update: function(){ this.$emit('update', this.organization)  }
+    removeOrganization() { this.$emit('remove') },
+    buildOrganization(event) { event.preventDefault();  this.$emit('build') },
+    update(){ this.$emit('update', this.organization)  }
   },
-  components: { 'inline-edit': InlineEdit, 'inline-text-edit': InlineTextEdit  }
+  components: {
+    'inline-edit': InlineEdit, 
+    'inline-text-edit': InlineTextEdit,
+    'dropdown': DropDown
+  }
 
   }
 </script>
 
 <style lang="sass">
-
+.add-organization {
+                  font-size:16px;
+}
 </style>

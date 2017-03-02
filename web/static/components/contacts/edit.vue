@@ -4,9 +4,18 @@
       <!-- Main content -->
       <section class="content" style="margin-top:20px;">
         <div class="row">
-          <profile-edit v-bind:contact="contact" v-bind:tags="tags" v-on:update="updateContact" v-on:updateTags="updateTags" />
+          <profile-edit
+            :contact="contact"
+            :tags="tags"
+            v-on:update="updateContact"
+            v-on:updateTags="updateTags"
+            v-on:remove="removeContact" />
           <div class="col-md-6">
-            <organization-edit v-bind:organization="organization" v-on:update="updateOrganization"  v-on:buildOrganization="buildOrganization" />
+            <organization-edit
+              :organization="organization"
+              v-on:update="updateOrganization"
+              v-on:build="buildOrganization"
+              v-on:remove="removeOrganization" />
           </div><!-- /.col -->
 
         </div>
@@ -39,7 +48,7 @@ export default {
             channel: null,
             contact: { },
             company: {},
-            organization: {},
+            organization: null,
             tags: {}
 
         }
@@ -62,6 +71,9 @@ methods: {
              $.ajax( url , { method: 'PUT', data: { tags: tag_ids, company_id: '1' }  });
            }
         },
+        removeContact(){
+
+        },
         updateContact(data) {
             this.contact = data
             var url = '/api/v2/contact/' + this.contact_id;
@@ -69,12 +81,37 @@ methods: {
             },
 
         updateOrganization(data){
-            console.log('update org', data);
-            this.organization = data
-            var url = '/api/v2/contact/' + this.contact_id;
-            //$.ajax( url , { method: 'PUT', data: { contact: data }  });
+            console.log('update org', data, this.organization.id);
+            var vm = this;
+            if (this.organization.id) { //update org
+              var url = '/api/v2/organizations/' + vm.organization.id;
+               $.ajax( url , {
+               data: {organization: vm.organization},
+               method: 'PUT',
+              });
+
+            } else { // new org
+             $.ajax( '/api/v2/organizations' , {
+               data: {organization: data},  method: 'POST',
+               success: function(res){ console.log('res'); vm.organization = data }
+            });
+                   
+            }
+            
+
             },
         buildOrganization(){ this.organization = { name: '', website: '', description: '' } },
+        removeOrganization() {
+          var vm = this;
+          var url = '/api/v2/contact/' + vm.contact.id;
+            $.ajax( url , {
+              method: 'PUT',
+              data: { 'contact[organization_id]': '' },
+              complete: function(xhr, status){ vm.organization = null
+              }
+            });
+
+        },
         connectToSocket() {
             this.socket = new Socket("/socket", {params: {token: window.userToken}});
             this.socket.connect();
@@ -85,6 +122,7 @@ methods: {
                 })
                 .receive("error", resp => { console.log("Unable to join", resp) });
                 this.channel.on('state', payload => {
+                console.log('rrr', payload.organization)
                 this.contact = payload.contact
                 if (payload.company) {
                     this.company = payload.company

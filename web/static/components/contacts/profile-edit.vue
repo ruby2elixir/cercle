@@ -3,9 +3,10 @@
     <!-- Profile Image -->
     <div class="box box-primary">
       <div class="box-body box-profile">
-        <div class="box-tools pull-right">
-          <button type="button" class="btn btn-box-tool" id="edit_contact_options" ><i class="fa fa-fw fa-angle-down"></i></button>
-        </div>
+        <dropdown>
+            <li><a href="#" v-on:click="deleteContact">Remove</a></li>
+        </dropdown>
+
         <h3 class="profile-username" style="margin-right:30px;">
           <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name"></inline-edit>
         </h3>
@@ -38,9 +39,13 @@ import {Socket, Presence} from "phoenix"
 import InlineEdit from "../inline-common-edit.vue"
 import InlineTextEdit from "../inline-textedit.vue"
 import vSelectize from "../vue-selectize.vue"
+import DropDown from "./dropdown.vue"
 export default {
     props: ['contact', 'tags'],
     methods: {
+        deleteContact: function(){
+         console.log('delete contact');
+        },
         updateTags: function(data){
             this.$emit('updateTags', data)
         },
@@ -51,7 +56,8 @@ export default {
     components: {
         'inline-edit': InlineEdit,
         'inline-text-edit': InlineTextEdit,
-        'v-selectize': vSelectize
+        'v-selectize': vSelectize,
+        'dropdown': DropDown
     }
 }
 </script>
