@@ -29,11 +29,11 @@ $(function() {
                 'opportunity[name]': '',  
               },
               complete: function(xhr, status){
-                window.location = "/contacts/" + contact_id;
+                window.location = "/contact/" + contact_id;
               }
             });
           }else{
-            window.location = "/contacts/" + contact_id;
+            window.location = "/contact/" + contact_id;
           }
         }
       });

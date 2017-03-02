@@ -41,7 +41,7 @@ export var ContactEdit = {
               'opportunity[contact_ids]': opportunity_contact_ids
             },
             complete: function(xhr, status){
-              window.location = "/contacts/" + contact_id;
+              window.location = "/contact/" + contact_id;
             }
           });
         }
@@ -195,6 +195,7 @@ export var ContactEdit = {
       $.ajax( url , {
           method: 'POST',
           data: { 'activity[contact_id]': contact_id, 
+            'activity[opportunity_id]': opportunity_id, 
             'activity[user_id]': user_id, 
             'activity[due_date]': new Date().toISOString(), 
             'activity[company_id]': company_id,

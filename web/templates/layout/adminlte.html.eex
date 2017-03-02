@@ -55,7 +55,7 @@
                 <a href="/board">Boards</a>
                 </li>
                 <li>
-                <a href="/contacts">People</a>
+                <a href="/contact">People</a>
                 </li>
                 <%end%>
               </ul>

@@ -4,10 +4,10 @@
   </td>
   
   <td style="font-size:16px;">
-  <a href="/contacts/<%=@activity.contact_id%>" style="color: #565656;">
+  <a href="/contact/<%=@activity.contact_id%>" style="color: #565656;">
   <span style=""> <%=@activity.title %></span>
   </a><br />
-  <a href="/contacts/<%=@activity.contact_id%>" style="color: #565656;">
+  <a href="/contact/<%=@activity.contact_id%>" style="color: #565656;">
   <%=@activity.contact.name %>
   </a>
   </td>
