@@ -1,6 +1,11 @@
 <template>
-  <div class="box" id="with_organization" style="display:;">
-    <div class="box-body box-profile">
+  <div class="box">
+
+    <div class="box-body box-profile" style="text-align:center;" v-if="!organization">
+      <a href="#sd" style="font-size:16px;" v-on:click="buildOrganization">+Add a rganization</a>
+    </div>
+    
+    <div class="box-body box-profile" v-if="organization">
       <div class="box-tools pull-right">
         <button type="button" class="btn btn-box-tool" id="edit_contact_options" ><i class="fa fa-fw fa-angle-down"></i></button>
       </div>
@@ -14,6 +19,7 @@
       </ul>
       <inline-text-edit v-model="organization.description" v-on:input="update" placeholder="Note"></inline-text-edit>
     </div><!-- /.box-body -->
+    
   </div><!-- /.box -->
 
 
@@ -27,9 +33,8 @@
       props: {
           organization: {type: Object, default: function() { return {} }     } },
   methods: {
-  update: function(){
-   this.$emit('update', this.organization)
-  }
+    buildOrganization: function(){  this.$emit('buildOrganization') },
+    update: function(){ this.$emit('update', this.organization)  }
   },
   components: { 'inline-edit': InlineEdit, 'inline-text-edit': InlineTextEdit  }
 

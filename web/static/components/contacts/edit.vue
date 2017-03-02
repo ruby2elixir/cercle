@@ -6,8 +6,7 @@
         <div class="row">
           <profile-edit v-bind:contact="contact" v-bind:tags="tags" v-on:update="updateContact" v-on:updateTags="updateTags" />
           <div class="col-md-6">
-            <organization-edit v-bind:organization="organization" v-on:update="updateOrganization" />
-            <company-edit :company="company" v-on:update="updateCompany" v-on:buildCompany="buildCompany" />
+            <organization-edit v-bind:organization="organization" v-on:update="updateOrganization"  v-on:buildOrganization="buildOrganization" />
           </div><!-- /.col -->
 
         </div>
@@ -28,7 +27,6 @@
 import {Socket, Presence} from "phoenix"
 import InlineEdit from "../inline-common-edit.vue"
 import ProfileEdit from "./profile-edit.vue"
-import CompanyEdit from "./company-edit.vue"
 import OrganizationEdit from "./organization-edit.vue"
 import OpportunityEdit from "./opportunity-edit.vue"
 import ToDo from "./to-do-edit.vue"
@@ -49,7 +47,6 @@ export default {
     components: {
         'inline-edit': InlineEdit,
         'profile-edit': ProfileEdit,
-        'company-edit': CompanyEdit,
         'organization-edit': OrganizationEdit,
         'opportunity-edit': OpportunityEdit,
         'to-do': ToDo
@@ -77,10 +74,7 @@ methods: {
             var url = '/api/v2/contact/' + this.contact_id;
             //$.ajax( url , { method: 'PUT', data: { contact: data }  });
             },
-         updateCompany(data) {
-             console.log('update comp', data);
-         },
-        buildCompany(){ this.company = { title: '' } },
+        buildOrganization(){ this.organization = { name: '', website: '', description: '' } },
         connectToSocket() {
             this.socket = new Socket("/socket", {params: {token: window.userToken}});
             this.socket.connect();
