@@ -3,8 +3,7 @@ defmodule CercleApi.Opportunity do
 	
   schema "opportunities" do
     field :name, :string
-    field :stage, :integer, default: 0
-    field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED WIN, 2 CLOSED LOST
+    field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED
     belongs_to :main_contact, CercleApi.Contact
     field :contact_ids, {:array, :integer}
     belongs_to :user, CercleApi.User

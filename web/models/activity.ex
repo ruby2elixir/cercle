@@ -2,6 +2,7 @@ defmodule CercleApi.Activity do
   use CercleApi.Web, :model
 
   schema "activities" do
+    belongs_to :opportunity, CercleApi.Opportunity
     belongs_to :user, CercleApi.User
     belongs_to :contact, CercleApi.Contact
     belongs_to :company, CercleApi.Company
@@ -13,7 +14,7 @@ defmodule CercleApi.Activity do
   end
 
   @required_fields ~w(user_id contact_id company_id)
-  @optional_fields ~w(due_date is_done title)
+  @optional_fields ~w(due_date is_done title  opportunity_id)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

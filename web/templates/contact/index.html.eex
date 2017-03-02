@@ -3,7 +3,7 @@
 
   
   <h2>People<br /> <span style="font-size:16px;color:grey;"><%=Enum.count(@leads_pending)%> contacts</span></h2>
-  <a href="/contacts/new" class="btn btn-primary">+ Add a Contact</a>
+  <a href="/contact/new" class="btn btn-primary">+ Add a Contact</a>
 
 </section>
 
@@ -24,7 +24,7 @@
                     <th>Last Updated</th>
                    </tr>
                   <%= for c <- @leads_pending do %>
-                    <tr style="cursor: pointer;" onclick="location.href='/contacts/<%= c.id %>'">
+                    <tr style="cursor: pointer;" onclick="location.href='/contact/<%= c.id %>'">
                       <td>
                       <%= c.name %>
                       </td>

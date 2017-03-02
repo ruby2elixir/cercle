@@ -1,4 +1,4 @@
-defmodule CercleApi.ContactsController do
+defmodule CercleApi.ContactController do
   use CercleApi.Web, :controller
 
   alias CercleApi.Contact
@@ -42,7 +42,7 @@ defmodule CercleApi.ContactsController do
     |> render("new.html", company: company, boards: boards)
   end
 
-  def edit(conn, %{"id" => id}) do
+  def show(conn, %{"id" => id}) do
     
     company_id = conn.assigns[:current_user].company_id
     contact = Repo.get!(Contact, id) |> Repo.preload([:organization, :company, :tags])
@@ -96,48 +96,7 @@ defmodule CercleApi.ContactsController do
     changeset = Contact.changeset(contact)
 		conn
 		|> put_layout("adminlte.html")
-		|> render("edit.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
-  end
-
-
-
-  def update(conn, %{"id" => id, "reward" => reward_params, "comment" => comment}) do
-  end
-
-
-  def statistics(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
-    users = company.users
-    map = Enum.reduce users, %{}, fn x, acc ->
-      user_id =  x.id
-      query = from p in TimelineEvent,
-        where: p.user_id == ^user_id,
-        where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.event_name == "meeting",
-        order_by: [desc: p.updated_at]
-      nb_meetings = length(Repo.all(query))
-
-
-      query = from p in TimelineEvent,
-        where: p.user_id == ^user_id,
-        where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.event_name == "call",
-        order_by: [desc: p.updated_at]
-      nb_calls = length(Repo.all(query))
-
-
-      query = from p in TimelineEvent,
-        where: p.user_id == ^user_id,
-        where: p.inserted_at > datetime_add(^Ecto.DateTime.utc, -1, "week"),
-        where: p.event_name == "email",
-        order_by: [desc: p.updated_at]
-      nb_emails = length(Repo.all(query))
-      Map.put(acc, x.id, [nb_meetings, nb_calls, nb_emails])
-    end
-    conn
-    |> put_layout("adminlte.html")
-    |> render("statistics.html", company: company, stat: map)
+		|> render("show.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
   end
 
 end

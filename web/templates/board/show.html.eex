@@ -62,7 +62,7 @@
   <h2>
     <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>"><%= @board.name %></span>
   </h2>
-  <a href="/contacts/new" class="btn btn-primary">+ Add a Contact</a>
+  <a href="/contact/new" class="btn btn-primary">+ Add a Contact</a>
   <!-- 
   <select name="select" id="change_filter_user_id" style="float:right;" >
   <option value="" >All </option> 

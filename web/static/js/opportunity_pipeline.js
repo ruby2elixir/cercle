@@ -6,11 +6,11 @@ export var Pipeline = {
       cancel: ".portlet-toggle",
       start: function (event, ui) {
         ui.item.addClass('tilt');
-        $("#opportunity_basket").css("visibility", "visible");
+        //$("#opportunity_basket").css("visibility", "visible");
       },
       stop: function (event, ui) {
         ui.item.removeClass('tilt');
-        $("#opportunity_basket").css("visibility", "hidden");
+        //$("#opportunity_basket").css("visibility", "hidden");
       },
       receive: function (event, ui) {
         var id = $(ui.item).data("id");
