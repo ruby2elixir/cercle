@@ -41,7 +41,7 @@ export var ContactEdit = {
               'opportunity[contact_ids]': opportunity_contact_ids
             },
             complete: function(xhr, status){
-              window.location = "/contacts/" + contact_id;
+              window.location = "/contact/" + contact_id;
             }
           });
         }
