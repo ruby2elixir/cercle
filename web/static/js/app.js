@@ -30,6 +30,8 @@ import contact_add from "./contact_add"
 import { ContactEdit } from "./contact_edit"
 import contact_live from "./contact_live"
 import { Pipeline } from "./opportunity_pipeline"
+import contact_import from "./contact_import"
+import blueimp_file_upload from "./blueimp_file_upload"
 
 export var App = {
   activity_init: function(){

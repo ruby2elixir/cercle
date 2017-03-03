@@ -1,7 +1,272 @@
-.import-head
-{    
-    padding: 10px 10px 20px 20px;
-    background: white;
+.import-parent-div{
+	padding: 10px 20px;
+	background: white;
+	border: 1px solid black;
+	margin-top: 10px;
+}
+.steps-ul{
+	margin:none;
+	padding: 2px 0px 0px 0px;
+	list-style: none;"
+}
+
+.steps-li{
+	/*border-radius: 4px 0px;*/
+	padding: 8px 16px;
+    width: 33%;
+    display: inline-block;
+    position: relative;
+}
+
+.steps-li-inactive{
+	background-color: #f3f5f6;
+	color: #888e94;
+	border:1px solid #e0e4e7;
+}
+
+.steps-li-active{
+	background-color: #3C8DBC;
+	color: white;
+	border:1px solid #3C8DBC;
+}
+
+.upload-outer-box{
+	padding: 10px 20px;
+	background: white;
+	border: 1px solid black;
+	margin-top: 2px;
+}
+
+.upload-dashed-box{
+    margin-top: 40px;
+	border: 2px dashed #c2c8cd;
+	border-radius: 3px;
+	background-color: #f3f5f6;
+	box-sizing: border-box;
+    margin-bottom: 10px;
+}
+	
+.upload-info-box{
+	margin: 60px 60px 30px;
+	text-align: center;
+}
+
+.arrow{
+	background-color: #fff;
+	position: absolute;
+    content: "";
+    right: -3px;
+    bottom: -1px;
+    top: -2px;
+    width: 2px;
+    z-index: 1;
+}
+
+li.active span.arrow:before {
+    border-left-color: #fff;
+}
+li.active span.arrow:after {
+    border-left-color: #3C8DBC;
+
+}
+.arrow:before{
+    position: absolute;
+    content: "";
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    z-index: 1;
+    right: -10px;
+    border-left: 12px solid #e0e4e7;
+}
+
+.arrow:after{
+    border-left-color: #888e94;
+    right: -8px;
+    border-left: 11px solid #f3f5f6;
+    position: absolute;
+    content: "";
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    z-index: 1;
+}
+li:first-child {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+li:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px !important;
+  direction: ltr;
+  cursor: pointer;
+}
+.completed{
+    background-color: #43c35e;
+    color: #fff;
+    border: 1px solid #43c35e;
+}
+
+li.completed span.arrow {
+    background-color: #fff;
+}
+
+li.completed span.arrow:before {
+    border-left-color: #fff;
+}
+
+li.completed span.arrow:after {
+    border-left-color: #43c35e;
+}
+
+.bar {
+    height: 18px;
+    background: #5cb85c;
+    border-radius: 10px;
+}
+
+#sec-2{
+    max-height:400px;
+    overflow: hidden;
+}
+.mapping-sections{
+   padding-top: 20px;
+   max-height: 300px;
+}
+.mapping-sections #left-section #left-section-table{
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 8px; 
+    margin-bottom: 0px;
+}
+.mapping-sections #left-section #left-section-table .csv-fields{
+    border:1px solid #c2c8cd;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-right-width: 0;
+    padding: 7px 20px;
+}
+.mapping-sections #left-section #left-section-table .drop-fields{
+    border-top-style: dashed;
+    border-right-style: dashed;
+    border-bottom-style: dashed;
+    border-color: #c2c8cd;
+    font-style: italic;
+    vertical-align: middle;
+    padding: 7px 20px;
+}
+
+.mapping-sections #left-section #left-section-table .contact-fields{
+    border:1px solid #c2c8cd;
+    border-radius: 3px;
+    font-weight: bold;
+    vertical-align: middle;
+    padding: 7px 20px;
+}
+
+.mapping-sections #left-section #left-section-table .company-fields{
+    border:1px solid #c2c8cd;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 7px 20px;
+}
+
+.mapping-sections #left-section{
+    max-height: 300px;
+    overflow-y: auto;
+}
+.mapping-sections #right-section{
+    /*border-left: 1px solid black;*/
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.mapping-sections #right-section #contact-field-table{
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-bottom: 0px;
+}
+.mapping-sections #right-section #contact-field-table .contact-fields{
+    border:1px solid #c2c8cd;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 8px 20px;
+}
+.mapping-sections #right-section #company-field-table{
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-bottom: 0px;
+}
+.mapping-sections #right-section #company-field-table .company-fields{
+    border:1px solid #c2c8cd;
+    border-radius: 3px;
+    font-weight: bold;
+    cursor: move;
+    padding: 8px 20px;
+}
+.contact-fields{
+    border:1px solid #c2c8cd;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 7px 20px;
+}
+.contact-fields .fa{
+    margin-right: 1px;
+}
+
+.company-fields .fa{
+    margin-right: 1px;
+}
+
+.csv-data{
+    color: grey;
+    font-size: 11px;
+}
+
+#uploaded-file-name{
+    text-align: center;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.filename{
+    font-weight: bold;
+    font-size: 15px;
+}
+
+#action-btns-step1, #action-btns-step2{
     border: 1px solid black;
-    margin-top: 10px;
+    border-top: none;
+    padding: 10px 15px 10px 15px;
+    height: 50px;
+    background-color: #3C8DBC;
+}
+
+#list-uploaded-file{
+}
+
+.tb-head{
+    background-color: #3C8DBC;
+    color: white;
 }

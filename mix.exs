@@ -19,7 +19,7 @@ defmodule CercleApi.Mixfile do
   def application do
     [mod: {CercleApi, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :ex_aws, :httpoison, :tzdata]]
+                    :phoenix_ecto, :postgrex, :ex_aws, :httpoison, :tzdata, :csv ]]
   end
 
   # Specifies which paths to compile per environment.
@@ -49,7 +49,8 @@ defmodule CercleApi.Mixfile do
      {:gettext, "~> 0.13.0"},
      {:basic_auth, "~> 2.0.0"},
      {:passport, git: "https://github.com/opendrops/passport.git"},
-     {:tzdata, "~> 0.5.8"}]
+     {:tzdata, "~> 0.5.8"},
+     {:csv, "~> 1.4.2"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

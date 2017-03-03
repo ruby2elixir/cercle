@@ -92,6 +92,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/activity", APIV2.ActivityController
     
     post "/api/v2/webhook", APIV2.WebhookController, :create
+    post "/api/v2/import-data", APIV2.ContactController, :import_data
 
   end
 

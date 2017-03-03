@@ -138,4 +138,54 @@ defmodule CercleApi.APIV2.ContactController do
 
     send_resp(conn, :no_content, "")
   end
+
+  def import_data(conn, %{"file" => file_params} ) do
+
+    upload = file_params
+
+    IO.inspect "File Type"
+    IO.inspect upload.content_type
+
+    IO.inspect "File Name"
+    file_name = upload.filename
+    IO.inspect file_name
+
+    IO.inspect "File Extention"
+    extension = Path.extname(upload.filename)
+    IO.inspect extension
+
+    IO.inspect "File Path"
+    file_path = upload.path
+    IO.inspect file_path
+
+    if File.exists?(upload.path) do
+      File.cp!(upload.path, "tmp/#{file_name}")
+    end
+
+
+    contact_fields = ["Name","Email","Description","Phone","Job Title"]
+    company_fields = ["Title","Logo Image"]
+
+    stream = File.stream!(Path.expand(file_path)) |>
+    CSV.decode(separator: ?,, headers: false)
+    headers = Enum.at(stream, 0)
+    first_row = Enum.at(stream, 1)
+    IO.inspect headers
+     #    [%{"companyId" => "3256963", "firstName" => "Louis",
+     # "headline" => "Directeur des achats chez <B>MesMateriaux</B>.<B>com</B>",
+     # "id" => "350784999", "industry" => "Construction", "lastName" => "Vignon",
+     # "location" => "Paris Area, France", "name" => "Louis Vignon"}]
+
+    json conn, %{headers: headers, first_row: first_row, contact_fields: contact_fields, company_fields: company_fields}
+  end
+
+  # defp _process_csv_row(conn,row) do
+  #   # TODO
+  #   # IO.inspect row
+    
+  #   # IO.inspect row["name"]
+  #   # IO.inspect row["location"]
+
+  # end
+
 end
