@@ -23,7 +23,16 @@
           </li>
           <li class="list-group-item" style="padding-bottom:4px;">
            <div class="contact-tags-box">
-             <v-selectize :selected="tags" v-on:input="updateTags" ></v-selectize>
+           <v-select multiple
+             v-model.sync="tags"
+             label="name"
+             :on-search="getTags"
+             :options="availableTags"
+             :pushTags="true"
+             :taggable='true'
+             :createOption='addTag'
+             v-on:search:focus = "getTags"
+             :placeholder="Tags"></v-select>
             </div>
           </li>
         </ul>
@@ -34,15 +43,40 @@
 </template>
 
 <script>
+Vue.use(VueResource);
 import {Socket, Presence} from "phoenix"
 
 import InlineEdit from "../inline-common-edit.vue"
 import InlineTextEdit from "../inline-textedit.vue"
-import vSelectize from "../vue-selectize.vue"
 import DropDown from "./dropdown.vue"
+
 export default {
     props: ['contact', 'tags'],
+    data(){
+    return {
+     availableTags: null
+    }
+    },
+    mounted() {
+     this.$http.get('/api/v2/tags', {
+             }).then(resp => {
+               this.availableTags = resp.data
+             })
+    },
+    
+     watch: {
+            tags: function(){
+                  this.updateTags($.map(this.tags, function(tag){ return tag.id }))
+      }           
+     },
     methods: {
+    
+        getTags() {
+          
+        },
+        addTag(tag) {
+          return { id: tag, name: tag }
+        },
         deleteContact: function(){
          console.log('delete contact');
         },
@@ -56,14 +90,17 @@ export default {
     components: {
         'inline-edit': InlineEdit,
         'inline-text-edit': InlineTextEdit,
-        'v-selectize': vSelectize,
-        'dropdown': DropDown
+        'dropdown': DropDown,
+        'v-select': vSelect.VueSelect
     }
 }
 </script>
 
 <style lang="sass">
     .contact-tags-box {
+    .open-indicator{
+    display: none !important; 
+    }
             .selectize-control {
                 border: none;
                 box-shadow: none;

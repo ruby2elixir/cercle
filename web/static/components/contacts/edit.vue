@@ -49,7 +49,7 @@ export default {
             contact: { },
             company: {},
             organization: null,
-            tags: {}
+            tags: []
 
         }
     },
@@ -122,7 +122,6 @@ methods: {
                 })
                 .receive("error", resp => { console.log("Unable to join", resp) });
                 this.channel.on('state', payload => {
-                console.log('rrr', payload.organization)
                 this.contact = payload.contact
                 if (payload.company) {
                     this.company = payload.company

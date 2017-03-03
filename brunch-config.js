@@ -75,10 +75,12 @@ exports.config = {
         globals: {
             $: 'jquery',
             jQuery: 'jquery',
-            Vue: 'vue/dist/vue.common.js'
+            Vue: 'vue/dist/vue.common.js',
+            vSelect: 'vue-select/dist/vue-select.js',
+            VueResource: 'vue-resource'
         },
         // Whitelist the npm deps to be pulled in as front-end assets.
         // All other deps in package.json will be excluded from the bundle.
-        whitelist: ["phoenix", "phoenix_html", "jquery", "selectize", "bootstrap-datepicker"]
+        whitelist: ["phoenix", "phoenix_html", "jquery", "bootstrap-datepicker", "vue-select", 'vue-resource']
     }
 };
