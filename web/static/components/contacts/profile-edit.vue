@@ -57,13 +57,9 @@ export default {
      availableTags: null
     }
     },
-    mounted() {
-     this.$http.get('/api/v2/tags', {
-             }).then(resp => {
-               this.availableTags = resp.data
-             })
+    mounted(){
+
     },
-    
      watch: {
             tags: function(){
                   this.updateTags($.map(this.tags, function(tag){ return tag.id }))
@@ -72,7 +68,13 @@ export default {
     methods: {
     
         getTags() {
-          
+          if (this.availableTags === null) {
+            this.$http.get('/api/v2/tags', {
+              params: { company_id: this.contact.company_id }
+            }).then(resp => {
+              this.availableTags = resp.data
+            })
+         }
         },
         addTag(tag) {
           return { id: tag, name: tag }

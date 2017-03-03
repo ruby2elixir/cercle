@@ -114,7 +114,10 @@ defmodule CercleApi.APIV2.ContactController do
           {tag_id, _rest} = Integer.parse(tag)
           tag_id
         else
-          Repo.insert!(%Tag{name: tag, company_id: company_id}).id
+        (
+          Repo.get_by(Tag, name: tag, company_id: company_id) ||
+            Repo.insert!(%Tag{name: tag, company_id: company_id})
+        ).id
         end
       end
       query = from tag in Tag,

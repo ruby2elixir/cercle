@@ -3,7 +3,7 @@ defmodule CercleApi.Contact do
   alias CercleApi.Contact
 
    @derive {Poison.Encoder, only: [
-               :id, :name, :email, :phone, :job_title, :description
+               :id, :name, :email, :phone, :job_title, :description, :company_id
              ]}
 
   schema "contacts" do
