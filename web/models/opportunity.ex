@@ -2,20 +2,19 @@ defmodule CercleApi.Opportunity do
   use CercleApi.Web, :model
 	
   schema "opportunities" do
-
     field :name, :string
-    field :stage, :integer, default: 0
-    field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED WIN, 2 CLOSED LOST
+    field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED
     belongs_to :main_contact, CercleApi.Contact
     field :contact_ids, {:array, :integer}
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
-
+    belongs_to :board, CercleApi.Board
+    belongs_to :board_column, CercleApi.BoardColumn
     timestamps
   end
 
   @required_fields ~w(main_contact_id user_id company_id)
-  @optional_fields ~w(name stage status contact_ids)
+  @optional_fields ~w(name status contact_ids board_id board_column_id)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

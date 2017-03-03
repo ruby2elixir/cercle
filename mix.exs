@@ -48,9 +48,11 @@ defmodule CercleApi.Mixfile do
      {:timex, "~> 3.1.8"},
      {:gettext, "~> 0.13.0"},
      {:basic_auth, "~> 2.0.0"},
-     {:passport, git: "https://github.com/opendrops/passport.git"},
+     {:csv, "~> 1.4.2"},
      {:tzdata, "~> 0.5.8"},
-     {:csv, "~> 1.4.2"}]
+     {:guardian, "~> 0.14.2"},
+     {:comeonin, "~> 2.5"}
+    ]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
@@ -60,7 +62,7 @@ defmodule CercleApi.Mixfile do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+    ["ecto.setup": ["ecto.create", "ecto.migrate"],
      "ecto.reset": ["ecto.drop", "ecto.setup"],
      "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
   end

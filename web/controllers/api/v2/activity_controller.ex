@@ -19,7 +19,7 @@ defmodule CercleApi.APIV2.ActivityController do
       {:ok, activity} ->
         activity_reload = Repo.get!(CercleApi.Activity, activity.id) |> Repo.preload([:user])
         company = Repo.get!(CercleApi.Company, activity_reload.user.company_id) |> Repo.preload([:users])
-        html = Phoenix.View.render_to_string(CercleApi.ContactsView, "_task.html", id: activity.id, is_done: activity.is_done, title: activity.title, due_date: activity.due_date, user_name: activity_reload.user.user_name, user_id: activity_reload.user_id, company: company, current_user_time_zone: activity_params["current_user_time_zone"])
+        html = Phoenix.View.render_to_string(CercleApi.ContactView, "_task.html", id: activity.id, is_done: activity.is_done, title: activity.title, due_date: activity.due_date, user_name: activity_reload.user.user_name, user_id: activity_reload.user_id, company: company, current_user_time_zone: activity_params["current_user_time_zone"])
         channel = "contacts:"  <> to_string(activity.contact_id)
         CercleApi.Endpoint.broadcast!( channel, "new:activity", %{"html" => html})
         json conn, "{OK: true}"

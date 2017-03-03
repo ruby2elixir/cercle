@@ -27,6 +27,8 @@ defmodule CercleApi.ConnCase do
 
       import CercleApi.Router.Helpers
 
+      import CercleApi.TestHelpers
+
       # The default endpoint for testing
       @endpoint CercleApi.Endpoint
     end

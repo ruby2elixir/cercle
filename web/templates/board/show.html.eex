@@ -1,0 +1,99 @@
+<!-- Content Header (Page header) -->
+  <style>
+
+  .tilt {
+    transform: rotate(3deg);
+    -moz-transform: rotate(3deg);
+    -webkit-transform: rotate(3deg);
+  }
+
+  body {
+    min-width: 1240px !important;
+  }
+
+  .container {
+    min-width: 1240px !important;
+  }
+  .column_title {
+    height: 50px;
+    line-height:50px;
+    color:#525252;
+    margin-bottom:10px;
+    text-align:center;
+    font-size:18px;
+  }
+  .column {
+    width: 220px;
+    padding-bottom: 100px;
+    border-right:1px solid #c5c5c5;
+    padding-left:20px;
+  }
+  .portlet {
+    margin: 0 1em 1em 0;
+    padding: 0.3em;
+  }
+  .portlet-header {
+    padding: 0.2em 0.3em;
+    margin-bottom: 0.5em;
+    position: relative;
+  }
+  .portlet-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+  }
+  .portlet-content {
+    padding: 0.4em;
+  }
+  .portlet-placeholder {
+    border: 1px dotted black;
+    margin: 0 1em 1em 0;
+    height: 50px;
+  }
+
+  .ui-widget-content{
+    border: 1px solid #e0e0e0;
+  }
+
+  </style>
+<section class="content-header" style="margin-top:20px;margin-bottom:20px;margin-left:20px;">
+  
+  <h2>
+    <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>"><%= @board.name %></span>
+  </h2>
+  <a href="/contact/new" class="btn btn-primary">+ Add a Contact</a>
+  <!-- 
+  <select name="select" id="change_filter_user_id" style="float:right;" >
+  <option value="" >All </option> 
+  <%= for u <- @company.users do %>
+        <option value="<%=u.id%>" ><%= u.user_name %> </option> 
+      <%end%>
+              </select>
+              -->
+   
+</section>
+<!-- Main content -->
+<section class="content">
+<%= for col <- @board.board_columns do %>
+<div class="column_master" style="width: 220px;display:inline-block;vertical-align:top;">
+<div class="column_title">
+ <span class='inline-editable' data-type='PUT' data-param-name="board_column[name]" data-inline-editurl="/api/v2/board_column/<%= col.id %>"> <%=col.name%></span>
+   
+  </div>
+<div class="column" data-id="<%=col.id%>">
+
+<%= for card <- @cards do %>
+  <%=if card.board_column_id == col.id do %>
+  <%= render "_opportunity.html", opportunity: card %>
+  <%=end%>
+  <%end%>
+</div>
+</div>
+<%=end%>
+</section><!-- /.content -->
+<script>
+$(document).ready(function(){
+  require("web/static/js/app").App.pipeline_init();
+});
+</script>

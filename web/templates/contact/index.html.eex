@@ -1,0 +1,53 @@
+<!-- Content Header (Page header) -->
+<section class="content-header" style="margin-top:20px;margin-bottom:20px;">
+
+  
+  <h2>People<br /> <span style="font-size:16px;color:grey;"><%=Enum.count(@leads_pending)%> contacts</span></h2>
+  <a href="/contact/new" class="btn btn-primary">+ Add a Contact</a>
+
+</section>
+
+<!-- Main content -->
+<section class="content">
+   <div class="row">
+      <div class="col-xs-12">
+        <div class="box" style="border:0px solid grey;">
+          <!-- /.box-header -->
+          <div class="nav-tabs-custom ">
+                <table class="table table-bordered">
+                   <tr>
+                   <th>Name</th>
+                   <th>Job Title</th>
+                   <th>Organization</th>
+                   <th>Email</th>
+                   <th>Phone</th>
+                    <th>Last Updated</th>
+                   </tr>
+                  <%= for c <- @leads_pending do %>
+                    <tr style="cursor: pointer;" onclick="location.href='/contact/<%= c.id %>'">
+                      <td>
+                      <%= c.name %>
+                      </td>
+                      <td>
+                      <%= c.job_title %>
+                      </td>
+                      <td>
+                       <%= if (c.organization) do %><%= c.organization.name %><%end%>
+                      </td>
+                       <td>
+                        <%= c.email %></b>
+                       </td>
+                       <td>
+                        <%= c.phone %></b>
+                       </td>
+                     <td style="width:120px;">
+                      <span style="color:grey;font-size:14px;"><%= time_ago_in_words c.updated_at %></span> </td>
+                    </tr>
+                  <% end %>
+                </table>
+          </div><!-- /.box-body -->
+        </div><!-- /.box -->
+      </div>
+    </div>
+    
+</section><!-- /.content -->
