@@ -112,6 +112,12 @@ methods: {
             });
 
         },
+        setAuthToken(){
+          this.$http.get('/current_user').then(resp => {
+              localStorage.setItem('auth_token', resp.data.token)
+              Vue.http.headers.common['Authorization'] = localStorage.getItem('auth_token');
+            })
+        },
         connectToSocket() {
             this.socket = new Socket("/socket", {params: {token: window.userToken}});
             this.socket.connect();
@@ -138,6 +144,8 @@ methods: {
     },
     mounted(){
         this.connectToSocket();
+        this.setAuthToken();
+        
     }
 }
   </script>

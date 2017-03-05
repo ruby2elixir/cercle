@@ -12,9 +12,20 @@ defmodule CercleApi.Router do
     plug BasicAuth, use_config: {:cercleApi, :basic_auth}
   end
 
+  pipeline :browser_json do
+    plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
+
+  pipeline :api_auth do
+    plug Guardian.Plug.VerifyHeader
+    plug Guardian.Plug.LoadResource
+  end
+
 
 	pipeline :browser_auth do
     plug Guardian.Plug.VerifySession
@@ -28,6 +39,11 @@ defmodule CercleApi.Router do
 
   pipeline :already_authenticated do
     plug Guardian.Plug.EnsureNotAuthenticated, handler: CercleApi.GuardianAlreadyAuthenticatedHandler
+  end
+
+  scope "/", CercleApi do
+    pipe_through [:browser_json, :browser_auth, :require_login]
+    get "/current_user", CurrentUserController, :show
   end
 
   scope "/", CercleApi do
@@ -56,7 +72,7 @@ defmodule CercleApi.Router do
     put "/settings/team_update", SettingsController, :team_update
     get "/settings/fields_edit", SettingsController, :fields_edit
     put "/settings/fields_update", SettingsController, :fields_update
-    
+
     get "/contact", ContactController, :index
 	  get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
@@ -90,8 +106,15 @@ defmodule CercleApi.Router do
     resources "/api/v2/board", APIV2.BoardController
     resources "/api/v2/board_column", APIV2.BoardColumnController
 
+
     post "/api/v2/webhook", APIV2.WebhookController, :create
 
+  end
+
+  scope "/", CercleApi do
+    pipe_through [:api, :api_auth]
+
+    get "/api/v2/user/organizations", APIV2.UserController, :organizations
   end
 
 	scope "/admin" , CercleApi.Admin,  as: :admin do

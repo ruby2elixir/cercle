@@ -2,6 +2,10 @@ defmodule CercleApi.User do
   use CercleApi.Web, :model
   use Arc.Ecto.Model
 
+  @derive {Poison.Encoder, only: [
+              :id, :user_name
+            ]}
+
   schema "users" do
     field :user_name, :string #is full rname
     field :password, :string, virtual: true
