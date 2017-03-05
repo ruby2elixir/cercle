@@ -23,16 +23,7 @@
           </li>
           <li class="list-group-item" style="padding-bottom:4px;">
            <div class="contact-tags-box">
-           <v-select multiple
-             v-model.sync="tags"
-             label="name"
-             :on-search="getTags"
-             :options="availableTags"
-             :pushTags="true"
-             :taggable='true'
-             :createOption='addTag'
-             v-on:search:focus = "getTags"
-             :placeholder="Tags"></v-select>
+           
             </div>
           </li>
         </ul>
@@ -51,7 +42,10 @@ import InlineTextEdit from "../inline-textedit.vue"
 import DropDown from "./dropdown.vue"
 
 export default {
-    props: ['contact', 'tags'],
+    props: [
+    'contact',
+    'tags'
+    ],
     data(){
     return {
      availableTags: null

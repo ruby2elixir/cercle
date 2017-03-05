@@ -15,7 +15,10 @@
               :organization="organization"
               v-on:update="updateOrganization"
               v-on:build="buildOrganization"
-              v-on:remove="removeOrganization" />
+              v-on:remove="removeOrganization"
+              v-on:choose="chooseOrganization"
+              v-on:add_new="addNewOrganization"
+              />
           </div><!-- /.col -->
 
         </div>
@@ -80,26 +83,32 @@ methods: {
             $.ajax( url , { method: 'PUT', data: { contact: data }  });
             },
 
-        updateOrganization(data){
-            console.log('update org', data, this.organization.id);
+        chooseOrganization(data){
             var vm = this;
-            if (this.organization.id) { //update org
-              var url = '/api/v2/organizations/' + vm.organization.id;
-               $.ajax( url , {
-               data: {organization: vm.organization},
-               method: 'PUT',
-              });
+              var url = '/api/v2/contact/' + vm.contact.id;
+              this.$http.put(url, { contact: { organization_id: data.id }}).then(resp => {
+              vm.organization = data
+              })
+        },
 
-            } else { // new org
-             $.ajax( '/api/v2/organizations' , {
-               data: {organization: data},  method: 'POST',
-               success: function(res){ console.log('res'); vm.organization = data }
-            });
-                   
-            }
-            
+        addNewOrganization(data){
+          var vm = this;
+          var url = '/api/v2/organizations';
+          this.$http.post(url, { organization: { name: data.name, company_id: vm.company.id }}).then(resp => {
+            vm.chooseOrganization(resp.data.data)
+          })
 
-            },
+        },
+        
+        updateOrganization(data){
+          var vm = this;
+          var url = '/api/v2/organizations/' + vm.organization.id;
+            $.ajax( url , {
+              data: {organization: vm.organization},
+              method: 'PUT',
+             });
+        },
+        
         buildOrganization(){ this.organization = { name: '', website: '', description: '' } },
         removeOrganization() {
           var vm = this;

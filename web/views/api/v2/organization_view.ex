@@ -10,6 +10,6 @@ defmodule CercleApi.APIV2.OrganizationView do
   end
 
   def render("organization.json", %{organization: organization}) do
-    %{id: organization.id}
+    organization
   end
 end

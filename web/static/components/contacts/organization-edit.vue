@@ -2,6 +2,25 @@
   <div class="box">
 
     <div class="box-body box-profile" style="text-align:center;" v-if="!organization">
+      <modal title="Where is the contact working currently?" large :show.sync="openModal">
+        <div slot="modal-body" class="modal-body">
+        
+          <v-select
+          label="name"
+          v-model="chooseOrganization"
+          :options="organizations" 
+          
+          :pushTags="true"
+          :taggable="true"
+          :placeholder="Organization"
+          :createOption='addOrganization'
+          ></v-select>
+        </div>
+         <div slot="modal-footer" class="modal-footer">
+           <button type="button" class="btn btn-success" v-on:click="saveOrganization">Save changes</button>
+         </div>
+      </modal>
+      
       <a href="#" class="add-organization" v-on:click="buildOrganization($event)">+Add a organization</a>
     </div>
     
@@ -33,15 +52,44 @@
       props: {
           organization: {type: Object, default: function() { return null }     }
           },
+      data(){
+          return {
+            openModal: false,
+            chooseOrganization: null,
+            organizations: [],
+            newOrganization: false
+          }
+          },
   methods: {
+  saveOrganization(){
+    this.$emit('choose', this.chooseOrganization)  
+    this.openModal = false;
+
+  },
+    addOrganization(item) {
+      this.$emit('add_new', { name: item })  
+      this.openModal = false;
+      return this.chooseOrganization;
+    },
     removeOrganization() { this.$emit('remove') },
-    buildOrganization(event) { event.preventDefault();  this.$emit('build') },
+    buildOrganization(event) {
+      event.preventDefault();
+      this.$http.get('/api/v2/user/organizations', {}).then(resp => {
+      this.organizations = resp.data
+      this.openModal = true;      
+    })
+    
+
+      
+    },
     update(){ this.$emit('update', this.organization)  }
   },
   components: {
     'inline-edit': InlineEdit, 
     'inline-text-edit': InlineTextEdit,
-    'dropdown': DropDown
+    'dropdown': DropDown,
+    'modal': VueStrap.modal,
+    'v-select': vSelect.VueSelect
   }
 
   }
