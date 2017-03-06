@@ -1,8 +1,7 @@
 <template>
-  <div class="col-md-12">
-    <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;">
+  <div style="margin-top:20px;">
       <!-- /.user-block -->
-      <div style="padding:15px;">
+      <div>
         <form id="contact-form" >
 
           <h3 style="margin-top:0px;border-bottom:0px solid #d8d8d8;">
@@ -34,9 +33,9 @@
 
         </form>
       </div>
+      <div id="timeline_events">
     </div>
-    <div id="timeline_events">
-    </div>
+    
   </div><!-- /.col -->
 </template>
 

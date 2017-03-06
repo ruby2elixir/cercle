@@ -26,10 +26,6 @@
         <div class="row">
           <opportunity-edit />
         </div>
-
-        <div class="row">
-          <to-do />
-        </div>
       </section>
     </div>
   </div>
@@ -41,7 +37,6 @@ import InlineEdit from "../inline-common-edit.vue"
 import ProfileEdit from "./profile-edit.vue"
 import OrganizationEdit from "./organization-edit.vue"
 import OpportunityEdit from "./opportunity-edit.vue"
-import ToDo from "./to-do-edit.vue"
 
 export default {
     props: ['contact_id'],
@@ -60,8 +55,7 @@ export default {
         'inline-edit': InlineEdit,
         'profile-edit': ProfileEdit,
         'organization-edit': OrganizationEdit,
-        'opportunity-edit': OpportunityEdit,
-        'to-do': ToDo
+        'opportunity-edit': OpportunityEdit
     },
 methods: {
         updateTags(data) {
