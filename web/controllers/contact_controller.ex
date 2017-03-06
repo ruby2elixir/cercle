@@ -47,7 +47,9 @@ defmodule CercleApi.ContactController do
     company_id = conn.assigns[:current_user].company_id
     contact = Repo.get!(Contact, id) |> Repo.preload([:organization, :company, :tags])
     company = Repo.get!(CercleApi.Company, contact.company_id) |> Repo.preload([:users])
-
+    if contact.company_id != company_id do 
+      conn |> redirect(to: "/") |> halt
+    end
     query = from p in Organization,
       where: p.company_id == ^company_id,
       order_by: [desc: p.inserted_at]
