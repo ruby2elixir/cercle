@@ -15,7 +15,6 @@ export default {
   .inline-textarea {
   border:0px solid grey;
   width:100%;
-  line-height:30px;
   height:60px;
   overflow: hidden;
   }

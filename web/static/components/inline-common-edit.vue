@@ -14,9 +14,7 @@ export default {
 <style lang="sass">
   .inline-input {
   border:0px solid grey;
-  width:100%;
-  line-height:30px;
-  height:30px;
+  display:inline !important;
   }
   input.inline-input:focus {
     outline-width: 0;

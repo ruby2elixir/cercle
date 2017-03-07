@@ -1,7 +1,7 @@
 <template>
-  <div class="box">
+  <div class="">
 
-    <div class="box-body box-profile" style="text-align:center;" v-if="!organization">
+    <div class="" style="" v-if="!organization">
       <modal title="Where is the contact working currently?" large :show.sync="openModal">
         <div slot="modal-body" class="modal-body">
         
@@ -20,23 +20,23 @@
            <button type="button" class="btn btn-success" v-on:click="saveOrganization">Save changes</button>
          </div>
       </modal>
-      
+      <br />
+      <br />
       <a href="#" class="add-organization" v-on:click="buildOrganization($event)">+Add a organization</a>
     </div>
     
     <div class="box-body box-profile" v-if="organization">
       <dropdown>
-        <li><a href="#" v-on:click="removeOrganization">Remove</a></li>
+
+        <li><a href="#" v-on:click="removeOrganization">Remove Organization</a></li>
+         <li><a href="#" v-on:click="deleteContact">Delete Contact</a></li>
       </dropdown>
-      <h3 class="profile-username">
-         <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit>
-      </h3>
-      <ul class="list-group list-group-unbordered" style="margin-bottom:5px;">
-        <li class="list-group-item" style="padding-bottom:4px;">
-         <inline-edit v-model="organization.website" v-on:input="update" placeholder="WebSite"></inline-edit>
-        </li>
-      </ul>
-      <inline-text-edit v-model="organization.description" v-on:input="update" placeholder="Note"></inline-text-edit>
+      <br /><br />
+      <div>
+      Working at <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit>
+      </div>
+      <inline-edit v-model="organization.website" v-on:input="update" placeholder="WebSite"></inline-edit>  
+      <inline-text-edit v-model="organization.description" v-on:input="update" placeholder="Note about the organization"></inline-text-edit>
     </div><!-- /.box-body -->
     
   </div><!-- /.box -->

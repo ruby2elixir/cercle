@@ -4,14 +4,19 @@
       <!-- Main content -->
       <section class="content" style="margin-top:20px;">
         <div class="row">
-          <profile-edit
+          <div class="col-md-12">
+            <table style="width:100%;background-color:white;margin-bottom:40px;">
+              <tr>
+                <td style="width:50%;padding:20px;vertical-align: top;">
+                  <profile-edit
             :contact="contact"
             :tags="tags"
             v-on:update="updateContact"
             v-on:updateTags="updateTags"
             v-on:remove="removeContact" />
-          <div class="col-md-6">
-            <organization-edit
+                </td>
+                <td style="width:50%;padding:20px;vertical-align: top;">
+                  <organization-edit
               :organization="organization"
               v-on:update="updateOrganization"
               v-on:build="buildOrganization"
@@ -19,8 +24,13 @@
               v-on:choose="chooseOrganization"
               v-on:add_new="addNewOrganization"
               />
-          </div><!-- /.col -->
-
+                </td>
+              </tr>
+            </table>
+            
+          
+            
+          </div>
         </div>
 
         <div class="row">

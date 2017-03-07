@@ -1,27 +1,22 @@
 <template>
-  <div class="col-md-6">
-    <!-- Profile Image -->
-    <div class="box box-primary">
-      <div class="box-body box-profile">
-        <dropdown>
-            <li><a href="#" v-on:click="deleteContact">Remove</a></li>
-        </dropdown>
+    <div class="">
+      <div class="">
 
-        <h3 class="profile-username" style="margin-right:30px;">
+        <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;">
+          <i class="fa fa-user" style="color:#d8d8d8;"></i>
+          
           <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name"></inline-edit>
         </h3>
-
-        <ul class="list-group list-group-unbordered" style="margin-bottom:5px;">
-          <li class="list-group-item" style="padding-bottom:4px;">
-            <inline-edit v-model="contact.job_title" v-on:input="updateContact"  placeholder="Job Title" ></inline-edit>
-          </li>
-          <li class="list-group-item" style="padding-bottom:4px;">
+            <div>
+              <inline-edit v-model="contact.job_title" v-on:input="updateContact"  placeholder="Job Title" ></inline-edit>
+            </div>
+            <div>
             <inline-edit v-model="contact.email" v-on:input="updateContact"  placeholder="Email" ></inline-edit>
-          </li>
-          <li class="list-group-item" style="padding-bottom:4px;">
+            </div>
+            <div>
             <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone"></inline-edit>
-          </li>
-          <li class="list-group-item" style="padding-bottom:4px;">
+            </div>
+          <div class="" style="padding-bottom:4px;">
            
            <div class="contact-tags-box">
              <button type="button" class="btn btn-box-tool btn-default btn-sm" v-for="(tag, index) in tags" style="margin: 2px;" v-on:click="removeTag(index);">
@@ -50,12 +45,11 @@
             </div>
           </modal>
       
-          </li>
-        </ul>
+          </div>
         <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
       </div><!-- /.box-body -->
     </div><!-- /.box -->
-  </div>
+
 </template>
 
 <script>
@@ -136,19 +130,8 @@ export default {
 
 <style lang="sass">
     .contact-tags-box {
-    .open-indicator{
-    display: none !important; 
-    }
-            .selectize-control {
-                border: none;
-                box-shadow: none;
-                    .selectize-input{
-                        border: none;
-                        box-shadow: none;
-                            .item {
-                                background-image: none !important;
-                            }
-                    }
-            }
+      .open-indicator{
+        display: none !important; 
+      }
     }
 </style>

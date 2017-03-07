@@ -4,15 +4,13 @@
     <button type="button" class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" id="opportunity_win" >ARCHIVE</button>
 
     <div style="" id="change_status">
-      <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i> Part of
+      <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i> 
         <span style="color:rgb(102,102,102);" class='inline-editable' data-type='PUT' data-param-name="opportunity[name]" data-inline-editurl="/api/v2/opportunity/">OPPOR NAME</span>
       </span>
       <Br />
       <Br />
       <div style="margin-right:20px;margin-bottom:10px;">
         Managed by:
-
-
       </div>
       Status:
       <Br />
