@@ -99,7 +99,11 @@ defmodule CercleApi.APIV2.ContactController do
 
   def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id_string}) do
     contact = Repo.get!(Contact, id)
-    {company_id, _rest} = Integer.parse(company_id_string)
+    {company_id, _rest} = cond do
+      is_number(company_id_string) -> { company_id_string, ""}
+      true -> Integer.parse(company_id_string)
+    end
+
     #tag_params
     query = from c in ContactTag,
         where: c.contact_id == ^id
@@ -109,15 +113,16 @@ defmodule CercleApi.APIV2.ContactController do
       render(conn, "show.json", contact: contact)
     else
       tag_ids = Enum.map tag_params, fn tag ->
-        #tag
-        if Regex.run(~r/^[\d]+$/, tag) do
-          {tag_id, _rest} = Integer.parse(tag)
-          tag_id
-        else
-        (
-          Repo.get_by(Tag, name: tag, company_id: company_id) ||
-            Repo.insert!(%Tag{name: tag, company_id: company_id})
-        ).id
+        cond do
+          is_number(tag) -> tag
+          Regex.run(~r/^[\d]+$/, tag) ->
+            {tag_id, _rest} = Integer.parse(tag)
+            tag_id
+          true ->
+          (
+            Repo.get_by(Tag, name: tag, company_id: company_id) ||
+              Repo.insert!(%Tag{name: tag, company_id: company_id})
+          ).id
         end
       end
       query = from tag in Tag,

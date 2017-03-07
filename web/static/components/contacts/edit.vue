@@ -57,15 +57,19 @@ export default {
         'organization-edit': OrganizationEdit,
         'opportunity-edit': OpportunityEdit
     },
-methods: {
+  methods: {
         updateTags(data) {
           var tag_ids = data
           if (tag_ids.length  == 0) {
              var url = '/api/v2/contact/' + this.contact_id + '/delete_tags';
-             $.ajax( url , { method: 'PUT', data: { company_id: '1' }  });
+             this.$http.put(url, 
+              { company_id: this.contact.company_id }
+             )
            } else {
              var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
-             $.ajax( url , { method: 'PUT', data: { tags: tag_ids, company_id: '1' }  });
+             this.$http.put(url, 
+              { tags: tag_ids, company_id: this.contact.company_id }
+             )
            }
         },
         removeContact(){

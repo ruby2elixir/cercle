@@ -22,9 +22,34 @@
             <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone"></inline-edit>
           </li>
           <li class="list-group-item" style="padding-bottom:4px;">
-           <div class="contact-tags-box">
            
+           <div class="contact-tags-box">
+             <button type="button" class="btn btn-box-tool btn-default btn-sm" v-for="(tag, index) in tags" style="margin: 2px;" v-on:click="removeTag(index);">
+               {{tag.name}}
+               <i class="fa fa-fw fa-close"></i>
+             </button>
+             <button type="button" class="btn btn-link" v-on:click="openTagsWindow()">
+               <i class="fa fa-fw fa-plus"></i>Add
+             </button>
+          </div>
+          <modal title="Tags" large :show.sync="openTagModal">
+            <div slot="modal-body" class="modal-body">
+            <v-select
+              multiple
+              label="name"
+              v-model="chooseTags"
+              :options="availableTags" 
+              :pushTags="true"
+              :taggable="true"
+              :placeholder="Tags"
+              :createOption='addNewTag'
+             ></v-select>
             </div>
+            <div slot="modal-footer" class="modal-footer">
+             <button type="button" class="btn btn-success" v-on:click="saveChangesTag" >Save changes</button>
+            </div>
+          </modal>
+      
           </li>
         </ul>
         <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
@@ -47,32 +72,47 @@ export default {
     'tags'
     ],
     data(){
-    return {
-     availableTags: null
-    }
+      return {
+        availableTags: [],
+        openTagModal: false,
+        chooseTags: []
+     }
     },
     mounted(){
 
     },
      watch: {
-            tags: function(){
-                  this.updateTags($.map(this.tags, function(tag){ return tag.id }))
-      }           
+
      },
     methods: {
-    
+        removeTag(index) {
+          this.tags.splice(index, 1);
+          this.tag_ids = this.tags.map(function(j) { return j.id })
+          this.$emit('updateTags', this.tag_ids)
+        },
+        addNewTag(input){
+          return { id: input, name: input }
+        },
+        saveChangesTag(){
+          this.tag_ids = this.chooseTags.map(function(j) { return j.id })
+          this.tags = this.chooseTags.map(function(j) { return {id: j.id, name: j.name }  })
+          this.$emit('updateTags', this.tag_ids)
+          this.openTagModal = false;
+        },
+        openTagsWindow(){
+        
+          this.chooseTags = this.tags.map(function(j) { return {id: j.id, name: j.name } })
+          this.getTags() 
+          this.openTagModal = true;
+        },
         getTags() {
-          if (this.availableTags === null) {
-            this.$http.get('/api/v2/tags', {
-              params: { company_id: this.contact.company_id }
-            }).then(resp => {
-              this.availableTags = resp.data
-            })
-         }
+          this.$http.get('/api/v2/tags', {
+            params: { company_id: this.contact.company_id }
+           }).then(resp => {
+             this.availableTags = resp.data
+          })
         },
-        addTag(tag) {
-          return { id: tag, name: tag }
-        },
+
         deleteContact: function(){
          console.log('delete contact');
         },
@@ -87,7 +127,9 @@ export default {
         'inline-edit': InlineEdit,
         'inline-text-edit': InlineTextEdit,
         'dropdown': DropDown,
-        'v-select': vSelect.VueSelect
+        'v-select': vSelect.VueSelect,
+        'modal': VueStrap.modal
+
     }
 }
 </script>
