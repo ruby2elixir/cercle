@@ -20,7 +20,7 @@ defmodule CercleApi.ContactController do
       where: p.company_id == ^company_id,
       order_by: [desc: p.updated_at]
 
-		leads_pending = Repo.all(query)   |> Repo.preload([:organization,timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])])
+		leads_pending = Repo.all(query)   |> Repo.preload([:organization, :tags, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])])
 
 		conn
 		|> put_layout("adminlte.html")
