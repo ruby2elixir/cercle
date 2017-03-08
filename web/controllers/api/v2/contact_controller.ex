@@ -22,30 +22,7 @@ defmodule CercleApi.APIV2.ContactController do
 
   def create(conn, %{"contact" => contact_params}) do
     company_id = contact_params["company_id"]
-    if contact_params["email"] do 
-      domain_email = List.first(Enum.take(String.split(contact_params["email"], "@"), -1))
-
-      query = from organization in Organization,
-        where: organization.website == ^domain_email,
-        where: organization.company_id == ^company_id
-  
-      organizations = Repo.all(query)
-  
-      if Enum.count(organizations) == 0 do
-        organization_params = %{"name" => domain_email, "website" => domain_email, "company_id" => company_id}
-        changeset = Organization.changeset(%Organization{}, organization_params)
-        case Repo.insert(changeset) do
-          {:ok, org} ->
-            organization_id = org.id
-        end
-      end
-  
-      organizations = Repo.all(query)
-      organization = Enum.at(organizations, 0)
-      organization_id = organization.id
-      contact_params = %{contact_params | "organization_id" => organization_id}
-    end
-
+    
     changeset = Contact.changeset(%Contact{}, contact_params)
     case Repo.insert(changeset) do
       {:ok, contact} ->
