@@ -107,9 +107,6 @@ export default {
           })
         },
 
-        deleteContact: function(){
-         console.log('delete contact');
-        },
         updateTags: function(data){
             this.$emit('updateTags', data)
         },

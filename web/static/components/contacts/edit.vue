@@ -9,27 +9,29 @@
               <tr>
                 <td style="width:50%;padding:20px;vertical-align: top;">
                   <profile-edit
-            :contact="contact"
-            :tags="tags"
-            v-on:update="updateContact"
-            v-on:updateTags="updateTags"
-            v-on:remove="removeContact" />
+                    :contact="contact"
+                    :tags="tags"
+                    v-on:update="updateContact"
+                    v-on:updateTags="updateTags"
+                    v-on:remove="removeContact" />
                 </td>
                 <td style="width:50%;padding:20px;vertical-align: top;">
                   <organization-edit
-              :organization="organization"
-              v-on:update="updateOrganization"
-              v-on:build="buildOrganization"
-              v-on:remove="removeOrganization"
-              v-on:choose="chooseOrganization"
-              v-on:add_new="addNewOrganization"
-              />
+                    :organization="organization"
+                    v-on:update="updateOrganization"
+                    v-on:build="buildOrganization"
+                    v-on:remove="removeOrganization"
+                    v-on:choose="chooseOrganization"
+                    v-on:add_new="addNewOrganization"
+                    >
+                    <li slot="menu"><a href="#"  v-on:click="deleteContact">Delete Contact</a></li>
+                   </organization-edit>
                 </td>
               </tr>
             </table>
-            
-          
-            
+
+
+
           </div>
         </div>
 
@@ -40,7 +42,7 @@
     </div>
   </div>
 </template>
-
+<!-- <li slot="menu"><a href="#" v-on:click="deleteContact">Delete Contact</a></li> -->
 <script>
 import {Socket, Presence} from "phoenix"
 import InlineEdit from "../inline-common-edit.vue"
@@ -67,17 +69,21 @@ export default {
         'organization-edit': OrganizationEdit,
         'opportunity-edit': OpportunityEdit
     },
-  methods: {
+methods: {
+        deleteContact: function(){
+         console.log('delete contact');
+        },
+
         updateTags(data) {
           var tag_ids = data
           if (tag_ids.length  == 0) {
              var url = '/api/v2/contact/' + this.contact_id + '/delete_tags';
-             this.$http.put(url, 
+             this.$http.put(url,
               { company_id: this.contact.company_id }
              )
            } else {
              var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
-             this.$http.put(url, 
+             this.$http.put(url,
               { tags: tag_ids, company_id: this.contact.company_id }
              )
            }
@@ -107,7 +113,7 @@ export default {
           })
 
         },
-        
+
         updateOrganization(data){
           var vm = this;
           var url = '/api/v2/organizations/' + vm.organization.id;
@@ -116,7 +122,7 @@ export default {
               method: 'PUT',
              });
         },
-        
+
         buildOrganization(){ this.organization = { name: '', website: '', description: '' } },
         removeOrganization() {
           var vm = this;
@@ -162,7 +168,7 @@ export default {
     mounted(){
         this.connectToSocket();
         this.setAuthToken();
-        
+
     }
 }
   </script>
