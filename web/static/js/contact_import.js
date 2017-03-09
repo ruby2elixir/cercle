@@ -4,7 +4,6 @@ $(function() {
 	$('#fileupload').fileupload({
         
         dataType: 'json',
-        maxFileSize: 5,
         add: function (e, data) {
     
             var file_name = data.files[0].name;
@@ -181,6 +180,11 @@ $(function() {
                         window.location = "/contact";
                       }
                     })
+                },
+                error: function(error) {
+                    $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
+                    $('#move-to-final').text('Next').removeClass('disabled');
+                    fade_flash();
                 }
             }); 
         }
@@ -191,10 +195,18 @@ $(function() {
                 method: 'POST',
                 data: {
                     mapping: jsonData,
-                    file_name: file_name
+                    file_name: file_name,
+                    company_id: company_id,
                 },
                 success: function(result){   
-                   console.log(result);
+                    $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">Records Imported Succesfully</p>');
+                    $('#move-to-final').text('Finished').addClass('disabled');
+                    window.location = "/contact";
+                },
+                error: function(error) {
+                    $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
+                    $('#move-to-final').text('Next').removeClass('disabled');
+                    fade_flash();
                 }
             });
         }

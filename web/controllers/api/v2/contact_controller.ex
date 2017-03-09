@@ -21,7 +21,7 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def create(conn, %{"contact" => contact_params}) do
-    IO.inspect contact_params
+    
     contact_params = sub_contact_function(conn,contact_params)
     changeset = Contact.changeset(%Contact{}, contact_params)
     case Repo.insert(changeset) do
@@ -160,7 +160,7 @@ defmodule CercleApi.APIV2.ContactController do
     table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
     File.rm!("tmp/#{file_name}.csv")
 
-    total_rows = Enum.count(table)
+    total_rows = Enum.count(table)-1
 
     for i <- 0..total_rows do
       first_row = Enum.at(table, i)
@@ -185,13 +185,10 @@ defmodule CercleApi.APIV2.ContactController do
           date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
           time = Timex.format!(datetime, "%H:%M", :strftime)
           tag_name = "imported #{date} at #{time}"
-          IO.inspect tag_name
           tag_id = Repo.insert!(%Tag{name: tag_name, company_id: company_id}).id
-          IO.inspect "++++++++++++++"
           query = from tag in Tag,
             where: tag.id == ^tag_id
           tags = Repo.all(query)
-              IO.inspect tags
               changeset = contact
             |> Repo.preload(:tags) # Load existing data
             |> Ecto.Changeset.change() # Build the changeset
