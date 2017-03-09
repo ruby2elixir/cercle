@@ -69,7 +69,7 @@ export default {
         'organization-edit': OrganizationEdit,
         'opportunity-edit': OpportunityEdit
     },
-methods: {
+      methods: {
         deleteContact: function(){
          console.log('delete contact');
         },
@@ -118,7 +118,7 @@ methods: {
           var vm = this;
           var url = '/api/v2/organizations/' + vm.organization.id;
             $.ajax( url , {
-              data: {organization: vm.organization},
+              data: { contact_id: vm.contact.id, organization: vm.organization},
               method: 'PUT',
              });
         },

@@ -1,7 +1,6 @@
 defmodule CercleApi.APIV2.OrganizationController do
   use CercleApi.Web, :controller
-
-  alias CercleApi.Organization
+  alias CercleApi.{Organization, Contact}
 
   plug :scrub_params, "organization" when action in [:create, :update]
 
@@ -34,8 +33,10 @@ defmodule CercleApi.APIV2.OrganizationController do
     render(conn, "show.json", organization: organization)
   end
 
-  def update(conn, %{"id" => id, "organization" => organization_params}) do
+  def update(conn, %{"id" => id, "organization" => organization_params} = params) do
     organization = Repo.get!(Organization, id)
+    contact_id = params |> Dict.get("contact_id")
+
     if organization_params["data"] do
       new_data = Map.merge(organization.data , organization_params["data"])
       organization_params = %{organization_params | "data" => new_data}
@@ -44,6 +45,16 @@ defmodule CercleApi.APIV2.OrganizationController do
 
     case Repo.update(changeset) do
       {:ok, organization} ->
+        if contact_id do
+          contact = Contact
+          |> Contact.preload_data
+          |> Repo.get(contact_id)
+          channel = "contacts:"  <> to_string(contact.id)
+          CercleApi.Endpoint.broadcast!( channel, "state", %{
+                contact: contact,
+                organization: contact.organization
+                                         })
+        end
         render(conn, "show.json", organization: organization)
       {:error, changeset} ->
         conn

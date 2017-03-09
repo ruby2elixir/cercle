@@ -94,6 +94,8 @@ defmodule CercleApi.APIV2.ContactController do
     query = from c in ContactTag,
       where: c.contact_id == ^id
     Repo.delete_all(query)
+    channel = "contacts:"  <> to_string(contact.id)
+    CercleApi.Endpoint.broadcast!( channel, "state", %{contact: contact, tags: []})
     render(conn, "show.json", contact: contact)
   end
 
@@ -135,6 +137,8 @@ defmodule CercleApi.APIV2.ContactController do
 
       case Repo.update(changeset) do
         {:ok, contact} ->
+          channel = "contacts:"  <> to_string(contact.id)
+          CercleApi.Endpoint.broadcast!( channel, "state", %{contact: contact, tags: contact.tags})
           render(conn, "show.json", contact: contact)
         {:error, changeset} ->
           conn
