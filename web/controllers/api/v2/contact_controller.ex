@@ -89,7 +89,7 @@ defmodule CercleApi.APIV2.ContactController do
     end
   end
 
-  def delete_tags(conn, %{"id" => id, "company_id" => company_id_string}) do
+  def utags(conn, %{"id" => id, "company_id" => company_id_string}) do
     contact = Repo.get!(Contact, id)
     query = from c in ContactTag,
       where: c.contact_id == ^id
@@ -99,12 +99,8 @@ defmodule CercleApi.APIV2.ContactController do
     render(conn, "show.json", contact: contact)
   end
 
-  def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id_string}) do
+  def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id}) do
     contact = Repo.get!(Contact, id)
-    {company_id, _rest} = cond do
-      is_number(company_id_string) -> { company_id_string, ""}
-      true -> Integer.parse(company_id_string)
-    end
 
     #tag_params
     query = from c in ContactTag,

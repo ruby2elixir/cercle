@@ -25,4 +25,9 @@ defmodule CercleApi.APIV2.TagsController do
     render(conn, "index.json", tags: tags)
   end
 
+  def create(conn, %{"tags" => %{"name" => tag_name }, "company_id" => company_id}) do
+    tag = Repo.get_by(Tag, name: tag_name, company_id: company_id) ||
+      Repo.insert!(%Tag{name: tag_name, company_id: company_id})
+    render(conn, "show.json", tag: tag)
+  end
 end

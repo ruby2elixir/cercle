@@ -77,7 +77,7 @@ export default {
         updateTags(data) {
           var tag_ids = data
           if (tag_ids.length  == 0) {
-             var url = '/api/v2/contact/' + this.contact_id + '/delete_tags';
+             var url = '/api/v2/contact/' + this.contact_id + '/utags';
              this.$http.put(url,
               { company_id: this.contact.company_id }
              )

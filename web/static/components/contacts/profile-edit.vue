@@ -85,6 +85,11 @@ export default {
           this.$emit('updateTags', this.tag_ids)
         },
         addNewTag(input){
+          this.$http.post('/api/v2/tags', {
+            tags: { name: input }, company_id: this.contact.company_id 
+           }).then(resp => {
+          })
+          
           return { id: input, name: input }
         },
         saveChangesTag(){
