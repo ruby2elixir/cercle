@@ -128,9 +128,14 @@
           <%= if get_flash(@conn, :error) do %>
             <p class="alert alert-danger" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :error) %></p>
           <% end %>
-        <div class="container">
+        <%= if assigns[:no_container] do %>
           <%= render @view_module, @view_template, assigns %>
-        </div><!-- /.container -->
+        <%= end %>
+        <%= if !assigns[:no_container] do %>
+          <div class="container">
+            <%= render @view_module, @view_template, assigns %>
+          </div><!-- /.container -->
+        <%end%>
       </div><!-- /.content-wrapper -->
 
 

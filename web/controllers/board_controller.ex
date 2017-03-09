@@ -59,7 +59,7 @@ defmodule CercleApi.BoardController do
 
 		conn
 		  |> put_layout("adminlte.html")
-		  |> render "show.html",  company: company, cards: cards, board: board
+		  |> render "show.html",  company: company, cards: cards, board: board, no_container: true
   end
 
   def new(conn, _params) do

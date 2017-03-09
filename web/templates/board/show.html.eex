@@ -16,17 +16,16 @@
   }
   .column_title {
     height: 50px;
-    line-height:50px;
     color:#525252;
     margin-bottom:10px;
-    text-align:center;
     font-size:18px;
+    white-space: normal;
+    padding:10px;
   }
   .column {
-    width: 220px;
+    width: 250px;
     padding-bottom: 100px;
-    border-right:1px solid #c5c5c5;
-    padding-left:20px;
+    padding-left:10px;
   }
   .portlet {
     margin: 0 1em 1em 0;
@@ -57,7 +56,7 @@
   }
 
   </style>
-<section class="content-header" style="margin-top:20px;margin-bottom:20px;margin-left:20px;">
+<section class="content-header" style="margin-bottom:20px;margin-left:20px;">
   
   <h2>
     <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>"><%= @board.name %></span>
@@ -74,13 +73,17 @@
    
 </section>
 <!-- Main content -->
-<section class="content">
+<div style="display: block;width: 100vw;height: 80vh;overflow: scroll;white-space: nowrap;">
 <%= for col <- @board.board_columns do %>
-<div class="column_master" style="width: 220px;display:inline-block;vertical-align:top;">
-<div class="column_title">
- <span class='inline-editable' data-type='PUT' data-param-name="board_column[name]" data-inline-editurl="/api/v2/board_column/<%= col.id %>"> <%=col.name%></span>
+<div class="column_master" style="width: 250px;display:inline-block;vertical-align:top;margin-left:30px;background-color:#e0e0e0;border-radius:5px;">
+<div class="column_title" style="position:relative;">
+ <textarea style="font-size:16px;border:0px solid grey;resize: none;background-color:#d0d0d0;border-radius:3px;overflow: hidden;word-wrap: break-word;height: 54px;width: 202px;padding:3px;"><%=col.name%></textarea>
+ <div id="actions" style="position: absolute;right: 4px;top: 4px;width:26px;height:26px;color:grey;">
+ <span class="fa fa-ellipsis-h"></span>
+ </div>
    
-  </div>
+</div>
+<br />
 <div class="column" data-id="<%=col.id%>">
 
 <%= for card <- @cards do %>
@@ -91,7 +94,7 @@
 </div>
 </div>
 <%=end%>
-</section><!-- /.content -->
+</div><!-- /.content -->
 <script>
 $(document).ready(function(){
   require("web/static/js/app").App.pipeline_init();
