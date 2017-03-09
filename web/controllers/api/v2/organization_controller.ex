@@ -61,4 +61,25 @@ defmodule CercleApi.APIV2.OrganizationController do
 
     send_resp(conn, :no_content, "")
   end
+
+  def import_organization(conn, %{"mapping" => mapping, "s3_url" => s3_url }) do
+    IO.inspect "organization_params"
+    table = File.read!("tmp/contact.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
+    headers = Map.keys(mapping)
+    first_row = Enum.at(table, 0)
+    organization_params = %{"name" => "org1", "website" => "org.com", "description" => "Imported", "company_id" => "3"}
+    company_id = organization_params["company_id"]
+
+    changeset = Organization.changeset(%Organization{}, organization_params)
+
+    case Repo.insert(changeset) do
+      {:ok, organization} ->
+        conn
+        |> render("show.json", organization: organization)
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+    end
+  end
 end

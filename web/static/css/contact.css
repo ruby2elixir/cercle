@@ -43,7 +43,13 @@
 	border-radius: 3px;
 	background-color: #f3f5f6;
 	box-sizing: border-box;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.upload-dashed-box .errors{
+    color: red;
+    font-style: italic;
+    font-size: 20px;
 }
 	
 .upload-info-box{
@@ -138,10 +144,9 @@ li.completed span.arrow:after {
     border-left-color: #43c35e;
 }
 
-.bar {
-    height: 18px;
-    background: #5cb85c;
-    border-radius: 10px;
+.upload-outer-box #progress{
+    margin-bottom: 10px;
+    background-color: transparent;
 }
 
 #sec-2{
@@ -183,7 +188,7 @@ li.completed span.arrow:after {
     padding: 7px 20px;
 }
 
-.mapping-sections #left-section #left-section-table .company-fields{
+.mapping-sections #left-section #left-section-table .organization-fields{
     border:1px solid #c2c8cd;
     border-radius: 3px;
     font-weight: bold;
@@ -210,15 +215,16 @@ li.completed span.arrow:after {
     border:1px solid #c2c8cd;
     border-radius: 3px;
     font-weight: bold;
+    cursor: move;
     padding: 8px 20px;
 }
-.mapping-sections #right-section #company-field-table{
+.mapping-sections #right-section #organization-field-table{
     table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0 8px;
     margin-bottom: 0px;
 }
-.mapping-sections #right-section #company-field-table .company-fields{
+.mapping-sections #right-section #organization-field-table .organization-fields{
     border:1px solid #c2c8cd;
     border-radius: 3px;
     font-weight: bold;
@@ -232,11 +238,11 @@ li.completed span.arrow:after {
     padding: 7px 20px;
 }
 .contact-fields .fa{
-    margin-right: 1px;
+    margin-right: 5px;
 }
 
-.company-fields .fa{
-    margin-right: 1px;
+.organization-fields .fa{
+    margin-right: 5px;
 }
 
 .csv-data{
@@ -255,12 +261,16 @@ li.completed span.arrow:after {
     font-size: 15px;
 }
 
-#action-btns-step1, #action-btns-step2{
+#action-btns-step1, #action-btns-step2, #action-btns-step3{
     border: 1px solid black;
     border-top: none;
     padding: 10px 15px 10px 15px;
     height: 50px;
     background-color: #3C8DBC;
+}
+
+#action-btns-step1 .btn, #action-btns-step2, #action-btns-step3 .btn{
+    font-weight: bold;
 }
 
 #list-uploaded-file{
@@ -269,4 +279,23 @@ li.completed span.arrow:after {
 .tb-head{
     background-color: #3C8DBC;
     color: white;
+}
+
+#preview-data-table{
+    border: 1px solid #c2c8cd;
+}
+
+#preview-data-table th, #preview-data-table td{
+    border-color: #c2c8cd;
+}
+
+
+#preview-data-table .fa{
+    margin-right: 5px;
+    vertical-align: baseline;
+}
+
+#preview-data-table .table-caption{
+    font-weight: bold;
+    font-size: 15px;
 }

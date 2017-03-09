@@ -105,7 +105,7 @@ defmodule CercleApi.ContactController do
 
     conn
       |> put_layout("adminlte.html")
-      |> render("import.html", company: company)
+      |> render("import.html", company: company, company_id: company_id)
   end
 
 end

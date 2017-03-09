@@ -2,15 +2,15 @@
 	<h2>Import data</h2>
 	<div>
 		<ul class="steps-ul">
-			<li class="steps-li active steps-li-active "><b>Step 1:</b> Upload file
+			<li class="steps-li active steps-li-active" id="step1"><b>Step 1:</b> Upload file
 	            <span class="arrow">
 	            </span>
             </li>
-			<li class="steps-li steps-li-inactive"><b>Step 2:</b> Mapping
+			<li class="steps-li steps-li-inactive" id="step2"><b>Step 2:</b> Mapping
 	            <span class="arrow">
 	            </span>
             </li>
-			<li class="steps-li steps-li-inactive"><b>Step 3:</b> Preview and finish
+			<li class="steps-li steps-li-inactive" id="step3"><b>Step 3:</b> Preview and finish
 	             <span class="">
 	            </span>
             </li>
@@ -27,6 +27,8 @@
 		                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;
 		                    <span>Upload file</span>
 		                    <input type="file" name="file" id="fileupload">
+		                    <input type="hidden" name="company_id" id="company_id" value="<%=@company_id%>">
+		                    <input type="hidden" name="user_id" id="user_id" value="<%=@conn.assigns[:current_user].id%>">
 		                </span>
 		                &nbsp;&nbsp;
 		                <span><b>...or drag a file here.</b></span>
@@ -51,23 +53,21 @@
 			</thead>
 			<tbody>
 				<tr class="success">
-				  <td></td>
-				  <td></td>
-				  <td></td>
-				  <td></td>
+				  <td></td><td></td><td></td><td></td>
 				</tr>			
 			</tbody>
 		</table>
 	</div>
-	<p id="uploaded-file-name"></p>
-	<div id="progress">
-    	<div class="bar" style="width: 0%;">
+	<div class="progress-section">
+		<p id="uploaded-file-name"></p>
+		<div class="progress" id="progress">
+		  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+		  </div>
 		</div>
 	</div>
-	<br><br>
 </div>
 <div id="action-btns-step1">
-	<%=link "Next", to: "" , class: "proceed-btn btn btn-success pull-right", style: "margin-left:5px"%>
+	<%=link "Next", to: "" , class: "btn btn-success pull-right disabled", id: "move-to-step2", style: "margin-left:5px"%>
 	<%=link "Cancel Import", to: "#", class: "cancel-import btn btn-danger pull-right"%>
 </div>
 <div class="upload-outer-box hidden" id="sec-2">
@@ -79,9 +79,7 @@
 			<i class="fa fa-file fa-lg" aria-hidden="true"></i> &nbsp; File Fields
 			<div class="table-responsive">
 				<table class="table table-bordered" id="left-section-table">
-					<tbody>					
-								
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>			
 		</div>
@@ -91,25 +89,21 @@
 			  	<a href="#contact" id="contact-tab" role="tab" data-toggle="tab" aria-controls="contact" aria-expanded="true"><i class="fa fa-user fa-lg" aria-hidden="true"></i> &nbsp; Contact Fields</a>
 			  </li>
 			  <li role="presentation">
-			  	<a href="#company" id="compnay-tab" role="tab" data-toggle="tab" aria-controls="company" aria-expanded="true"><i class="fa fa-building fa-lg" aria-hidden="true"></i> &nbsp; Company Fields</a>
+			  	<a href="#organization" id="organization-tab" role="tab" data-toggle="tab" aria-controls="organization" aria-expanded="true"><i class="fa fa-building fa-lg" aria-hidden="true"></i> &nbsp; Organization Fields</a>
 			  </li>
 			</ul>
 			<div class="tab-content" id="myTabContent"> 
 				<div class="tab-pane fade active in" role="tabpanel" id="contact" aria-labelledby="contact-tab">
 					<div class="table-responsive">
 						<table class="table table-bordered" id="contact-field-table">
-							<tbody>					
-											
-							</tbody>
+							<tbody></tbody>
 						</table>
 					</div>
 				</div>
-				<div class="tab-pane fade" role="tabpanel" id="company" aria-labelledby="company-tab">
+				<div class="tab-pane fade" role="tabpanel" id="organization" aria-labelledby="organization-tab">
 					<div class="table-responsive">
-						<table class="table table-bordered" id="company-field-table">
-							<tbody>					
-										
-							</tbody>
+						<table class="table table-bordered" id="organization-field-table">
+							<tbody></tbody>
 						</table>
 					</div>
 				</div>
@@ -118,24 +112,51 @@
 	</div>
 </div>
 <div id="action-btns-step2" class="hidden">
-	<%=link "Back", to: "#" , id: "back-to-step1", class: "btn btn-primary pull-left", style: "margin-left:5px"%>
-	<%=link "Next", to: "#" , class: "btn btn-success pull-right", style: "margin-left:5px"%>
+	<%=link "Back", to: "#" , id: "back-to-step1", class: "btn btn-default pull-left", style: "margin-left:5px"%>
+	<%=link "Next", to: "#" , class: "btn btn-success pull-right disabled", id: "move-to-step3",  style: "margin-left:5px"%>
+	<%=link "Cancel Import", to: "", class: "cancel-import btn btn-danger pull-right"%>
+</div>
+<div class="upload-outer-box hidden" id="sec-3">
+	<div class="preview-info-section">
+		<h3>Preview Data</h3>
+		<p>Have a preview data according to the mapping done in <b>Step 2</b></p>
+	</div>
+	<div class="preview-section">
+		<div class="table-responsive">
+			<table class="table table-bordered" id="preview-data-table">
+				<caption class="table-caption"></caption>
+				<thead id="preview-head"></thead>
+				<tbody id="preview-body"></tbody>
+			</table>
+		</div>		
+	</div>
+</div>
+<div id="action-btns-step3" class="hidden">
+	<%=link "Back", to: "#" , id: "back-to-step2", class: "btn btn-default pull-left", style: "margin-left:5px"%>
+	<%=link "Finish", to: "#" , class: "btn btn-success pull-right", id: "move-to-final",  style: "margin-left:5px"%>
 	<%=link "Cancel Import", to: "", class: "cancel-import btn btn-danger pull-right"%>
 </div>
 <script>
-
+	var jsonData = {};
+	var upload_type;
 	function allowDrop(ev) {
 	    ev.preventDefault();
 	}
 
 	function drag(ev) {
 	    ev.dataTransfer.setData("text/plain", ev.target.id);
+	    upload_type = $('#'+ev.target.id).closest('div').parent().attr('id');
 	}
 
 	function drop(ev) {
 	    var data = ev.dataTransfer.getData("text/plain");
-	    ev.target.innerHTML=document.getElementById(data).innerHTML;
-	    ev.target.draggable='true';
-	    ev.target.className=('contact-fields active');
+	    ev.target.innerHTML = document.getElementById(data).innerHTML;
+	    ev.target.draggable = 'true';
+	    ev.target.className = ('contact-fields active');
+	    var db_col = $('#'+data).find('.db-field').text();
+	    var csv_col = $('#'+ev.target.id).prev('td').find('.csv-col').text();
+        jsonData[db_col] = csv_col;
+        $('#move-to-step3').removeClass('disabled');
+       
 	}
 </script>

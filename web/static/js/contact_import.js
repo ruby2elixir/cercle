@@ -1,49 +1,79 @@
 $(function() {
-
+    var s3_url=""
+    var file_name=""
 	$('#fileupload').fileupload({
         
         dataType: 'json',
+        maxFileSize: 5,
         add: function (e, data) {
-            console.log(data.files[0]);
+    
             var file_name = data.files[0].name;
-            $('#list-uploaded-file').toggleClass('hidden');
+            var file_size = (data.files[0].size/1000).toFixed(1);
             $('#list-uploaded-file').find('table tbody tr td')[0].innerHTML = file_name;
-            $('#list-uploaded-file').find('table tbody tr td')[1].innerHTML = data.files[0].size;
+            $('#list-uploaded-file').find('table tbody tr td')[1].innerHTML = file_size + "kB";
             $('#list-uploaded-file').find('table tbody tr td')[2].innerHTML = data.files[0].type;
             $('#list-uploaded-file').find('table tbody tr td')[3].innerHTML = data.files[0].lastModifiedDate;
-            $(".proceed-btn").on('click', function (ev) {
-                ev.preventDefault();
-                data.context = $('#uploaded-file-name').html('Uploading <span class="filename">'+ file_name+'</span>').prependTo($('#progress'));
-                var xhr = data.submit();
-            });
+            var fileType = data.files[0].name.split('.').pop(), allowdtypes = 'csv,xls,xlsx';
+            if (allowdtypes.indexOf(fileType) < 0) {
+                $('.upload-dashed-box').css('border', '2px dashed red');
+                if(!$('.errors').length){
+                    $('.upload-info-box').prepend('<p class="errors">The uploaded file is in the wrong format..</p>');
+                    if ($('#list-uploaded-file').hasClass('hidden')) $('#list-uploaded-file').toggleClass('hidden')
+                }
+                return false;
+            }
+            else{
+                if($('.errors').length){
+                    $('.errors').remove();
+                    $('.upload-dashed-box').css('border', '2px dashed #c2c8cd');
+                }
+                if ($('#list-uploaded-file').hasClass('hidden')) $('#list-uploaded-file').toggleClass('hidden')
+                $("#move-to-step2").removeClass('disabled');
+                $("#move-to-step2").on('click', function (ev) {
+                    ev.preventDefault();
+                    $(this).addClass('disabled');
+                    $('#uploaded-file-name').html('<span>Uploading </span><span class="filename">'+ file_name+'</span>');
+                    var xhr = data.submit();
+                });
+            }
         },
         success: function(result){
-           
-            prepare_file_table("left-section-table", result.headers,result.first_row);
-            prepare_db_table("contact-field-table", result.contact_fields);
-            prepare_db_table("company-field-table", result.company_fields);
+            
+            if (result.error){
+                return false;
+            }
+            else{
+                if (!$('#left-section-table tr').length) prepare_file_table("left-section-table", result.headers,result.first_row); 
+                if (!$('#contact-field-table tr').length) prepare_db_table("contact-field-table", result.contact_fields);
+                if (!$('#organization-field-table tr').length) prepare_db_table("organization-field-table", result.organization_fields);
+                if (result) s3_url = result.s3_url;
+            }
         },
-        progressall: function (e, data) {
+        progress: function (e, data) {
             
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .bar').css(
+            $('.progress .progress-bar').css(
                 'width',
                 progress + '%'
             );
         },
         done: function (e, data) {
-            
-            $('#progress .bar').toggleClass('hidden');
-            $('#sec-1').toggleClass('hidden');
-            $('#action-btns-step1').toggleClass('hidden');
-            $('#sec-2').toggleClass('hidden');
-            $('#action-btns-step2').toggleClass('hidden');
-            // $('.table tbody').append('<tr class="child"><td>blahblah</td></tr>');
-            // $('<p/>').text(file.name).appendTo(document.body);
-            // $('<img/>').attr("src",file.thumbnailUrl).appendTo(document.body);
-            // $('<p/>').text(file.size).appendTo(document.body);
-            $('.steps-li-active').addClass('completed').append('<i class="fa fa-check-circle" style="float:right" aria-hidden="true"></i>');
-            $('.completed').next().removeClass('steps-li-inactive').addClass('steps-li-active active');
+           
+            if (data.result.error && data.result.error.length){
+                $('.upload-dashed-box').css('border', '2px dashed red');
+                $('.upload-info-box').prepend('<p class="errors"> The errors in import are:-'+data.result.error+'</p>');
+                if ($('#list-uploaded-file').hasClass('hidden')) $('#list-uploaded-file').toggleClass('hidden');
+                $('#progress .progress-bar').toggleClass('hidden');
+                $('#uploaded-file-name').html("");
+                return false;
+            }
+            else{
+                $('#progress .progress-bar').toggleClass('hidden');
+                $('#sec-1,#sec-2').toggleClass('hidden');
+                $('#action-btns-step1,#action-btns-step2').toggleClass('hidden');
+                $('#step1').addClass('completed').append('<i class="fa fa-check-circle" style="float:right" aria-hidden="true"></i>');
+                $('#step2').removeClass('steps-li-inactive').addClass('steps-li-active active');
+            }
         }        
     });
 
@@ -52,7 +82,7 @@ $(function() {
       $(this).tab('show');
     });
 
-    $('#myTabs a[href="#company"]').click(function (e) {
+    $('#myTabs a[href="#organization"]').click(function (e) {
       e.preventDefault();
       $(this).tab('show');
     });
@@ -62,27 +92,123 @@ $(function() {
     });
 
     $('#back-to-step1').click(function (e) {
-        $('#progress .bar').toggleClass('hidden');
-        $('#sec-1').toggleClass('hidden');
-        $('#action-btns-step1').toggleClass('hidden');
-        $('#sec-2').toggleClass('hidden');
-        $('#action-btns-step2').toggleClass('hidden');
-        $('.completed').next().removeClass('active steps-li-active').addClass('steps-li-inactive');
-        $('.completed').removeClass('completed active steps-li-inactive').addClass('active steps-li-active');
-        // $('.steps-li-active').append('<i class="fa fa-check-circle" style="float:right" aria-hidden="true"></i>');        
+        $('#progress .progress-bar').toggleClass('hidden');
+        $('#sec-1,#sec-2').toggleClass('hidden');
+        $('#move-to-step2').removeClass('disabled');
+        $('#action-btns-step1,#action-btns-step2').toggleClass('hidden');
+        $('#step2').removeClass('steps-li-active active').addClass('steps-li-inactive');
+        $('#step1').removeClass('completed');
+        $('#step1').children(':last-child').remove();
+        $('#uploaded-file-name span').first().text('Uploaded ');
+    });
+
+    $('#back-to-step2').click(function (e) {
+        $('#sec-2,#sec-3').toggleClass('hidden');
+        $('#action-btns-step2,#action-btns-step3').toggleClass('hidden');
+        $('#step3').removeClass('steps-li-active active').addClass('steps-li-inactive');
+        $('#step2').removeClass('completed');
+        $('#step2').children(':last-child').remove();
+        $('#move-to-step3').text('Next').removeClass('disabled');
+    });
+
+    $('#move-to-step3').on("click", function (e) {
+        e.preventDefault();
+        $(this).text('Processing..').addClass('disabled');
+        $.ajax({
+            url: '/api/v2/view_uploaded_data',
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                mapping: jsonData,
+                s3_url: s3_url
+            },
+            error: function(error) {
+                $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
+                $('#move-to-step3').text('Next').removeClass('disabled');
+                fade_flash();
+
+            },
+            success: function(data) {                
+                $('#sec-2').toggleClass('hidden');
+                $('#action-btns-step2,#action-btns-step3').toggleClass('hidden');
+                $('#step2').addClass('completed').append('<i class="fa fa-check-circle" style="float:right" aria-hidden="true"></i>');
+                $('#sec-3').toggleClass('hidden');
+                $('#step3').removeClass('steps-li-inactive').addClass('steps-li-active active');
+                $('#move-to-step3').text('Next').removeClass('disabled');
+                var headers = data.headers;
+                var mapping = data.mapping;
+                file_name = data.file_name
+                prepare_preview_data_table("preview-data-table",headers, mapping, upload_type);
+            }
+        });
+    });
+
+    $('#move-to-final').click(function(e){
+        e.preventDefault();
+        $(this).text('Importing..').addClass('disabled');
+        var user_id = $("#user_id").val();
+        var company_id = $("#company_id").val();
+        if(upload_type == "contact"){
+            // contact-import
+            $.ajax({
+                url: '/api/v2/contact_create',
+                method: 'POST',
+                data: {
+                    mapping: jsonData,
+                    file_name: file_name,
+                    company_id: company_id,
+                    user_id: user_id
+                },
+                success: function(result){
+                    
+                    var contact_id = result.data.id;
+                    var date_time = new Date();
+                    var date = date_time.toLocaleDateString();
+                    var time = date_time.toLocaleTimeString();
+                    // contact-tag-creation
+                    $.ajax({
+                      url: '/api/v2/contact/'+contact_id+'/update_tags',
+                      method: 'PUT',
+                      data: { 
+                        id: contact_id,
+                        tags: ["imported " +date+" at "+time],
+                        company_id: company_id
+                      },
+                      success: function(result){
+                        $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">Records Imported Succesfully</p>');
+                        $('#move-to-final').text('Finished').addClass('disabled');
+                        window.location = "/contact";
+                      }
+                    })
+                }
+            }); 
+        }
+        else{
+            // orgnization-import
+            $.ajax({
+                url: '/api/v2/import_organization',
+                method: 'POST',
+                data: {
+                    mapping: jsonData,
+                    file_name: file_name
+                },
+                success: function(result){   
+                   console.log(result);
+                }
+            });
+        }
     });
 })
 
 function prepare_file_table(table_name,headers,first_row) {
     var tbl = document.getElementById(table_name);
     for (var i = 0; i < headers.length; i++){ 
-        var row = tbl.insertRow(tbl.rows.length);      // append table row
-        
-        // insert table cells to the new row
+        var row = tbl.insertRow(tbl.rows.length);
         for (var j = 0; j < 2; j++) {
             if(j==0){
                 var x = row.insertCell(j);
-                x.innerHTML = '<div class=""><b>'+headers[i]+'</b></div><div class="csv-data">'+first_row[i]+'</div>';
+                x.innerHTML = '<div class="csv-col"><b>'+headers[i]+'</b></div><div class="csv-data">'+first_row[i]+'</div>';
                 x.className = 'active csv-fields';
             }
             else{
@@ -109,15 +235,15 @@ function prepare_db_table(table_name,fields) {
     }
     else{
        var icon_type = "fa fa-building";
-       var class_name = 'company-fields';
-       var id = 'company-drag';
+       var class_name = 'organization-fields';
+       var id = 'organization-drag';
     }
     var tbl = document.getElementById(table_name);
     for (var i = 0; i < fields.length; i++){ 
         var row = tbl.insertRow(tbl.rows.length);       
            
         var x = row.insertCell(0);
-        x.innerHTML = '<i class="'+icon_type +'" aria-hidden="true"></i> '+ fields[i];
+        x.innerHTML = '<i class="'+icon_type +'" aria-hidden="true"></i><span class="db-field">'+ fields[i]+ '</span>';
         x.className = 'active '+ class_name;
         x.id = id+i;
         x.draggable = true;
@@ -125,4 +251,36 @@ function prepare_db_table(table_name,fields) {
         x.setAttribute("ondragover","return allowDrop(event)");
         x.setAttribute("ondragstart","return drag(event)");
     }
+}
+
+function prepare_preview_data_table(table_name,headers,mapping,upload_type) {
+
+    var icon_type = upload_type=="contact" ? "fa fa-user" : "fa fa-building"
+    upload_type = upload_type.charAt(0).toUpperCase() + upload_type.slice(1);
+    var tbl = document.getElementById(table_name);
+    var caption = tbl.getElementsByTagName('caption')[0];
+    caption.innerHTML = '<i class="'+icon_type +'" aria-hidden="true"></i><span>'+ upload_type+ '</span>';
+    var thead = tbl.getElementsByTagName('thead')[0];
+    if(thead) $('#preview-head').empty();
+    var row = thead.insertRow(0);
+    row.className = 'tb-head';
+    for (var j = 0; j < headers.length; j++){ 
+        var headerCell = document.createElement("TH");
+        headerCell.innerHTML = headers[j];
+        row.appendChild(headerCell);
+    }
+
+    var tbody = tbl.getElementsByTagName('tbody')[0];
+    $('#preview-body').empty();
+    var row = tbody.insertRow(tbody.rows.length);
+    for (var j = 0; j < mapping.length; j++){ 
+        var x = row.insertCell(j);
+        x.innerHTML = mapping[j];
+    }
+}
+
+function fade_flash() {
+   $('.alert').delay(1000).fadeIn('slow', function() {
+      $(this).delay(3000).fadeOut();
+   });
 }
