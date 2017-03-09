@@ -36,7 +36,10 @@
         </div>
 
         <div class="row">
-          <opportunity-edit />
+          <opportunity-edit
+            :activities="activities"
+            :events="events"
+            />
         </div>
       </section>
     </div>
@@ -59,7 +62,9 @@ export default {
             contact: { },
             company: {},
             organization: null,
-            tags: []
+            tags: [],
+            activitites: [],
+            events: []
 
         }
     },
@@ -161,6 +166,12 @@ export default {
                 if (payload.organization) {
                     this.organization = payload.organization
                     }
+                if (payload.activities) {
+                    this.activities = payload.activities
+                }
+                if (payload.events) {
+                    this.events = payload.events
+                }
 
             });
         }

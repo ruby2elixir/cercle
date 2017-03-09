@@ -1,6 +1,11 @@
 defmodule CercleApi.Activity do
   use CercleApi.Web, :model
 
+  @derive {Poison.Encoder, only: [
+              :id, :title, :is_done, :due_date,
+              :company_id, :contact_id, :user_id, :opportunity_id, :user
+            ]}
+
   schema "activities" do
     belongs_to :opportunity, CercleApi.Opportunity
     belongs_to :user, CercleApi.User
@@ -26,5 +31,5 @@ defmodule CercleApi.Activity do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
+
 end

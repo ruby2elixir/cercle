@@ -21,7 +21,9 @@ defmodule CercleApi.ContactChannel do
       contact: contact,
       company: contact.company,
       tags: contact.tags,
-      organization: contact.organization
+      organization: contact.organization,
+      activities: contact.activities,
+      events: contact.timeline_event
     }
 
     {:noreply, socket}

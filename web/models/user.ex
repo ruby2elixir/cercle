@@ -3,7 +3,7 @@ defmodule CercleApi.User do
   use Arc.Ecto.Model
 
   @derive {Poison.Encoder, only: [
-              :id, :user_name
+              :id, :user_name, :profile_image
             ]}
 
   schema "users" do
