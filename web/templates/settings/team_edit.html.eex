@@ -50,7 +50,8 @@
                     </<td>
                     <td>
                     <%=u.user_name%>
-                      
+                    <br />
+                    <%=u.login%>
                     </td>
                     <td>
                     <%=u.name%>

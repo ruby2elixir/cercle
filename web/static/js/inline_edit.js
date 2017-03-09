@@ -19,8 +19,8 @@ $(function() {
         editContainer.find('.editable-input').append(inputElement);
       }
       else{
-        inputElement = $("<input style='height: 25px;width: 125px;' class='form-control input-sm' type='text' />");
-        editContainer.find('.editable-input').append(inputElement);
+        inputElement = $("<input style='height: 25px;width: 175px;' class='form-control input-sm' type='text' />");
+        editContainer.find('.editable-input').append(inputElement);   
       }
   
       
@@ -54,6 +54,11 @@ $(function() {
       });
   
       editContainer.insertAfter(ele);
+      if (ele.data('input-type') == 'textarea'){
+        editContainer.find('.editable-input textarea').first().focus();
+      }else{
+        editContainer.find('.editable-input input').first().focus();
+      }
     });
   });
 });
