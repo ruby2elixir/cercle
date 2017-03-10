@@ -148,6 +148,7 @@ $(function() {
         $(this).text('Importing..').addClass('disabled');
         var user_id = $("#user_id").val();
         var company_id = $("#company_id").val();
+        $('#final-progress .progress-bar').toggleClass('hidden');
         if(upload_type == "contact"){
             // contact-import
             $.ajax({
@@ -160,6 +161,7 @@ $(function() {
                     user_id: user_id
                 },
                 success: function(result){
+                    $('#final-progress .progress-bar').toggleClass('hidden');
                     $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">Records Imported Succesfully</p>');
                     $('#move-to-final').text('Finished').addClass('disabled');
                     window.location = "/contact";
