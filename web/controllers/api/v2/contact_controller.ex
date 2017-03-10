@@ -21,8 +21,10 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def create(conn, %{"contact" => contact_params}) do
-    
-    contact_params = sub_contact_function(conn,contact_params)
+
+    company_id = contact_params["company_id"]
+
+
     changeset = Contact.changeset(%Contact{}, contact_params)
     case Repo.insert(changeset) do
       {:ok, contact} ->
@@ -169,8 +171,8 @@ defmodule CercleApi.APIV2.ContactController do
         maps = %{db_col => first_row[csv_col]}
       end
       contact_params = Enum.reduce(maps, contact_params, fn (map, acc) -> Map.merge(acc, map) end)
-      #call sub function for creating contacts
-      contact_params = sub_contact_function(conn,contact_params)
+     
+      company_id = contact_params["company_id"]
       changeset = Contact.changeset(%Contact{}, contact_params)
       case Repo.insert(changeset) do
         {:ok, contact} ->
@@ -195,44 +197,16 @@ defmodule CercleApi.APIV2.ContactController do
             |> Ecto.Changeset.put_assoc(:tags, tags)
           case Repo.update(changeset) do
             {:ok, contact} ->
-              render(conn, "show.json", contact: contact)
+              IO.inspect "inside tag :ok"
+              IO.inspect contact
             {:error, changeset} ->
-              conn
-              |> put_status(:unprocessable_entity)
-              |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+              IO.inspect "inside tag :error"
+              IO.inspect changeset
           end
         {:error, changeset} ->
-          conn
-          |> put_status(:unprocessable_entity)
-          |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+          IO.inspect "ewde"
       end
     end
-  end
-
-  def sub_contact_function(conn,contact_params) do
-    company_id = contact_params["company_id"]
-    if contact_params["email"] do 
-      domain_email = List.first(Enum.take(String.split(contact_params["email"], "@"), -1))
-
-      query = from organization in Organization,
-        where: organization.website == ^domain_email,
-        where: organization.company_id == ^company_id
-  
-      organizations = Repo.all(query)
-  
-      if Enum.count(organizations) == 0 do
-        organization_params = %{"name" => domain_email, "website" => domain_email, "company_id" => company_id}
-        changeset = Organization.changeset(%Organization{}, organization_params)
-        case Repo.insert(changeset) do
-          {:ok, org} ->
-            organization_id = org.id
-        end
-      end
-  
-      organizations = Repo.all(query)
-      organization = Enum.at(organizations, 0)
-      organization_id = organization.id
-      contact_params = %{contact_params | "organization_id" => organization_id}
-    end
+    json conn, %{message: "true"}
   end
 end

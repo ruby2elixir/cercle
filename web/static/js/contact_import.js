@@ -160,26 +160,9 @@ $(function() {
                     user_id: user_id
                 },
                 success: function(result){
-                    
-                    var contact_id = result.data.id;
-                    var date_time = new Date();
-                    var date = date_time.toLocaleDateString();
-                    var time = date_time.toLocaleTimeString();
-                    // contact-tag-creation
-                    $.ajax({
-                      url: '/api/v2/contact/'+contact_id+'/update_tags',
-                      method: 'PUT',
-                      data: { 
-                        id: contact_id,
-                        tags: ["imported " +date+" at "+time],
-                        company_id: company_id
-                      },
-                      success: function(result){
-                        $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">Records Imported Succesfully</p>');
-                        $('#move-to-final').text('Finished').addClass('disabled');
-                        window.location = "/contact";
-                      }
-                    })
+                    $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">Records Imported Succesfully</p>');
+                    $('#move-to-final').text('Finished').addClass('disabled');
+                    window.location = "/contact";
                 },
                 error: function(error) {
                     $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
