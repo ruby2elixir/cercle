@@ -1,4 +1,4 @@
-<div style="max-width:800px;margin: 0px auto;" id="contact_id" data-id="<%=@contact.id%>">
+  <div style="max-width:800px;margin: 0px auto;" id="contact_id" data-id="<%=@contact.id%>">
   <section style="padding:20px;height:60px;padding-bottom:0px;display:<%= if (@opportunity ) do %>none<%end%>;;">
     Add into the board: &nbsp;&nbsp;
     <select name="select" id="add_to_board" style="margin-top:10px;">
@@ -91,21 +91,24 @@
               <option value="<%=u.id%>" <%= if @opportunity.user_id == u.id do %>selected<%= end %>><%= u.user_name %> </option> 
               <%end%>
             </select>
-
-          </div>
-          Status:
+            &nbsp;&nbsp;
+             Status:
           <select name="select" id="change_opportunity_stage" data-id="<%=@opportunity.id%>">
             <%= for col <- @board.board_columns do %>
             <option value="<%=col.id%>" <%= if @opportunity.board_column_id == col.id  do %>selected<%= end %>><%=col.name%> </option> 
             <%end%>
           </select>
-          <Br />
-          <Br />
+          </div>
           Contacts Involved: 
           <%= for o <- @opportunity_contacts do %>
           <a href ="/contact/<%=o.id%>" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;"><%= o.name %> </a>
           <% end %>
           <a id="add_contact_to_opportunity" href ="javascript:void(0);" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;">+ Add ...</a>
+        <div style="margin-top:10px;margin-bottom:10px;">
+          Description
+          <br />
+          <div style="margin-top:10px;" data-placeholder="Write a description..." class='inline-editable' data-type='PUT' data-input-type="textarea" data-param-name="opportunity[description]" data-inline-editurl="/api/v2/opportunity/<%= @opportunity.id %>"><%= @opportunity.description %></div>
+        </div>
         </div>
          <!-- /.user-block -->
           <br />
