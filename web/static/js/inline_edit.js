@@ -1,22 +1,22 @@
 $(function() {
   $('.textarea-inline-editable').each(function(index){
     var ele = $(this);
-
+    ele.blur(function(e) {
+      e.preventDefault();
+      var params = {};
+      params[ele.data('param-name')] = ele.val();
+      $.ajax(ele.data('inline-editurl'), {
+        type: ele.data('type'),
+        data: params,
+        success: function(xhr, st){
+          ele.text(params[ele.data('param-name')]);
+        }
+      })
+    });
     ele.keypress(function (e) {
         if(e.which == 13) {
           //submit form via ajax, this is not JS but server side scripting so not showing here
           ele.blur()
-          e.preventDefault();
-          var params = {};
-          params[ele.data('param-name')] = ele.val();
-          $.ajax(ele.data('inline-editurl'), {
-            type: ele.data('type'),
-            data: params,
-            success: function(xhr, st){
-              ele.text(params[ele.data('param-name')]);
-              editContainer.find('.editable-cancel').trigger('click');
-            }
-          })
         }
     });
   });
