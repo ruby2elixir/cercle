@@ -6,11 +6,6 @@
         </a>
       </div>
       <div style="font-size:12px;">
-         <%= if Enum.find(@opportunity.main_contact.timeline_event, fn(x) -> x.event_name != "comment" end) do  %>
-          <span style="background-color:#fdfdfd;padding:3px;color:blue;">
-            <%=String.slice(Enum.find(@opportunity.main_contact.timeline_event, fn(x) -> x.event_name != "comment" end).content, 0..250)%>
-        </span>
-      <%end%>
       </div>
       <div style="font-size:11px;margin-top:5px;color:grey;float:right;">
         <%=if(length(@opportunity.main_contact.activities) == 0) do %>
