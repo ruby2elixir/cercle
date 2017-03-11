@@ -18,8 +18,8 @@ defmodule CercleApi.Organization do
     timestamps
   end
 
-  @required_fields ~w(company_id)
-  @optional_fields ~w(data name website description)
+  @required_fields ~w(company_id name)
+  @optional_fields ~w(data website description)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

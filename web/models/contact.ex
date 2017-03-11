@@ -19,8 +19,8 @@ defmodule CercleApi.Contact do
     timestamps
   end
 
-  @required_fields ~w(company_id)
-  @optional_fields ~w(data organization_id user_id email name phone description job_title)
+  @required_fields ~w(company_id name)
+  @optional_fields ~w(data organization_id user_id email phone description job_title)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
