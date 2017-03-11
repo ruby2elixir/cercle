@@ -77,7 +77,7 @@
 <%= for col <- @board.board_columns do %>
 <div class="column_master" style="width: 250px;display:inline-block;vertical-align:top;margin-left:30px;background-color:#e0e0e0;border-radius:5px;">
 <div class="column_title" style="position:relative;">
- <textarea style="font-size:16px;border:0px solid grey;resize: none;background-color:#d0d0d0;border-radius:3px;overflow: hidden;word-wrap: break-word;height: 54px;width: 202px;padding:3px;"><%=col.name%></textarea>
+ <form class='form-inline editableform'><textarea class='textarea-inline-editable' data-type='PUT' data-param-name="board_column[name]" data-inline-editurl="/api/v2/board_column/<%= col.id %>" style="font-size:16px;border:0px solid grey;resize: none;background-color:#d0d0d0;border-radius:3px;overflow: hidden;word-wrap: break-word;height: 54px;width: 202px;padding:3px;"><%=col.name%></textarea></form>
  <div id="actions" style="position: absolute;right: 4px;top: 4px;width:18px;height:18px;color:grey;font-size:12px;">
  <span class="fa fa-ellipsis-h"></span>
  </div>
