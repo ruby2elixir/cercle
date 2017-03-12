@@ -14,7 +14,6 @@ defmodule CercleApi.APIV2.CompanyController do
 
   def create(conn, %{"company" => company_params}) do
     changeset = Company.changeset(%Company{}, company_params)
-
     case Repo.insert(changeset) do
       {:ok, company} ->
         conn
@@ -30,16 +29,13 @@ defmodule CercleApi.APIV2.CompanyController do
 
   def show(conn, _params) do
     id = _params["id"]
-    
     company = Repo.get!(Company, id)
-
     render(conn, "show.json", company: company)
   end
 
   def update(conn, %{"id" => id, "company" => company_params}) do
     company = Repo.get!(Company, id)
     changeset = Company.changeset(company, company_params)
-
     case Repo.update(changeset) do
       {:ok, company} ->
         render(conn, "show.json", company: company)

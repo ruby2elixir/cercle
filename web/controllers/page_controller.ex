@@ -3,7 +3,7 @@ defmodule CercleApi.PageController do
 
   def index(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
-    if (current_user && is_integer(current_user.company_id) ) do
+    if current_user && is_integer(current_user.company_id) do
       conn
         |> redirect(to: "/activity")
         |> halt

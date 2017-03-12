@@ -1,15 +1,16 @@
 /*eslint-env node*/
 module.exports = {
-  "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module"
+  'parserOptions': {
+    'ecmaVersion': 6,
+    'sourceType': 'module'
   },
-  "env": {
-    "browser": true,
+  'env': {
+    'browser': true,
     'es6': true
   },
   'globals': {
-    '$': true
+    '$': true,
+    'exports': true
   },
   'ecmaFeatures': {
     'modules': true

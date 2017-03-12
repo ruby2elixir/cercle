@@ -50,7 +50,8 @@ defmodule CercleApi.Mixfile do
      {:basic_auth, "~> 2.0.0"},
      {:tzdata, "~> 0.5.8"},
      {:guardian, "~> 0.14.2"},
-     {:comeonin, "~> 2.5"}
+     {:comeonin, "~> 2.5"},
+     {:credo, "~> 0.5", only: [:dev, :test]}
     ]
   end
 
