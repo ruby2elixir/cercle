@@ -62,9 +62,6 @@ defmodule CercleApi.Router do
     get "/settings/fields_edit", SettingsController, :fields_edit
     put "/settings/fields_update", SettingsController, :fields_update
 
-    get "/organizations", OrganizationsController, :index
-    get "/organizations/:id", OrganizationsController, :edit
-
     get "/contact", ContactController, :index
 	  get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
