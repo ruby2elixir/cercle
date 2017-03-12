@@ -8,6 +8,8 @@ defmodule CercleApi.APIV2.OpportunityController do
   alias CercleApi.Organization
   alias CercleApi.User
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   plug :scrub_params, "opportunity" when action in [:create, :update]
 
   

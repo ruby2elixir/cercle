@@ -1,5 +1,6 @@
 export var Activity = {
   start: function(){
+    var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
     $('.activity_page_toggle').iCheck({
          checkboxClass: 'icheckbox_square-blue',
          radioClass: 'iradio_square-blue',
@@ -11,6 +12,7 @@ export var Activity = {
         var that = $(this);
         $.ajax( url , {
             method: 'PUT',
+            headers: {"Authorization": "Bearer "+jwt_token},
             data: { 'activity[is_done]': $(this).is(":checked") },
             complete: function(xhr, status){
               if(that.is(":checked")){

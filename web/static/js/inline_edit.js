@@ -1,4 +1,5 @@
 $(function() {
+  var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
   $('.textarea-inline-editable').each(function(index){
     var ele = $(this);
     ele.blur(function(e) {
@@ -7,6 +8,7 @@ $(function() {
       params[ele.data('param-name')] = ele.val();
       $.ajax(ele.data('inline-editurl'), {
         type: ele.data('type'),
+        headers: {"Authorization": "Bearer "+jwt_token},
         data: params,
         success: function(xhr, st){
           ele.text(params[ele.data('param-name')]);
@@ -55,6 +57,7 @@ $(function() {
   
         $.ajax(ele.data('inline-editurl'), {
           type: ele.data('type'),
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: params,
           success: function(xhr, st){
             ele.text(params[ele.data('param-name')]);

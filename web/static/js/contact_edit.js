@@ -1,7 +1,5 @@
 export var ContactEdit = {
-  start: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids){
-    
-
+  start: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids, jwt_token){
     
 
     $("#organization_remove_link").click(function(){
@@ -25,6 +23,7 @@ export var ContactEdit = {
       var contact_name =$("#contact_name").val();
       $.ajax('/api/v2/contact', {
         method: 'POST',
+        headers: {"Authorization": "Bearer "+jwt_token},
         data: { 
           'contact[name]': contact_name,
           'contact[user_id]': user_id,
@@ -37,6 +36,7 @@ export var ContactEdit = {
           var url = '/api/v2/opportunity/'+opportunity_id;
           $.ajax( url , {
             method: 'PUT',
+            headers: {"Authorization": "Bearer "+jwt_token},
             data: { 
               'opportunity[contact_ids]': opportunity_contact_ids
             },
@@ -61,6 +61,7 @@ export var ContactEdit = {
       var url = '/api/v2/contact/' + contact_id+"/update_tags";
         $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'tags': organization_name,
                   'company_id': company_id
            },
@@ -86,6 +87,7 @@ export var ContactEdit = {
         var url = '/api/v2/contact/' + contact_id;
         $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'contact[organization_id]': organization_id },
           complete: function(xhr, status){
             location.reload();
@@ -107,6 +109,7 @@ export var ContactEdit = {
             var url = '/api/v2/contact/' + contact_id;
             $.ajax( url , {
               method: 'PUT',
+              headers: {"Authorization": "Bearer "+jwt_token},
               data: { 'contact[organization_id]': organization_id },
               complete: function(xhr, status){
                 location.reload();
@@ -125,6 +128,7 @@ export var ContactEdit = {
         var url = '/api/v2/opportunity/' + opportunity_id;
         $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'opportunity[board_column_id]': $(this).val() },
           complete: function(xhr, status){
             return true;
@@ -136,6 +140,7 @@ export var ContactEdit = {
         var url = '/api/v2/opportunity/' + opportunity_id;
         $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'opportunity[user_id]': $(this).val() },
           complete: function(xhr, status){
             return true;
@@ -147,6 +152,7 @@ export var ContactEdit = {
       var url = '/api/v2/opportunity/' + opportunity_id;
       $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'opportunity[status]': 2 },
           complete: function(xhr, status){
             location.reload();
@@ -160,6 +166,7 @@ export var ContactEdit = {
       var url = '/api/v2/opportunity/';
       $.ajax( url , {
           method: 'POST',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 
             'opportunity[main_contact_id]': contact_id, 
             'opportunity[contact_ids]': [contact_id], 
@@ -180,6 +187,7 @@ export var ContactEdit = {
       var url = '/api/v2/opportunity/' + opportunity_id;
       $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'opportunity[status]': 1 },
           complete: function(xhr, status){
             location.reload();
@@ -194,6 +202,7 @@ export var ContactEdit = {
       var url = '/api/v2/activity/';
       $.ajax( url , {
           method: 'POST',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'activity[contact_id]': contact_id, 
             'activity[opportunity_id]': opportunity_id, 
             'activity[user_id]': user_id, 
@@ -215,6 +224,7 @@ export var ContactEdit = {
       var url = '/api/v2/contact/' + $(this).data('id');
       $.ajax( url , {
           method: 'DELETE',
+          headers: {"Authorization": "Bearer "+jwt_token},
           complete: function(xhr, status){
             window.location = "/opportunity";
             return true;
@@ -226,6 +236,7 @@ export var ContactEdit = {
       var url = '/api/v2/organizations/' + organization_id;
       $.ajax( url , {
           method: 'DELETE',
+          headers: {"Authorization": "Bearer "+jwt_token},
           complete: function(xhr, status){
             window.location = "/opportunity";
             return true;
@@ -254,6 +265,7 @@ export var ContactEdit = {
     
         $.ajax('/api/v2/timeline_events', {
           method: 'POST',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: new FormData(this),
           processData: false,
           contentType: false,

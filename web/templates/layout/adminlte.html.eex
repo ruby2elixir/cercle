@@ -21,6 +21,9 @@
     
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <%= if Guardian.Plug.current_token(@conn) do %>
+      <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
+    <% end %>
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav">

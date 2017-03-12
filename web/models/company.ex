@@ -6,6 +6,10 @@ defmodule CercleApi.Company do
     field :title, :string
     field :logo_image, CercleApi.CompanyLogoImage.Type
     has_many :users, CercleApi.User
+    has_many :contacts, CercleApi.Contact
+    has_many :organizations, CercleApi.Organization
+    has_many :opportunities, CercleApi.Opportunity
+    has_many :boards, CercleApi.Board
     field :data_fields, :map 
     timestamps
   end

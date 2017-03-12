@@ -1,6 +1,5 @@
 let ContactLive = {
   init(socket, contact_id){
-
     // connect to the socket
     socket.connect()
    
@@ -25,11 +24,14 @@ let ContactLive = {
   },
 
   activities_init() {
+    var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
+    
     $('.activity_delete').click(function(){
       var task_id = $(this).data('id');
       var url = '/api/v2/activity/' + task_id;
       $.ajax( url , {
           method: 'DELETE',
+          headers: {"Authorization": "Bearer "+jwt_token},
           complete: function(xhr, status){
             $('#row_task_'+task_id).remove();
             $(this).empty();
@@ -43,6 +45,7 @@ let ContactLive = {
       var url = '/api/v2/activity/' + $(this).data('id');
       $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'activity[title]': new_title },
           complete: function(xhr, status){
             return true;
@@ -55,6 +58,7 @@ let ContactLive = {
       var url = '/api/v2/activity/' + $(this).data('id');
       $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'activity[user_id]': user_id },
           complete: function(xhr, status){
             return true;
@@ -82,6 +86,7 @@ let ContactLive = {
         var url = '/api/v2/activity/' + $(this).data('id');
         $.ajax( url , {
             method: 'PUT',
+            headers: {"Authorization": "Bearer "+jwt_token},
             data: { 'activity[due_date]': new_date.toISOString() },
             complete: function(xhr, status){
               return true;
@@ -113,6 +118,7 @@ let ContactLive = {
         var url = '/api/v2/activity/' + $(this).data('id');
         $.ajax( url , {
             method: 'PUT',
+            headers: {"Authorization": "Bearer "+jwt_token},
             data: { 'activity[due_date]': new_date.toISOString() },
             complete: function(xhr, status){
               return true;
@@ -138,6 +144,7 @@ let ContactLive = {
       var that = $(this);
       $.ajax( url , {
           method: 'PUT',
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: { 'activity[is_done]': $(this).is(":checked") },
           complete: function(xhr, status){
             if(that.is(":checked")){

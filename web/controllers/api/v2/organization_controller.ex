@@ -3,6 +3,8 @@ defmodule CercleApi.APIV2.OrganizationController do
 
   alias CercleApi.Organization
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   plug :scrub_params, "organization" when action in [:create, :update]
 
   def index(conn, _params) do

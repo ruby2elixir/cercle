@@ -1,5 +1,5 @@
 $(function() {
-
+  var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
   $('#referral-form').submit(function(e){
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
@@ -11,6 +11,7 @@ $(function() {
       $.ajax('/api/v2/contact', {
         method: 'POST',
         data: new FormData(this),
+        headers: {"Authorization": "Bearer "+jwt_token},
         contentType: false,
         processData: false,
         success: function(result){
