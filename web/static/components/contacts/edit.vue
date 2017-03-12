@@ -141,13 +141,15 @@ export default {
 
         },
         setAuthToken(){
-          this.$http.get('/current_user').then(resp => {
+          var vm = this
+          vm.$http.get('/current_user').then(resp => {
               localStorage.setItem('auth_token', resp.data.token)
               Vue.http.headers.common['Authorization'] = localStorage.getItem('auth_token');
+              vm.connectToSocket();
             })
         },
         connectToSocket() {
-            this.socket = new Socket("/socket", {params: {token: window.userToken}});
+            this.socket = new Socket("/socket", {params: { token: localStorage.getItem('auth_token') }});
             this.socket.connect();
             this.channel = this.socket.channel("contacts:" + this.contact_id, {});
             this.channel.join()
@@ -177,7 +179,6 @@ export default {
         }
     },
     mounted(){
-        this.connectToSocket();
         this.setAuthToken();
 
     }
