@@ -19,14 +19,7 @@
       <a id="add_contact_to_opportunity" href ="javascript:void(0);" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;">+ Add ...</a>
     </div>
     
-    <to-do>
-      <comment_form slot="comment-form" />
-      <timeline_events
-        slot="timeline-events"
-        :events="events"
-        /> 
-    </to-do>
-    
+     <slot name="to-do" />
   </div>
 </div>
 
@@ -34,19 +27,14 @@
 
 <script>
   import InlineEdit from "../inline-common-edit.vue"
-  import ToDo from "./to-do-edit.vue"
-  import CommentForm from "./comment-form.vue"
-  import TimelineEvents from "./timeline-events.vue"
   export default {
-  props: ['activities', 'events'],
+  props: ['activities'],
   methods: {
 
   },
   components: { 
-    'inline-edit': InlineEdit,
-    'to-do': ToDo,
-    'comment_form': CommentForm,
-    'timeline_events': TimelineEvents
+    'inline-edit': InlineEdit
+
   }
   }
 </script>

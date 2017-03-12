@@ -23,7 +23,7 @@
   },
   methods: {
     sendMessage(){
-      console.log('sendMessage', this.message)
+      this.$emit('submit', this.message)
       this.message = ''
     }
   },

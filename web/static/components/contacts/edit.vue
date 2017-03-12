@@ -38,21 +38,32 @@
         <div class="row">
           <opportunity-edit
             :activities="activities"
-            :events="events"
-            />
+            >
+          <to-do slot="to-do">
+            <comment_form slot="comment-form" v-on:submit="addComment" />
+            <timeline_events
+              slot="timeline-events"
+              :events="events"
+             /> 
+          </to-do>
+
+          </opportunity-edit>
         </div>
       </section>
     </div>
   </div>
 </template>
-<!-- <li slot="menu"><a href="#" v-on:click="deleteContact">Delete Contact</a></li> -->
+
 <script>
 import {Socket, Presence} from "phoenix"
 import InlineEdit from "../inline-common-edit.vue"
 import ProfileEdit from "./profile-edit.vue"
 import OrganizationEdit from "./organization-edit.vue"
 import OpportunityEdit from "./opportunity-edit.vue"
-
+import ToDo from "./to-do-edit.vue"
+import CommentForm from "./comment-form.vue"
+import TimelineEvents from "./timeline-events.vue"
+  
 export default {
     props: ['contact_id'],
     data() {
@@ -72,9 +83,26 @@ export default {
         'inline-edit': InlineEdit,
         'profile-edit': ProfileEdit,
         'organization-edit': OrganizationEdit,
-        'opportunity-edit': OpportunityEdit
+        'opportunity-edit': OpportunityEdit,
+        'to-do': ToDo,
+        'comment_form': CommentForm,
+        'timeline_events': TimelineEvents
     },
       methods: {
+        addComment(msg) {
+          console.log('add messages', msg)
+          var url = '/api/v2/timeline_events';
+          this.$http.post(url,
+              { timeline_event: {
+                  company_id: this.contact.company_id,
+                  contact_id: this.contact.id,
+                  content: msg, 
+                  event_name: 'comment'
+                  }
+                }
+             )
+          
+        },
         deleteContact: function(){
          console.log('delete contact');
         },
