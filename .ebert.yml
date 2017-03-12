@@ -21,5 +21,6 @@ exclude_paths:
 - config
 - priv/repo
 - test
+- web/static/css
 - web/static/js/adminlte
 - web/static/vendor

@@ -48,8 +48,8 @@ defmodule CercleApi.Admin.CompanyController do
         conn
         |> put_flash(:info, "Company updated successfully.")
         |> redirect(to: admin_company_path(conn, :show, company))
-      {:error, changeset} ->
-        render(conn, "edit.html", company: company, changeset: changeset)
+        {:error, changeset} ->
+          render(conn, "edit.html", company: company, changeset: changeset)
     end
   end
 
@@ -59,9 +59,10 @@ defmodule CercleApi.Admin.CompanyController do
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
     Repo.delete!(company)
-
+  
     conn
     |> put_flash(:info, "Company deleted successfully.")
     |> redirect(to: admin_company_path(conn, :index))
   end
+
 end

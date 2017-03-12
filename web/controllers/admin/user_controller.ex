@@ -2,7 +2,7 @@ defmodule CercleApi.Admin.UserController do
   use CercleApi.Web, :controller
 
   alias CercleApi.User
-	alias CercleApi.Company
+  alias CercleApi.Company
 
   plug :scrub_params, "user" when action in [:create, :update]
 
@@ -13,7 +13,7 @@ defmodule CercleApi.Admin.UserController do
 
   def new(conn, _params) do
     changeset = User.changeset(%User{})
-		companies = Repo.all(Company) |> Enum.map(&{&1.title, &1.id})
+    companies = Enum.map(Repo.all(Company), fn {k, v} -> {k.title, v.id} end)
     render(conn, "new.html", changeset: changeset, companies: companies)
   end
 
@@ -38,15 +38,14 @@ defmodule CercleApi.Admin.UserController do
   def edit(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
     changeset = User.changeset(user)
-		companies = Repo.all(Company) |> Enum.map(&{&1.title, &1.id})
+    companies = Enum.map(Repo.all(Company), fn {k, v} -> {k.title, v.id} end)
     render(conn, "edit.html", user: user, changeset: changeset, companies: companies)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Repo.get!(User, id)
-    companies = Repo.all(Company) |> Enum.map(&{&1.title, &1.id})
-		changeset = User.update_changeset(user, user_params)
-
+    companies = Enum.map(Repo.all(Company), fn {k, v} -> {k.title, v.id} end)
+    changeset = User.update_changeset(user, user_params)
     case Repo.update(changeset) do
       {:ok, user} ->
         conn
@@ -59,13 +58,11 @@ defmodule CercleApi.Admin.UserController do
 
   def delete(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
-
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
     Repo.delete!(user)
-
     conn
-    |> put_flash(:info, "User deleted successfully.")
-    |> redirect(to: admin_user_path(conn, :index))
+      |> put_flash(:info, "User deleted successfully.")
+      |> redirect(to: admin_user_path(conn, :index))
   end
 end
