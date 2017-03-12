@@ -17,6 +17,11 @@ defmodule CercleApi.Router do
     plug :fetch_session
   end
 
+  pipeline :api_auth do
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -83,7 +88,7 @@ defmodule CercleApi.Router do
   end
 
   scope "/", CercleApi do
-    pipe_through :api
+    pipe_through [:api, :api_auth]
 
 
 

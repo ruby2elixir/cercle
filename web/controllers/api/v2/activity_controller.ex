@@ -8,8 +8,12 @@ defmodule CercleApi.APIV2.ActivityController do
   alias CercleApi.Company
   alias CercleApi.Organization
   alias CercleApi.User
+  
+  plug Guardian.Plug.EnsureAuthenticated
 
   plug :scrub_params, "activity" when action in [:create, :update]
+
+
 
 
   def create(conn, %{"activity" => activity_params }) do

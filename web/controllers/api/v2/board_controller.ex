@@ -9,6 +9,8 @@ defmodule CercleApi.APIV2.BoardController do
   alias CercleApi.Organization
   alias CercleApi.User
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   plug :scrub_params, "board" when action in [:create, :update]
 
 

@@ -4,6 +4,8 @@ defmodule CercleApi.APIV2.UserController do
   alias CercleApi.User
   alias CercleApi.{Company, Organization}
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   plug :scrub_params, "user" when action in [:create, :update]
 
 

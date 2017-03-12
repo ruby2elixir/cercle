@@ -20,6 +20,11 @@
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <%= if Guardian.Plug.current_token(@conn) do %>
+      <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
+    <% end %>
 
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
@@ -45,7 +50,7 @@
                 <%= if is_integer(assigns[:current_user].company_id) do %>
                 <li>
                 <a href="/activity">
-                 <!-- 
+                 <!--
                   <span class="label label-primary">4</span>
                   -->
                   Inbox
@@ -103,14 +108,6 @@
 
                   </li>
 
-
-
-                  <li>
-            <a href="#" data-toggle="control-sidebar"><i class="fa fa-bell-o"></i>
-              <span class="label label-warning">10</span></a>
-          </li>
-
-
                 </ul>
               </div><!-- /.navbar-custom-menu -->
           </div><!-- /.container-fluid -->
@@ -127,9 +124,14 @@
           <%= if get_flash(@conn, :error) do %>
             <p class="alert alert-danger" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :error) %></p>
           <% end %>
-        <div class="container">
+        <%= if assigns[:no_container] do %>
           <%= render @view_module, @view_template, assigns %>
-        </div><!-- /.container -->
+        <%= end %>
+        <%= if !assigns[:no_container] do %>
+          <div class="container">
+            <%= render @view_module, @view_template, assigns %>
+          </div><!-- /.container -->
+        <%end%>
       </div><!-- /.content-wrapper -->
 
 
@@ -268,6 +270,18 @@ LOST
 WIN
 </div>
     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+
+ <%= if (@conn.assigns[:current_user].id) do %>
+<script>
+  if (window.location.hostname == "www.cercle.co") {
+  window.intercomSettings = {
+    app_id: "mkbrkdwj",
+    name: "<%=@conn.assigns[:current_user].user_name%>", // Full name
+    email: "<%=@conn.assigns[:current_user].login%>" // Email address
+  };
+}
+</script>
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/mkbrkdwj';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+<%end%>
   </body>
 </html>

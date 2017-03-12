@@ -1,6 +1,7 @@
 $(function() {
 
   $('#board-form').submit(function(e){
+    var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
 
@@ -10,6 +11,7 @@ $(function() {
       var board_column = $("#board_column").val();
       $.ajax('/api/v2/board', {
         method: 'POST',
+        headers: {"Authorization": "Bearer "+jwt_token},
         data: new FormData(this),
         contentType: false,
         processData: false,

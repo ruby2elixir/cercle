@@ -5,6 +5,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
   alias CercleApi.User
   alias CercleApi.Contact
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   def index(conn, _params) do
     te = Repo.all(TimelineEvent)
     render(conn, "index.json", timeline_events: te)

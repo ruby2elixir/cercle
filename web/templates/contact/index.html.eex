@@ -21,6 +21,7 @@
                    <th>Organization</th>
                    <th>Email</th>
                    <th>Phone</th>
+                   <th>Tags</th>
                     <th>Last Updated</th>
                    </tr>
                   <%= for c <- @leads_pending do %>
@@ -35,10 +36,15 @@
                        <%= if (c.organization) do %><%= c.organization.name %><%end%>
                       </td>
                        <td>
-                        <%= c.email %></b>
+                        <%= c.email %>
                        </td>
                        <td>
-                        <%= c.phone %></b>
+                        <%= c.phone %>
+                       </td>
+                       <td>
+                        <%= for tag <- c.tags do %>
+                          <%=tag.name%> 
+                        <%end%>
                        </td>
                      <td style="width:120px;">
                       <span style="color:grey;font-size:14px;"><%= time_ago_in_words c.updated_at %></span> </td>

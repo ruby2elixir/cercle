@@ -11,7 +11,11 @@ defmodule CercleApi.APIV2.ContactController do
   alias CercleApi.Tag
   alias CercleApi.ContactTag
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   plug :scrub_params, "contact" when action in [:create, :update]
+
+  plug Guardian.Plug.EnsureAuthenticated
 
 
 
@@ -21,32 +25,10 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def create(conn, %{"contact" => contact_params}) do
-    company_id = contact_params["company_id"]
-    if contact_params["email"] do
-      domain_email = List.first(Enum.take(String.split(contact_params["email"], "@"), -1))
+    user = Guardian.Plug.current_resource(conn)
+    company = Repo.get!(Company, user.company_id)
 
-      query = from organization in Organization,
-        where: organization.website == ^domain_email,
-        where: organization.company_id == ^company_id
-
-      organizations = Repo.all(query)
-
-      if Enum.count(organizations) == 0 do
-        organization_params = %{"name" => domain_email, "website" => domain_email, "company_id" => company_id}
-        changeset = Organization.changeset(%Organization{}, organization_params)
-        case Repo.insert(changeset) do
-          {:ok, org} ->
-            organization_id = org.id
-        end
-      end
-
-      organizations = Repo.all(query)
-      organization = Enum.at(organizations, 0)
-      organization_id = organization.id
-      contact_params = %{contact_params | "organization_id" => organization_id}
-    end
-
-    changeset = Contact.changeset(%Contact{}, contact_params)
+    changeset = Ecto.build_assoc(company, :contacts, contact_params)
     case Repo.insert(changeset) do
       {:ok, contact} ->
         conn

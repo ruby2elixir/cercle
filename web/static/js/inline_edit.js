@@ -1,4 +1,28 @@
 $(function() {
+  var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
+  $('.textarea-inline-editable').each(function(index){
+    var ele = $(this);
+    ele.blur(function(e) {
+      e.preventDefault();
+      var params = {};
+      params[ele.data('param-name')] = ele.val();
+      $.ajax(ele.data('inline-editurl'), {
+        type: ele.data('type'),
+        headers: {"Authorization": "Bearer "+jwt_token},
+        data: params,
+        success: function(xhr, st){
+          ele.text(params[ele.data('param-name')]);
+        }
+      })
+    });
+    ele.keypress(function (e) {
+        if(e.which == 13) {
+          //submit form via ajax, this is not JS but server side scripting so not showing here
+          ele.blur()
+        }
+    });
+  });
+
   $('.inline-editable').each(function(index){
     var ele = $(this);
   
@@ -19,8 +43,8 @@ $(function() {
         editContainer.find('.editable-input').append(inputElement);
       }
       else{
-        inputElement = $("<input style='height: 25px;width: 125px;' class='form-control input-sm' type='text' />");
-        editContainer.find('.editable-input').append(inputElement);
+        inputElement = $("<input style='height: 25px;width: 175px;' class='form-control input-sm' type='text' />");
+        editContainer.find('.editable-input').append(inputElement);   
       }
   
       
@@ -33,6 +57,7 @@ $(function() {
   
         $.ajax(ele.data('inline-editurl'), {
           type: ele.data('type'),
+          headers: {"Authorization": "Bearer "+jwt_token},
           data: params,
           success: function(xhr, st){
             ele.text(params[ele.data('param-name')]);
@@ -54,6 +79,11 @@ $(function() {
       });
   
       editContainer.insertAfter(ele);
+      if (ele.data('input-type') == 'textarea'){
+        editContainer.find('.editable-input textarea').first().focus();
+      }else{
+        editContainer.find('.editable-input input').first().focus();
+      }
     });
   });
 });

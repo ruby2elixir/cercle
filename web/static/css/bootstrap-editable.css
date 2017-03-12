@@ -655,6 +655,6 @@ a.editable-click.editable-disabled:hover {
 }
 
 .inline-edit-empty:after {
-  content: "-empty-";
+  content: attr(data-placeholder);
   color: #aaa;
 }
