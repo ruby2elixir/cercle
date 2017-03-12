@@ -15,7 +15,6 @@ defmodule CercleApi.APIV2.BoardController do
 
 
   def create(conn, %{"board" => board_params }) do
-
     changeset = Board.changeset(%Board{}, board_params)
     case Repo.insert(changeset) do
       {:ok, board} ->
@@ -40,7 +39,6 @@ defmodule CercleApi.APIV2.BoardController do
   def update(conn, %{"id" => id, "board" => board_params}) do
     board = Repo.get!(Board, id)
     changeset = Board.changeset(board, board_params)
-
     case Repo.update(changeset) do
       {:ok, board} ->
         render(conn, "show.json", board: board)
@@ -52,7 +50,6 @@ defmodule CercleApi.APIV2.BoardController do
   end
 
   def delete(conn, %{"id" => id}) do
-
   end
 
 end

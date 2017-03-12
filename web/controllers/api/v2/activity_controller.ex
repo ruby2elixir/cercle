@@ -13,11 +13,7 @@ defmodule CercleApi.APIV2.ActivityController do
 
   plug :scrub_params, "activity" when action in [:create, :update]
 
-
-
-
   def create(conn, %{"activity" => activity_params }) do
-   
    changeset = Activity.changeset(%Activity{}, activity_params)
     case Repo.insert(changeset) do
       {:ok, activity} ->
@@ -35,7 +31,6 @@ defmodule CercleApi.APIV2.ActivityController do
   end
 
   def update(conn, %{"id" => id, "activity" => activity_params}) do
-  
     activity = Repo.get!(Activity, id)
     changeset = Activity.changeset(activity, activity_params)
     case Repo.update(changeset) do
