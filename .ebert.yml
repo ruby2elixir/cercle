@@ -1,5 +1,3 @@
-# This configuration was used Ebert to review the kf8a/drought repository
-# on ed48ed394f3819c94f27a2ab208acaf194ad8161.
 # You can make this the default configuration for future reviews by moving this
 # file to your repository as `.ebert.yml` and pushing it to GitHub, and tweak
 # it as you wish - To know more on how to change this file to better review your
@@ -19,9 +17,9 @@ engines:
   remark-lint:
     enabled: true
 exclude_paths:
+- bin
 - config
 - priv/repo
 - test
-- web/static/css/app.css
-- web/static/css/phoenix.css
-- web/static/js/app.js
+- web/static/js/adminlte
+- web/static/vendor
