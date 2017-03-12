@@ -172,7 +172,7 @@ export default {
           var vm = this
           vm.$http.get('/current_user').then(resp => {
               localStorage.setItem('auth_token', resp.data.token)
-              Vue.http.headers.common['Authorization'] = localStorage.getItem('auth_token');
+              Vue.http.headers.common['Authorization'] = "Bearer " + localStorage.getItem('auth_token');
               vm.connectToSocket();
             })
         },
