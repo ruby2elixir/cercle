@@ -4,7 +4,6 @@ $(function() {
     var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
-
     if($("#contact_name").val() != ""){
       var user_id = $("#user_id").val();
       var company_id = $("#company_id").val();
@@ -24,10 +23,5 @@ $(function() {
       $(this).find('input[type=submit]').removeAttr('disabled');  
       alert("Name can't be blank");
     }
-    
   });
 });
-
-
-
-
