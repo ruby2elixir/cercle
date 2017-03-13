@@ -2,13 +2,13 @@
   <div class="contact-page-events">
     <div class="event" v-for="event in events">
       <div class="user-block">
-        <img v-if="event.user.profile_image" class="img-circle img-bordered-sm" :src="event.user.profile_image" alt="user image">
+        <img v-if="event.user && event.user.profile_image" class="img-circle img-bordered-sm" :src="event.user.profile_image" alt="user image">
         <img v-else class="img-circle img-bordered-sm" src="/images/pp_2.png" alt="user image">
       </div>
       <div class="message-block">
         <div style="padding:5px;font-size:15px;padding-bottom:15px;">
           <span class="username" style="">
-            {{ event.user.user_name }}
+            {{ event.user && event.user.user_name }}
           </span>
           <span class="description"> {{event.event_name}} </span>
         </div>
@@ -31,6 +31,11 @@
     timestamp(time) {
       return Moment(time).fromNow()
     }
+  },
+  computed: {
+            profile_image(event) {
+            return event.user && event.user.profile_image
+            }
   },
   components: {  },
   }

@@ -38,16 +38,10 @@
         <div class="row">
           <opportunity-edit
             :activities="activities"
-            >
-          <to-do slot="to-do">
-            <comment_form slot="comment-form" v-on:submit="addComment" />
-            <timeline_events
-              slot="timeline-events"
-              :events="events"
-             /> 
-          </to-do>
+            :events="events"
+            v-on:addComment="addComment"
+            />
 
-          </opportunity-edit>
         </div>
       </section>
     </div>
@@ -60,9 +54,6 @@ import InlineEdit from "../inline-common-edit.vue"
 import ProfileEdit from "./profile-edit.vue"
 import OrganizationEdit from "./organization-edit.vue"
 import OpportunityEdit from "./opportunity-edit.vue"
-import ToDo from "./to-do-edit.vue"
-import CommentForm from "./comment-form.vue"
-import TimelineEvents from "./timeline-events.vue"
   
 export default {
     props: ['contact_id'],
@@ -83,10 +74,8 @@ export default {
         'inline-edit': InlineEdit,
         'profile-edit': ProfileEdit,
         'organization-edit': OrganizationEdit,
-        'opportunity-edit': OpportunityEdit,
-        'to-do': ToDo,
-        'comment_form': CommentForm,
-        'timeline_events': TimelineEvents
+        'opportunity-edit': OpportunityEdit
+
     },
       methods: {
         addComment(msg) {
