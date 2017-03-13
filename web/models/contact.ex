@@ -38,13 +38,22 @@ defmodule CercleApi.Contact do
     |> cast(params, @required_fields, @optional_fields)
   end
 
-  def preload_data(query \\ %Contact{}) do
-    comments_query = from c in CercleApi.TimelineEvent, order_by: [desc: c.inserted_at], preload: :user
-
-    from q in query, preload: [
-      :company, :organization, :tags,
-      activities: [:user], timeline_event: ^comments_query
-    ]
+  def opportunity(contact) do
+    open_opportunity = from opp in CercleApi.Opportunity,
+      limit: 1,
+      where: fragment("? = ANY (?)", ^contact.id, opp.contact_ids),
+      where: opp.status == 0,
+      order_by: [desc: opp.inserted_at],
+      preload: [:board, :board_column]
+    CercleApi.Repo.one(open_opportunity)
   end
 
+  def preload_data(query \\ %Contact{}) do
+    comments_query = from c in CercleApi.TimelineEvent, order_by: [desc: c.inserted_at], preload: :user
+    from q in query, preload: [
+      :company, :organization, :tags,
+      activities: [:user],
+      timeline_event: ^comments_query
+    ]
+  end
 end

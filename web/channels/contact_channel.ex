@@ -1,8 +1,7 @@
 defmodule CercleApi.ContactChannel do
   use Phoenix.Channel
   require Logger
-  alias CercleApi.Contact
-  alias CercleApi.Repo
+  alias CercleApi.{Contact, Repo}
 
   def join("contacts:" <> contact_id, _message, socket) do
     socket = assign(socket, :contact_id, contact_id)
@@ -23,7 +22,8 @@ defmodule CercleApi.ContactChannel do
       tags: contact.tags,
       organization: contact.organization,
       activities: contact.activities,
-      events: contact.timeline_event
+      events: contact.timeline_event,
+      opportunity: Contact.opportunity(contact)
     }
 
     {:noreply, socket}

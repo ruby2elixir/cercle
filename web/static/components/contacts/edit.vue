@@ -37,6 +37,7 @@
 
         <div class="row">
           <opportunity-edit
+            :opportunity="opportunity"
             :activities="activities"
             :events="events"
             v-on:addComment="addComment"
@@ -64,6 +65,7 @@ export default {
             contact: { },
             company: {},
             organization: null,
+            opportunity: null, 
             tags: [],
             activitites: [],
             events: []
@@ -176,6 +178,9 @@ export default {
                 .receive("error", resp => { console.log("Unable to join", resp) });
                 this.channel.on('state', payload => {
                 this.contact = payload.contact
+                if (payload.opportunity) {
+                  this.opportunity = payload.opportunity
+                }
                 if (payload.company) {
                     this.company = payload.company
                 }

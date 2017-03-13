@@ -1,10 +1,14 @@
 defmodule CercleApi.Opportunity do
   use CercleApi.Web, :model
-	
+
+  @derive {Poison.Encoder, only: [
+              :id, :name, :description, :status, :contact_ids
+            ]}
+
   schema "opportunities" do
     field :name, :string
     field :description, :string
-    field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED
+    field :status, :integer, default: 0 #### 0 OPEN, 1 CLOSED
     belongs_to :main_contact, CercleApi.Contact
     field :contact_ids, {:array, :integer}
     belongs_to :user, CercleApi.User
@@ -27,5 +31,4 @@ defmodule CercleApi.Opportunity do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
 end

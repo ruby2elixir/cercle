@@ -39,7 +39,7 @@
   import TimelineEvents from "./timeline-events.vue"
 
   export default {
-  props: ['activities', 'events'],
+  props: ['activities', 'events', 'opportunity'],
   methods: {
     addComment(msg){
       this.$emit('addComment', msg)
