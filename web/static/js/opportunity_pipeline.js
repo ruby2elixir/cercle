@@ -1,6 +1,6 @@
 export var Pipeline = {
   start: function(){
-    var jwt_token = document.querySelector('meta[name="guardian_token"]').content;
+    var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
     $( ".column" ).sortable({
       connectWith: ['.column', '.column_status'],
       handle: ".portlet-content",
@@ -29,7 +29,7 @@ export var Pipeline = {
           $(ui.item).remove();
           $.ajax({
             type: 'DELETE',
-            headers: {"Authorization": "Bearer "+jwt_token},
+            headers: {"Authorization": "Bearer "+jwtToken},
             url: '/api/v2/opportunity/'+ id
           });
         } else if (stage === "win"){
@@ -37,14 +37,14 @@ export var Pipeline = {
           $.ajax({
             data: {opportunity : {status: 1}},
             type: 'PUT',
-            headers: {"Authorization": "Bearer "+jwt_token},
+            headers: {"Authorization": "Bearer "+jwtToken},
             url: '/api/v2/opportunity/'+ id
           });
         }else{
           $.ajax({
             data: {opportunity : {board_column_id: stage}},
             type: 'PUT',
-            headers: {"Authorization": "Bearer "+jwt_token},
+            headers: {"Authorization": "Bearer "+jwtToken},
             url: '/api/v2/opportunity/'+ id
           });
         }        
@@ -56,4 +56,4 @@ export var Pipeline = {
       .find( ".portlet-header" )
         .addClass( "ui-widget-header ui-corner-all" );
   }
-}
+};
