@@ -263,19 +263,8 @@
       <!-- /.tab-pane -->
     </div>
   </aside>
+</div><!-- ./wrapper -->
 
-    </div><!-- ./wrapper -->
-
-<div style="position:fixed;bottom:0px;width:100%;height:120px;background-color:grey;visibility:hidden;text-align:center;" id="opportunity_basket" >
-<div style="float:none;display:inline-block;padding:40px;background-color:white;margin-right:30px;height:100px;margin-top:10px;background-color:white;font-weight:800;width:200px;font-size:22px;" class="column" data-id="delete">
-DELETE
-</div>
-<div style="float:none;display:inline-block;padding:40px;background-color:white;margin-right:30px;height:100px;margin-top:10px;background-color:red;font-weight:800;width:200px;font-size:22px;" class="column" data-id="lost">
-LOST
-</div>
-<div style="float:none;display:inline-block;padding:40px;background-color:white;margin-right:30px;height:100px;margin-top:10px;background-color:green;font-weight:800;width:200px;font-size:22px;" class="column" data-id="win">
-WIN
-</div>
 <script>window.userToken = "<%= assigns[:user_token] %>";</script>
 
  <%= if (@conn.assigns[:current_user].id) do %>
