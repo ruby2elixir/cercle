@@ -135,10 +135,12 @@ $(function() {
                 $('#sec-3').toggleClass('hidden');
                 $('#step3').removeClass('steps-li-inactive').addClass('steps-li-active active');
                 $('#move-to-step3').text('Next').removeClass('disabled');
-                var headers = data.headers;
-                var mapping = data.mapping;
+                var contact_headers = data.contact_headers;
+                var organization_headers = data.organization_headers;
+                var contact_values = data.contact_values;
+                var organization_values = data.organization_values;
                 file_name = data.file_name
-                prepare_preview_data_table("preview-data-table",headers, mapping, upload_type);
+                prepare_preview_data_table("preview-data-table",contact_headers, organization_headers, contact_values, organization_values);
             }
         });
     });
@@ -149,7 +151,7 @@ $(function() {
         var user_id = $("#user_id").val();
         var company_id = $("#company_id").val();
         $('#final-progress .progress-bar').toggleClass('hidden');
-        if(upload_type == "contact"){
+        if(upload_type){
             // contact-import
             $.ajax({
                 url: '/api/v2/contact_create',
@@ -172,28 +174,6 @@ $(function() {
                     fade_flash();
                 }
             }); 
-        }
-        else{
-            // orgnization-import
-            $.ajax({
-                url: '/api/v2/import_organization',
-                method: 'POST',
-                data: {
-                    mapping: jsonData,
-                    file_name: file_name,
-                    company_id: company_id,
-                },
-                success: function(result){   
-                    $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">Records Imported Succesfully</p>');
-                    $('#move-to-final').text('Finished').addClass('disabled');
-                    window.location = "/contact";
-                },
-                error: function(error) {
-                    $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
-                    $('#move-to-final').text('Next').removeClass('disabled');
-                    fade_flash();
-                }
-            });
         }
     });
 })
@@ -250,29 +230,28 @@ function prepare_db_table(table_name,fields) {
     }
 }
 
-function prepare_preview_data_table(table_name,headers,mapping,upload_type) {
+function prepare_preview_data_table(table_name,contact_headers, organization_headers,contact_values,organization_values) {
 
-    var icon_type = upload_type=="contact" ? "fa fa-user" : "fa fa-building"
-    upload_type = upload_type.charAt(0).toUpperCase() + upload_type.slice(1);
     var tbl = document.getElementById(table_name);
     var caption = tbl.getElementsByTagName('caption')[0];
-    caption.innerHTML = '<i class="'+icon_type +'" aria-hidden="true"></i><span>'+ upload_type+ '</span>';
+    caption.innerHTML = '<i class="fa fa-user" aria-hidden="true"></i><span>Contact</span>';
     var thead = tbl.getElementsByTagName('thead')[0];
     if(thead) $('#preview-head').empty();
     var row = thead.insertRow(0);
     row.className = 'tb-head';
-    for (var j = 0; j < headers.length; j++){ 
+    var final_headers = contact_headers.concat(organization_headers);
+    var final_values = contact_values.concat(organization_values);
+    for (var j = 0; j < final_headers.length; j++){ 
         var headerCell = document.createElement("TH");
-        headerCell.innerHTML = headers[j];
+        headerCell.innerHTML = final_headers[j];
         row.appendChild(headerCell);
     }
-
     var tbody = tbl.getElementsByTagName('tbody')[0];
     $('#preview-body').empty();
     var row = tbody.insertRow(tbody.rows.length);
-    for (var j = 0; j < mapping.length; j++){ 
+    for (var j = 0; j < final_values.length; j++){ 
         var x = row.insertCell(j);
-        x.innerHTML = mapping[j];
+        x.innerHTML = final_values[j];
     }
 }
 

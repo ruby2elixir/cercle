@@ -20,7 +20,7 @@ defmodule CercleApi.Contact do
   end
 
   @required_fields ~w(company_id)
-  @optional_fields ~w(data organization_id user_id email name phone description job_title)
+  @optional_fields ~w(data organization_id user_id name phone email description job_title)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

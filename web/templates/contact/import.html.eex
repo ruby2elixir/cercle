@@ -144,6 +144,8 @@
 </div>
 <script>
 	var jsonData = {};
+	var contact= {};
+	var organization = {};
 	var upload_type;
 	function allowDrop(ev) {
 	    ev.preventDefault();
@@ -161,7 +163,14 @@
 	    ev.target.className = ('contact-fields active');
 	    var db_col = $('#'+data).find('.db-field').text();
 	    var csv_col = $('#'+ev.target.id).prev('td').find('.csv-col').text();
-        jsonData[db_col] = csv_col;
+	    if(upload_type == "contact"){
+        	contact[db_col] = csv_col;
+        }
+        else{
+        	organization[db_col] = csv_col;
+        }
+        jsonData["contact"] = contact;
+        jsonData["organization"] = organization;
         $('#move-to-step3').removeClass('disabled');
        
 	}

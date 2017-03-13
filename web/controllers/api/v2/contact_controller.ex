@@ -146,37 +146,55 @@ defmodule CercleApi.APIV2.ContactController do
     end
     File.write!("tmp/#{file_name}.csv", body)
     table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
-    headers = Map.keys(mapping)
+    contact_headers = Map.keys(mapping["contact"])
+    organization_headers = Map.keys(mapping["organization"])
     first_row = Enum.at(table, 0)
-    preview_values = []
-    preview_values = for {db_col,csv_col} <- mapping do
+    contact_values = []
+    organization_values = []
+    contact_values = for {db_col,csv_col} <- mapping["contact"] do
       first_row[csv_col]
     end
-    json conn, %{headers: headers, mapping: preview_values, file_name: file_name}
+    organization_values = for {db_col,csv_col} <- mapping["organization"] do
+      first_row[csv_col]
+    end
+    json conn, %{contact_headers: contact_headers, organization_headers: organization_headers, contact_values: contact_values, organization_values: organization_values,  file_name: file_name}
   end
 
   def contact_create(conn, %{"mapping" => mapping, "file_name" => file_name, "company_id" => company_id, "user_id" => user_id}) do
 
-    user = Repo.get(User,user_id)
+    user = Repo.get!(User,user_id)
+    organization_params = %{"company_id" => company_id}
     contact_params = %{"company_id" => company_id, "organization_id" => "", "user_id" => user_id}
+
     table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
     File.rm!("tmp/#{file_name}.csv")
 
     total_rows = Enum.count(table)-1
+    contact_headers = Map.keys(mapping["contact"])
+    organization_headers = Map.keys(mapping["organization"])
 
     for i <- 0..total_rows do
-      first_row = Enum.at(table, i)
-      # find only mapped values from csv
-      maps = for {db_col,csv_col} <- mapping do
-        maps = %{db_col => first_row[csv_col]}
+      selected_row = Enum.at(table, i)
+      org_maps = for {db_col,csv_col} <- mapping["organization"] do
+        org_maps = %{db_col => selected_row[csv_col]}
       end
-      contact_params = Enum.reduce(maps, contact_params, fn (map, acc) -> Map.merge(acc, map) end)
-     
-      company_id = contact_params["company_id"]
+      organization_params = Enum.reduce(org_maps, organization_params, fn (map, acc) -> Map.merge(acc, map) end)
+      ext_org = Repo.get_by(Organization, name: organization_params["name"], company_id: organization_params["company_id"])
+      if ext_org do
+        contact_params = %{contact_params | "organization_id" => ext_org.id }
+      else
+        changeset = Organization.changeset(%Organization{}, organization_params)
+        organization = Repo.insert!(changeset)
+        contact_params = %{contact_params | "organization_id" => organization.id }
+      end
+
+      contact_maps = for {db_col,csv_col} <- mapping["contact"] do
+        contact_maps = %{db_col => selected_row[csv_col]}
+      end
+      contact_params = Enum.reduce(contact_maps, contact_params, fn (map, acc) -> Map.merge(acc, map) end)
       changeset = Contact.changeset(%Contact{}, contact_params)
       case Repo.insert(changeset) do
-        {:ok, contact} ->
-          
+        {:ok, contact} ->          
           #create tags
           contact = Repo.get!(Contact, contact.id) 
           query = from c in ContactTag,
@@ -195,18 +213,11 @@ defmodule CercleApi.APIV2.ContactController do
             |> Repo.preload(:tags) # Load existing data
             |> Ecto.Changeset.change() # Build the changeset
             |> Ecto.Changeset.put_assoc(:tags, tags)
-          case Repo.update(changeset) do
-            {:ok, contact} ->
-              IO.inspect "inside tag :ok"
-              IO.inspect contact
-            {:error, changeset} ->
-              IO.inspect "inside tag :error"
-              IO.inspect changeset
-          end
+          Repo.update!(changeset)
         {:error, changeset} ->
-          IO.inspect "ewde"
+          IO.inspect "error ar row#{i+1}"
       end
     end
-    json conn, %{message: "true"}
+    json conn, %{message: "records imported"}
   end
 end

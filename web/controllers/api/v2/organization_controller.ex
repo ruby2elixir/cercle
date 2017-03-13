@@ -61,32 +61,4 @@ defmodule CercleApi.APIV2.OrganizationController do
 
     send_resp(conn, :no_content, "")
   end
-
-  def import_organization(conn, %{"mapping" => mapping, "file_name" => file_name, "company_id" => company_id }) do
-   
-    organization_params = %{"company_id" => company_id}
-    table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
-    File.rm!("tmp/#{file_name}.csv")
-
-    total_rows = Enum.count(table)-1
-    for i <- 0..total_rows do
-      first_row = Enum.at(table, i)
-      # find only mapped values from csv
-      maps = for {db_col,csv_col} <- mapping do
-        maps = %{db_col => first_row[csv_col]}
-      end
-      organization_params = Enum.reduce(maps, organization_params, fn (map, acc) -> Map.merge(acc, map) end) 
-      changeset = Organization.changeset(%Organization{}, organization_params)   
-      case Repo.insert(changeset) do
-        {:ok, organization} ->
-          conn
-          |> render("show.json", organization: organization)
-        {:error, changeset} ->
-          conn
-          |> put_status(:unprocessable_entity)
-          |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
-      end
-    end
-     send_resp(conn, :no_content, "")
-  end
 end
