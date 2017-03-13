@@ -13,7 +13,6 @@ defmodule CercleApi.APIV2.BoardController do
 
   plug :scrub_params, "board" when action in [:create, :update]
 
-
   def create(conn, %{"board" => board_params}) do
     changeset = Board.changeset(%Board{}, board_params)
     case Repo.insert(changeset) do
@@ -34,7 +33,6 @@ defmodule CercleApi.APIV2.BoardController do
         |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
     end
   end
-
 
   def update(conn, %{"id" => id, "board" => board_params}) do
     board = Repo.get!(Board, id)

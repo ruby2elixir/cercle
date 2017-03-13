@@ -8,7 +8,6 @@ defmodule CercleApi.APIV2.UserController do
 
   plug :scrub_params, "user" when action in [:create, :update]
 
-
   def organizations(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
     company_id = current_user.company_id
