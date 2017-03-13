@@ -8,20 +8,22 @@ defmodule CercleApi.APIV2.ActivityController do
   alias CercleApi.Company
   alias CercleApi.Organization
   alias CercleApi.User
-  
+
   plug Guardian.Plug.EnsureAuthenticated
 
   plug :scrub_params, "activity" when action in [:create, :update]
 
-  def create(conn, %{"activity" => activity_params }) do
+  def create(conn, %{"activity" => activity_params}) do
    changeset = Activity.changeset(%Activity{}, activity_params)
     case Repo.insert(changeset) do
       {:ok, activity} ->
-        activity_reload = Repo.get!(CercleApi.Activity, activity.id) |> Repo.preload([:user])
-        company = Repo.get!(CercleApi.Company, activity_reload.user.company_id) |> Repo.preload([:users])
+        activity_reload = Repo.get!(CercleApi.Activity, activity.id)
+        activity_reload = Repo.preload(activity_reload, [:user])
+        company = Repo.get!(CercleApi.Company, activity_reload.user.company_id)
+        company = Repo.preload(company, [:users])
         html = Phoenix.View.render_to_string(CercleApi.ContactView, "_task.html", id: activity.id, is_done: activity.is_done, title: activity.title, due_date: activity.due_date, user_name: activity_reload.user.user_name, user_id: activity_reload.user_id, company: company, current_user_time_zone: activity_params["current_user_time_zone"])
         channel = "contacts:"  <> to_string(activity.contact_id)
-        CercleApi.Endpoint.broadcast!( channel, "new:activity", %{"html" => html})
+        CercleApi.Endpoint.broadcast!(channel, "new:activity", %{"html" => html})
         json conn, "{OK: true}"
       {:error, changeset} ->
         conn

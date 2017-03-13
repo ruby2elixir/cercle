@@ -14,7 +14,7 @@ defmodule CercleApi.APIV2.BoardController do
   plug :scrub_params, "board" when action in [:create, :update]
 
 
-  def create(conn, %{"board" => board_params }) do
+  def create(conn, %{"board" => board_params}) do
     changeset = Board.changeset(%Board{}, board_params)
     case Repo.insert(changeset) do
       {:ok, board} ->
