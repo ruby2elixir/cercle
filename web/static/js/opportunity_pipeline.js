@@ -17,7 +17,7 @@ export var Pipeline = {
         var id = $(ui.item).data("id");
         var column = ui.item.parent()[0];
         var stage = $(column).data("id");
-        if (stage == "lost")
+        if (stage === "lost")
         {
           $(ui.item).remove();
           $.ajax({
@@ -25,14 +25,14 @@ export var Pipeline = {
             type: 'PUT',
             url: '/api/v2/opportunity/'+ id
           });
-        } else if (stage == "delete"){
+        } else if (stage === "delete"){
           $(ui.item).remove();
           $.ajax({
             type: 'DELETE',
             headers: {"Authorization": "Bearer "+jwt_token},
             url: '/api/v2/opportunity/'+ id
           });
-        } else if (stage == "win"){
+        } else if (stage === "win"){
           $(ui.item).remove();
           $.ajax({
             data: {opportunity : {status: 1}},
