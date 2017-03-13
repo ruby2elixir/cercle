@@ -8,5 +8,4 @@ defmodule CercleApi.APIV2.UserController do
 
   plug :scrub_params, "user" when action in [:create, :update]
 
-   
 end

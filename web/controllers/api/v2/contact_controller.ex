@@ -17,8 +17,6 @@ defmodule CercleApi.APIV2.ContactController do
 
   plug Guardian.Plug.EnsureAuthenticated
 
-
-
   def index(conn, _params) do
     contacts = Repo.all(Contact)
     render(conn, "index.json", contacts: contacts)
@@ -106,9 +104,6 @@ defmodule CercleApi.APIV2.ContactController do
           |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
       end
     end
-
-  
-
   end
 
   def delete(conn, %{"id" => id}) do
