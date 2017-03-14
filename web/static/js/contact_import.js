@@ -1,6 +1,6 @@
 $(function() {
-    var s3_url=""
-    var file_name=""
+    var s3Url=""
+    var fileName=""
     var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
 	$('#fileupload').fileupload({
         
@@ -8,10 +8,10 @@ $(function() {
         headers: {'Authorization': 'Bearer '+jwtToken},
         add: function (e, data) {
     
-            var file_name = data.files[0].name;
-            var file_size = (data.files[0].size/1000).toFixed(1);
-            $('#list-uploaded-file').find('table tbody tr td')[0].innerHTML = file_name;
-            $('#list-uploaded-file').find('table tbody tr td')[1].innerHTML = file_size + "kB";
+            var fileName = data.files[0].name;
+            var fileSize = (data.files[0].size/1000).toFixed(1);
+            $('#list-uploaded-file').find('table tbody tr td')[0].innerHTML = fileName;
+            $('#list-uploaded-file').find('table tbody tr td')[1].innerHTML = fileSize + "kB";
             $('#list-uploaded-file').find('table tbody tr td')[2].innerHTML = data.files[0].type;
             $('#list-uploaded-file').find('table tbody tr td')[3].innerHTML = data.files[0].lastModifiedDate;
             var fileType = data.files[0].name.split('.').pop(), allowdtypes = 'csv,xls,xlsx';
@@ -33,7 +33,7 @@ $(function() {
                 $("#move-to-step2").on('click', function (ev) {
                     ev.preventDefault();
                     $(this).addClass('disabled');
-                    $('#uploaded-file-name').html('<span>Uploading </span><span class="filename">'+ file_name+'</span>');
+                    $('#uploaded-file-name').html('<span>Uploading </span><span class="filename">'+ fileName+'</span>');
                     var xhr = data.submit();
                 });
             }
@@ -44,10 +44,10 @@ $(function() {
                 return false;
             }
             else{
-                if (!$('#left-section-table tr').length) prepare_file_table("left-section-table", result.headers,result.first_row); 
-                if (!$('#contact-field-table tr').length) prepare_db_table("contact-field-table", result.contact_fields);
-                if (!$('#organization-field-table tr').length) prepare_db_table("organization-field-table", result.organization_fields);
-                if (result) s3_url = result.s3_url;
+                if (!$('#left-section-table tr').length) prepareFileTable("left-section-table", result.headers,result.first_row); 
+                if (!$('#contact-field-table tr').length) prepareDbTable("contact-field-table", result.contact_fields);
+                if (!$('#organization-field-table tr').length) prepareDbTable("organization-field-table", result.organization_fields);
+                if (result) s3Url = result.s3_url;
             }
         },
         progress: function (e, data) {
@@ -123,12 +123,12 @@ $(function() {
             async: true,
             data: {
                 mapping: jsonData,
-                s3_url: s3_url
+                s3_url: s3Url
             },
             error: function(error) {
                 $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
                 $('#move-to-step3').text('Next').removeClass('disabled');
-                fade_flash();
+                fadeFlash();
 
             },
             success: function(data) {                
@@ -138,12 +138,12 @@ $(function() {
                 $('#sec-3').toggleClass('hidden');
                 $('#step3').removeClass('steps-li-inactive').addClass('steps-li-active active');
                 $('#move-to-step3').text('Next').removeClass('disabled');
-                var contact_headers = data.contact_headers;
-                var organization_headers = data.organization_headers;
-                var contact_values = data.contact_values;
-                var organization_values = data.organization_values;
-                file_name = data.file_name
-                prepare_preview_data_table("preview-data-table",contact_headers, organization_headers, contact_values, organization_values);
+                var contactHeaders = data.contact_headers;
+                var organizationHeaders = data.organization_headers;
+                var contactValues = data.contact_values;
+                var organizationValues = data.organization_values;
+                fileName = data.file_name
+                preparePreviewDataTable("preview-data-table",contactHeaders, organizationHeaders, contactValues, organizationValues);
             }
         });
     });
@@ -151,10 +151,10 @@ $(function() {
     $('#move-to-final').click(function(e){
         e.preventDefault();
         $(this).text('Importing..').addClass('disabled');
-        var user_id = $("#user_id").val();
-        var company_id = $("#company_id").val();
+        var userId = $("#user_id").val();
+        var companyId = $("#company_id").val();
         $('#final-progress .progress-bar').toggleClass('hidden');
-        if(upload_type){
+        if(uploadType){
             // contact-import
             $.ajax({
                 url: '/api/v2/contact_create',
@@ -162,9 +162,9 @@ $(function() {
                 headers: {'Authorization': 'Bearer '+jwtToken},
                 data: {
                     mapping: jsonData,
-                    file_name: file_name,
-                    company_id: company_id,
-                    user_id: user_id
+                    file_name: fileName,
+                    company_id: companyId,
+                    user_id: userId
                 },
                 success: function(result){
                     $('#final-progress .progress-bar').toggleClass('hidden');
@@ -175,21 +175,21 @@ $(function() {
                 error: function(error) {
                     $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
                     $('#move-to-final').text('Next').removeClass('disabled');
-                    fade_flash();
+                    fadeFlash();
                 }
             }); 
         }
     });
 })
 
-function prepare_file_table(table_name,headers,first_row) {
-    var tbl = document.getElementById(table_name);
+function prepareFileTable(tableName,headers,firstRow) {
+    var tbl = document.getElementById(tableName);
     for (var i = 0; i < headers.length; i++){ 
         var row = tbl.insertRow(tbl.rows.length);
         for (var j = 0; j < 2; j++) {
             if(j==0){
                 var x = row.insertCell(j);
-                x.innerHTML = '<div class="csv-col"><b>'+headers[i]+'</b></div><div class="csv-data">'+first_row[i]+'</div>';
+                x.innerHTML = '<div class="csv-col"><b>'+headers[i]+'</b></div><div class="csv-data">'+firstRow[i]+'</div>';
                 x.className = 'active csv-fields';
             }
             else{
@@ -207,25 +207,25 @@ function prepare_file_table(table_name,headers,first_row) {
     }
 }
 
-function prepare_db_table(table_name,fields) {
+function prepareDbTable(tableName,fields) {
 
-    if (table_name == "contact-field-table") {
-        var icon_type = "fa fa-user";
-        var class_name = 'contact-fields';
+    if (tableName == "contact-field-table") {
+        var iconType = "fa fa-user";
+        var className = 'contact-fields';
         var id =  'contact-drag';
     }
     else{
-       var icon_type = "fa fa-building";
-       var class_name = 'organization-fields';
+       var iconType = "fa fa-building";
+       var className = 'organization-fields';
        var id = 'organization-drag';
     }
-    var tbl = document.getElementById(table_name);
+    var tbl = document.getElementById(tableName);
     for (var i = 0; i < fields.length; i++){ 
         var row = tbl.insertRow(tbl.rows.length);       
            
         var x = row.insertCell(0);
-        x.innerHTML = '<i class="'+icon_type +'" aria-hidden="true"></i><span class="db-field">'+ fields[i]+ '</span>';
-        x.className = 'active '+ class_name;
+        x.innerHTML = '<i class="'+iconType +'" aria-hidden="true"></i><span class="db-field">'+ fields[i]+ '</span>';
+        x.className = 'active '+ className;
         x.id = id+i;
         x.draggable = true;
         x.setAttribute("ondrop","return drop(event)");
@@ -234,33 +234,33 @@ function prepare_db_table(table_name,fields) {
     }
 }
 
-function prepare_preview_data_table(table_name,contact_headers, organization_headers,contact_values,organization_values) {
+function preparePreviewDataTable(tableName,contactHeaders, organizationHeaders,contactValues,organizationValues) {
 
-    var tbl = document.getElementById(table_name);
+    var tbl = document.getElementById(tableName);
     var caption = tbl.getElementsByTagName('caption')[0];
     caption.innerHTML = '<i class="fa fa-user" aria-hidden="true"></i><span>Contact</span>';
     var thead = tbl.getElementsByTagName('thead')[0];
     if(thead) $('#preview-head').empty();
     var row = thead.insertRow(0);
     row.className = 'tb-head';
-    var final_headers = contact_headers.concat(organization_headers);
-    var final_values = contact_values.concat(organization_values);
-    for (var j = 0; j < final_headers.length; j++){ 
+    var finalHeaders = contactHeaders.concat(organizationHeaders);
+    var finalValues = contactValues.concat(organizationValues);
+    for (var j = 0; j < finalHeaders.length; j++){ 
         var headerCell = document.createElement("TH");
-        headerCell.innerHTML = final_headers[j];
+        headerCell.innerHTML = finalHeaders[j];
         row.appendChild(headerCell);
     }
     var tbody = tbl.getElementsByTagName('tbody')[0];
     $('#preview-body').empty();
     var row = tbody.insertRow(tbody.rows.length);
-    for (var j = 0; j < final_values.length; j++){ 
+    for (var j = 0; j < finalValues.length; j++){ 
         var x = row.insertCell(j);
-        x.innerHTML = final_values[j];
+        x.innerHTML = finalValues[j];
     }
 }
 
-function fade_flash() {
-   $('.alert').delay(1000).fadeIn('slow', function() {
-      $(this).delay(3000).fadeOut();
-   });
+function fadeFlash() {
+    $('.alert').delay(1000).fadeIn('slow', function() {
+        $(this).delay(3000).fadeOut();
+    });
 }

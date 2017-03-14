@@ -146,14 +146,14 @@
 	var jsonData = {};
 	var contact= {};
 	var organization = {};
-	var upload_type;
+	var uploadType;
 	function allowDrop(ev) {
 	    ev.preventDefault();
 	}
 
 	function drag(ev) {
 	    ev.dataTransfer.setData("text/plain", ev.target.id);
-	    upload_type = $('#'+ev.target.id).closest('div').parent().attr('id');
+	    uploadType = $('#'+ev.target.id).closest('div').parent().attr('id');
 	}
 
 	function drop(ev) {
@@ -161,13 +161,13 @@
 	    ev.target.innerHTML = document.getElementById(data).innerHTML;
 	    ev.target.draggable = 'true';
 	    ev.target.className = ('contact-fields active');
-	    var db_col = $('#'+data).find('.db-field').text();
-	    var csv_col = $('#'+ev.target.id).prev('td').find('.csv-col').text();
-	    if(upload_type == "contact"){
-        	contact[db_col] = csv_col;
+	    var dbCol = $('#'+data).find('.db-field').text();
+	    var csvCol = $('#'+ev.target.id).prev('td').find('.csv-col').text();
+	    if(uploadType == "contact"){
+        	contact[dbCol] = csvCol;
         }
         else{
-        	organization[db_col] = csv_col;
+        	organization[dbCol] = csvCol;
         }
         jsonData["contact"] = contact;
         jsonData["organization"] = organization;
