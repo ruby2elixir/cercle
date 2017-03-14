@@ -1,9 +1,11 @@
 $(function() {
     var s3_url=""
     var file_name=""
+    var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
 	$('#fileupload').fileupload({
         
         dataType: 'json',
+        headers: {'Authorization': 'Bearer '+jwtToken},
         add: function (e, data) {
     
             var file_name = data.files[0].name;
@@ -117,6 +119,7 @@ $(function() {
             url: '/api/v2/view_uploaded_data',
             type: 'POST',
             dataType: 'json',
+            headers: {'Authorization': 'Bearer '+jwtToken},
             async: true,
             data: {
                 mapping: jsonData,
@@ -156,6 +159,7 @@ $(function() {
             $.ajax({
                 url: '/api/v2/contact_create',
                 method: 'POST',
+                headers: {'Authorization': 'Bearer '+jwtToken},
                 data: {
                     mapping: jsonData,
                     file_name: file_name,
