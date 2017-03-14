@@ -26,7 +26,10 @@ defmodule CercleApi.APIV2.ContactController do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
 
-    changeset = Ecto.build_assoc(company, :contacts, contact_params)
+    changeset = company
+      |> Ecto.build_assoc(:contacts)
+      |> Contact.changeset(contact_params)
+
     case Repo.insert(changeset) do
       {:ok, contact} ->
         conn
