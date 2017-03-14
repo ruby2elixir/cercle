@@ -18,6 +18,7 @@ export default {
   }
   input.inline-input:focus {
     outline-width: 0;
+    border: 0.01em solid #f7f7f7;
   }
   textarea.inline-input{
     resize: none;

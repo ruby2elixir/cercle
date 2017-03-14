@@ -20,6 +20,7 @@ export default {
   }
   .inline-textarea:focus {
     outline-width: 0;
+    border: 0.01em solid #f7f7f7;
   }
   textarea.inline-textarea{
     resize: none;

@@ -51,8 +51,9 @@ defmodule CercleApi.Contact do
   def preload_data(query \\ %Contact{}) do
     comments_query = from c in CercleApi.TimelineEvent, order_by: [desc: c.inserted_at], preload: :user
     from q in query, preload: [
-      :company, :organization, :tags,
-      activities: [:user],
+       :organization, :tags,
+       activities: [:user],
+       company: [:users],
       timeline_event: ^comments_query
     ]
   end

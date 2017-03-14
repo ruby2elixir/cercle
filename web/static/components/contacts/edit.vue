@@ -35,12 +35,18 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" v-if="opportunity">
           <opportunity-edit
+            :company="company"
+            :company_users="company_users"
+            :board="board"
+            :board_columns="board_columns"
             :opportunity="opportunity"
+            :opportunity_contacts="opportunity_contacts"
             :activities="activities"
             :events="events"
             v-on:addComment="addComment"
+            v-on:updateOpportunity="updateOpportunity"
             />
 
         </div>
@@ -64,11 +70,15 @@ export default {
             channel: null,
             contact: { },
             company: {},
+            company_users: [],
             organization: null,
             opportunity: null, 
             tags: [],
             activitites: [],
-            events: []
+            events: [],
+            board: null,
+            board_columns: [],
+            opportunity_contacts: []
 
         }
     },
@@ -80,6 +90,11 @@ export default {
 
     },
       methods: {
+      updateOpportunity(data) {
+        var url = '/api/v2/opportunity/' + this.opportunity.id;
+        this.$http.put(url, { opportunity: data })
+        
+      },
         addComment(msg) {
           console.log('add messages', msg)
           var url = '/api/v2/timeline_events';
@@ -118,7 +133,7 @@ export default {
         updateContact(data) {
             this.contact = data
             var url = '/api/v2/contact/' + this.contact_id;
-            $.ajax( url , { method: 'PUT', data: { contact: data }  });
+            this.$http.put(url, { contact: data } )
             },
 
         chooseOrganization(data){
@@ -141,22 +156,16 @@ export default {
         updateOrganization(data){
           var vm = this;
           var url = '/api/v2/organizations/' + vm.organization.id;
-            $.ajax( url , {
-              data: { contact_id: vm.contact.id, organization: vm.organization},
-              method: 'PUT',
-             });
+          this.$http.put(url, { contact_id: vm.contact.id, organization: vm.organization })
         },
 
         buildOrganization(){ this.organization = { name: '', website: '', description: '' } },
         removeOrganization() {
           var vm = this;
           var url = '/api/v2/contact/' + vm.contact.id;
-            $.ajax( url , {
-              method: 'PUT',
-              data: { 'contact[organization_id]': '' },
-              complete: function(xhr, status){ vm.organization = null
-              }
-            });
+         this.$http.put(url, { contact: {organization_id: '' }}).then(resp => {
+            vm.organization = null
+          })
 
         },
         setAuthToken(){
@@ -180,9 +189,11 @@ export default {
                 this.contact = payload.contact
                 if (payload.opportunity) {
                   this.opportunity = payload.opportunity
+                  this.opportunity_contacts = payload.opportunity_contacts
                 }
                 if (payload.company) {
                     this.company = payload.company
+                    this.company_users = payload.company_users
                 }
                 if (payload.tags) {
                     this.tags = payload.tags
@@ -195,6 +206,10 @@ export default {
                 }
                 if (payload.events) {
                     this.events = payload.events
+                }
+                if (payload.board) {
+                   this.board = payload.board
+                   this.board_columns = payload.board_columns
                 }
 
             });

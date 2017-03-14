@@ -2,7 +2,8 @@ defmodule CercleApi.Opportunity do
   use CercleApi.Web, :model
 
   @derive {Poison.Encoder, only: [
-              :id, :name, :description, :status, :contact_ids
+              :id, :name, :description, :status, :contact_ids, :user_id,
+              :board_id, :board_column_id
             ]}
 
   schema "opportunities" do
@@ -31,4 +32,11 @@ defmodule CercleApi.Opportunity do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
+
+  def contacts(opportunity) do
+    opportunity_contacts = from contact in CercleApi.Contact,
+      where: contact.id in ^opportunity.contact_ids
+    CercleApi.Repo.all(opportunity_contacts)
+  end
+
 end
