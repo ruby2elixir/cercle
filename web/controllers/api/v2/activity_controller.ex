@@ -3,11 +3,7 @@ defmodule CercleApi.APIV2.ActivityController do
   require Logger
   use CercleApi.Web, :controller
   use Timex
-  alias CercleApi.Activity
-  alias CercleApi.Contact
-  alias CercleApi.Company
-  alias CercleApi.Organization
-  alias CercleApi.User
+  alias CercleApi.{Contact, Activity, Organization, User, Company}
 
   plug Guardian.Plug.EnsureAuthenticated
 
@@ -17,10 +13,8 @@ defmodule CercleApi.APIV2.ActivityController do
    changeset = Activity.changeset(%Activity{}, activity_params)
     case Repo.insert(changeset) do
       {:ok, activity} ->
-        activity_reload = Repo.get!(CercleApi.Activity, activity.id)
-        activity_reload = Repo.preload(activity_reload, [:user])
-        company = Repo.get!(CercleApi.Company, activity_reload.user.company_id)
-        company = Repo.preload(company, [:users])
+        activity_reload = Repo.preload(Repo.get!(CercleApi.Activity, activity.id), [:user])
+        company = Repo.preload(Repo.get!(CercleApi.Company, activity_reload.user.company_id), [:users])
         html = Phoenix.View.render_to_string(CercleApi.ContactView, "_task.html", id: activity.id, is_done: activity.is_done, title: activity.title, due_date: activity.due_date, user_name: activity_reload.user.user_name, user_id: activity_reload.user_id, company: company, current_user_time_zone: activity_params["current_user_time_zone"])
         channel = "contacts:"  <> to_string(activity.contact_id)
         CercleApi.Endpoint.broadcast!(channel, "new:activity", %{"html" => html})
