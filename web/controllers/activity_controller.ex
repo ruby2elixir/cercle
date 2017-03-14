@@ -1,20 +1,18 @@
 defmodule CercleApi.ActivityController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User, Contact, Activity,
-                   Organization, TimelineEvent, Company}
+  alias CercleApi.{User, Contact, Activity, Organization, TimelineEvent, Company}
 
-	require Logger
-
+  require Logger
 
   def index(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-    |> Repo.preload(:company)
+    current_user = Repo.preload(Guardian.Plug.current_resource(conn), :company)
+    
     current_user_id = current_user.id
     current_user_time_zone = current_user.time_zone
     company_id = current_user.company.id
-    company = Repo.get!(CercleApi.Company, company_id)
-    |> Repo.preload([:users])
+
+    company = Repo.preload(Repo.get!(CercleApi.Company, company_id), [:users])
 
     %{year: year, month: month, day: day} = Timex.now(current_user_time_zone)
 
@@ -30,7 +28,7 @@ defmodule CercleApi.ActivityController do
       where: p.due_date  <= ^from_time,
       order_by: [asc: p.due_date]
 
-    activities_overdue = Repo.all(query_overdue)   |> Repo.preload([:contact, :user])
+    activities_overdue =  Repo.preload(Repo.all(query_overdue), [:contact, :user])
 
     query_today = from p in Activity,
       where: p.is_done == false,
@@ -40,7 +38,7 @@ defmodule CercleApi.ActivityController do
       where: p.due_date <= ^to_time,
       order_by: [asc: p.due_date]
 
-    activities_today = Repo.all(query_today)   |> Repo.preload([:contact, :user])
+    activities_today = Repo.preload(Repo.all(query_today), [:contact, :user])
 
     query_later = from p in Activity,
       where: p.is_done == false,
@@ -49,11 +47,11 @@ defmodule CercleApi.ActivityController do
       where: p.due_date >= ^to_time,
       order_by: [asc: p.due_date]
 
-    activities_later = Repo.all(query_later)   |> Repo.preload([:contact, :user])
+    activities_later = Repo.preload(Repo.all(query_later), [:contact, :user])
 
-		conn
-		|> put_layout("adminlte.html")
-		|> render("index.html", activities_today: activities_today, activities_overdue: activities_overdue, activities_later: activities_later, company: company, current_user_id: current_user_id, current_user_time_zone: current_user_time_zone)
+    conn
+      |> put_layout("adminlte.html")
+      |> render("index.html", activities_today: activities_today, activities_overdue: activities_overdue, activities_later: activities_later, company: company, current_user_id: current_user_id, current_user_time_zone: current_user_time_zone)
   end
 
 end

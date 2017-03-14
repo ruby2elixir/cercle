@@ -8,9 +8,10 @@ defmodule CercleApi.APIV2.OpportunityController do
   alias CercleApi.Organization
   alias CercleApi.User
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   plug :scrub_params, "opportunity" when action in [:create, :update]
 
-  
   def create(conn, %{"opportunity" => opportunity_params}) do
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
     
@@ -36,8 +37,6 @@ defmodule CercleApi.APIV2.OpportunityController do
         |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
     end
   end
-
-
 
   def update(conn, %{"id" => id, "opportunity" => opportunity_params}) do
     opportunity = Repo.get!(Opportunity, id)

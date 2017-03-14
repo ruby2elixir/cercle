@@ -1,31 +1,23 @@
 $(function() {
-
   $('#board-form').submit(function(e){
+    var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
-
-    if($("#contact_name").val() != ""){
-      var user_id = $("#user_id").val();
-      var company_id = $("#company_id").val();
-      var board_column = $("#board_column").val();
+    if($('#contact_name').val() !== ''){
       $.ajax('/api/v2/board', {
         method: 'POST',
+        headers: {'Authorization': 'Bearer '+jwtToken},
         data: new FormData(this),
         contentType: false,
         processData: false,
         success: function(result){
-          var contact_id = result.data.id;
-          window.location = "/board/" + contact_id;
+          var contactId = result.data.id;
+          window.location = '/board/' + contactId;
         }
       });
     }else{
       $(this).find('input[type=submit]').removeAttr('disabled');  
-      alert("Name can't be blank");
+      alert('Name can\'t be blank');
     }
-    
   });
 });
-
-
-
-

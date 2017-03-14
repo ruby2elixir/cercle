@@ -14,6 +14,11 @@ defmodule CercleApi.TestHelpers do
       |> Repo.insert!()
   end
 
+  def insert_company() do
+    {_, company} = Repo.insert(%CercleApi.Company{title: "Coca-Cola Inc."})
+    company
+  end
+
   use Phoenix.ConnTest
 
   @endpoint CercleApi.Endpoint

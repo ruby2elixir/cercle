@@ -3,6 +3,7 @@ defmodule CercleApi.Opportunity do
 	
   schema "opportunities" do
     field :name, :string
+    field :description, :string
     field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED
     belongs_to :main_contact, CercleApi.Contact
     field :contact_ids, {:array, :integer}
@@ -14,7 +15,7 @@ defmodule CercleApi.Opportunity do
   end
 
   @required_fields ~w(main_contact_id user_id company_id)
-  @optional_fields ~w(name status contact_ids board_id board_column_id)
+  @optional_fields ~w(name status contact_ids board_id board_column_id description)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

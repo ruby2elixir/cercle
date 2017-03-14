@@ -12,6 +12,11 @@ defmodule CercleApi.Router do
     plug BasicAuth, use_config: {:cercleApi, :basic_auth}
   end
 
+  pipeline :api_auth do
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -57,9 +62,6 @@ defmodule CercleApi.Router do
     get "/settings/fields_edit", SettingsController, :fields_edit
     put "/settings/fields_update", SettingsController, :fields_update
 
-    get "/organizations", OrganizationsController, :index
-    get "/organizations/:id", OrganizationsController, :edit
-
     get "/contact", ContactController, :index
 	  get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
@@ -71,7 +73,7 @@ defmodule CercleApi.Router do
   end
 
   scope "/", CercleApi do
-    pipe_through :api
+    pipe_through [:api, :api_auth]
 
 
 

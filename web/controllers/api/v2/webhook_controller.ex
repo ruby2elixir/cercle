@@ -5,6 +5,8 @@ defmodule CercleApi.APIV2.WebhookController do
   alias CercleApi.User
   alias CercleApi.Contact
 
+  plug Guardian.Plug.EnsureAuthenticated
+
   require Logger
 
   def create(conn, params) do
@@ -12,4 +14,4 @@ defmodule CercleApi.APIV2.WebhookController do
     text conn, "Showing id #{params["To"]}"
   end
 
- end
+end
