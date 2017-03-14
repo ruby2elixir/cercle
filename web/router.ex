@@ -68,7 +68,7 @@ defmodule CercleApi.Router do
     
     resources "/board", BoardController
     get "/activity", ActivityController, :index
-    get "/import", ContactController, :import 
+    get "/import", ContactController, :import
     
   end
 

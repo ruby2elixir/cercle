@@ -137,8 +137,6 @@ defmodule CercleApi.APIV2.ContactController do
         json conn, %{headers: headers, first_row: first_row, contact_fields: contact_fields, organization_fields: organization_fields, s3_url: s3_path}
       {:error, reason} ->
         json conn, %{error: reason}
-      _ -> 
-        IO.inspect "Default"
     end    
   end
 
@@ -154,8 +152,6 @@ defmodule CercleApi.APIV2.ContactController do
     contact_headers = Map.keys(mapping["contact"])
     organization_headers = Map.keys(mapping["organization"])
     first_row = Enum.at(table, 0)
-    contact_values = []
-    organization_values = []
     contact_values = for {db_col,csv_col} <- mapping["contact"] do
       first_row[csv_col]
     end
@@ -220,7 +216,7 @@ defmodule CercleApi.APIV2.ContactController do
             |> Ecto.Changeset.put_assoc(:tags, tags)
           Repo.update!(changeset)
         {:error, changeset} ->
-          IO.inspect "error ar row#{i+1}"
+          # IO.inspect "error ar row#{i+1}"
       end
     end
     json conn, %{message: "records imported"}

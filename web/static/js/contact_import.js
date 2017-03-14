@@ -1,6 +1,6 @@
 $(function() {
-    var s3Url=""
-    var fileName=""
+    var s3Url='';
+    var fileName='';
     var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
 	$('#fileupload').fileupload({
         
@@ -246,7 +246,7 @@ function preparePreviewDataTable(tableName,contactHeaders, organizationHeaders,c
     var finalHeaders = contactHeaders.concat(organizationHeaders);
     var finalValues = contactValues.concat(organizationValues);
     for (var j = 0; j < finalHeaders.length; j++){ 
-        var headerCell = document.createElement("TH");
+        var headerCell = document.createElement('TH');
         headerCell.innerHTML = finalHeaders[j];
         row.appendChild(headerCell);
     }
