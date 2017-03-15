@@ -35,6 +35,26 @@
       </div><!-- /.box --></td></tr></table>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div style="padding:15px;">
+        <%= for opportunity <- @opportunities do %>
+          <a href="/contact/<%=@contact.id%>/opportunity/<%=opportunity.id%>" class="opportunity_status<%=opportunity.status %>" style="font-weight:bold;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;"><%= opportunity.name %></a>
+        <% end %>
+        <a  href ="javascript:void(0);" onclick="$('#add_into_a_board').show();" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;">+ Create a card...</a>
+        <div style="display:none;" id="add_into_a_board">
+        Create a card into the board: &nbsp;&nbsp;
+    <select name="select" id="add_to_board" style="margin-top:10px;">
+      <%= for board <- @boards do %>
+      <option value="<%=board.id%>--<%= Enum.at(board.board_columns,0).id%>" id="board_column" name="board_column" ><%=board.name%> </option> 
+      <%end%>
+    </select>
+    &nbsp;&nbsp;
+    <button type="button" class="" style="margin-top:10px;border-radius:5px;    margin-top: 10px;border-radius: 5px;background-color: #f8f8f8;border: 1px solid #c5c5c5;" id="opportunity_add" >Add</button>
+    </div>
+      </div>
+    </div>
+  </div>
   <%=if @opportunity do %>
   <div class="modal fade" tabindex="-1" role="dialog" id="myModal3" >
     <div class="modal-dialog" role="document">
@@ -61,31 +81,13 @@
   </div><!-- /.modal -->
   <div class="row">
     <div class="col-md-12">
-      <div style="padding:15px;">
-        <%= for opportunity <- @opportunities do %>
-          <a href="/contact/<%=@contact.id%>/opportunity/<%=opportunity.id%>" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;"><%= opportunity.name %></a>
-        <% end %>
-        <a  href ="javascript:void(0);" onclick="$('#add_into_a_board').show();" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;">+ Create a card...</a>
-        <div style="display:none;" id="add_into_a_board">
-        Create a card into the board: &nbsp;&nbsp;
-    <select name="select" id="add_to_board" style="margin-top:10px;">
-      <%= for board <- @boards do %>
-      <option value="<%=board.id%>--<%= Enum.at(board.board_columns,0).id%>" id="board_column" name="board_column" ><%=board.name%> </option> 
-      <%end%>
-    </select>
-    &nbsp;&nbsp;
-    <button type="button" class="" style="margin-top:10px;border-radius:5px;    margin-top: 10px;border-radius: 5px;background-color: #f8f8f8;border: 1px solid #c5c5c5;" id="opportunity_add" >Add</button>
-    </div>
-
-
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
       <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;padding:20px;margin-bottom:10px;">
-        <button type="button" class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" id="opportunity_win" data-id="<%=@opportunity.id%>">ARCHIVE</button>
-
+        <%= if @opportunity.status == 0  do %>
+          <button type="button" class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" id="opportunity_win" data-id="<%=@opportunity.id%>">ARCHIVE</button>
+        <%= end %>
+        <%= if @opportunity.status == 1  do %>
+          <button type="button" class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" id="opportunity_lost" data-id="<%=@opportunity.id%>">UNARCHIVE</button>
+        <%= end %>
         <div style="" id="change_status">
           <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
             <span data-placeholder="Project Name" style="color:rgb(102,102,102);" class='inline-editable' data-type='PUT' data-param-name="opportunity[name]" data-inline-editurl="/api/v2/opportunity/<%= @opportunity.id %>"><%=@opportunity.name %></span>
@@ -199,7 +201,10 @@
         <h4 class="modal-title">What do you want to do?</h4>
       </div>
       <div class="modal-body">
+
       <button type="button" class="btn btn-block btn-default" id="organization_remove_link" >Remove this company</button>
+      <Br />
+      <button type="button" class="btn btn-block btn-default" onclick="$('.opportunity_status1').show();" data-dismiss="modal" >Display Archived Boards</button>
       <Br />
         <button type="button" class="btn btn-block btn-default" style="margin-top:10px;" id="contact_delete" data-id="<%=@contact.id%>">Delete this Contact</button>
       </div>
