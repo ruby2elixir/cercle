@@ -81,6 +81,7 @@ defmodule CercleApi.Router do
     get "/contact", ContactController, :index
 	  get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
+    get "/contact/:id/opportunity/:opportunity_id", ContactController, :show
 
     resources "/board", BoardController
     get "/activity", ActivityController, :index

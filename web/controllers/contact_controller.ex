@@ -34,8 +34,6 @@ defmodule CercleApi.ContactController do
       leads_pending = Repo.all(query)   |> Repo.preload([:organization, :tags, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])])
 
     end
-
-		
 		conn
 		|> put_layout("adminlte.html")
 		|> render("index.html", leads_pending: leads_pending , company: company)
@@ -56,10 +54,10 @@ defmodule CercleApi.ContactController do
     |> render("new.html", company: company, boards: boards)
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, params) do
     
     company_id = conn.assigns[:current_user].company_id
-    contact = Repo.get!(Contact, id) |> Repo.preload([:organization, :company, :tags])
+    contact = Repo.get!(Contact, params["id"]) |> Repo.preload([:organization, :company, :tags])
     company = Repo.get!(CercleApi.Company, contact.company_id) |> Repo.preload([:users])
     if contact.company_id != company_id do 
       conn |> redirect(to: "/") |> halt
@@ -69,24 +67,27 @@ defmodule CercleApi.ContactController do
       order_by: [desc: p.inserted_at]
     organizations = Repo.all(query)
 
-    query = from event in CercleApi.TimelineEvent,
-      where: event.contact_id == ^contact.id,
-      order_by: [desc: event.inserted_at]
-    events = Repo.all(query) |> Repo.preload [:user]
-
-    query = from opportunity in CercleApi.Opportunity,
-      where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
-      where: opportunity.status == 0,
-      order_by: [desc: opportunity.inserted_at]
-    opportunities = Repo.all(query)
-
+    
     query = from activity in CercleApi.Activity,
       where: activity.contact_id == ^contact.id,
       where: activity.is_done == false,
       order_by: [desc: activity.inserted_at]
     activities = Repo.all(query) |> Repo.preload [:user]
 
-    opportunity = List.first(opportunities)
+    query = from opportunity in CercleApi.Opportunity,
+      where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
+      where: opportunity.status == 0,
+      order_by: [desc: opportunity.inserted_at]
+    opportunities = Repo.all(query)
+    
+    if params["opportunity_id"] do
+      opportunity = Repo.get!(CercleApi.Opportunity, params["opportunity_id"]) 
+    else
+      opportunity = List.first(opportunities)
+    end
+    
+    events = []
+
     if opportunity do
       contact_ids = opportunity.contact_ids
       query = from contact in CercleApi.Contact,
@@ -94,6 +95,11 @@ defmodule CercleApi.ContactController do
       opportunity_contacts = Repo.all(query)
 
       board = Repo.get!(CercleApi.Board, opportunity.board_id)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
+
+      query = from event in CercleApi.TimelineEvent,
+      where: event.opportunity_id == ^opportunity.id,
+      order_by: [desc: event.inserted_at]
+      events = Repo.all(query) |> Repo.preload [:user]
     end
 
     query = from p in Board,
@@ -112,7 +118,7 @@ defmodule CercleApi.ContactController do
     changeset = Contact.changeset(contact)
 		conn
 		|> put_layout("adminlte.html")
-		|> render("show.html", activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
+		|> render("show.html", opportunities: opportunities, activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
   end
 
 end
