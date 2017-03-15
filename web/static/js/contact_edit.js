@@ -99,6 +99,7 @@ export var ContactEdit = {
         var url = '/api/v2/organizations/';
         $.ajax( url , {
           method: 'POST',
+          headers: {"Authorization": "Bearer "+jwt_token},
           datatype: 'json',
           data: { 
             'organization[name]': organization_name,
