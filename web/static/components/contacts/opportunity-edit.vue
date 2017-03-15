@@ -61,7 +61,8 @@
 
   export default {
   props: [
-    'activities', 'events', 'opportunity', 'company', 'company_users', 'board',
+    'activities', 'events', 'opportunity', 'company',
+    'company_users', 'board',
     'board_columns', 'opportunity_contacts'
   ],
   methods: {

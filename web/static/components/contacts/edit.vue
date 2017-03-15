@@ -61,7 +61,7 @@ import InlineEdit from "../inline-common-edit.vue"
 import ProfileEdit from "./profile-edit.vue"
 import OrganizationEdit from "./organization-edit.vue"
 import OpportunityEdit from "./opportunity-edit.vue"
-  
+
 export default {
     props: ['contact_id'],
     data() {
@@ -72,7 +72,7 @@ export default {
             company: {},
             company_users: [],
             organization: null,
-            opportunity: null, 
+            opportunity: null,
             tags: [],
             activitites: [],
             events: [],
@@ -89,43 +89,43 @@ export default {
         'opportunity-edit': OpportunityEdit
 
     },
-      methods: {
-      updateOpportunity(data) {
-        var url = '/api/v2/opportunity/' + this.opportunity.id;
-        this.$http.put(url, { opportunity: data })
-        
-      },
+    methods: {
+        updateOpportunity(data) {
+            var url = '/api/v2/opportunity/' + this.opportunity.id;
+            this.$http.put(url, { opportunity: data })
+
+        },
         addComment(msg) {
-          console.log('add messages', msg)
-          var url = '/api/v2/timeline_events';
-          this.$http.post(url,
-              { timeline_event: {
-                  company_id: this.contact.company_id,
-                  contact_id: this.contact.id,
-                  content: msg, 
-                  event_name: 'comment'
-                  }
-                }
-             )
-          
+            var url = '/api/v2/timeline_events';
+            this.$http.post(url,
+                            { timeline_event: {
+                                company_id: this.contact.company_id,
+                                contact_id: this.contact.id,
+                                content: msg,
+                                event_name: 'comment',
+                                opportunity_id: this.opportunity.id
+                            }
+                            }
+                           )
+
         },
         deleteContact: function(){
-         console.log('delete contact');
+            console.log('delete contact');
         },
 
         updateTags(data) {
-          var tag_ids = data
-          if (tag_ids.length  == 0) {
-             var url = '/api/v2/contact/' + this.contact_id + '/utags';
-             this.$http.put(url,
-              { company_id: this.contact.company_id }
-             )
-           } else {
-             var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
-             this.$http.put(url,
-              { tags: tag_ids, company_id: this.contact.company_id }
-             )
-           }
+            var tag_ids = data
+            if (tag_ids.length  == 0) {
+                var url = '/api/v2/contact/' + this.contact_id + '/utags';
+                this.$http.put(url,
+                               { company_id: this.contact.company_id }
+                              )
+            } else {
+                var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
+                this.$http.put(url,
+                               { tags: tag_ids, company_id: this.contact.company_id }
+                              )
+            }
         },
         removeContact(){
 
@@ -134,45 +134,45 @@ export default {
             this.contact = data
             var url = '/api/v2/contact/' + this.contact_id;
             this.$http.put(url, { contact: data } )
-            },
+        },
 
         chooseOrganization(data){
             var vm = this;
-              var url = '/api/v2/contact/' + vm.contact.id;
-              this.$http.put(url, { contact: { organization_id: data.id }}).then(resp => {
-              vm.organization = data
-              })
+            var url = '/api/v2/contact/' + vm.contact.id;
+            this.$http.put(url, { contact: { organization_id: data.id }}).then(resp => {
+                vm.organization = data
+            })
         },
 
         addNewOrganization(data){
-          var vm = this;
-          var url = '/api/v2/organizations';
-          this.$http.post(url, { organization: { name: data.name, company_id: vm.company.id }}).then(resp => {
-            vm.chooseOrganization(resp.data.data)
-          })
+            var vm = this;
+            var url = '/api/v2/organizations';
+            this.$http.post(url, { organization: { name: data.name, company_id: vm.company.id }}).then(resp => {
+                vm.chooseOrganization(resp.data.data)
+            })
 
         },
 
         updateOrganization(data){
-          var vm = this;
-          var url = '/api/v2/organizations/' + vm.organization.id;
-          this.$http.put(url, { contact_id: vm.contact.id, organization: vm.organization })
+            var vm = this;
+            var url = '/api/v2/organizations/' + vm.organization.id;
+            this.$http.put(url, { contact_id: vm.contact.id, organization: vm.organization })
         },
 
         buildOrganization(){ this.organization = { name: '', website: '', description: '' } },
         removeOrganization() {
-          var vm = this;
-          var url = '/api/v2/contact/' + vm.contact.id;
-         this.$http.put(url, { contact: {organization_id: '' }}).then(resp => {
-            vm.organization = null
-          })
+            var vm = this;
+            var url = '/api/v2/contact/' + vm.contact.id;
+            this.$http.put(url, { contact: {organization_id: '' }}).then(resp => {
+                vm.organization = null
+            })
 
         },
         setAuthToken(){
-          var vm = this
-          localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content)
-          Vue.http.headers.common['Authorization'] = "Bearer " + localStorage.getItem('auth_token');
-          vm.connectToSocket();
+            var vm = this
+            localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content)
+            Vue.http.headers.common['Authorization'] = "Bearer " + localStorage.getItem('auth_token');
+            vm.connectToSocket();
         },
         connectToSocket() {
             this.socket = new Socket("/socket", {params: { token: localStorage.getItem('auth_token') }});
@@ -183,11 +183,14 @@ export default {
                     this.channel.push("load_state");
                 })
                 .receive("error", resp => { console.log("Unable to join", resp) });
-                this.channel.on('state', payload => {
+            this.channel.on('timeline_event:created', payload => {
+                this.events.unshift(payload.event)
+            })
+            this.channel.on('state', payload => {
                 this.contact = payload.contact
                 if (payload.opportunity) {
-                  this.opportunity = payload.opportunity
-                  this.opportunity_contacts = payload.opportunity_contacts
+                    this.opportunity = payload.opportunity
+                    this.opportunity_contacts = payload.opportunity_contacts
                 }
                 if (payload.company) {
                     this.company = payload.company
@@ -198,7 +201,7 @@ export default {
                 }
                 if (payload.organization) {
                     this.organization = payload.organization
-                    }
+                }
                 if (payload.activities) {
                     this.activities = payload.activities
                 }
@@ -206,8 +209,8 @@ export default {
                     this.events = payload.events
                 }
                 if (payload.board) {
-                   this.board = payload.board
-                   this.board_columns = payload.board_columns
+                    this.board = payload.board
+                    this.board_columns = payload.board_columns
                 }
 
             });
@@ -218,7 +221,7 @@ export default {
 
     }
 }
-  </script>
+</script>
 
 <style lang="sass">
 .contact-edit {
