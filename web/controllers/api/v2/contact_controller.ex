@@ -11,7 +11,6 @@ defmodule CercleApi.APIV2.ContactController do
   alias CercleApi.Activity
   alias CercleApi.Tag
   alias CercleApi.ContactTag
-  alias CercleApi.CsvUpload
 
   plug Guardian.Plug.EnsureAuthenticated
 
@@ -120,38 +119,22 @@ defmodule CercleApi.APIV2.ContactController do
     send_resp(conn, :no_content, "")
   end
 
-  def contact_create(conn, %{"mapping" => mapping, "file_name" => file_name, "company_id" => company_id, "user_id" => user_id}) do
-
-    user = Repo.get!(User,user_id)
-    organization_params = %{"company_id" => company_id}
-    contact_params = %{"company_id" => company_id, "organization_id" => "", "user_id" => user_id}
-
-    table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
-    File.rm!("tmp/#{file_name}.csv")
-
-    total_rows = Enum.count(table)-1
-    contact_headers = Map.keys(mapping["contact"])
-    organization_headers = Map.keys(mapping["organization"])
-
-    for i <- 0..total_rows do
-      selected_row = Enum.at(table, i)
-      org_maps = for {db_col,csv_col} <- mapping["organization"] do
-        org_maps = %{db_col => selected_row[csv_col]}
-      end
-      organization_params = Enum.reduce(org_maps, organization_params, fn (map, acc) -> Map.merge(acc, map) end)
-      ext_org = Repo.get_by(Organization, name: organization_params["name"], company_id: organization_params["company_id"])
+  def bulk_contact_create(conn,%{"items" => items}) do
+    for item <- items do
+      user = Repo.get!(User,item["contact"]["user_id"])
+      contact_params = item["contact"]
+      organization_params = item["organization"]
+      organization_params = Map.put(organization_params, "company_id", contact_params["company_id"])
+      {company_id, _rest} = Integer.parse(contact_params["company_id"])
+      ext_org = Repo.get_by(Organization, name: contact_params["name"], company_id: contact_params["company_id"])
       if ext_org do
         contact_params = %{contact_params | "organization_id" => ext_org.id }
       else
         changeset = Organization.changeset(%Organization{}, organization_params)
         organization = Repo.insert!(changeset)
-        contact_params = %{contact_params | "organization_id" => organization.id }
+        contact_params = Map.put(contact_params,"organization_id",organization.id)
       end
 
-      contact_maps = for {db_col,csv_col} <- mapping["contact"] do
-        contact_maps = %{db_col => selected_row[csv_col]}
-      end
-      contact_params = Enum.reduce(contact_maps, contact_params, fn (map, acc) -> Map.merge(acc, map) end)
       changeset = Contact.changeset(%Contact{}, contact_params)
       case Repo.insert(changeset) do
         {:ok, contact} ->          
@@ -160,7 +143,6 @@ defmodule CercleApi.APIV2.ContactController do
           query = from c in ContactTag,
             where: c.contact_id == ^contact.id
           Repo.delete_all(query)
-          {company_id, _rest} = Integer.parse(company_id)
           datetime = Timezone.convert(Ecto.DateTime.to_erl(contact.inserted_at),user.time_zone)
           date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
           time = Timex.format!(datetime, "%H:%M", :strftime)
@@ -178,6 +160,6 @@ defmodule CercleApi.APIV2.ContactController do
           # IO.inspect "error ar row#{i+1}"
       end
     end
-    json conn, %{message: "records imported"}
+    json conn, %{status: "200", message: "Records imported successfully"}
   end
 end

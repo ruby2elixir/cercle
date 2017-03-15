@@ -65,13 +65,13 @@ defmodule CercleApi.Router do
     get "/contact", ContactController, :index
 	  get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
-    get "/contact/:id/opportunity/:opportunity_id", ContactController, :show
     
     resources "/board", BoardController
     get "/activity", ActivityController, :index
     get "/import", ContactController, :import
-    post "/import-data", ContactController, :import_data
+    post "/import_data", ContactController, :import_data
     post "/view_uploaded_data", ContactController, :view_uploaded_data
+    post "/create_nested_data", ContactController, :create_nested_data
     
   end
 
@@ -97,8 +97,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/board_column", APIV2.BoardColumnController
     
     post "/api/v2/webhook", APIV2.WebhookController, :create
-    post "/api/v2/contact_create", APIV2.ContactController, :contact_create
-    post "/api/v2/import_organization", APIV2.OrganizationController, :import_organization
+    post "/api/v2/bulk_contact_create", APIV2.ContactController, :bulk_contact_create
 
   end
 

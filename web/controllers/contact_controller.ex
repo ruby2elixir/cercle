@@ -172,49 +172,28 @@ defmodule CercleApi.ContactController do
     json conn, %{contact_headers: contact_headers, organization_headers: organization_headers, contact_values: contact_values, organization_values: organization_values,  file_name: file_name}
   end
 
-  def create_nested_data(conn, %{"mapping" => mapping, "file_name" => file_name, "company_id" => company_id, "user_id" => user_id}) do
-    IO.inspect mapping
-    user = Repo.get!(User,user_id)
-    organization_params = %{"company_id" => company_id}
-    contact_params = %{"company_id" => company_id, "organization_id" => "", "user_id" => user_id}
-
-    table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
-    File.rm!("tmp/#{file_name}.csv")
-
-    total_rows = Enum.count(table)-1
-    contact_headers = Map.keys(mapping["contact"])
-    organization_headers = Map.keys(mapping["organization"])  
-    items = for i <- 0..total_rows do
-      selected_row = Enum.at(table, i)
-      data = %{user_id: user_id, company_id: company_id}
-      
-      for {:db_col,csv_col} <- mapping["organization"] do
-        Map.put(data,:db_col,selected_row[csv_col])
+  def create_nested_data(conn, %{"mapping" => mapping, "file_name" => file_name, "company_id" => company_id, "user_id" => user_id, "s3_url" => s3_url}) do
+    unless File.exists?("tmp/#{file_name}.csv") do
+      %HTTPoison.Response{body: body, status_code: status_code} = HTTPoison.get!(s3_url)
+      file_name = UUID.uuid1()
+      unless File.dir?("tmp") do
+        File.mkdir!("tmp")
       end
-
-      for {:db_col,csv_col} <- mapping["contact"] do
-        Map.put(data,:db_col,selected_row[csv_col])
-      end
-
+      File.write!("tmp/#{file_name}.csv", body)
     end
+    table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
+    total_rows = Enum.count(table)-1
 
-
-    # "items": [
-    # {   
-    #   "method": "post",  
-    #   "data_type": "user",
-    #   "data": {
-    #     "user_id": "25",
-    #     "email": "wash@serenity.io"
-    #   }
-    # },
-    # {
-    #   "method": "post",  
-    #   "data_type": "user",
-    #   "data": {
-    #     "user_id": "25",
-    #     "email": "zoe@serenity.io"
-    #   }
-    # },  
+    items = for i <- 0..total_rows do
+      row_data = %{}
+      selected_row = Enum.at(table, i)
+      contact_data = %{"user_id" => user_id,"company_id" => company_id ,"name" => selected_row[mapping["contact"]["name"]], "email" => selected_row[mapping["contact"]["email"]], "phone" => selected_row[mapping["contact"]["phone"]], "description" => selected_row[mapping["contact"]["description"]], "job_title" => selected_row[mapping["contact"]["job_title"]]}
+      row_data = Map.put(row_data, "contact", contact_data)
+      organization_data = %{"name" => selected_row[mapping["organization"]["name"]], "website" => selected_row[mapping["organization"]["website"]],"description" => selected_row[mapping["organization"]["description"]]}
+      row_data = Map.put(row_data, "organization", organization_data)
+      row_data
+    end
+    File.rm!("tmp/#{file_name}.csv")
+    CercleApi.APIV2.ContactController.bulk_contact_create(conn,%{"items" => items})
   end
 end

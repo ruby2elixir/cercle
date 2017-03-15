@@ -157,22 +157,24 @@ $(function() {
         if(uploadType){
             // contact-import
             $.ajax({
-                url: '/api/v2/contact_create',
+                url: '/create_nested_data',
                 method: 'POST',
                 headers: {'Authorization': 'Bearer '+jwtToken},
                 data: {
                     mapping: jsonData,
                     file_name: fileName,
                     company_id: companyId,
-                    user_id: userId
+                    user_id: userId,
+                    s3_url: s3Url
                 },
                 success: function(result){
                     $('#final-progress .progress-bar').toggleClass('hidden');
-                    $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">Records Imported Succesfully</p>');
+                    $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">'+result.message+'</p>');
                     $('#move-to-final').text('Finished').addClass('disabled');
-                    window.location = "/contact";
+                    window.location = '/contact';
                 },
                 error: function(error) {
+                    $('#final-progress .progress-bar').toggleClass('hidden');
                     $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
                     $('#move-to-final').text('Next').removeClass('disabled');
                     fadeFlash();
