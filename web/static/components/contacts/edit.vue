@@ -170,11 +170,9 @@ export default {
         },
         setAuthToken(){
           var vm = this
-          vm.$http.get('/current_user').then(resp => {
-              localStorage.setItem('auth_token', resp.data.token)
-              Vue.http.headers.common['Authorization'] = "Bearer " + localStorage.getItem('auth_token');
-              vm.connectToSocket();
-            })
+          localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content)
+          Vue.http.headers.common['Authorization'] = "Bearer " + localStorage.getItem('auth_token');
+          vm.connectToSocket();
         },
         connectToSocket() {
             this.socket = new Socket("/socket", {params: { token: localStorage.getItem('auth_token') }});

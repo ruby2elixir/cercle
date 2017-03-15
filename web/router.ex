@@ -47,11 +47,6 @@ defmodule CercleApi.Router do
   end
 
   scope "/", CercleApi do
-    pipe_through [:browser_json, :browser_auth, :require_login]
-    get "/current_user", CurrentUserController, :show
-  end
-
-  scope "/", CercleApi do
     pipe_through [:browser, :browser_auth, :already_authenticated]
     get "/", PageController, :index
     get "/login", SessionController, :new
