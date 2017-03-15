@@ -76,7 +76,6 @@ defmodule CercleApi.ContactController do
 
     query = from opportunity in CercleApi.Opportunity,
       where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
-      where: opportunity.status == 0,
       order_by: [desc: opportunity.inserted_at]
     opportunities = Repo.all(query)
     
