@@ -69,6 +69,8 @@ defmodule CercleApi.Router do
     resources "/board", BoardController
     get "/activity", ActivityController, :index
     get "/import", ContactController, :import
+    post "/import-data", ContactController, :import_data
+    post "/view_uploaded_data", ContactController, :view_uploaded_data
     
   end
 
@@ -94,8 +96,6 @@ defmodule CercleApi.Router do
     resources "/api/v2/board_column", APIV2.BoardColumnController
     
     post "/api/v2/webhook", APIV2.WebhookController, :create
-    post "/api/v2/import-data", APIV2.ContactController, :import_data
-    post "/api/v2/view_uploaded_data", APIV2.ContactController, :view_uploaded_data
     post "/api/v2/contact_create", APIV2.ContactController, :contact_create
     post "/api/v2/import_organization", APIV2.OrganizationController, :import_organization
 

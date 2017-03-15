@@ -20,7 +20,7 @@
 <div class="upload-outer-box" id="sec-1">
 	<div class="upload-dashed-box">
 		<div class="upload-info-box">			
-		    <form id="fileupload" action="/api/v2/import-data" method="POST" enctype="multipart/form-data">		       
+		    <form id="fileupload" action="/import-data" method="POST" enctype="multipart/form-data">		       
 		        <div class="row fileupload-buttonbar">
 		            <div class="col-md-12">		                
 		                <span class="btn btn-success fileinput-button">

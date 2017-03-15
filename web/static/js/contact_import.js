@@ -116,7 +116,7 @@ $(function() {
         e.preventDefault();
         $(this).text('Processing..').addClass('disabled');
         $.ajax({
-            url: '/api/v2/view_uploaded_data',
+            url: '/view_uploaded_data',
             type: 'POST',
             dataType: 'json',
             headers: {'Authorization': 'Bearer '+jwtToken},

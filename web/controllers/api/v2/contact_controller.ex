@@ -120,47 +120,6 @@ defmodule CercleApi.APIV2.ContactController do
     send_resp(conn, :no_content, "")
   end
 
-  def import_data(conn, %{"file" => file_params, "company_id" => company_id}) do
-
-    upload = file_params
-    file_name = upload.filename
-    extension = Path.extname(upload.filename)
-    file_path = upload.path
-    case CsvUpload.store({file_params, company_id}) do
-      {:ok, path} ->
-        s3_path = CsvUpload.url({path,company_id})
-        {:ok, table} = File.read!(Path.expand(file_path)) |> ExCsv.parse(headings: true)
-        headers = table.headings
-        first_row = Enum.at(table.body, 0)
-        contact_fields = ["name","email","description","phone","job_title"]
-        organization_fields = ["name","website","description"]
-        json conn, %{headers: headers, first_row: first_row, contact_fields: contact_fields, organization_fields: organization_fields, s3_url: s3_path}
-      {:error, reason} ->
-        json conn, %{error: reason}
-    end    
-  end
-
-  def view_uploaded_data(conn, %{"mapping" => mapping, "s3_url" => s3_url}) do
-
-    %HTTPoison.Response{body: body, status_code: status_code} = HTTPoison.get!(s3_url)
-    file_name = UUID.uuid1()
-    unless File.dir?("tmp") do
-      File.mkdir!("tmp")
-    end
-    File.write!("tmp/#{file_name}.csv", body)
-    table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
-    contact_headers = Map.keys(mapping["contact"])
-    organization_headers = Map.keys(mapping["organization"])
-    first_row = Enum.at(table, 0)
-    contact_values = for {db_col,csv_col} <- mapping["contact"] do
-      first_row[csv_col]
-    end
-    organization_values = for {db_col,csv_col} <- mapping["organization"] do
-      first_row[csv_col]
-    end
-    json conn, %{contact_headers: contact_headers, organization_headers: organization_headers, contact_values: contact_values, organization_values: organization_values,  file_name: file_name}
-  end
-
   def contact_create(conn, %{"mapping" => mapping, "file_name" => file_name, "company_id" => company_id, "user_id" => user_id}) do
 
     user = Repo.get!(User,user_id)
