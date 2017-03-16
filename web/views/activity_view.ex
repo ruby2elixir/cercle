@@ -1,6 +1,6 @@
 defmodule CercleApi.ActivityView do
   use CercleApi.Web, :view
-	import CercleApi.FormView, only: [auto_submit_selectize: 3, auto_submit_selectize: 4]
+  import CercleApi.FormView, only: [auto_submit_selectize: 3, auto_submit_selectize: 4]
   alias CercleApi.Organization
   alias CercleApi.Repo
 

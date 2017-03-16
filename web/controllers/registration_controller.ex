@@ -1,7 +1,7 @@
 defmodule CercleApi.RegistrationController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{ User, Company, Board, BoardColumn }
+  alias CercleApi.{User, Company, Board, BoardColumn}
 
   def new(conn, _params) do
     changeset = User.changeset(%CercleApi.User{})

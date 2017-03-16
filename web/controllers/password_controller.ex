@@ -1,7 +1,7 @@
 defmodule CercleApi.PasswordController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{ User, Repo, Mailer }
+  alias CercleApi.{User, Repo, Mailer}
 
   def forget_password(conn, _) do
     conn
