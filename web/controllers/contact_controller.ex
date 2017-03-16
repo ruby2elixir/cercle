@@ -173,7 +173,7 @@ defmodule CercleApi.ContactController do
     items = for i <- 0..total_rows do
       row_data = %{}
       selected_row = Enum.at(table, i)
-      contact_data = %{"user_id" => user_id,"company_id" => company_id ,"name" => selected_row[mapping["contact"]["name"]], "email" => selected_row[mapping["contact"]["email"]], "phone" => selected_row[mapping["contact"]["phone"]], "description" => selected_row[mapping["contact"]["description"]], "job_title" => selected_row[mapping["contact"]["job_title"]]}
+      contact_data = %{"name" => selected_row[mapping["contact"]["name"]], "email" => selected_row[mapping["contact"]["email"]], "phone" => selected_row[mapping["contact"]["phone"]], "description" => selected_row[mapping["contact"]["description"]], "job_title" => selected_row[mapping["contact"]["job_title"]]}
       row_data = Map.put(row_data, "contact", contact_data)
       organization_data = %{"name" => selected_row[mapping["organization"]["name"]], "website" => selected_row[mapping["organization"]["website"]],"description" => selected_row[mapping["organization"]["description"]]}
       row_data = Map.put(row_data, "organization", organization_data)

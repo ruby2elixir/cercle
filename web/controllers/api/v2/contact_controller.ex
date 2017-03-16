@@ -124,13 +124,15 @@ defmodule CercleApi.APIV2.ContactController do
     company_id = user.company_id
     for item <- items do
       organization_params = Map.put(item["organization"], "company_id", company_id)
-      ext_org = Repo.get_by(Organization, name: item["contact"]["name"], company_id: company_id)
+      contact_params =  Map.put(item["contact"], "user_id", user.id)
+      contact_params = Map.put(contact_params, "company_id", company_id)
+      ext_org = Repo.get_by(Organization, name: organization_params["name"], company_id: company_id)
       if ext_org do
-        contact_params = %{item["contact"] | "organization_id" => ext_org.id}
+        contact_params = Map.put(contact_params,"organization_id",ext_org.id)
       else
         changeset = Organization.changeset(%Organization{}, organization_params)
         organization = Repo.insert!(changeset)
-        contact_params = Map.put(item["contact"],"organization_id",organization.id)
+        contact_params = Map.put(contact_params,"organization_id",organization.id)
       end
 
       changeset = Contact.changeset(%Contact{}, contact_params)
