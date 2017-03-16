@@ -24,7 +24,7 @@ defmodule CercleApi.APIV2.OpportunityController do
       name = contact.name <> " / " <> board.name
     end
     
-    opportunity_params = %{ opportunity_params | "name" => name }
+    opportunity_params = %{opportunity_params | "name" => name}
     changeset = Opportunity.changeset(%Opportunity{}, opportunity_params)
     case Repo.insert(changeset) do
       {:ok, opportunity} ->

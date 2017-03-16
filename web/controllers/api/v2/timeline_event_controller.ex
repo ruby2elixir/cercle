@@ -20,16 +20,16 @@ defmodule CercleApi.APIV2.TimelineEventController do
         timeline_event_reload = Repo.get!(CercleApi.TimelineEvent, timeline_event.id) |> Repo.preload [:user]
         html = Phoenix.View.render_to_string(CercleApi.ContactView, "_timeline_event.html", timeline_event: timeline_event_reload)
         channel = "contacts:"  <> to_string(timeline_event_reload.contact_id)
-        CercleApi.Endpoint.broadcast!( channel, "new:timeline_event", %{"html" => html})
+        CercleApi.Endpoint.broadcast!(channel, "new:timeline_event", %{"html" => html})
 
         
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
         user = Repo.get_by(User, id: timeline_event_params["user_id"])
         contact = Repo.get!(CercleApi.Contact, timeline_event_params["contact_id"]) |> Repo.preload [:company]
-      	comment = timeline_event_params["content"]
-      	company = contact.company
-      	company_id = company.id
-      	parts = String.split(comment, " ")
+        comment = timeline_event_params["content"]
+        company = contact.company
+        company_id = company.id
+        parts = String.split(comment, " ")
           
             
         query = from p in User,
@@ -58,7 +58,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
   def notification_email(emailTo, reward, status, comment, company, user, user2) do
       %Mailman.Email{
-        subject: user.user_name <> " commented on "<> reward.name,
+        subject: user.user_name <> " commented on " <> reward.name,
         from: "referral@cercle.co",
         to: [emailTo],
         html: Phoenix.View.render_to_string(CercleApi.EmailView, "lead_notification.html", reward: reward, status: status, comment: comment, company: company, user: user, user2: user2)

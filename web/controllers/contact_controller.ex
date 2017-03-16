@@ -10,7 +10,7 @@ defmodule CercleApi.ContactController do
   alias CercleApi.Tag
   alias CercleApi.Board
 
-	require Logger
+  require Logger
 
   def index(conn, params) do
 
@@ -34,9 +34,9 @@ defmodule CercleApi.ContactController do
       leads_pending = Repo.all(query)   |> Repo.preload([:organization, :tags, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])])
 
     end
-		conn
-		|> put_layout("adminlte.html")
-		|> render("index.html", leads_pending: leads_pending , company: company)
+    conn
+    |> put_layout("adminlte.html")
+    |> render("index.html", leads_pending: leads_pending , company: company)
   end
 
   def new(conn, _params) do
@@ -120,9 +120,9 @@ defmodule CercleApi.ContactController do
 
 
     changeset = Contact.changeset(contact)
-		conn
-		|> put_layout("adminlte.html")
-		|> render("show.html", opportunities: opportunities, activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
+    conn
+    |> put_layout("adminlte.html")
+    |> render("show.html", opportunities: opportunities, activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
   end
 
 end

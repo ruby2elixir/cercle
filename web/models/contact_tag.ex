@@ -1,6 +1,6 @@
 defmodule CercleApi.ContactTag do
   use CercleApi.Web, :model
-	
+  
   schema "contacts_tags" do
     belongs_to :contact, CercleApi.Contact
     belongs_to :tag, CercleApi.Tag
@@ -17,5 +17,5 @@ defmodule CercleApi.ContactTag do
     model
     |> cast(params, [])
   end
-	
+  
 end

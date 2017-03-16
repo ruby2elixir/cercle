@@ -1,6 +1,6 @@
 defmodule CercleApi.Board do
   use CercleApi.Web, :model
-	
+  
   schema "boards" do
     field :name, :string
     belongs_to :company, CercleApi.Company
@@ -21,5 +21,5 @@ defmodule CercleApi.Board do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
+  
 end
