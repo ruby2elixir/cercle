@@ -16,7 +16,7 @@ defmodule CercleApi.ContactController do
   def index(conn, params) do
 
     company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload([:users])
 
     if params["tag_name"] do
       tag_name = params["tag_name"] 
@@ -42,7 +42,7 @@ defmodule CercleApi.ContactController do
 
   def new(conn, _params) do
     company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload([:users])
 
     query = from p in Board,
       where: p.company_id == ^company_id,
@@ -73,7 +73,7 @@ defmodule CercleApi.ContactController do
       where: activity.contact_id == ^contact.id,
       where: activity.is_done == false,
       order_by: [desc: activity.inserted_at]
-    activities = Repo.all(query) |> Repo.preload [:user]
+    activities = Repo.all(query) |> Repo.preload([:user])
 
     query = from opportunity in CercleApi.Opportunity,
       where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
@@ -104,7 +104,7 @@ defmodule CercleApi.ContactController do
       query = from event in CercleApi.TimelineEvent,
       where: event.opportunity_id == ^opportunity.id,
       order_by: [desc: event.inserted_at]
-      events = Repo.all(query) |> Repo.preload [:user]
+      events = Repo.all(query) |> Repo.preload([:user])
     end
 
     query = from p in Board,
@@ -128,7 +128,7 @@ defmodule CercleApi.ContactController do
 
   def import(conn, _params) do
     company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload([:users])
 
     conn
       |> put_layout("adminlte.html")
@@ -186,7 +186,7 @@ defmodule CercleApi.ContactController do
       File.write!("tmp/#{file_name}.csv", body)
     end
     table = File.read!("tmp/#{file_name}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
-    total_rows = Enum.count(table)-1
+    total_rows = Enum.count(table) - 1
 
     items = for i <- 0..total_rows do
       row_data = %{}
@@ -195,7 +195,6 @@ defmodule CercleApi.ContactController do
       row_data = Map.put(row_data, "contact", contact_data)
       organization_data = %{"name" => selected_row[mapping["organization"]["name"]], "website" => selected_row[mapping["organization"]["website"]],"description" => selected_row[mapping["organization"]["description"]]}
       row_data = Map.put(row_data, "organization", organization_data)
-      row_data
     end
     File.rm!("tmp/#{file_name}.csv")
     CercleApi.APIV2.ContactController.bulk_contact_create(conn,%{"items" => items})

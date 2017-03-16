@@ -122,17 +122,15 @@ defmodule CercleApi.APIV2.ContactController do
   def bulk_contact_create(conn,%{"items" => items}) do
     for item <- items do
       user = Repo.get!(User,item["contact"]["user_id"])
-      contact_params = item["contact"]
-      organization_params = item["organization"]
-      organization_params = Map.put(organization_params, "company_id", contact_params["company_id"])
-      {company_id, _rest} = Integer.parse(contact_params["company_id"])
-      ext_org = Repo.get_by(Organization, name: contact_params["name"], company_id: contact_params["company_id"])
+      organization_params = Map.put(item["organization"], "company_id", item["contact"]["company_id"])
+      {company_id, _rest} = Integer.parse(item["contact"]["company_id"])
+      ext_org = Repo.get_by(Organization, name: item["contact"]["name"], company_id: item["contact"]["company_id"])
       if ext_org do
-        contact_params = %{contact_params | "organization_id" => ext_org.id }
+        contact_params = %{item["contact"] | "organization_id" => ext_org.id}
       else
         changeset = Organization.changeset(%Organization{}, organization_params)
         organization = Repo.insert!(changeset)
-        contact_params = Map.put(contact_params,"organization_id",organization.id)
+        contact_params = Map.put(item["contact"],"organization_id",organization.id)
       end
 
       changeset = Contact.changeset(%Contact{}, contact_params)
@@ -156,8 +154,6 @@ defmodule CercleApi.APIV2.ContactController do
             |> Ecto.Changeset.change() # Build the changeset
             |> Ecto.Changeset.put_assoc(:tags, tags)
           Repo.update!(changeset)
-        {:error, changeset} ->
-          # IO.inspect "error ar row#{i+1}"
       end
     end
     json conn, %{status: "200", message: "Records imported successfully"}
