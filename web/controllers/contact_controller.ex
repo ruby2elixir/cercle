@@ -155,7 +155,7 @@ defmodule CercleApi.ContactController do
     end    
   end
 
-  def view_uploaded_data(conn, %{"mapping" => mapping, "s3_url" => s3_url}) do
+  def view_uploaded_data(conn, %{"mapping" => mapping, "s3Url" => s3_url}) do
 
     %HTTPoison.Response{body: body, status_code: status_code} = HTTPoison.get!(s3_url)
     file_name = UUID.uuid1()
@@ -176,7 +176,7 @@ defmodule CercleApi.ContactController do
     json conn, %{contact_headers: contact_headers, organization_headers: organization_headers, contact_values: contact_values, organization_values: organization_values,  file_name: file_name}
   end
 
-  def create_nested_data(conn, %{"mapping" => mapping, "file_name" => file_name, "company_id" => company_id, "user_id" => user_id, "s3_url" => s3_url}) do
+  def create_nested_data(conn, %{"mapping" => mapping, "fileName" => file_name, "companyId" => company_id, "userId" => user_id, "s3Url" => s3_url}) do
     unless File.exists?("tmp/#{file_name}.csv") do
       %HTTPoison.Response{body: body, status_code: status_code} = HTTPoison.get!(s3_url)
       file_name = UUID.uuid1()

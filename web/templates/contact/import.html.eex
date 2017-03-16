@@ -143,34 +143,31 @@
 	<%=link "Cancel Import", to: "", class: "cancel-import btn btn-danger pull-right"%>
 </div>
 <script>
-	var jsonData = {};
-	var contact= {};
-	var organization = {};
-	var uploadType;
+	
 	function allowDrop(ev) {
 	    ev.preventDefault();
 	}
 
 	function drag(ev) {
-	    ev.dataTransfer.setData("text/plain", ev.target.id);
+	    ev.dataTransfer.setData('text/plain', ev.target.id);
 	    uploadType = $('#'+ev.target.id).closest('div').parent().attr('id');
 	}
 
 	function drop(ev) {
-	    var data = ev.dataTransfer.getData("text/plain");
+	    var data = ev.dataTransfer.getData('text/plain');
 	    ev.target.innerHTML = document.getElementById(data).innerHTML;
 	    ev.target.draggable = 'true';
 	    ev.target.className = ('contact-fields active');
 	    var dbCol = $('#'+data).find('.db-field').text();
 	    var csvCol = $('#'+ev.target.id).prev('td').find('.csv-col').text();
-	    if(uploadType == "contact"){
+	    if(uploadType == 'contact'){
         	contact[dbCol] = csvCol;
         }
         else{
         	organization[dbCol] = csvCol;
         }
-        jsonData["contact"] = contact;
-        jsonData["organization"] = organization;
+        jsonData['contact'] = contact;
+        jsonData['organization'] = organization;
         $('#move-to-step3').removeClass('disabled');
        
 	}
