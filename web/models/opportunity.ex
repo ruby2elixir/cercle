@@ -1,6 +1,6 @@
 defmodule CercleApi.Opportunity do
   use CercleApi.Web, :model
-	
+  
   schema "opportunities" do
     field :name, :string
     field :description, :string
@@ -27,5 +27,5 @@ defmodule CercleApi.Opportunity do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
+  
 end

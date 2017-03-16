@@ -49,7 +49,7 @@
       checks: [
         {Credo.Check.Consistency.ExceptionNames},
         {Credo.Check.Consistency.LineEndings},
-        {Credo.Check.Consistency.MultiAliasImportRequireUse},
+        {Credo.Check.Consistency.MultiAliasImportRequireUse, false},
         {Credo.Check.Consistency.ParameterPatternMatching},
         {Credo.Check.Consistency.SpaceAroundOperators},
         {Credo.Check.Consistency.SpaceInParentheses},
@@ -57,7 +57,7 @@
 
         # For some checks, like AliasUsage, you can only customize the priority
         # Priority values are: `low, normal, high, higher`
-        {Credo.Check.Design.AliasUsage, priority: :low},
+        {Credo.Check.Design.AliasUsage, false},
 
         # For others you can set parameters
 
@@ -69,12 +69,12 @@
         # You can also customize the exit_status of each check.
         # If you don't want TODO comments to cause `mix credo` to fail, just
         # set this value to 0 (zero).
-        {Credo.Check.Design.TagTODO, exit_status: 2},
-        {Credo.Check.Design.TagFIXME},
+        {Credo.Check.Design.TagTODO, false},
+        {Credo.Check.Design.TagFIXME, false},
 
         {Credo.Check.Readability.FunctionNames},
         {Credo.Check.Readability.LargeNumbers},
-        {Credo.Check.Readability.MaxLineLength, priority: :low, max_length: 100},
+        {Credo.Check.Readability.MaxLineLength, false},
         {Credo.Check.Readability.ModuleAttributeNames},
         {Credo.Check.Readability.ModuleDoc},
         {Credo.Check.Readability.ModuleNames},
@@ -83,7 +83,7 @@
         {Credo.Check.Readability.PredicateFunctionNames},
         {Credo.Check.Readability.PreferImplicitTry},
         {Credo.Check.Readability.RedundantBlankLines},
-        {Credo.Check.Readability.Specs, priority: :low},
+        {Credo.Check.Readability.Specs, false},
         {Credo.Check.Readability.StringSigils},
         {Credo.Check.Readability.TrailingBlankLine},
         {Credo.Check.Readability.TrailingWhiteSpace},

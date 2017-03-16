@@ -1,6 +1,6 @@
 defmodule CercleApi.BoardColumn do
   use CercleApi.Web, :model
-	
+  
   schema "boards_columns" do
     field :name, :string
     field :order, :integer
@@ -17,9 +17,9 @@ defmodule CercleApi.BoardColumn do
   If no params are provided, an invalid changeset is returned
   with no validation performed.
   """
+
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
 end

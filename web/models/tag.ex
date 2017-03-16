@@ -1,6 +1,6 @@
 defmodule CercleApi.Tag do
   use CercleApi.Web, :model
-	
+  
   schema "tags" do
     field :name, :string
     belongs_to :company, CercleApi.Company
@@ -21,5 +21,5 @@ defmodule CercleApi.Tag do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
+  
 end

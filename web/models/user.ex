@@ -1,4 +1,9 @@
 defmodule CercleApi.User do
+  @moduledoc """
+  User are the people who use Cercle CRM.
+  Each User belongs to a company.
+  """
+  
   use CercleApi.Web, :model
   use Arc.Ecto.Model
 
@@ -7,8 +12,8 @@ defmodule CercleApi.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :password_reset_code, :string
-		belongs_to :company, CercleApi.Company
-		field :login, :string
+    belongs_to :company, CercleApi.Company
+    field :login, :string
     field :profile_image, CercleApi.UserProfileImage.Type
     field :name, :string #is username
     field :time_zone, :string, default: "America/New_York"
@@ -34,7 +39,7 @@ defmodule CercleApi.User do
     model
     |> cast(params, @required_fields, @optional_fields)
     |> cast_attachments(params, @required_file_fields, @optional_file_fields)
-		|> unique_constraint(:login)
+    |> unique_constraint(:login)
   end
 
   def registration_changeset(model, params) do model
@@ -45,7 +50,7 @@ defmodule CercleApi.User do
   end
 
   def update_changeset(model, params) do
-    if params["password"] !="" do
+    if params["password"] != "" do
       model
       |> changeset(params)
       |> cast(params, ~w(password), [])

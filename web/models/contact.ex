@@ -1,6 +1,9 @@
 defmodule CercleApi.Contact do
+  @moduledoc """
+  Contact is the main table where user save informations about contacts
+  """
   use CercleApi.Web, :model
-	
+  
   schema "contacts" do
     belongs_to :user, CercleApi.User
     belongs_to :organization, CercleApi.Organization
@@ -32,5 +35,5 @@ defmodule CercleApi.Contact do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-	
+  
 end
