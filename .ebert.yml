@@ -9,13 +9,13 @@ engines:
   credo:
     enabled: true
   fixme:
-    enabled: true
+    enabled: false
   eslint:
     enabled: true
   csslint:
-    enabled: true
+    enabled: false
   remark-lint:
-    enabled: true
+    enabled: false
 exclude_paths:
 - bin
 - config
