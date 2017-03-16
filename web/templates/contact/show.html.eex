@@ -18,7 +18,7 @@
 
             <div style="margin-top:10px;" data-placeholder="Note about the contact" class='inline-editable' data-type='PUT' data-input-type="textarea" data-param-name="contact[description]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>"><%= @contact.description %></div>
           
-      </td><td style="vertical-align: top;padding:20px;">      <div class="" id="with_organization" style="display:<%= if !(@contact.organization_id ) do %>none<%end%>;"><div class="box-tools pull-right">
+      </td><td style="vertical-align: top;padding:20px;">      <div class="" id="with_organization" style="display:"><div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" id="edit_contact_options" ><i class="fa fa-fw fa-angle-down"></i></button>
             </div>
           <br />
@@ -201,9 +201,9 @@
         <h4 class="modal-title">What do you want to do?</h4>
       </div>
       <div class="modal-body">
-
+        <%= if !(@contact.organization_id ) do %>
       <button type="button" class="btn btn-block btn-default" id="organization_remove_link" >Remove this company</button>
-      <Br />
+      <Br /><%end%>;
       <button type="button" class="btn btn-block btn-default" onclick="$('.opportunity_status1').show();" data-dismiss="modal" >Display Archived Boards</button>
       <Br />
         <button type="button" class="btn btn-block btn-default" style="margin-top:10px;" id="contact_delete" data-id="<%=@contact.id%>">Delete this Contact</button>
