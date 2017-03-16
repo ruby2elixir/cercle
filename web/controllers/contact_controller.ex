@@ -144,16 +144,23 @@ defmodule CercleApi.ContactController do
     end
     File.cp!(upload.path,"tmp/#{temp_file}.csv")
     {:ok, table} = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse(headings: true)
-    headers = table.headings
-    first_row = Enum.at(table.body, 0)
-    contact_fields = ["name","email","description","phone","job_title"]
-    organization_fields = ["name","website","description"]
-    json conn, %{headers: headers, first_row: first_row, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file} 
+    table_rows = Enum.count(table.body)
+    if table_rows > 100 do 
+      File.rm!("tmp/#{temp_file}.csv")
+      json conn, %{error_message: "Maximum 100 records are permitted per call"}
+    else
+      headers = table.headings
+      first_row = Enum.at(table.body, 0)
+      contact_fields = ["name","email","description","phone","job_title"]
+      organization_fields = ["name","website","description"]
+      json conn, %{headers: headers, first_row: first_row, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file} 
+    end
   end
 
   def view_uploaded_data(conn, %{"mapping" => mapping, "tempFile" => temp_file}) do
 
     table = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
+    total_rows = Enum.count(table) - 1
     contact_headers = Map.keys(mapping["contact"])
     organization_headers = Map.keys(mapping["organization"])
     first_row = Enum.at(table, 0)

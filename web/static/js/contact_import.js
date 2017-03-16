@@ -42,6 +42,9 @@ $(function() {
       if (result.error){
         return false;
       }
+      else if(result.error_message && result.error_message.length){
+        $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">'+result.error_message+'</p>');
+      }
       else{
         if (!$('#left-section-table tr').length) prepareFileTable('left-section-table', result.headers,result.first_row); 
         if (!$('#contact-field-table tr').length) prepareDbTable('contact-field-table', result.contact_fields);
@@ -54,6 +57,7 @@ $(function() {
       $('.progress .progress-bar').css('width',progress + '%');
     },
     done: function (e, data) {
+
       if (data.result.error && data.result.error.length){
         $('.upload-dashed-box').css('border', '2px dashed red');
         $('.upload-info-box').prepend('<p class="errors"> The errors in import are:-'+data.result.error+'</p>');
@@ -62,6 +66,9 @@ $(function() {
         $('#uploaded-file-name').html('');
         return false;
       }
+      else if(data.result.error_message && data.result.error_message.length) {
+        window.location = '/import';
+      } 
       else{
         $('#progress .progress-bar').toggleClass('hidden');
         $('#sec-1,#sec-2').toggleClass('hidden');
