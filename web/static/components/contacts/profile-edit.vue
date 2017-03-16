@@ -85,7 +85,7 @@ export default {
           this.$emit('updateTags', this.tag_ids)
         },
         addNewTag(input){
-          this.$http.post('/api/v2/tags', {
+          this.$http.post('/api/v2/tag', {
             tags: { name: input }, company_id: this.contact.company_id 
            }).then(resp => {
           })
@@ -105,7 +105,7 @@ export default {
           this.openTagModal = true;
         },
         getTags() {
-          this.$http.get('/api/v2/tags', {
+          this.$http.get('/api/v2/tag', {
             params: { company_id: this.contact.company_id }
            }).then(resp => {
              this.availableTags = resp.data

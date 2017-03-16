@@ -1,4 +1,4 @@
-defmodule CercleApi.APIV2.TagsView do
+defmodule CercleApi.APIV2.TagView do
   use CercleApi.Web, :view
 
   def render("index.json", %{tags: tags}) do

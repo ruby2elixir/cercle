@@ -1,4 +1,4 @@
-defmodule CercleApi.APIV2.TagsController do
+defmodule CercleApi.APIV2.TagController do
 
   require Logger
   use CercleApi.Web, :controller
