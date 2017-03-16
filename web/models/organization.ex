@@ -1,4 +1,8 @@
 defmodule CercleApi.Organization do
+  @moduledoc """
+  Organization is the place where is working a contact.
+  """
+
   use CercleApi.Web, :model
   
   schema "organizations" do

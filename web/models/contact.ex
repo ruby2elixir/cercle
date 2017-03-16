@@ -1,4 +1,7 @@
 defmodule CercleApi.Contact do
+  @moduledoc """
+  Contact is the main table where user save informations about contacts
+  """
   use CercleApi.Web, :model
   
   schema "contacts" do

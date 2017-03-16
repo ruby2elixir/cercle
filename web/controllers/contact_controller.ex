@@ -57,8 +57,8 @@ defmodule CercleApi.ContactController do
   def show(conn, params) do
     
     company_id = conn.assigns[:current_user].company_id
-    contact = Repo.get!(Contact, params["id"]) |> Repo.preload([:organization, :company, :tags])
-    company = Repo.get!(CercleApi.Company, contact.company_id) |> Repo.preload([:users])
+    contact = Repo.preload(Repo.get!(Contact, params["id"]), [:organization, :company, :tags])
+    company = Repo.preload(Repo.get!(CercleApi.Company, contact.company_id), [:users])
     if contact.company_id != company_id do 
       conn |> redirect(to: "/") |> halt
     end
