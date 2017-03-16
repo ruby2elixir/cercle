@@ -26,8 +26,17 @@
         Contacts Involved:
         <a v-for="o_contact in opportunity_contacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
 
-
-        <a class="add_o_contact" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;">+ Add ...</a>
+        <modal title="What is his name?" large :show.sync="openContactModal">
+            <div slot="modal-body" class="modal-body">
+            <input class="form-control" v-model="NewContactName" type="text" placeholder="Name of the Contact">
+            </div>
+            <div slot="modal-footer" class="modal-footer">
+             <button type="button" class="btn btn-success" v-on:click="addContact">Add Contact</button>
+            </div>
+        </modal>
+        <button type="button" class="btn btn-link add_o_contact" v-on:click="openContactModal = true" >
+          <i class="fa fa-fw fa-plus"></i>Add ...
+        </button> 
 
             <div style="margin-top:10px;margin-bottom:10px;">
               Description
@@ -37,8 +46,6 @@
               </div>
             </div>
       </div>
-
-
       <to-do>
         <comment_form slot="comment-form" v-on:submit="addComment" />
         <timeline_events
@@ -63,9 +70,41 @@
   props: [
     'activities', 'events', 'opportunity', 'company',
     'company_users', 'board',
-    'board_columns', 'opportunity_contacts'
+    'board_columns', 'opportunity_contacts',
+    'organization'
   ],
+  data(){
+  return {
+  openContactModal: false
+  }
+  },
   methods: {
+  
+    addContact(){
+    var url = '/api/v2/contact';
+    var data = {
+      name: this.NewContactName,
+      user_id: this.opportunity.user_id
+     }
+    if (this.company) {
+    data['company_id'] = this.company.id
+    }
+    if (this.organization) {
+      data['organization_id'] = this.organization.id
+    }
+    this.$http.post(url, { contact: data }).then(resp => {
+     var op_url = '/api/v2/opportunity/'+ this.opportunity.id;
+     var contact_ids = []
+     this.opportunity_contacts.forEach(function(item) {
+       contact_ids.push(item.id)
+     });
+     contact_ids.push(resp.data.data.id)
+     this.$http.put(op_url,{opportunity:{ contact_ids: contact_ids}}) 
+    })
+    
+    this.NewContactName = ''
+    this.openContactModal = false
+   },
   addComment(msg){
   this.$emit('addComment', msg)
   },
@@ -80,6 +119,7 @@
   'timeline_events': TimelineEvents,
   'inline-text-edit': InlineTextEdit,
   'v-select': vSelect.VueSelect,
+  'modal': VueStrap.modal
   }
 
   }
@@ -95,12 +135,26 @@
   color:grey;
   text-decoration:underline;
   }
-  a.add_o_contact {
+  .add_o_contact {
+  font-size: small;
   font-weight:bold;
   display:inline-block;
   padding:3px;
   border-radius:5px;
   margin-right:7px;
   color:grey;
+  &:hover {
+  color:grey;
+  box-shadow: none;
+  }
+  &:active {
+  color:grey;
+  box-shadow: none;
+  }
+
+  &:focus {
+  color:grey;
+  box-shadow: none;
+  }
   }
 </style>

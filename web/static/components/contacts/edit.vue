@@ -37,6 +37,7 @@
 
         <div class="row" v-if="opportunity">
           <opportunity-edit
+            :organization="organization"
             :company="company"
             :company_users="company_users"
             :board="board"
@@ -186,6 +187,18 @@ export default {
             this.channel.on('timeline_event:created', payload => {
                 this.events.unshift(payload.event)
             })
+
+            this.channel.on('opportunity:updated', payload => {
+                if (payload.opportunity) {
+                    this.opportunity = payload.opportunity
+                    this.opportunity_contacts = payload.opportunity_contacts
+                }
+                if (payload.board) {
+                    this.board = payload.board
+                    this.board_columns = payload.board_columns
+                }
+            })
+            
             this.channel.on('state', payload => {
                 this.contact = payload.contact
                 if (payload.opportunity) {

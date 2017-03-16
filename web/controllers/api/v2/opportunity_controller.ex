@@ -14,7 +14,7 @@ defmodule CercleApi.APIV2.OpportunityController do
 
   def create(conn, %{"opportunity" => opportunity_params}) do
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
-    
+
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
 
     name = ""
@@ -23,7 +23,7 @@ defmodule CercleApi.APIV2.OpportunityController do
     else
       name = contact.name <> " / " <> board.name
     end
-    
+
     opportunity_params = %{ opportunity_params | "name" => name }
     changeset = Opportunity.changeset(%Opportunity{}, opportunity_params)
     case Repo.insert(changeset) do
@@ -44,6 +44,21 @@ defmodule CercleApi.APIV2.OpportunityController do
 
     case Repo.update(changeset) do
       {:ok, opportunity} ->
+        opportunity_contacts = CercleApi.Opportunity.contacts(opportunity)
+        board = Repo.get!(CercleApi.Board, opportunity.board_id)
+        |> Repo.preload(:board_columns)
+
+        Enum.each opportunity.contact_ids, fn (contact_id) ->
+          channel = "contacts:"  <> to_string(contact_id)
+          CercleApi.Endpoint.broadcast!(
+            channel, "opportunity:updated", %{
+              "opportunity" => opportunity,
+              "opportunity_contacts" => opportunity_contacts,
+              "board" => board,
+              "board_columns" => board.board_columns
+            }
+          )
+        end
         render(conn, "show.json", opportunity: opportunity)
       {:error, changeset} ->
         conn
