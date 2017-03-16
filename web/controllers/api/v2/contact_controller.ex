@@ -120,11 +120,11 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def bulk_contact_create(conn,%{"items" => items}) do
+    user = Guardian.Plug.current_resource(conn)
+    company_id = user.company_id
     for item <- items do
-      user = Repo.get!(User,item["contact"]["user_id"])
-      organization_params = Map.put(item["organization"], "company_id", item["contact"]["company_id"])
-      {company_id, _rest} = Integer.parse(item["contact"]["company_id"])
-      ext_org = Repo.get_by(Organization, name: item["contact"]["name"], company_id: item["contact"]["company_id"])
+      organization_params = Map.put(item["organization"], "company_id", company_id)
+      ext_org = Repo.get_by(Organization, name: item["contact"]["name"], company_id: company_id)
       if ext_org do
         contact_params = %{item["contact"] | "organization_id" => ext_org.id}
       else

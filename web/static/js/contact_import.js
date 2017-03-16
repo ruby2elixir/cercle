@@ -1,5 +1,5 @@
 $(function() {
-  var s3Url='';
+  var tempFile='';
   var fileName='';
   var xhr;
   
@@ -46,7 +46,7 @@ $(function() {
         if (!$('#left-section-table tr').length) prepareFileTable('left-section-table', result.headers,result.first_row); 
         if (!$('#contact-field-table tr').length) prepareDbTable('contact-field-table', result.contact_fields);
         if (!$('#organization-field-table tr').length) prepareDbTable('organization-field-table', result.organization_fields);
-        if (result) s3Url = result.s3_url;
+        if (result) tempFile = result.temp_file;
       }
     },
     progress: function (e, data) {
@@ -117,7 +117,7 @@ $(function() {
       async: true,
       data: {
         mapping: jsonData,
-        s3Url: s3Url
+        tempFile: tempFile
       },
       error: function(error) {
         $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
@@ -135,7 +135,7 @@ $(function() {
         var organizationHeaders = data.organization_headers;
         var contactValues = data.contact_values;
         var organizationValues = data.organization_values;
-        fileName = data.file_name;
+        tempFile = data.temp_file;
         preparePreviewDataTable('preview-data-table',contactHeaders, organizationHeaders, contactValues, organizationValues);
       }
     });
@@ -155,10 +155,9 @@ $(function() {
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: {
           mapping: jsonData,
-          fileName: fileName,
+          tempFile: tempFile,
           companyId: companyId,
-          userId: userId,
-          s3Url: s3Url
+          userId: userId
         },
         success: function(result){
           $('#final-progress .progress-bar').toggleClass('hidden');

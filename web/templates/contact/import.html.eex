@@ -143,7 +143,10 @@
 	<%=link "Cancel Import", to: "", class: "cancel-import btn btn-danger pull-right"%>
 </div>
 <script>
-	
+	var uploadType;
+	var contact = {};
+	var organization ={};
+	var jsonData = {};
 	function allowDrop(ev) {
 	    ev.preventDefault();
 	}
