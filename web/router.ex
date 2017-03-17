@@ -97,7 +97,8 @@ defmodule CercleApi.Router do
     resources "/api/v2/board_column", APIV2.BoardColumnController
     
     post "/api/v2/webhook", APIV2.WebhookController, :create
-    post "/api/v2/bulk_contact_create", APIV2.ContactController, :bulk_contact_create
+    post "/api/v2/bulk_contact_create", APIV2.BulkController, :bulk_contact_create
+    post "/api/v2/bulk_tag_or_untag_contacts", APIV2.BulkController, :bulk_tag_or_untag_contacts
 
   end
 

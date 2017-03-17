@@ -1,5 +1,6 @@
 defmodule CercleApi.ContactController do
   use CercleApi.Web, :controller
+  use Timex
 
   alias CercleApi.Contact
   alias CercleApi.Organization
@@ -173,10 +174,17 @@ defmodule CercleApi.ContactController do
     json conn, %{contact_headers: contact_headers, organization_headers: organization_headers, contact_values: contact_values, organization_values: organization_values,  temp_file: temp_file}
   end
 
-  def create_nested_data(conn, %{"mapping" => mapping, "tempFile" => temp_file, "companyId" => company_id, "userId" => user_id}) do
+  def create_nested_data(conn, %{"mapping" => mapping, "tempFile" => temp_file}) do
     
+    user = Guardian.Plug.current_resource(conn)
+    company_id = user.company_id
     table = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
     total_rows = Enum.count(table) - 1
+    datetime = Timezone.convert(Timex.now,user.time_zone)
+    date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
+    time = Timex.format!(datetime, "%H:%M", :strftime)
+    tag_name = "imported #{date} at #{time}"
+    tag_id = Repo.insert!(%Tag{name: tag_name, company_id: company_id}).id
     items = for i <- 0..total_rows do
       row_data = %{}
       selected_row = Enum.at(table, i)
@@ -186,6 +194,6 @@ defmodule CercleApi.ContactController do
       row_data = Map.put(row_data, "organization", organization_data)
     end
     File.rm!("tmp/#{temp_file}.csv")
-    CercleApi.APIV2.ContactController.bulk_contact_create(conn,%{"items" => items})
+    CercleApi.APIV2.BulkController.bulk_contact_create(conn,%{"items" => items, "tag_id" => tag_id})
   end
 end

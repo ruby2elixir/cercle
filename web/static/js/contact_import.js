@@ -151,8 +151,8 @@ $(function() {
   $('#move-to-final').click(function(e){
     e.preventDefault();
     $(this).text('Importing..').addClass('disabled');
-    var userId = $('#user_id').val();
-    var companyId = $('#company_id').val();
+    // var userId = $('#user_id').val();
+    // var companyId = $('#company_id').val();
     $('#final-progress .progress-bar').toggleClass('hidden');
     if(uploadType){
       // contact-import
@@ -162,9 +162,9 @@ $(function() {
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: {
           mapping: jsonData,
-          tempFile: tempFile,
-          companyId: companyId,
-          userId: userId
+          tempFile: tempFile
+          // companyId: companyId,
+          // userId: userId
         },
         success: function(result){
           $('#final-progress .progress-bar').toggleClass('hidden');
@@ -199,9 +199,9 @@ function prepareFileTable(tableName,headers,firstRow) {
         x.className = 'info drop-fields';
         x.id = 'map'+i;
         x.draggable = true;
-        x.setAttribute('ondrop','return drop(event)');
-        x.setAttribute('ondragover','return allowDrop(event)');
-        x.setAttribute('ondragstart','return drag(event)');
+        x.setAttribute('ondrop','drop(event)');
+        x.setAttribute('ondragover','allowDrop(event)');
+        x.setAttribute('ondragstart','drag(event)');
       }
     }
   }
@@ -226,9 +226,9 @@ function prepareDbTable(tableName,fields) {
     x.className = 'active '+ className;
     x.id = id+i;
     x.draggable = true;
-    x.setAttribute('ondrop','return drop(event)');
-    x.setAttribute('ondragover','return allowDrop(event)');
-    x.setAttribute('ondragstart','return drag(event)');
+    x.setAttribute('ondrop','drop(event)');
+    x.setAttribute('ondragover','allowDrop(event)');
+    x.setAttribute('ondragstart','drag(event)');
   }
 }
 

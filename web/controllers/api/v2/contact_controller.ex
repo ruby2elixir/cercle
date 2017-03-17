@@ -118,46 +118,5 @@ defmodule CercleApi.APIV2.ContactController do
 
     send_resp(conn, :no_content, "")
   end
-
-  def bulk_contact_create(conn,%{"items" => items}) do
-    user = Guardian.Plug.current_resource(conn)
-    company_id = user.company_id
-    for item <- items do
-      organization_params = Map.put(item["organization"], "company_id", company_id)
-      contact_params =  Map.put(item["contact"], "user_id", user.id)
-      contact_params = Map.put(contact_params, "company_id", company_id)
-      ext_org = Repo.get_by(Organization, name: organization_params["name"], company_id: company_id)
-      if ext_org do
-        contact_params = Map.put(contact_params,"organization_id",ext_org.id)
-      else
-        changeset = Organization.changeset(%Organization{}, organization_params)
-        organization = Repo.insert!(changeset)
-        contact_params = Map.put(contact_params,"organization_id",organization.id)
-      end
-
-      changeset = Contact.changeset(%Contact{}, contact_params)
-      case Repo.insert(changeset) do
-        {:ok, contact} ->          
-          #create tags
-          contact = Repo.get!(Contact, contact.id) 
-          query = from c in ContactTag,
-            where: c.contact_id == ^contact.id
-          Repo.delete_all(query)
-          datetime = Timezone.convert(Ecto.DateTime.to_erl(contact.inserted_at),user.time_zone)
-          date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
-          time = Timex.format!(datetime, "%H:%M", :strftime)
-          tag_name = "imported #{date} at #{time}"
-          tag_id = Repo.insert!(%Tag{name: tag_name, company_id: company_id}).id
-          query = from tag in Tag,
-            where: tag.id == ^tag_id
-          tags = Repo.all(query)
-              changeset = contact
-            |> Repo.preload(:tags) # Load existing data
-            |> Ecto.Changeset.change() # Build the changeset
-            |> Ecto.Changeset.put_assoc(:tags, tags)
-          Repo.update!(changeset)
-      end
-    end
-    json conn, %{status: "200", message: "Records imported successfully"}
-  end
+  
 end

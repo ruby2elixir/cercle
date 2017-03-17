@@ -142,36 +142,38 @@
 	<%=link "Finish", to: "#" , class: "btn btn-success pull-right", id: "move-to-final",  style: "margin-left:5px"%>
 	<%=link "Cancel Import", to: "", class: "cancel-import btn btn-danger pull-right"%>
 </div>
-<script>
-	var uploadType;
-	var contact = {};
-	var organization ={};
-	var jsonData = {};
-	function allowDrop(ev) {
-	    ev.preventDefault();
-	}
+<script type="text/javascript">
+	
+var uploadType;
+var contact = {};
+var organization ={};
+var jsonData = {};	
 
-	function drag(ev) {
-	    ev.dataTransfer.setData('text/plain', ev.target.id);
-	    uploadType = $('#'+ev.target.id).closest('div').parent().attr('id');
-	}
+function allowDrop(ev) {
+  ev.preventDefault();
+}
 
-	function drop(ev) {
-	    var data = ev.dataTransfer.getData('text/plain');
-	    ev.target.innerHTML = document.getElementById(data).innerHTML;
-	    ev.target.draggable = 'true';
-	    ev.target.className = ('contact-fields active');
-	    var dbCol = $('#'+data).find('.db-field').text();
-	    var csvCol = $('#'+ev.target.id).prev('td').find('.csv-col').text();
-	    if(uploadType == 'contact'){
-        	contact[dbCol] = csvCol;
-        }
-        else{
-        	organization[dbCol] = csvCol;
-        }
-        jsonData['contact'] = contact;
-        jsonData['organization'] = organization;
-        $('#move-to-step3').removeClass('disabled');
-       
-	}
+function drag(ev) {
+  ev.dataTransfer.setData('text/plain', ev.target.id);
+  uploadType = $('#'+ev.target.id).closest('div').parent().attr('id');
+}
+
+function drop(ev) {
+  var data = ev.dataTransfer.getData('text/plain');
+  ev.target.innerHTML = document.getElementById(data).innerHTML;
+  ev.target.draggable = 'true';
+  ev.target.className = ('contact-fields active');
+  var dbCol = $('#'+data).find('.db-field').text();
+  var csvCol = $('#'+ev.target.id).prev('td').find('.csv-col').text();
+  if(uploadType == 'contact'){
+    contact[dbCol] = csvCol;
+  }
+  else{
+    organization[dbCol] = csvCol;
+  }
+  jsonData['contact'] = contact;
+  jsonData['organization'] = organization;
+  $('#move-to-step3').removeClass('disabled');  
+}
+
 </script>
