@@ -5,7 +5,7 @@ defmodule CercleApi.Company do
   use CercleApi.Web, :model
   use Arc.Ecto.Model
 
-  @derive {Poison.Encoder, only: [ :id, :title, :logo_image, :data_fields ]}
+  @derive {Poison.Encoder, only: [:id, :title, :logo_image, :data_fields]}
 
   schema "companies" do
     field :title, :string

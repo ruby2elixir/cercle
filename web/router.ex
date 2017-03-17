@@ -107,7 +107,7 @@ defmodule CercleApi.Router do
     get "/api/v2/user/organizations", APIV2.UserController, :organizations
   end
 
-	scope "/admin" , CercleApi.Admin,  as: :admin do
+  scope "/admin" , CercleApi.Admin, as: :admin do
     pipe_through :browser # Use the default browser stack
     pipe_through :basic_auth
 

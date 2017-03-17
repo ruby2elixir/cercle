@@ -1,7 +1,7 @@
 defmodule CercleApi.Tag do
   use CercleApi.Web, :model
 
-	@derive {Poison.Encoder, only: [ :id, :name, :company_id ]}
+  @derive {Poison.Encoder, only: [:id, :name, :company_id]}
 
   schema "tags" do
     field :name, :string
