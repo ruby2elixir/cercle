@@ -15,6 +15,7 @@
                     v-on:updateTags="updateTags"
                     v-on:remove="removeContact" />
                 </td>
+
                 <td style="width:50%;padding:20px;vertical-align: top;">
                   <organization-edit
                     :organization="organization"
@@ -35,6 +36,27 @@
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-md-12">
+            <div style="padding:15px;">
+              <a v-for="opportunity in opportunities" :href="'/contact/'+contact.id + '/opportunity/' + opportunity.id" class="opportunity-tags">
+                {{opportunity.name}}
+              </a>
+              <button v-show="!ShowAddCard" v-on:click="ShowAddCard=true" type="button" class="btn btn-link show-add-card-form">
+               <i class="fa fa-fw fa-plus"></i>Create a card
+              </button>
+              <div v-show="ShowAddCard">
+                Create a card into the board: 
+                <select v-model="NewBoard">
+                  <option v-for="board in boards" :value="board">{{board.name}}</option>
+                </select>
+                &nbsp;&nbsp;
+                <button type="button" v-on:click="addNewCard" >Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="row" v-if="opportunity">
           <opportunity-edit
             :organization="organization"
@@ -43,11 +65,13 @@
             :board="board"
             :board_columns="board_columns"
             :opportunity="opportunity"
+            :opportunities="opportunities"
             :opportunity_contacts="opportunity_contacts"
             :activities="activities"
             :events="events"
             v-on:addComment="addComment"
             v-on:updateOpportunity="updateOpportunity"
+            v-on:archiveOpportunity="archiveOpportunity"
             />
 
         </div>
@@ -67,6 +91,7 @@ export default {
     props: ['contact_id'],
     data() {
         return {
+            ShowAddCard: false,
             socket: null,
             channel: null,
             contact: { },
@@ -74,12 +99,15 @@ export default {
             company_users: [],
             organization: null,
             opportunity: null,
+            opportunities: [],
             tags: [],
             activitites: [],
             events: [],
             board: null,
+            boards: [],
             board_columns: [],
-            opportunity_contacts: []
+            opportunity_contacts: [],
+            NewBoard: null
 
         }
     },
@@ -91,6 +119,29 @@ export default {
 
     },
     methods: {
+    
+        addNewCard() {
+          console.log('fffffff', this.NewBoard);
+          var url = "/api/v2/opportunity/"
+          this.$http.post(url,
+          { opportunity: {
+            main_contact_id: this.contact.id,
+            contact_ids: [this.contact.id],
+            company_id: this.company.id,
+            name: '',
+            board_id: this.NewBoard.id,
+            board_column_id: this.NewBoard.board_columns[0].id
+          } }
+          ).then(resp => {
+            console.log('resp', resp.data)
+          })
+          this.NewBoard = null
+          this.ShowAddCard = false;
+        },
+        archiveOpportunity(){
+            var url = '/api/v2/opportunity/' + this.opportunity.id;
+            this.$http.put(url, { opportunity: { status: '1'} })
+        },
         updateOpportunity(data) {
             var url = '/api/v2/opportunity/' + this.opportunity.id;
             this.$http.put(url, { opportunity: data })
@@ -198,12 +249,19 @@ export default {
                     this.board_columns = payload.board_columns
                 }
             })
-            
+
             this.channel.on('state', payload => {
                 this.contact = payload.contact
+                if (payload.boards) {
+                    this.boards = payload.boards
+                }
                 if (payload.opportunity) {
                     this.opportunity = payload.opportunity
                     this.opportunity_contacts = payload.opportunity_contacts
+                }
+
+                if (payload.opportunities) {
+                    this.opportunities = payload.opportunities
                 }
                 if (payload.company) {
                     this.company = payload.company
@@ -244,6 +302,12 @@ width: 800px;
 
 h1 {
 text-align: center;
+}
+.show-add-card-form {
+font-weight:bold;display:inline-block;padding:0px 3px 3px 3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;
+}
+.opportunity-tags {
+font-weight:bold;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;
 }
 }
 </style>

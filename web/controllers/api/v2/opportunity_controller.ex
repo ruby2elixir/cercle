@@ -13,7 +13,9 @@ defmodule CercleApi.APIV2.OpportunityController do
   plug :scrub_params, "opportunity" when action in [:create, :update]
 
   def create(conn, %{"opportunity" => opportunity_params}) do
-    contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
+    current_user = Guardian.Plug.current_resource(conn)
+    contact = Repo.get!(CercleApi.Contact,
+      opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
 
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
 
@@ -25,7 +27,10 @@ defmodule CercleApi.APIV2.OpportunityController do
     end
 
     opportunity_params = %{ opportunity_params | "name" => name }
-    changeset = Opportunity.changeset(%Opportunity{}, opportunity_params)
+    changeset = current_user
+    |> build_assoc(:opportunities)
+    |> Opportunity.changeset(opportunity_params)
+
     case Repo.insert(changeset) do
       {:ok, opportunity} ->
         conn

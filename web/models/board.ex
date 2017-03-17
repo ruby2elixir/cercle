@@ -2,7 +2,7 @@ defmodule CercleApi.Board do
   use CercleApi.Web, :model
 
   @derive {Poison.Encoder, only: [
-              :id, :name, :company_id
+              :id, :name, :company_id, :board_columns
             ]}
 
   schema "boards" do

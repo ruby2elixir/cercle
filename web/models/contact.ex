@@ -48,12 +48,21 @@ defmodule CercleApi.Contact do
     CercleApi.Repo.one(open_opportunity)
   end
 
+  def involved_in_opportunities(contact) do
+    query = from opportunity in CercleApi.Opportunity,
+      where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
+      where: opportunity.status == 0,
+      order_by: [desc: opportunity.inserted_at]
+    CercleApi.Repo.all(query)
+  end
+
   def preload_data(query \\ %Contact{}) do
     comments_query = from c in CercleApi.TimelineEvent, order_by: [desc: c.inserted_at], preload: :user
+
     from q in query, preload: [
-       :organization, :tags,
-       activities: [:user],
-       company: [:users],
+      :organization, :tags, :opportunities,
+      activities: [:user],
+      company: [:users, boards: [:board_columns]],
       timeline_event: ^comments_query
     ]
   end

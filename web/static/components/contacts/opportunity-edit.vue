@@ -2,7 +2,8 @@
   <div class="col-md-12">
 
     <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;padding:20px;margin-bottom:10px;">
-      <button type="button" class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" id="opportunity_win" >ARCHIVE</button>
+
+      <button type="button" class="btn btn-default pull-right" v-on:click="archiveOpportunity" >ARCHIVE</button>
 
       <div style="" id="change_status">
         <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
@@ -36,7 +37,7 @@
         </modal>
         <button type="button" class="btn btn-link add_o_contact" v-on:click="openContactModal = true" >
           <i class="fa fa-fw fa-plus"></i>Add ...
-        </button> 
+        </button>
 
             <div style="margin-top:10px;margin-bottom:10px;">
               Description
@@ -67,60 +68,64 @@
   import InlineTextEdit from "../inline-textedit.vue"
 
   export default {
-  props: [
-    'activities', 'events', 'opportunity', 'company',
-    'company_users', 'board',
-    'board_columns', 'opportunity_contacts',
-    'organization'
-  ],
-  data(){
-  return {
-  openContactModal: false
-  }
-  },
-  methods: {
-  
-    addContact(){
-    var url = '/api/v2/contact';
-    var data = {
-      name: this.NewContactName,
-      user_id: this.opportunity.user_id
-     }
-    if (this.company) {
-    data['company_id'] = this.company.id
+    props: [
+        'activities', 'events', 'opportunity', 'company',
+        'opportunities',
+        'company_users', 'board',
+        'board_columns', 'opportunity_contacts',
+        'organization'
+    ],
+    data(){
+        return {
+            openContactModal: false
+        }
+    },
+    methods: {
+
+        addContact(){
+            var url = '/api/v2/contact';
+            var data = {
+                name: this.NewContactName,
+                user_id: this.opportunity.user_id
+            }
+            if (this.company) {
+                data['company_id'] = this.company.id
+            }
+            if (this.organization) {
+                data['organization_id'] = this.organization.id
+            }
+            this.$http.post(url, { contact: data }).then(resp => {
+                var op_url = '/api/v2/opportunity/'+ this.opportunity.id;
+                var contact_ids = []
+                this.opportunity_contacts.forEach(function(item) {
+                    contact_ids.push(item.id)
+                });
+                contact_ids.push(resp.data.data.id)
+                this.$http.put(op_url,{opportunity:{ contact_ids: contact_ids}})
+            })
+
+            this.NewContactName = ''
+            this.openContactModal = false
+        },
+        addComment(msg){
+            this.$emit('addComment', msg)
+        },
+        archiveOpportunity() {
+          this.$emit('archiveOpportunity', this.opportunity)
+        },
+        updateOpportunity(){
+          this.$emit('updateOpportunity', this.opportunity)
+        },
+    },
+    components: {
+        'inline-edit': InlineEdit,
+        'to-do': ToDo,
+        'comment_form': CommentForm,
+        'timeline_events': TimelineEvents,
+        'inline-text-edit': InlineTextEdit,
+        'v-select': vSelect.VueSelect,
+        'modal': VueStrap.modal
     }
-    if (this.organization) {
-      data['organization_id'] = this.organization.id
-    }
-    this.$http.post(url, { contact: data }).then(resp => {
-     var op_url = '/api/v2/opportunity/'+ this.opportunity.id;
-     var contact_ids = []
-     this.opportunity_contacts.forEach(function(item) {
-       contact_ids.push(item.id)
-     });
-     contact_ids.push(resp.data.data.id)
-     this.$http.put(op_url,{opportunity:{ contact_ids: contact_ids}}) 
-    })
-    
-    this.NewContactName = ''
-    this.openContactModal = false
-   },
-  addComment(msg){
-  this.$emit('addComment', msg)
-  },
-  updateOpportunity(){
-    this.$emit('updateOpportunity', this.opportunity)
-  },
-  },
-  components: {
-  'inline-edit': InlineEdit,
-  'to-do': ToDo,
-  'comment_form': CommentForm,
-  'timeline_events': TimelineEvents,
-  'inline-text-edit': InlineTextEdit,
-  'v-select': vSelect.VueSelect,
-  'modal': VueStrap.modal
-  }
 
   }
 </script>

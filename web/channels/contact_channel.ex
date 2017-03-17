@@ -16,6 +16,7 @@ defmodule CercleApi.ContactChannel do
 
     Logger.debug "> LOAD STATE"
     opportunity = Contact.opportunity(contact)
+
     data = %{
       contact: contact,
       company: contact.company,
@@ -24,7 +25,9 @@ defmodule CercleApi.ContactChannel do
       organization: contact.organization,
       activities: contact.activities,
       events: contact.timeline_event,
-      opportunity: opportunity
+      opportunity: opportunity,
+      opportunities: CercleApi.Contact.involved_in_opportunities(contact),
+      boards: contact.company.boards
     }
 
     if opportunity do
