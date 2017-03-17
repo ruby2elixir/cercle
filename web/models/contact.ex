@@ -1,4 +1,7 @@
 defmodule CercleApi.Contact do
+  @moduledoc """
+  Contact is the main table where user save informations about contacts
+  """
   use CercleApi.Web, :model
   alias CercleApi.Contact
 
@@ -66,4 +69,5 @@ defmodule CercleApi.Contact do
       timeline_event: ^comments_query
     ]
   end
+
 end

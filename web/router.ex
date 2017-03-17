@@ -26,13 +26,7 @@ defmodule CercleApi.Router do
     plug :accepts, ["json"]
   end
 
-  pipeline :api_auth do
-    plug Guardian.Plug.VerifyHeader
-    plug Guardian.Plug.LoadResource
-  end
-
-
-	pipeline :browser_auth do
+  pipeline :browser_auth do
     plug Guardian.Plug.VerifySession
     plug Guardian.Plug.LoadResource
   end
@@ -74,7 +68,7 @@ defmodule CercleApi.Router do
     put "/settings/fields_update", SettingsController, :fields_update
 
     get "/contact", ContactController, :index
-	  get "/contact/new", ContactController, :new
+    get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
     get "/contact/:id/opportunity/:opportunity_id", ContactController, :show
 
@@ -110,11 +104,6 @@ defmodule CercleApi.Router do
 
     post "/api/v2/webhook", APIV2.WebhookController, :create
 
-  end
-
-  scope "/", CercleApi do
-    pipe_through [:api, :api_auth]
-
     get "/api/v2/user/organizations", APIV2.UserController, :organizations
   end
 
@@ -125,5 +114,5 @@ defmodule CercleApi.Router do
     resources "/users", UserController
     resources "/companies", CompanyController
     #resources "/company_services", CompanyServiceController
-	end
+  end
 end

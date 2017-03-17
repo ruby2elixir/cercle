@@ -1,5 +1,10 @@
 defmodule CercleApi.Organization do
+  @moduledoc """
+  Organization is the place where is working a contact.
+  """
+
   use CercleApi.Web, :model
+
 
   @derive {Poison.Encoder, only: [
               :id, :user_id, :company_id, :name, :website,

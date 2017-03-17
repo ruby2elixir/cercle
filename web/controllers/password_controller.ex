@@ -1,7 +1,7 @@
 defmodule CercleApi.PasswordController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{ User, Repo, Mailer }
+  alias CercleApi.{User, Repo, Mailer}
 
   def forget_password(conn, _) do
     conn
@@ -24,7 +24,7 @@ defmodule CercleApi.PasswordController do
             to: [user.login],
             html: Phoenix.View.render_to_string(CercleApi.EmailView, "password_reset.html", user: user)
           }
-				  Mailer.deliver password_reset_mail
+          Mailer.deliver password_reset_mail
 
           conn
           |> put_flash(:info, "Password reset link has been sent to your email address.")

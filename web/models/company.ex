@@ -1,4 +1,7 @@
 defmodule CercleApi.Company do
+  @moduledoc """
+  Company reprends the group of users who use Cercle CRM.
+  """
   use CercleApi.Web, :model
   use Arc.Ecto.Model
 

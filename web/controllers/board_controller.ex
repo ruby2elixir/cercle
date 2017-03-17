@@ -7,10 +7,10 @@ defmodule CercleApi.BoardController do
   alias CercleApi.Opportunity
   alias CercleApi.TimelineEvent
   alias CercleApi.Board
-	
+  
   alias CercleApi.Company
 
-	require Logger
+  require Logger
 
   def index(conn, _params) do
     company_id = conn.assigns[:current_user].company_id
@@ -35,7 +35,7 @@ defmodule CercleApi.BoardController do
       |> put_layout("adminlte.html")
       |> render "new.html", company: company
   end
-	
+
   def show(conn, %{"id" => id}) do
     
     board = Repo.get!(CercleApi.Board, id)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
@@ -52,14 +52,14 @@ defmodule CercleApi.BoardController do
 
     #order_by: [desc: p.rating]
     #from(CercleApi.TimelineEvent], order_by: [desc: :inserted_at])
+    query = (from a in CercleApi.Activity, where: a.is_done == false)
+    cards = Repo.all(query_cards)  |> Repo.preload([:user, {:main_contact, activities: query}, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
 
-		cards = Repo.all(query_cards)   |> Repo.preload([:user, {:main_contact, activities: (from a in CercleApi.Activity, where: a.is_done == false) }, {:main_contact, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])}])
 
 
-
-		conn
-		  |> put_layout("adminlte.html")
-		  |> render "show.html",  company: company, cards: cards, board: board, no_container: true
+    conn
+      |> put_layout("adminlte.html")
+      |> render "show.html",  company: company, cards: cards, board: board, no_container: true
   end
 
   def new(conn, _params) do
@@ -87,9 +87,9 @@ defmodule CercleApi.BoardController do
     reward_status_history = Repo.all(query) |> Repo.preload [:user]
 
     changeset = Contact.changeset(reward)
-		conn
-		  |> put_layout("adminlte.html")
-		  |> render "edit.html", reward: reward, changeset: changeset, company: company, reward_status_history: reward_status_history, organizations: organizations
+    conn
+      |> put_layout("adminlte.html")
+      |> render "edit.html", reward: reward, changeset: changeset, company: company, reward_status_history: reward_status_history, organizations: organizations
   end
 
 end

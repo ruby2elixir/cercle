@@ -26,7 +26,7 @@ defmodule CercleApi.APIV2.OpportunityController do
       name = contact.name <> " / " <> board.name
     end
 
-    opportunity_params = %{ opportunity_params | "name" => name }
+    opportunity_params = %{opportunity_params | "name" => name}
     changeset = current_user
     |> build_assoc(:opportunities)
     |> Opportunity.changeset(opportunity_params)
