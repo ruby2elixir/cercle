@@ -164,7 +164,7 @@ export var ContactEdit = {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: { 
-          'opportunity[main_contactId]': contactId, 
+          'opportunity[main_contact_id]': contactId, 
           'opportunity[contact_ids]': [contactId], 
           'opportunity[user_id]': userId, 
           'opportunity[company_id]': companyId, 
