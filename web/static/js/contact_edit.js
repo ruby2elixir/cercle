@@ -22,7 +22,7 @@ export var ContactEdit = {
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: { 
           'contact[name]': contactName,
-          'contact[userId]': userId,
+          'contact[user_id]': userId,
           'contact[companyId]': companyId, 
           'contact[organizationId]': organizationId
         },
