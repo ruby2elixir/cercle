@@ -1,7 +1,6 @@
 export var ContactEdit = {
   start: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids, jwt_token){
     
-
     $("#organization_remove_link").click(function(){
       $('#without_organization').show();
       $('#with_organization').hide();
