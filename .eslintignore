@@ -1,0 +1,4 @@
+priv/*
+deps/*
+web/static/js/adminlte
+web/static/vendor
