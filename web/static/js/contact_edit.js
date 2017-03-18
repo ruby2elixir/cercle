@@ -34,7 +34,7 @@ export var ContactEdit = {
             method: 'PUT',
             headers: {'Authorization': 'Bearer '+jwtToken},
             data: { 
-              'opportunity[contactIds]': opportunityContactIds
+              'opportunity[contact_ids]': opportunityContactIds
             },
             complete: function(xhr, status){
               window.location = '/contact/' + newContactId;
@@ -137,7 +137,7 @@ export var ContactEdit = {
       $.ajax( url , {
         method: 'PUT',
         headers: {'Authorization': 'Bearer '+jwtToken},
-        data: { 'opportunity[userId]': $(this).val() },
+        data: { 'opportunity[user_id]': $(this).val() },
         complete: function(xhr, status){
           return true;
         }
@@ -165,9 +165,9 @@ export var ContactEdit = {
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: { 
           'opportunity[main_contactId]': contactId, 
-          'opportunity[contactIds]': [contactId], 
-          'opportunity[userId]': userId, 
-          'opportunity[companyId]': companyId, 
+          'opportunity[contact_ids]': [contactId], 
+          'opportunity[user_id]': userId, 
+          'opportunity[company_id]': companyId, 
           'opportunity[name]': '', 
           'opportunity[board_id]': boardColumn.split('--')[0],
           'opportunity[board_column_id]': boardColumn.split('--')[1]
@@ -200,10 +200,10 @@ export var ContactEdit = {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: { 'activity[contactId]': contactId, 
-          'activity[opportunityId]': opportunityId, 
-          'activity[userId]': userId, 
+          'activity[opportunity_id]': opportunityId, 
+          'activity[user_id]': userId, 
           'activity[due_date]': new Date().toISOString(), 
-          'activity[companyId]': companyId,
+          'activity[company_id]': companyId,
           'activity[current_user_time_zone]': $(this).data('current_user_time_zone'),
           'activity[title]': 'Call'
         },
