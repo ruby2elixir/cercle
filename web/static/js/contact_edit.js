@@ -23,8 +23,8 @@ export var ContactEdit = {
         data: { 
           'contact[name]': contactName,
           'contact[user_id]': userId,
-          'contact[companyId]': companyId, 
-          'contact[organizationId]': organizationId
+          'contact[company_id]': companyId, 
+          'contact[organization_id]': organizationId
         },
         success: function(result){
           var newContactId = result.data.id;
@@ -83,7 +83,7 @@ export var ContactEdit = {
         $.ajax( url , {
           method: 'PUT',
           headers: {'Authorization': 'Bearer '+jwtToken},
-          data: { 'contact[organizationId]': organizationName },
+          data: { 'contact[organization_id]': organizationName },
           complete: function(xhr, status){
             location.reload();
             return true;
@@ -106,7 +106,7 @@ export var ContactEdit = {
             $.ajax( url2 , {
               method: 'PUT',
               headers: {'Authorization': 'Bearer '+jwtToken},
-              data: { 'contact[organizationId]': newOrganizationId },
+              data: { 'contact[organization_id]': newOrganizationId },
               complete: function(xhr, status){
                 location.reload();
                 return true;
