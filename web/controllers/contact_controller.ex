@@ -205,5 +205,5 @@ defmodule CercleApi.ContactController do
     File.rm!("tmp/#{temp_file}.csv")
     json conn, %{status: "200", message: "Records imported successfully"}
   end
-  
+
 end

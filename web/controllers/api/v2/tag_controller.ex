@@ -32,5 +32,5 @@ defmodule CercleApi.APIV2.TagController do
       Repo.insert!(%Tag{name: tag_name, company_id: company_id})
     render(conn, "show.json", tag: tag)
   end
-  
+
 end
