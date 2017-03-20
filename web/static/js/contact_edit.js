@@ -132,7 +132,7 @@ export var ContactEdit = {
       });
     });
   
-    $('#change_opportunity_userId').change(function(){
+    $('#change_opportunity_user_id').change(function(){
       var url = '/api/v2/opportunity/' + opportunityId;
       $.ajax( url , {
         method: 'PUT',
