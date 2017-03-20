@@ -100,10 +100,10 @@ defmodule CercleApi.ContactController do
 
       board = Repo.get!(CercleApi.Board, opportunity.board_id)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
 
-      query = from event in CercleApi.TimelineEvent,
+      query1 = from event in CercleApi.TimelineEvent,
       where: event.opportunity_id == ^opportunity.id,
       order_by: [desc: event.inserted_at]
-      events = Repo.all(query) |> Repo.preload([:user])
+      events = Repo.all(query1) |> Repo.preload([:user])
     end
 
     query = from p in Board,
@@ -112,9 +112,9 @@ defmodule CercleApi.ContactController do
 
     boards = Repo.all(query)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
 
-    query = from p in Tag,
+    query1 = from p in Tag,
       where: p.company_id == ^company_id
-    tags = Repo.all(query)
+    tags = Repo.all(query1)
 
     tag_ids = Enum.map(contact.tags, fn(t) -> t.id end)
 
@@ -193,9 +193,8 @@ defmodule CercleApi.ContactController do
         row_data = %{}
         selected_row = Enum.at(table, i)
         contact_data = %{"name" => selected_row[mapping["contact"]["name"]], "email" => selected_row[mapping["contact"]["email"]], "phone" => selected_row[mapping["contact"]["phone"]], "description" => selected_row[mapping["contact"]["description"]], "job_title" => selected_row[mapping["contact"]["job_title"]]}
-        row_data = Map.put(row_data, "contact", contact_data)
         organization_data = %{"name" => selected_row[mapping["organization"]["name"]], "website" => selected_row[mapping["organization"]["website"]],"description" => selected_row[mapping["organization"]["description"]]}
-        row_data = Map.put(row_data, "organization", organization_data)
+        Map.put(row_data, "contact", contact_data) |> Map.put("organization", organization_data)
       end
       contacts = CercleApi.APIV2.BulkController.bulk_contact_create(conn,%{"items" => items})
       CercleApi.APIV2.BulkController.bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => str_tag_id})
