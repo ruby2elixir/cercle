@@ -48,7 +48,7 @@ defmodule CercleApi.APIV2.BulkController do
     end
   end
 
-  def bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => tag_id}) do
+  def bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => tag_id, "untag" => untag}) do
     responses = []
     if Enum.count(contacts) > 100 do
       json conn, %{status: "422", error_message: "Maximum 100 records are permitted per call"}
@@ -62,22 +62,32 @@ defmodule CercleApi.APIV2.BulkController do
           responses = for c <- contacts do
             if c do
               {contact_id, _rest} = Integer.parse(c)
-              contact = Repo.get!(Contact,c)
+              contact = Repo.preload(Repo.get!(Contact, c), [:tags])
               if contact do
-                # untag them
+               
                 query = from c in ContactTag,
-                  where: c.contact_id == ^contact.id
+                  where: c.contact_id == ^contact.id and c.tag_id == ^tag_id
                 tagged = Repo.all(query)
-                Repo.delete_all(query)
-                # tag them
-                query = from tag in Tag,
-                  where: tag.id == ^tag.id
-                tags = Repo.all(query)
-                    changeset = contact
-                  |> Repo.preload(:tags) # Load existing data
-                  |> Ecto.Changeset.change() # Build the changeset
-                  |> Ecto.Changeset.put_assoc(:tags, tags) # Set the association
-                Repo.update!(changeset)
+
+                # untag contact
+                if untag == true && tagged do
+                  Repo.delete_all(query)
+                end
+                
+                tag_ids = Enum.map(contact.tags, fn(t) -> t.id end)
+                all_tag_ids = tag_ids ++ [tag.id]
+                #tag contact
+                if untag == false && Enum.count(tagged) == 0 do
+                  query = from tag in Tag,
+                  where: tag.id in ^all_tag_ids
+                  tags = Repo.all(query)
+                      changeset = contact
+                    |> Repo.preload(:tags) # Load existing data
+                    |> Ecto.Changeset.change() # Build the changeset
+                    |> Ecto.Changeset.put_assoc(:tags, tags) # Set the association
+                  Repo.update!(changeset)
+                end
+
                 %{status: "200", success: "Contact id #{contact.id} tagged/untagged successfully"}
               else
                 %{status: "400", error: "Contact id #{c} not found"}
