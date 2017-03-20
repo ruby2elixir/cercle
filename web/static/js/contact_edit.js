@@ -199,7 +199,7 @@ export var ContactEdit = {
       $.ajax( url , {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+jwtToken},
-        data: { 'activity[contactId]': contactId, 
+        data: { 'activity[contact_id]': contactId, 
           'activity[opportunity_id]': opportunityId, 
           'activity[user_id]': userId, 
           'activity[due_date]': new Date().toISOString(), 
