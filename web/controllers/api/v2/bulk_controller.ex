@@ -7,22 +7,18 @@ defmodule CercleApi.APIV2.BulkController do
   plug Guardian.Plug.EnsureAuthenticated
 
   def bulk_contact_create(conn,%{"items" => items}) do
-    if Enum.count(items) <= 100 do
+    if Enum.count(items) > 100 do
+      json conn, %{status: "422", error_message: "Maximum 100 records are permitted per call"}
+    else
       user = Guardian.Plug.current_resource(conn)
       company_id = user.company_id
       contacts = for item <- items do
-        organization_params = Map.put(item["organization"], "company_id", company_id)
-        if organization_params["id"] do
-          ext_org = Repo.get_by(Organization, id: organization_params["id"], company_id: company_id)
-        end
-
         contact_params = Map.put(item["contact"], "user_id", user.id)
         contact_params = Map.put(contact_params, "company_id", company_id)
+        organization_params = Map.put(item["organization"], "company_id", company_id)
 
-        if contact_params["id"] do
-          ext_contact = Repo.get_by(Contact, id: contact_params["id"], company_id: company_id)
-        else contact_params["email"]
-          ext_contact = Repo.get_by(Contact, email: contact_params["email"], company_id: company_id)
+        if organization_params["id"] do
+          ext_org = Repo.get_by(Organization, id: organization_params["id"], company_id: company_id)
         end
 
         if ext_org do
@@ -31,6 +27,12 @@ defmodule CercleApi.APIV2.BulkController do
           changeset = Organization.changeset(%Organization{}, organization_params)
           organization = Repo.insert!(changeset)
           contact_params = Map.put(contact_params,"organization_id",organization.id)
+        end
+        
+        if contact_params["id"] do
+          ext_contact = Repo.get_by(Contact, id: contact_params["id"], company_id: company_id)
+        else contact_params["email"]
+          ext_contact = Repo.get_by(Contact, email: contact_params["email"], company_id: company_id)
         end
 
         if ext_contact do
