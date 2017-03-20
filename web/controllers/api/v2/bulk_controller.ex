@@ -94,4 +94,5 @@ defmodule CercleApi.APIV2.BulkController do
       end
     end
   end
+  
 end

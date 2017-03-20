@@ -19,7 +19,7 @@ defmodule CercleApi.ContactController do
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload([:users])
 
     if params["tag_name"] do
-      tag_name = params["tag_name"] 
+      tag_name = params["tag_name"]
       contacts = Repo.all(from a in Contact,
         preload: [:tags],
         left_join: ac in ContactTag, on: a.id == ac.contact_id,
@@ -60,7 +60,7 @@ defmodule CercleApi.ContactController do
     company_id = conn.assigns[:current_user].company_id
     contact = Repo.preload(Repo.get!(Contact, params["id"]), [:organization, :company, :tags])
     company = Repo.preload(Repo.get!(CercleApi.Company, contact.company_id), [:users])
-    if contact.company_id != company_id do 
+    if contact.company_id != company_id do
       conn |> redirect(to: "/") |> halt
     end
     query = from p in Organization,
@@ -81,7 +81,7 @@ defmodule CercleApi.ContactController do
     opportunities = Repo.all(query)
     
     if params["opportunity_id"] do
-      opportunity = Repo.get!(CercleApi.Opportunity, params["opportunity_id"]) 
+      opportunity = Repo.get!(CercleApi.Opportunity, params["opportunity_id"])
     else
       query = from opportunity in CercleApi.Opportunity,
         where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
@@ -146,7 +146,7 @@ defmodule CercleApi.ContactController do
     File.cp!(upload.path,"tmp/#{temp_file}.csv")
     {:ok, table} = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse(headings: true)
     table_rows = Enum.count(table.body)
-    if table_rows > 10000 do 
+    if table_rows > 10_000 do
       File.rm!("tmp/#{temp_file}.csv")
       json conn, %{error_message: "Maximum 10,000 records are permitted"}
     else
@@ -155,7 +155,7 @@ defmodule CercleApi.ContactController do
       top_five_rows = Enum.take(table.body,5)
       contact_fields = ["name","email","description","phone","job_title"]
       organization_fields = ["name","website","description"]
-      json conn, %{headers: headers, first_row: first_row, top_five_rows: top_five_rows, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file} 
+      json conn, %{headers: headers, first_row: first_row, top_five_rows: top_five_rows, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file}
     end
   end
 
@@ -205,4 +205,5 @@ defmodule CercleApi.ContactController do
     File.rm!("tmp/#{temp_file}.csv")
     json conn, %{status: "200", message: "Records imported successfully"}
   end
+  
 end

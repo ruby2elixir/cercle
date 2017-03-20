@@ -1,4 +1,7 @@
 $(function() {
+  /*global someFunction jsonData:true*/
+  /*global someFunction uploadType:true*/
+  
   var tempFile='';
   var fileName='';
   var xhr;

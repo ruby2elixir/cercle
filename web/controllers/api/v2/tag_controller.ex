@@ -24,7 +24,7 @@ defmodule CercleApi.APIV2.TagController do
     render(conn, "index.json", tags: tags)
   end
 
-  def create(conn, %{"tags" => %{"name" => tag_name }}) do
+  def create(conn, %{"tags" => %{"name" => tag_name}}) do
   	user = Guardian.Plug.current_resource(conn)
     company_id = user.company_id
 
@@ -32,4 +32,5 @@ defmodule CercleApi.APIV2.TagController do
       Repo.insert!(%Tag{name: tag_name, company_id: company_id})
     render(conn, "show.json", tag: tag)
   end
+  
 end
