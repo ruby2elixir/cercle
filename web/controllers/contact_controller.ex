@@ -56,7 +56,7 @@ defmodule CercleApi.ContactController do
   end
 
   def show(conn, params) do
-    
+
     company_id = conn.assigns[:current_user].company_id
     contact = Repo.preload(Repo.get!(Contact, params["id"]), [:organization, :company, :tags])
     company = Repo.preload(Repo.get!(CercleApi.Company, contact.company_id), [:users])
@@ -68,7 +68,6 @@ defmodule CercleApi.ContactController do
       order_by: [desc: p.inserted_at]
     organizations = Repo.all(query)
 
-    
     query = from activity in CercleApi.Activity,
       where: activity.contact_id == ^contact.id,
       where: activity.is_done == false,
@@ -79,7 +78,7 @@ defmodule CercleApi.ContactController do
       where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
       order_by: [desc: opportunity.inserted_at]
     opportunities = Repo.all(query)
-    
+
     if params["opportunity_id"] do
       opportunity = Repo.get!(CercleApi.Opportunity, params["opportunity_id"])
     else
@@ -118,7 +117,6 @@ defmodule CercleApi.ContactController do
     tags = Repo.all(query)
 
     tag_ids = Enum.map(contact.tags, fn(t) -> t.id end)
-
 
     changeset = Contact.changeset(contact)
     conn
@@ -176,7 +174,7 @@ defmodule CercleApi.ContactController do
   end
 
   def create_nested_data(conn, %{"mapping" => mapping, "tempFile" => temp_file}) do
-    
+
     user = Guardian.Plug.current_resource(conn)
     company_id = user.company_id
     table = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
