@@ -27,7 +27,7 @@ defmodule CercleApi.APIV2.BulkController do
           organization = Repo.insert!(changeset)
           contact_params = Map.put(contact_params,"organization_id",organization.id)
         end
-        
+
         if contact_params["id"] do
           ext_contact = Repo.get_by(Contact, id: contact_params["id"], company_id: company_id)
         else contact_params["email"]
@@ -64,7 +64,7 @@ defmodule CercleApi.APIV2.BulkController do
               {contact_id, _rest} = Integer.parse(c)
               contact = Repo.preload(Repo.get!(Contact, c), [:tags])
               if contact do
-               
+
                 query = from c in ContactTag,
                   where: c.contact_id == ^contact.id and c.tag_id == ^tag_id
                 tagged = Repo.all(query)
@@ -73,7 +73,7 @@ defmodule CercleApi.APIV2.BulkController do
                 if untag == true && tagged do
                   Repo.delete_all(query)
                 end
-                
+
                 tag_ids = Enum.map(contact.tags, fn(t) -> t.id end)
                 all_tag_ids = tag_ids ++ [tag.id]
                 #tag contact
