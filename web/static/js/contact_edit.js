@@ -1,12 +1,12 @@
 export var ContactEdit = {
   start: function(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken){
-    
+
     $('#organization_remove_link').click(function(){
       $('#without_organization').show();
       $('#with_organization').hide();
     });
-  
-    
+
+
     $('#edit_contact_options').click(function(){
       $('#myModal2').modal('show');
     });
@@ -20,10 +20,10 @@ export var ContactEdit = {
       $.ajax('/api/v2/contact', {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+jwtToken},
-        data: { 
+        data: {
           'contact[name]': contactName,
           'contact[userId]': userId,
-          'contact[companyId]': companyId, 
+          'contact[companyId]': companyId,
           'contact[organizationId]': organizationId
         },
         success: function(result){
@@ -33,7 +33,7 @@ export var ContactEdit = {
           $.ajax( url , {
             method: 'PUT',
             headers: {'Authorization': 'Bearer '+jwtToken},
-            data: { 
+            data: {
               'opportunity[contactIds]': opportunityContactIds
             },
             complete: function(xhr, status){
@@ -42,7 +42,7 @@ export var ContactEdit = {
           });
         }
       });
-      
+
     });
 
     /// MODAL TAGS
@@ -71,7 +71,7 @@ export var ContactEdit = {
 
     /// MODAL COMPANY
     $('#contact_word_id').selectize({sortField: 'text', create: true});
-    
+
     $('#change_company_modal').click(function(){
       $('#myModal').modal('show');
     });
@@ -96,7 +96,7 @@ export var ContactEdit = {
           method: 'POST',
           headers: {'Authorization': 'Bearer '+jwtToken},
           datatype: 'json',
-          data: { 
+          data: {
             'organization[name]': organizationName,
             'organization[companyId]': companyId
           },
@@ -116,9 +116,9 @@ export var ContactEdit = {
         });
       }
     });
-  
-  
-  
+
+
+
     //EDIT OPPORTUNITY IN CONTACT PAGE
     $('#change_opportunity_stage').change(function(){
       var url = '/api/v2/opportunity/' + opportunityId;
@@ -131,7 +131,7 @@ export var ContactEdit = {
         }
       });
     });
-  
+
     $('#change_opportunity_userId').change(function(){
       var url = '/api/v2/opportunity/' + opportunityId;
       $.ajax( url , {
@@ -143,7 +143,7 @@ export var ContactEdit = {
         }
       });
     });
-  
+
     $('#opportunity_lost').click(function(){
       var url = '/api/v2/opportunity/' + opportunityId;
       $.ajax( url , {
@@ -156,19 +156,19 @@ export var ContactEdit = {
         }
       });
     });
-  
+
     $('#opportunity_add').click(function(){
       var boardColumn = $('#add_to_board').val();
       var url = '/api/v2/opportunity/';
       $.ajax( url , {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+jwtToken},
-        data: { 
-          'opportunity[main_contactId]': contactId, 
-          'opportunity[contactIds]': [contactId], 
-          'opportunity[userId]': userId, 
-          'opportunity[companyId]': companyId, 
-          'opportunity[name]': '', 
+        data: {
+          'opportunity[main_contactId]': contactId,
+          'opportunity[contactIds]': [contactId],
+          'opportunity[userId]': userId,
+          'opportunity[companyId]': companyId,
+          'opportunity[name]': '',
           'opportunity[board_id]': boardColumn.split('--')[0],
           'opportunity[board_column_id]': boardColumn.split('--')[1]
         },
@@ -178,7 +178,7 @@ export var ContactEdit = {
         }
       });
     });
-  
+
     $('#opportunity_win').click(function(){
       var url = '/api/v2/opportunity/' + opportunityId;
       $.ajax( url , {
@@ -191,18 +191,18 @@ export var ContactEdit = {
         }
       });
     });
-  
+
     // ADD ACTIVITY
-  
+
     $('#activity_add').click(function(){
       var url = '/api/v2/activity/';
       $.ajax( url , {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+jwtToken},
-        data: { 'activity[contactId]': contactId, 
-          'activity[opportunityId]': opportunityId, 
-          'activity[userId]': userId, 
-          'activity[due_date]': new Date().toISOString(), 
+        data: { 'activity[contactId]': contactId,
+          'activity[opportunityId]': opportunityId,
+          'activity[userId]': userId,
+          'activity[due_date]': new Date().toISOString(),
           'activity[companyId]': companyId,
           'activity[current_user_time_zone]': $(this).data('current_user_time_zone'),
           'activity[title]': 'Call'
@@ -227,7 +227,7 @@ export var ContactEdit = {
         }
       });
     });
-  
+
     $('#organization_delete').click(function(){
       var url = '/api/v2/organizations/' + organizationId;
       $.ajax( url , {
@@ -239,16 +239,16 @@ export var ContactEdit = {
         }
       });
     });
-    
 
-  
+
+
     // POST TIMELINE_EVENT
     $('.btn-actiontype').click(function(){
       $('.btn-actiontype').removeClass('submit-commit-active');
       $(this).addClass('submit-commit-active');
       $('#te_action_type').val($(this).data('event_name'));
     });
-  
+
     $('#contact-form').submit(function(e){
       e.preventDefault();
       if ($('#inputExperience').val() === '' ){
@@ -257,7 +257,7 @@ export var ContactEdit = {
       else
       {
         $(this).find('input[type=submit]').attr('disabled', true);
-    
+
         $.ajax('/api/v2/timeline_events', {
           method: 'POST',
           headers: {'Authorization': 'Bearer '+jwtToken},
@@ -267,7 +267,7 @@ export var ContactEdit = {
           complete: function(xhr, status){
             $(this).find('input[type=submit]').removeAttr('disabled');
             console.log([xhr, status]);
-    
+
             if(xhr.responseJSON.data && xhr.responseJSON.data.id) {
               $('#inputExperience').val('');
               $('#submit_timeline_event').removeAttr('disabled');
@@ -281,7 +281,7 @@ export var ContactEdit = {
               });
               alert(messages.join('\n'));
             } else if(xhr.responseJSON.message) {
-              
+
               alert(xhr.responseJSON.message);
             } else {
               alert('Error occured');
@@ -292,7 +292,3 @@ export var ContactEdit = {
     });
   }
 };
-
-
-
-

@@ -47,6 +47,7 @@ export var App = {
   }
 }
 
+Vue.use(require('vue-moment-jalaali'))
 import ContactAppEdit from "../components/contacts/edit.vue";
 
 

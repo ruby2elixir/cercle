@@ -1,3 +1,7 @@
 <div id="contact-app-edit">
-  <contact-app-edit contact_id="<%= Poison.encode!(@contact.id) %>" />
+  <contact-app-edit
+    contact_id="<%= Poison.encode!(@contact.id) %>"
+    current_user_id="<%= @conn.assigns[:current_user].id %>"
+    time_zone="<%= @conn.assigns[:current_user].time_zone %>"
+    />
 </div>

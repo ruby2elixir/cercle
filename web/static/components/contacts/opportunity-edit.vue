@@ -47,7 +47,15 @@
               </div>
             </div>
       </div>
-      <to-do>
+      <to-do
+        :activities.sync="activities"
+        :company_users="company_users"
+        :contact="contact"
+        :opportunity="opportunity"
+        :company="company"
+        :time_zone="time_zone"
+        :current_user_id="current_user_id"
+      >
         <comment_form slot="comment-form" v-on:submit="addComment" />
         <timeline_events
           slot="timeline-events"
@@ -69,6 +77,7 @@
 
   export default {
     props: [
+        'contact', 'time_zone', 'current_user_id',
         'activities', 'events', 'opportunity', 'company',
         'opportunities',
         'company_users', 'board',
@@ -81,7 +90,6 @@
         }
     },
     methods: {
-
         addContact(){
             var url = '/api/v2/contact';
             var data = {

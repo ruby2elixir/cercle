@@ -59,6 +59,14 @@ defmodule CercleApi.Contact do
     CercleApi.Repo.all(query)
   end
 
+  def activities_in_progress(contact) do
+    query = from activity in CercleApi.Activity,
+      where: activity.contact_id == ^contact.id,
+      where: activity.is_done == false,
+      order_by: [desc: activity.inserted_at]
+    CercleApi.Repo.all(query) |> CercleApi.Repo.preload [:user]
+  end
+
   def preload_data(query \\ %Contact{}) do
     comments_query = from c in CercleApi.TimelineEvent, order_by: [desc: c.inserted_at], preload: :user
 

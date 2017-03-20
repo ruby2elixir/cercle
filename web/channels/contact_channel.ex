@@ -23,7 +23,7 @@ defmodule CercleApi.ContactChannel do
       company_users: contact.company.users,
       tags: contact.tags,
       organization: contact.organization,
-      activities: contact.activities,
+      activities:  CercleApi.Contact.activities_in_progress(contact),
       events: contact.timeline_event,
       opportunity: opportunity,
       opportunities: CercleApi.Contact.involved_in_opportunities(contact),

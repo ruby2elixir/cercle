@@ -59,7 +59,10 @@
 
         <div class="row" v-if="opportunity">
           <opportunity-edit
+            :time_zone="time_zone"
+            :current_user_id="current_user_id"
             :organization="organization"
+            :contact="contact"
             :company="company"
             :company_users="company_users"
             :board="board"
@@ -67,7 +70,7 @@
             :opportunity="opportunity"
             :opportunities="opportunities"
             :opportunity_contacts="opportunity_contacts"
-            :activities="activities"
+            :activities.sync="activities"
             :events="events"
             v-on:addComment="addComment"
             v-on:updateOpportunity="updateOpportunity"
@@ -88,7 +91,7 @@ import OrganizationEdit from "./organization-edit.vue"
 import OpportunityEdit from "./opportunity-edit.vue"
 
 export default {
-    props: ['contact_id'],
+    props: ['contact_id', 'current_user_id', 'time_zone'],
     data() {
         return {
             ShowAddCard: false,
@@ -119,10 +122,8 @@ export default {
 
     },
     methods: {
-    
         addNewCard() {
-          console.log('fffffff', this.NewBoard);
-          var url = "/api/v2/opportunity/"
+         var url = "/api/v2/opportunity/"
           this.$http.post(url,
           { opportunity: {
             main_contact_id: this.contact.id,
@@ -235,6 +236,24 @@ export default {
                     this.channel.push("load_state");
                 })
                 .receive("error", resp => { console.log("Unable to join", resp) });
+            this.channel.on('activity:created', payload => {
+                this.activities.unshift(payload.activity)
+            })
+
+            this.channel.on('activity:deleted', payload => {
+                var index = this.activities.findIndex(function(item, index){
+                  return item.id == payload.activity_id
+                })
+               this.activities.splice(index, 1)
+            })
+
+           this.channel.on('activity:updated', payload => {
+                var index = this.activities.findIndex(function(item, index){
+                  return item.id == payload.activity.id
+                })
+               this.activities.splice(index, 1, payload.activity)
+            })
+            
             this.channel.on('timeline_event:created', payload => {
                 this.events.unshift(payload.event)
             })
