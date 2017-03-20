@@ -1,5 +1,7 @@
 /*eslint-env node*/
 module.exports = {
+  'extends': ['vue'],
+  'plugins': ['vue'],
   'parserOptions': {
     'ecmaVersion': 6,
     'sourceType': 'module'
