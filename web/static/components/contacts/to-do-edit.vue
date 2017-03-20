@@ -6,8 +6,9 @@
       </h3>
       <div style="padding:15px;">
         <div  v-for="task in tasks" class="task row">
-          <div class="col-md-1">
-            <input type="checkbox" v-model.sync="task.is_done" class="task-is-done" v-on:click="updateTask(task)">
+          <div class="col-md-1 task-is-done">
+    <input type="checkbox" :id="'task-' + task.id" v-model.sync="task.is_done" :class="{'active': task.is_done}" v-on:click="updateTask(task)">
+    <label :for="'task-'+task.id"></label>
           </div>
           <div class="col-md-5">
             <inline-edit v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" class="title-input"></inline-edit>
@@ -96,7 +97,8 @@
                   contact_id: this.contact.id,
                   opportunity_id: this.opportunity.id,
                   user_id: this.current_user_id,
-                  company_id: this.company.id
+                  company_id: this.company.id,
+                  is_done: task.is_done
               }
           })
       }
@@ -131,7 +133,23 @@
   width: 100%;
   }
   .task-is-done {
-  border: 0px solid grey;
+      border: 0px solid grey;
+
+      /*** custom checkboxes ***/
+      label { margin-top: -5px; }
+      input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+      input[type=checkbox] + label:before {
+          font-family: FontAwesome;
+          display: inline-block;
+          font-size: 24px;
+              -webkit-text-stroke: 2px white;
+      }
+
+      input[type=checkbox] + label:before { content: "\f096"; } /* unchecked icon */
+      input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+      input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+      input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
   }
   }
 </style>
