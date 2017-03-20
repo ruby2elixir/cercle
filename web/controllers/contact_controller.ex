@@ -135,7 +135,7 @@ defmodule CercleApi.ContactController do
       |> render("import.html", company: company, company_id: company_id)
   end
 
-  def import_data(conn, %{"file" => file_params, "company_id" => company_id}) do
+  def import_data(conn, %{"file" => file_params}) do
 
     upload = file_params
     extension = Path.extname(upload.filename)
@@ -146,15 +146,16 @@ defmodule CercleApi.ContactController do
     File.cp!(upload.path,"tmp/#{temp_file}.csv")
     {:ok, table} = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse(headings: true)
     table_rows = Enum.count(table.body)
-    if table_rows > 100 do 
+    if table_rows > 10000 do 
       File.rm!("tmp/#{temp_file}.csv")
-      json conn, %{error_message: "Maximum 100 records are permitted per call"}
+      json conn, %{error_message: "Maximum 10,000 records are permitted"}
     else
       headers = table.headings
       first_row = Enum.at(table.body, 0)
+      top_five_rows = Enum.take(table.body,5)
       contact_fields = ["name","email","description","phone","job_title"]
       organization_fields = ["name","website","description"]
-      json conn, %{headers: headers, first_row: first_row, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file} 
+      json conn, %{headers: headers, first_row: first_row, top_five_rows: top_five_rows, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file} 
     end
   end
 
@@ -180,20 +181,28 @@ defmodule CercleApi.ContactController do
     company_id = user.company_id
     table = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
     total_rows = Enum.count(table) - 1
+    iterations = div(total_rows,100)
     datetime = Timezone.convert(Timex.now,user.time_zone)
     date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
     time = Timex.format!(datetime, "%H:%M", :strftime)
     tag_name = "imported #{date} at #{time}"
     tag_id = Repo.insert!(%Tag{name: tag_name, company_id: company_id}).id
-    items = for i <- 0..total_rows do
-      row_data = %{}
-      selected_row = Enum.at(table, i)
-      contact_data = %{"name" => selected_row[mapping["contact"]["name"]], "email" => selected_row[mapping["contact"]["email"]], "phone" => selected_row[mapping["contact"]["phone"]], "description" => selected_row[mapping["contact"]["description"]], "job_title" => selected_row[mapping["contact"]["job_title"]]}
-      row_data = Map.put(row_data, "contact", contact_data)
-      organization_data = %{"name" => selected_row[mapping["organization"]["name"]], "website" => selected_row[mapping["organization"]["website"]],"description" => selected_row[mapping["organization"]["description"]]}
-      row_data = Map.put(row_data, "organization", organization_data)
+    str_tag_id = Integer.to_string(tag_id)
+    responses  = for n <- 0..iterations do
+      lower..upper = (n * 100..(n + 1) * 100 -1)
+      if upper > total_rows do upper = total_rows end
+      items = for i <- lower..upper do
+        row_data = %{}
+        selected_row = Enum.at(table, i)
+        contact_data = %{"name" => selected_row[mapping["contact"]["name"]], "email" => selected_row[mapping["contact"]["email"]], "phone" => selected_row[mapping["contact"]["phone"]], "description" => selected_row[mapping["contact"]["description"]], "job_title" => selected_row[mapping["contact"]["job_title"]]}
+        row_data = Map.put(row_data, "contact", contact_data)
+        organization_data = %{"name" => selected_row[mapping["organization"]["name"]], "website" => selected_row[mapping["organization"]["website"]],"description" => selected_row[mapping["organization"]["description"]]}
+        row_data = Map.put(row_data, "organization", organization_data)
+      end
+      contacts = CercleApi.APIV2.BulkController.bulk_contact_create(conn,%{"items" => items})
+      CercleApi.APIV2.BulkController.bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => str_tag_id})
     end
     File.rm!("tmp/#{temp_file}.csv")
-    CercleApi.APIV2.BulkController.bulk_contact_create(conn,%{"items" => items, "tag_id" => tag_id})
+    json conn, %{status: "200", message: "Records imported successfully"}
   end
 end

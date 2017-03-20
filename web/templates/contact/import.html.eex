@@ -27,8 +27,6 @@
 		                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;
 		                    <span>Upload file</span>
 		                    <input type="file" name="file" id="fileupload">
-		                    <input type="hidden" name="company_id" id="company_id" value="<%=@company_id%>">
-		                    <input type="hidden" name="user_id" id="user_id" value="<%=@conn.assigns[:current_user].id%>">
 		                </span>
 		                &nbsp;&nbsp;
 		                <span><b>...or drag a file here.</b></span>
@@ -160,8 +158,7 @@ function drag(ev) {
 
 function drop(ev) {
   var data = ev.dataTransfer.getData('text/plain');
-  ev.target.innerHTML = document.getElementById(data).innerHTML;
-  ev.target.draggable = 'true';
+  ev.target.innerHTML = document.getElementById(data).innerHTML + '<i class="revert fa fa-times" aria-hidden="true" style="float:right; margin-top:2px; cursor: pointer;"></i>';
   ev.target.className = ('contact-fields active');
   var dbCol = $('#'+data).find('.db-field').text();
   var csvCol = $('#'+ev.target.id).prev('td').find('.csv-col').text();

@@ -299,3 +299,8 @@ li.completed span.arrow:after {
     font-weight: bold;
     font-size: 15px;
 }
+
+.tooltip-inner {
+    white-space:pre;
+    max-width: none;
+}

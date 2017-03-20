@@ -46,7 +46,7 @@ $(function() {
         $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">'+result.error_message+'</p>');
       }
       else{
-        if (!$('#left-section-table tr').length) prepareFileTable('left-section-table', result.headers,result.first_row); 
+        if (!$('#left-section-table tr').length) prepareFileTable('left-section-table', result.headers,result.first_row, result.top_five_rows); 
         if (!$('#contact-field-table tr').length) prepareDbTable('contact-field-table', result.contact_fields);
         if (!$('#organization-field-table tr').length) prepareDbTable('organization-field-table', result.organization_fields);
         if (result) tempFile = result.temp_file;
@@ -73,7 +73,7 @@ $(function() {
         $('#progress .progress-bar').toggleClass('hidden');
         $('#sec-1,#sec-2').toggleClass('hidden');
         $('#action-btns-step1,#action-btns-step2').toggleClass('hidden');
-        $('#step1').addClass('completed').append('<i class="fa fa-check-circle" style="float:right" aria-hidden="true"></i>');
+        $('#step1').addClass('completed').append('<i class="fa fa-check-circle" style="float:right; margin-top:3px;" aria-hidden="true"></i>');
         $('#step2').removeClass('steps-li-inactive').addClass('steps-li-active active');
       }
     }        
@@ -115,44 +115,48 @@ $(function() {
 
   $('#move-to-step3').on('click', function (e) {
     e.preventDefault();
-    $(this).text('Processing..').addClass('disabled');
-    $.ajax({
-      url: '/view_uploaded_data',
-      type: 'POST',
-      dataType: 'json',
-      headers: {'Authorization': 'Bearer '+jwtToken},
-      async: true,
-      data: {
-        mapping: jsonData,
-        tempFile: tempFile
-      },
-      error: function(error) {
-        $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
-        $('#move-to-step3').text('Next').removeClass('disabled');
-        fadeFlash();
-      },
-      success: function(data) {                
-        $('#sec-2').toggleClass('hidden');
-        $('#action-btns-step2,#action-btns-step3').toggleClass('hidden');
-        $('#step2').addClass('completed').append('<i class="fa fa-check-circle" style="float:right" aria-hidden="true"></i>');
-        $('#sec-3').toggleClass('hidden');
-        $('#step3').removeClass('steps-li-inactive').addClass('steps-li-active active');
-        $('#move-to-step3').text('Next').removeClass('disabled');
-        var contactHeaders = data.contact_headers;
-        var organizationHeaders = data.organization_headers;
-        var contactValues = data.contact_values;
-        var organizationValues = data.organization_values;
-        tempFile = data.temp_file;
-        preparePreviewDataTable('preview-data-table',contactHeaders, organizationHeaders, contactValues, organizationValues);
-      }
-    });
+    if (jsonData['contact']['name'] && jsonData['organization']['name']){
+      $(this).text('Processing..').addClass('disabled');
+      $.ajax({
+        url: '/view_uploaded_data',
+        type: 'POST',
+        dataType: 'json',
+        headers: {'Authorization': 'Bearer '+jwtToken},
+        async: true,
+        data: {
+          mapping: jsonData,
+          tempFile: tempFile
+        },
+        error: function(error) {
+          $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
+          $('#move-to-step3').text('Next').removeClass('disabled');
+          fadeFlash();
+        },
+        success: function(data) {                
+          $('#sec-2').toggleClass('hidden');
+          $('#action-btns-step2,#action-btns-step3').toggleClass('hidden');
+          $('#step2').addClass('completed').append('<i class="fa fa-check-circle" style="float:right; margin-top: 3px;" aria-hidden="true"></i>');
+          $('#sec-3').toggleClass('hidden');
+          $('#step3').removeClass('steps-li-inactive').addClass('steps-li-active active');
+          $('#move-to-step3').text('Next').removeClass('disabled');
+          var contactHeaders = data.contact_headers;
+          var organizationHeaders = data.organization_headers;
+          var contactValues = data.contact_values;
+          var organizationValues = data.organization_values;
+          tempFile = data.temp_file;
+          preparePreviewDataTable('preview-data-table',contactHeaders, organizationHeaders, contactValues, organizationValues);
+        }
+      });
+    }
+    else{
+      $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Organization and Contact mapping is incomplete</p>');
+      fadeFlash();
+    }
   });
 
   $('#move-to-final').click(function(e){
     e.preventDefault();
     $(this).text('Importing..').addClass('disabled');
-    // var userId = $('#user_id').val();
-    // var companyId = $('#company_id').val();
     $('#final-progress .progress-bar').toggleClass('hidden');
     if(uploadType){
       // contact-import
@@ -163,8 +167,6 @@ $(function() {
         data: {
           mapping: jsonData,
           tempFile: tempFile
-          // companyId: companyId,
-          // userId: userId
         },
         success: function(result){
           $('#final-progress .progress-bar').toggleClass('hidden');
@@ -181,15 +183,37 @@ $(function() {
       }); 
     }
   });
+
+  $('body').on('click','.revert',function(){
+    if($(this).parent().hasClass('contact-fields')){
+      console.log(jsonData['contact'][$(this).parent().text()]);
+      delete jsonData['contact'][$(this).parent().text()];
+    }
+    else{
+      delete jsonData['organization'][$(this).parent().text()];
+    }
+    $(this).parent().addClass('info drop-fields').removeClass('active contact-fields');
+    $(this).parent().html('Drag and drop field here');
+    
+  });
 });
 
-function prepareFileTable(tableName,headers,firstRow) {
+function prepareFileTable(tableName,headers,firstRow,topFiveRows) {
+  console.log(topFiveRows);
   var tbl = document.getElementById(tableName);
   for (var i = 0; i < headers.length; i++){ 
+    var tooltipValues = [];
     var row = tbl.insertRow(tbl.rows.length);
+    for(var r = 0; r < topFiveRows.length; r++) {
+      tooltipValues.push(topFiveRows[r][i]);
+    }
     for (var j = 0; j < 2; j++) {
       if(j===0){
         var x = row.insertCell(j);
+        x.setAttribute('data-original-title',tooltipValues.toString().replace(/,/g, '\n'));
+        x.setAttribute('data-container','body');
+        x.setAttribute('data-toggle','tooltip');
+        x.setAttribute('data-placement','top');
         x.innerHTML = '<div class="csv-col"><b>'+headers[i]+'</b></div><div class="csv-data">'+firstRow[i]+'</div>';
         x.className = 'active csv-fields';
       }
@@ -198,7 +222,6 @@ function prepareFileTable(tableName,headers,firstRow) {
         x.innerHTML = 'Drag and drop field here';
         x.className = 'info drop-fields';
         x.id = 'map'+i;
-        x.draggable = true;
         x.setAttribute('ondrop','drop(event)');
         x.setAttribute('ondragover','allowDrop(event)');
         x.setAttribute('ondragstart','drag(event)');
@@ -257,7 +280,6 @@ function preparePreviewDataTable(tableName,contactHeaders, organizationHeaders,c
 }
 
 function fadeFlash() {
-  $('.alert').delay(1000).fadeIn('slow', function() {
-    $(this).delay(3000).fadeOut();
-  });
+  $('.alert').delay(5000).fadeOut();
+  $(this).remove();
 }
