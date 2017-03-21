@@ -6,17 +6,18 @@
     </ul>
   </div>
 </template>
-
 <script>
 export default {
-    data() { return {  isActive: false } },
-    methods: {
+  data() { 
+    return {  isActive: false };
+  },
+  methods: {
     closeList(event) {
-    event.preventDefault()
-    this.isActive = false
+      event.preventDefault();
+      this.isActive = false;
     }
-}
-}
+  }
+};
 </script>
 <style lang="sass">
 </style>
