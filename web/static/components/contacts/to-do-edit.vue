@@ -14,10 +14,10 @@
             <inline-edit v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" class="title-input"></inline-edit>
           </div>
           <div class="col-md-2">
-            <span>{{ task.due_date | moment("MM/DD/YYYY") }}</span>
+            <inline-edit v-model.sync="task.due_only_date" v-on:input="updateTask(task)" placeholder="Time" class="title-input"></inline-edit>
           </div>
           <div class="col-md-2">
-            <span>{{ task.due_date | moment("HH:mm") }}</span>
+            <inline-edit v-model.sync="task.due_time" v-on:input="updateTask(task)" placeholder="Time" class="title-input"></inline-edit>
           </div>
 
           <div class="col-md-1">
@@ -67,7 +67,12 @@
       },
       data() {
           return {
-              tasks: this.activities
+              tasks: this.activities.map(function(item){
+                item.due_time = Vue.moment(item.due_date).format('HH:mm')
+                item.due_only_date = Vue.moment(item.due_date).format('MM/DD/YYYY')
+                return item
+              }
+              ),
           }
   },
   methods: {
@@ -91,9 +96,12 @@
       },
       updateTask(task) {
           var url = '/api/v2/activity/' + task.id;
+          var due_date = new Date(task.due_only_date + ' ' + task.due_time);
+          
           this.$http.put(url, {
               activity: {
                   title: task.title,
+                  due_date: Vue.moment(due_date).toISOString(),
                   contact_id: this.contact.id,
                   opportunity_id: this.opportunity.id,
                   user_id: this.current_user_id,
@@ -131,6 +139,20 @@
   }
   .title-input {
   width: 100%;
+  }
+  .task-time {
+  .time-picker {
+  max-width: 100px;
+  input {
+  max-width: 100px;
+  }
+  .dropdown {
+  max-width: 100px;
+  .select-list {
+  max-width: 100px;
+  }
+  }
+  }
   }
   .task-is-done {
       border: 0px solid grey;
