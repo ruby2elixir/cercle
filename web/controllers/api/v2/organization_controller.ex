@@ -2,6 +2,7 @@ defmodule CercleApi.APIV2.OrganizationController do
   use CercleApi.Web, :controller
 
   alias CercleApi.Organization
+  alias CercleApi.Company
 
   plug Guardian.Plug.EnsureAuthenticated
 
@@ -13,7 +14,13 @@ defmodule CercleApi.APIV2.OrganizationController do
   end
 
   def create(conn, %{"organization" => organization_params}) do
-    changeset = Organization.changeset(%Organization{}, organization_params)
+    user = Guardian.Plug.current_resource(conn)
+    company = Repo.get!(Company, user.company_id)
+    
+    changeset = company
+      |> Ecto.build_assoc(:organizations)
+      |> Organization.changeset(organization_params)
+
     case Repo.insert(changeset) do
       {:ok, organization} ->
         conn
