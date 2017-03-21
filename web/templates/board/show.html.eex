@@ -60,8 +60,10 @@
   
   <h2>
     <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>"><%= @board.name %></span>
+    &nbsp;&nbsp;&nbsp;
+     <a href="/contact/new" class="btn btn-default">+ Add a Contact</a>
   </h2>
-  <a href="/contact/new" class="btn btn-primary">+ Add a Contact</a>
+ 
   <!-- 
   <select name="select" id="change_filter_user_id" style="float:right;" >
   <option value="" >All </option> 
@@ -73,11 +75,11 @@
    
 </section>
 <!-- Main content -->
-<div style="display: block;width: 100vw;">
+<div style="display: block;width: 100vw;height: 80vh;overflow: scroll;white-space:nowrap;">
 <%= for col <- @board.board_columns do %>
-<div class="column_master" style="width: 250px;display:inline-block;vertical-align:top;margin-left:30px;background-color:#e0e0e0;border-radius:5px;">
+<div class="column_master" style="width: 250px;display:inline-block;vertical-align:top;margin-left:30px;background-color:#e0e0e0;border-radius:5px;white-space:normal;">
 <div class="column_title" style="position:relative;">
- <form class='form-inline editableform'><textarea class='textarea-inline-editable' data-type='PUT' data-param-name="board_column[name]" data-inline-editurl="/api/v2/board_column/<%= col.id %>" style="font-size:16px;border:0px solid grey;resize: none;background-color:#d0d0d0;border-radius:3px;overflow: hidden;word-wrap: break-word;height: 54px;width: 202px;padding:3px;"><%=col.name%></textarea></form>
+ <form class='form-inline editableform'><textarea class='textarea-inline-editable' data-type='PUT' data-param-name="board_column[name]" data-inline-editurl="/api/v2/board_column/<%= col.id %>" style="font-weight:800;font-size:16px;border:0px solid grey;resize: none;background-color:#d0d0d0;border-radius:3px;overflow: hidden;word-wrap: break-word;height: 54px;width: 202px;padding:3px;"><%=col.name%></textarea></form>
  <div id="actions" style="position: absolute;right: 4px;top: 4px;width:18px;height:18px;color:grey;font-size:12px;">
  <span class="fa fa-ellipsis-h"></span>
  </div>
@@ -90,10 +92,19 @@
   <%=if card.board_column_id == col.id do %>
   <%= render "_opportunity.html", opportunity: card %>
   <%=end%>
-  <%end%>
+<%end%>  
 </div>
 </div>
 <%=end%>
+
+<div class="column_master" style="width: 250px;display:inline-block;vertical-align:top;margin-left:30px;background-color:#e0e0e0;border-radius:5px;height:150px;background-color:white;font-weight:800;padding:10px;font-size:16px;">
+    Add a new Column
+    <form class='form-inline editableform'><input type="text"  style="margin-top:10px;margin-bottom:10px;font-weight:800;font-size:16px;border:0px solid grey;resize: none;background-color:white;border-radius:3px;overflow: hidden;word-wrap: break-word;height: 54px;width: 202px;padding:3px;border:1px solid grey;" placeholder="Name of the Column" />
+    <br />
+    <input type="button" value="Save" class="btn btn-success" />
+    </form>
+  </div>
+
 </div><!-- /.content -->
 <script>
 $(document).ready(function(){
