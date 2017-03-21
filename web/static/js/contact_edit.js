@@ -60,7 +60,7 @@ export var ContactEdit = {
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: {
           'tags': organizationName,
-          'companyId': companyId
+          'company_id': companyId
         },
         complete: function(xhr, status){
           location.reload();
@@ -98,7 +98,7 @@ export var ContactEdit = {
           datatype: 'json',
           data: {
             'organization[name]': organizationName,
-            'organization[companyId]': companyId
+            'organization[company_id]': companyId
           },
           success: function(result){
             var newOrganizationId = result.data.id;
