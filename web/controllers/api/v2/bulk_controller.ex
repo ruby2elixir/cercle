@@ -8,7 +8,7 @@ defmodule CercleApi.APIV2.BulkController do
 
   def bulk_contact_create(conn,%{"items" => items}) do
     if Enum.count(items) > 100 do
-      json conn, %{status: "422", error_message: "Maximum 100 records are permitted per call"}
+      json conn, %{status: 422, error_message: "Maximum 100 records are permitted per call"}
     else
       user = Guardian.Plug.current_resource(conn)
       company_id = user.company_id
@@ -44,16 +44,16 @@ defmodule CercleApi.APIV2.BulkController do
           str_contact_id = Integer.to_string(contact_id)
         end
       end
-      contacts
+      json conn, %{status: 200, contacts: contacts}
     end
   end
 
   def bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => tag_id, "untag" => untag}) do
     responses = []
-    if Enum.count(contacts) > 100 do
-      json conn, %{status: "422", error_message: "Maximum 100 records are permitted per call"}
+    if contacts && Enum.count(contacts) > 100 do
+      json conn, %{status: 422, error_message: "Maximum 100 records are permitted per call"}
     else
-      if contacts && tag_id do
+      if tag_id && untag do
         {tag_id, _rest} = Integer.parse(tag_id)
         tag = Repo.get(Tag,tag_id)
         if tag do
@@ -62,9 +62,10 @@ defmodule CercleApi.APIV2.BulkController do
           responses = for c <- contacts do
             if c do
               {contact_id, _rest} = Integer.parse(c)
-              contact = Repo.preload(Repo.get!(Contact, c), [:tags])
+              contact = Repo.get(Contact,contact_id)
+             
               if contact do
-
+                contact = Repo.preload(contact,[:tags])
                 query = from c in ContactTag,
                   where: c.contact_id == ^contact.id and c.tag_id == ^tag_id
                 tagged = Repo.all(query)
@@ -88,20 +89,20 @@ defmodule CercleApi.APIV2.BulkController do
                   Repo.update!(changeset)
                 end
 
-                %{status: "200", success: "Contact id #{contact.id} tagged/untagged successfully"}
+                %{status: 200, success: "Contact id #{contact.id} tagged/untagged successfully"}
               else
-                %{status: "400", error: "Contact id #{c} not found"}
+                %{status: 400, error: "Contact id #{c} not found"}
               end
             else
-              %{status: "400", error: "Contact id missing"}
+              %{status: 400, error: "Contact id missing"}
             end
           end
-          responses
+          json conn, %{status: 200, responses: responses}
         else
-          json conn, %{status: "400", responses: %{"errors" => "Tag id #{tag_id} not found"}}
+          json conn, %{status: 400, responses: %{"errors" => "Tag id #{tag_id} not found"}}
         end
       else
-        json conn, %{status: "400", responses: %{"errors" => "Parameters missing"}}
+        json conn, %{status: 400, responses: %{"errors" => "Parameters missing"}}
       end
     end
   end

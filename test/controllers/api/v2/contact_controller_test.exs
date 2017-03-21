@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   use CercleApi.ConnCase
   @valid_attrs %{name: "John Doe"}
   @invalid_attrs %{}
-  alias CercleApi.User
+  alias CercleApi.{User,Contact}
 
   setup %{conn: conn} do
     company = insert_company()
@@ -15,11 +15,6 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   test "create contact on post", %{conn: conn} do
     conn = post conn, "/api/v2/contact", contact: @valid_attrs
     assert json_response(conn, 201)["data"]["id"]
-  end
-
-  test "can't create contact on post", %{conn: conn} do
-    conn = post conn, "/api/v2/contact", contact: @invalid_attrs
-    assert json_response(conn, 422)["errors"]
   end
 
 end
