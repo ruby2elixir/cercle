@@ -62,7 +62,6 @@
                 <a href="/contact">People</a>
                 </li>
                 <li>
-                <a href="/import">Import CSV</a>
                 <%end%>
               </ul>
             
