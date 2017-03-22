@@ -4,7 +4,7 @@
 
         <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;">
           <i class="fa fa-user" style="color:#d8d8d8;"></i>
-          
+
           <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name"></inline-edit>
         </h3>
             <div>
@@ -17,7 +17,7 @@
             <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone"></inline-edit>
             </div>
           <div class="" style="padding-bottom:4px;">
-           
+
            <div class="contact-tags-box">
              <button type="button" class="btn btn-box-tool btn-default btn-sm" v-for="(tag, index) in tags" style="margin: 2px;" v-on:click="removeTag(index);">
                {{tag.name}}
@@ -33,7 +33,7 @@
               multiple
               label="name"
               v-model="chooseTags"
-              :options="availableTags" 
+              :options="availableTags"
               :pushTags="true"
               :taggable="true"
               :placeholder="Tags"
@@ -44,7 +44,7 @@
              <button type="button" class="btn btn-success" v-on:click="saveChangesTag" >Save changes</button>
             </div>
           </modal>
-      
+
           </div>
         <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
       </div><!-- /.box-body -->
@@ -82,26 +82,26 @@ export default {
     removeTag(index) {
       this.tags.splice(index, 1);
       this.tag_ids = this.tags.map(function(j) { return j.id; });
-      this.$emit('updateTags', this.tag_ids);
+      this.updateTags();
     },
     addNewTag(input){
       this.$http.post('/api/v2/tag', {
-        tags: { name: input }, company_id: this.contact.company_id 
+        tags: { name: input }, company_id: this.contact.company_id
       }).then(resp => {
       });
-          
+
       return { id: input, name: input };
     },
     saveChangesTag(){
       this.tag_ids = this.chooseTags.map(function(j) { return j.id; });
       this.tags = this.chooseTags.map(function(j) { return {id: j.id, name: j.name };  });
-      this.$emit('updateTags', this.tag_ids);
+      this.updateTags();
       this.openTagModal = false;
     },
     openTagsWindow(){
-        
+
       this.chooseTags = this.tags.map(function(j) { return {id: j.id, name: j.name }; });
-      this.getTags(); 
+      this.getTags();
       this.openTagModal = true;
     },
     getTags() {
@@ -112,11 +112,20 @@ export default {
       });
     },
 
-    updateTags: function(data){
-      this.$emit('updateTags', data);
+    updateTags() {
+        if (this.tag_ids.length === 0) {
+            var url = '/api/v2/contact/' + this.contact.id + '/utags';
+            this.$http.put(url, { company_id: this.contact.company_id } );
+        } else {
+            var url = '/api/v2/contact/' + this.contact.id + '/update_tags';
+            this.$http.put(url,
+                           { tags: this.tag_ids, company_id: this.contact.company_id }
+                          );
+        }
     },
     updateContact: function(){
-      this.$emit('update', this.contact);
+        var url = '/api/v2/contact/' + this.contact.id;
+        this.$http.put(url, { contact: this.contact } );
     }
   },
   components: {
@@ -133,7 +142,7 @@ export default {
 <style lang="sass">
     .contact-tags-box {
       .open-indicator{
-        display: none !important; 
+        display: none !important;
       }
     }
 </style>

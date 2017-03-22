@@ -11,9 +11,7 @@
                   <profile-edit
                     :contact="contact"
                     :tags="tags"
-                    v-on:update="updateContact"
-                    v-on:updateTags="updateTags"
-                    v-on:remove="removeContact" />
+                    v-on:remove="deleteContact" />
                 </td>
 
                 <td style="width:50%;padding:20px;vertical-align: top;">
@@ -164,29 +162,6 @@ export default {
     },
     deleteContact: function(){
       console.log('delete contact');
-    },
-
-    updateTags(data) {
-      var tag_ids = data;
-      if (tag_ids.length === 0) {
-        var url = '/api/v2/contact/' + this.contact_id + '/utags';
-        this.$http.put(url,
-                               { company_id: this.contact.company_id }
-                              );
-      } else {
-        var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
-        this.$http.put(url,
-                               { tags: tag_ids, company_id: this.contact.company_id }
-                              );
-      }
-    },
-    removeContact(){
-
-    },
-    updateContact(data) {
-      this.contact = data;
-      var url = '/api/v2/contact/' + this.contact_id;
-      this.$http.put(url, { contact: data } );
     },
 
     chooseOrganization(data){
