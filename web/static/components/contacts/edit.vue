@@ -17,11 +17,8 @@
                 <td style="width:50%;padding:20px;vertical-align: top;">
                   <organization-edit
                     :organization="organization"
-                    v-on:update="updateOrganization"
-                    v-on:build="buildOrganization"
-                    v-on:remove="removeOrganization"
-                    v-on:choose="chooseOrganization"
-                    v-on:add_new="addNewOrganization"
+                    :contact="contact"
+                    :company="company"
                     >
                     <li slot="menu"><a href="#"  v-on:click="deleteContact">Delete Contact</a></li>
                    </organization-edit>
@@ -164,38 +161,6 @@ export default {
       console.log('delete contact');
     },
 
-    chooseOrganization(data){
-      var vm = this;
-      var url = '/api/v2/contact/' + vm.contact.id;
-      this.$http.put(url, { contact: { organization_id: data.id }}).then(resp => {
-        vm.organization = data;
-      });
-    },
-
-    addNewOrganization(data){
-      var vm = this;
-      var url = '/api/v2/organizations';
-      this.$http.post(url, { organization: { name: data.name, company_id: vm.company.id }}).then(resp => {
-        vm.chooseOrganization(resp.data.data);
-      });
-
-    },
-
-    updateOrganization(data){
-      var vm = this;
-      var url = '/api/v2/organizations/' + vm.organization.id;
-      this.$http.put(url, { contact_id: vm.contact.id, organization: vm.organization });
-    },
-
-    buildOrganization(){ this.organization = { name: '', website: '', description: '' }; },
-    removeOrganization() {
-      var vm = this;
-      var url = '/api/v2/contact/' + vm.contact.id;
-      this.$http.put(url, { contact: {organization_id: '' }}).then(resp => {
-        vm.organization = null;
-      });
-
-    },
     setAuthToken(){
       var vm = this;
       localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
@@ -265,7 +230,11 @@ export default {
           this.tags = payload.tags;
         }
         if (payload.organization) {
-          this.organization = payload.organization;
+          if (payload.organization['id']) {
+            this.organization = payload.organization;
+          } else {
+            this.organization = null;
+          }
         }
         if (payload.activities) {
           this.activities = payload.activities;

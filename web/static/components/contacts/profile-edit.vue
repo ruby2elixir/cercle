@@ -113,19 +113,19 @@ export default {
     },
 
     updateTags() {
-        if (this.tag_ids.length === 0) {
-            var url = '/api/v2/contact/' + this.contact.id + '/utags';
-            this.$http.put(url, { company_id: this.contact.company_id } );
-        } else {
-            var url = '/api/v2/contact/' + this.contact.id + '/update_tags';
-            this.$http.put(url,
+      if (this.tag_ids.length === 0) {
+        var url = '/api/v2/contact/' + this.contact.id + '/utags';
+        this.$http.put(url, { company_id: this.contact.company_id } );
+      } else {
+        var url = '/api/v2/contact/' + this.contact.id + '/update_tags';
+        this.$http.put(url,
                            { tags: this.tag_ids, company_id: this.contact.company_id }
                           );
-        }
+      }
     },
     updateContact: function(){
-        var url = '/api/v2/contact/' + this.contact.id;
-        this.$http.put(url, { contact: this.contact } );
+      var url = '/api/v2/contact/' + this.contact.id;
+      this.$http.put(url, { contact: this.contact } );
     }
   },
   components: {

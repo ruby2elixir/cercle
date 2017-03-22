@@ -50,7 +50,9 @@
   import DropDown from './dropdown.vue';
   export default {
     props: {
-      organization: {type: Object, default: function() { return null; }     }
+      organization: {type: Object, default: function() { return null; } },
+      contact: Object,
+      company: Object
     },
     data(){
       return {
@@ -62,27 +64,47 @@
     },
     methods: {
       saveOrganization(){
-        this.$emit('choose', this.chooseOrganization);
+        var url = '/api/v2/contact/' + this.contact.id;
+        this.$http.put(url, { contact: { organization_id: this.chooseOrganization.id }});
         this.openModal = false;
-
       },
+
       addOrganization(item) {
-        this.$emit('add_new', { name: item });
-        this.openModal = false;
+        var vm = this;
+        var url = '/api/v2/organizations';
+        this.$http.post(url, { organization: { name: item, company_id: vm.company.id }}).then(resp => {
+          this.getOrganizations(function(r){
+            vm.organizations = r.data;
+            vm.chooseOrganization = resp.data.data;
+          });
+
+        });
         return this.chooseOrganization;
       },
-      removeOrganization() { this.$emit('remove'); },
+      removeOrganization() {
+        var url = '/api/v2/contact/' + this.contact.id;
+        this.$http.put(url, { contact: {organization_id: '' }});
+      },
       buildOrganization(event) {
         event.preventDefault();
         this.$http.get('/api/v2/user/organizations', {}).then(resp => {
           this.organizations = resp.data;
           this.openModal = true;
         });
-
-
-
       },
-      update(){ this.$emit('update', this.organization);  }
+      getOrganizations(callback) {
+        this.$http.get('/api/v2/user/organizations', {}).then(resp => {
+          callback(resp);
+        });
+      },
+      update(){
+        var vm = this;
+        var url = '/api/v2/organizations/' + this.organization.id;
+        this.$http.put(url, {
+          contact_id: this.contact.id,
+          organization: this.organization
+        });
+      }
     },
     components: {
       'inline-edit': InlineEdit,
