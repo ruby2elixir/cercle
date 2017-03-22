@@ -56,7 +56,7 @@
         :timeZone="time_zone"
         :currentUserId="current_user_id"
       >
-        <comment_form slot="comment-form" v-on:submit="addComment" />
+        <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" />
         <timeline_events
           slot="timeline-events"
           :events="events"
@@ -115,15 +115,16 @@
         this.NewContactName = '';
         this.openContactModal = false;
       },
-      addComment(msg){
-        this.$emit('addComment', msg);
-      },
+
       archiveOpportunity() {
-        this.$emit('archiveOpportunity', this.opportunity);
+        var url = '/api/v2/opportunity/' + this.opportunity.id;
+        this.$http.put(url, { opportunity: { status: '1'} });
       },
       updateOpportunity(){
-        this.$emit('updateOpportunity', this.opportunity);
+        var url = '/api/v2/opportunity/' + this.opportunity.id;
+        this.$http.put(url, { opportunity: this.opportunity });
       }
+
     },
     components: {
       'inline-edit': InlineEdit,

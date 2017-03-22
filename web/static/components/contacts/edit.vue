@@ -67,9 +67,6 @@
             :opportunity_contacts="opportunity_contacts"
             :activities.sync="activities"
             :events="events"
-            v-on:addComment="addComment"
-            v-on:updateOpportunity="updateOpportunity"
-            v-on:archiveOpportunity="archiveOpportunity"
             />
 
         </div>
@@ -134,29 +131,7 @@ export default {
       this.NewBoard = null;
       this.ShowAddCard = false;
     },
-    archiveOpportunity(){
-      var url = '/api/v2/opportunity/' + this.opportunity.id;
-      this.$http.put(url, { opportunity: { status: '1'} });
-    },
-    updateOpportunity(data) {
-      var url = '/api/v2/opportunity/' + this.opportunity.id;
-      this.$http.put(url, { opportunity: data });
 
-    },
-    addComment(msg) {
-      var url = '/api/v2/timeline_events';
-      this.$http.post(url,
-        { timeline_event: {
-          company_id: this.contact.company_id,
-          contact_id: this.contact.id,
-          content: msg,
-          event_name: 'comment',
-          opportunity_id: this.opportunity.id
-        }
-        }
-                           );
-
-    },
     deleteContact: function(){
       console.log('delete contact');
     },

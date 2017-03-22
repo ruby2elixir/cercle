@@ -15,7 +15,7 @@
 
 <script>
   export default {
-    props: [],
+    props: ['contact', 'opportunity'],
     data(){
       return {
         message: ''
@@ -23,7 +23,18 @@
     },
     methods: {
       sendMessage(){
-        this.$emit('submit', this.message);
+        var url = '/api/v2/timeline_events';
+        this.$http.post(url,
+          { timeline_event: {
+            company_id: this.contact.company_id,
+            contact_id: this.contact.id,
+            content: this.message,
+            event_name: 'comment',
+            opportunity_id: this.opportunity.id
+          }
+          }
+                       );
+
         this.message = '';
       }
     },
