@@ -15,21 +15,21 @@
 
 <script>
   export default {
-  props: [],
-  data(){
-    return {
-      message: ""
+    props: [],
+    data(){
+      return {
+        message: ''
+      };
+    },
+    methods: {
+      sendMessage(){
+        this.$emit('submit', this.message);
+        this.message = '';
+      }
+    },
+    components: {
     }
-  },
-  methods: {
-    sendMessage(){
-      this.$emit('submit', this.message)
-      this.message = ''
-    }
-  },
-  components: {
-  }
-  }
+  };
 </script>
 
 <style lang="sass">

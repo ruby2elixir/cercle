@@ -45,54 +45,54 @@
 </template>
 
 <script>
-  import InlineEdit from "../inline-common-edit.vue"
-  import InlineTextEdit from "../inline-textedit.vue"
-  import DropDown from "./dropdown.vue"
+  import InlineEdit from '../inline-common-edit.vue';
+  import InlineTextEdit from '../inline-textedit.vue';
+  import DropDown from './dropdown.vue';
   export default {
-      props: {
-          organization: {type: Object, default: function() { return null }     }
-          },
-      data(){
-          return {
-            openModal: false,
-            chooseOrganization: null,
-            organizations: [],
-            newOrganization: false
-          }
-          },
-  methods: {
-  saveOrganization(){
-    this.$emit('choose', this.chooseOrganization)
-    this.openModal = false;
-
-  },
-    addOrganization(item) {
-      this.$emit('add_new', { name: item })
-      this.openModal = false;
-      return this.chooseOrganization;
+    props: {
+      organization: {type: Object, default: function() { return null; }     }
     },
-    removeOrganization() { this.$emit('remove') },
-    buildOrganization(event) {
-      event.preventDefault();
-      this.$http.get('/api/v2/user/organizations', {}).then(resp => {
-      this.organizations = resp.data
-      this.openModal = true;
-    })
-
-
-
+    data(){
+      return {
+        openModal: false,
+        chooseOrganization: null,
+        organizations: [],
+        newOrganization: false
+      };
     },
-    update(){ this.$emit('update', this.organization)  }
-  },
-  components: {
-    'inline-edit': InlineEdit,
-    'inline-text-edit': InlineTextEdit,
-    'dropdown': DropDown,
-    'modal': VueStrap.modal,
-    'v-select': vSelect.VueSelect
-  }
+    methods: {
+      saveOrganization(){
+        this.$emit('choose', this.chooseOrganization);
+        this.openModal = false;
 
-  }
+      },
+      addOrganization(item) {
+        this.$emit('add_new', { name: item });
+        this.openModal = false;
+        return this.chooseOrganization;
+      },
+      removeOrganization() { this.$emit('remove'); },
+      buildOrganization(event) {
+        event.preventDefault();
+        this.$http.get('/api/v2/user/organizations', {}).then(resp => {
+          this.organizations = resp.data;
+          this.openModal = true;
+        });
+
+
+
+      },
+      update(){ this.$emit('update', this.organization);  }
+    },
+    components: {
+      'inline-edit': InlineEdit,
+      'inline-text-edit': InlineTextEdit,
+      'dropdown': DropDown,
+      'modal': VueStrap.modal,
+      'v-select': vSelect.VueSelect
+    }
+
+  };
 </script>
 
 <style lang="sass">

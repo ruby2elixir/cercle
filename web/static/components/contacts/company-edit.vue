@@ -22,17 +22,17 @@
 </template>
 
 <script>
-  import InlineEdit from "../inline-common-edit.vue"
+  import InlineEdit from '../inline-common-edit.vue';
   export default {
-  props: ['company'],
-  methods: {
-  update: function(){  this.$emit('update', this.company)  },
-  buildCompany: function(){
-    this.$emit('buildCompany')
-  }
-  },
-  components: { 'inline-edit': InlineEdit  }
-  }
+    props: ['company'],
+    methods: {
+      update: function(){  this.$emit('update', this.company);  },
+      buildCompany: function(){
+        this.$emit('buildCompany');
+      }
+    },
+    components: { 'inline-edit': InlineEdit  }
+  };
 </script>
 
 <style lang="sass">

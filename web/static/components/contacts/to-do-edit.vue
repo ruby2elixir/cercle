@@ -1,7 +1,7 @@
 <template>
   <div class="contact-to-dos">
     <div>
-      <h3 style="margin-top:0px;border-bottom:0px solid #d8d8d8;">
+      <h3>
         <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i> To-Do
       </h3>
       <div style="padding:15px;">
@@ -22,7 +22,7 @@
 
           <div class="col-md-1">
             <select v-model="task.user_id">
-              <option v-for="user in company_users" :value="user.id">{{(user.user_name.toUpperCase()).slice(0, 2)}}</option>
+              <option v-for="user in companyUsers" :value="user.id">{{(user.user_name.toUpperCase()).slice(0, 2)}}</option>
             </select>
           </div>
 
@@ -51,75 +51,79 @@
 </template>
 
 <script>
-  import InlineEdit from "../inline-common-edit.vue"
+  import InlineEdit from '../inline-common-edit.vue';
   export default {
-      props: {
-          time_zone: String,
-          current_user_id: String,
-          activities: { type: Array, default: [] },
-          company_users: { type: Array, default: [] },
-          contact: Object,
-          opportunity: Object,
-          company: Object
-      },
-      computed: {
+    props: {
+      timeZone: String,
+      currentUserId: String,
+      activities: { type: Array, default: [] },
+      companyUsers: { type: Array, default: [] },
+      contact: Object,
+      opportunity: Object,
+      company: Object
+    },
+    computed: {
 
-      },
-      data() {
-          return {
-              tasks: this.activities.map(function(item){
-                item.due_time = Vue.moment(item.due_date).format('HH:mm')
-                item.due_only_date = Vue.moment(item.due_date).format('MM/DD/YYYY')
-                return item
-              }
-              ),
-          }
-  },
-  methods: {
+    },
+    data() {
+      return {
+        tasks: this.activities.map(function(item){
+          item.due_time = Vue.moment(item.due_date).format('HH:mm');
+          item.due_only_date = Vue.moment(item.due_date).format('MM/DD/YYYY');
+          return item;
+        }
+              )
+      };
+    },
+    methods: {
       addTask() {
-          var url = '/api/v2/activity/';
-          this.$http.post(url, {
-              activity: {
-                  contact_id: this.contact.id,
-                  opportunity_id: this.opportunity.id,
-                  user_id: this.current_user_id,
-                  due_date: new Date().toISOString(),
-                  company_id: this.company.id,
-                  title: 'Call',
-                  current_user_time_zone: this.time_zone
-              } })
+        var url = '/api/v2/activity/';
+        this.$http.post(url, {
+          activity: {
+            contact_id: this.contact.id,
+            opportunity_id: this.opportunity.id,
+            user_id: this.currentUserId,
+            due_date: new Date().toISOString(),
+            company_id: this.company.id,
+            title: 'Call',
+            current_user_time_zone: this.timeZone
+          } });
       },
       removeTask(task) {
-          var url = '/api/v2/activity/' + task.id;
-          this.$http.delete(url)
-          false;
+        var url = '/api/v2/activity/' + task.id;
+        this.$http.delete(url);
+        false;
       },
       updateTask(task) {
-          var url = '/api/v2/activity/' + task.id;
-          var due_date = new Date(task.due_only_date + ' ' + task.due_time);
-          
-          this.$http.put(url, {
-              activity: {
-                  title: task.title,
-                  due_date: Vue.moment(due_date).toISOString(),
-                  contact_id: this.contact.id,
-                  opportunity_id: this.opportunity.id,
-                  user_id: this.current_user_id,
-                  company_id: this.company.id,
-                  is_done: task.is_done
-              }
-          })
+        var url = '/api/v2/activity/' + task.id;
+        var due_date = new Date(task.due_only_date + ' ' + task.due_time);
+
+        this.$http.put(url, {
+          activity: {
+            title: task.title,
+            due_date: Vue.moment(due_date).toISOString(),
+            contact_id: this.contact.id,
+            opportunity_id: this.opportunity.id,
+            user_id: this.currentUserId,
+            company_id: this.company.id,
+            is_done: task.is_done
+          }
+        });
       }
-  },
-  components: {
-  'inline-edit': InlineEdit,
-  'checkbox': VueStrap.checkbox
-  }
-  }
+    },
+    components: {
+      'inline-edit': InlineEdit,
+      'checkbox': VueStrap.checkbox
+    }
+  };
 </script>
 
 <style lang="sass">
-  .contact-to-dos {
+.contact-to-dos {
+  h3 {
+    margin-top:0px;
+    border-bottom:0px solid #d8d8d8;
+  }
   .add-to-do {
   padding-left:15px;
   button {

@@ -49,12 +49,12 @@
       </div>
       <to-do
         :activities.sync="activities"
-        :company_users="company_users"
+        :companyUsers="company_users"
         :contact="contact"
         :opportunity="opportunity"
         :company="company"
-        :time_zone="time_zone"
-        :current_user_id="current_user_id"
+        :timeZone="time_zone"
+        :currentUserId="current_user_id"
       >
         <comment_form slot="comment-form" v-on:submit="addComment" />
         <timeline_events
@@ -69,73 +69,73 @@
 </template>
 
 <script>
-  import InlineEdit from "../inline-common-edit.vue"
-  import ToDo from "./to-do-edit.vue"
-  import CommentForm from "./comment-form.vue"
-  import TimelineEvents from "./timeline-events.vue"
-  import InlineTextEdit from "../inline-textedit.vue"
+  import InlineEdit from '../inline-common-edit.vue';
+  import ToDo from './to-do-edit.vue';
+  import CommentForm from './comment-form.vue';
+  import TimelineEvents from './timeline-events.vue';
+  import InlineTextEdit from '../inline-textedit.vue';
 
   export default {
     props: [
-        'contact', 'time_zone', 'current_user_id',
-        'activities', 'events', 'opportunity', 'company',
-        'opportunities',
-        'company_users', 'board',
-        'board_columns', 'opportunity_contacts',
-        'organization'
+      'contact', 'time_zone', 'current_user_id',
+      'activities', 'events', 'opportunity', 'company',
+      'opportunities',
+      'company_users', 'board',
+      'board_columns', 'opportunity_contacts',
+      'organization'
     ],
     data(){
-        return {
-            openContactModal: false
-        }
+      return {
+        openContactModal: false
+      };
     },
     methods: {
-        addContact(){
-            var url = '/api/v2/contact';
-            var data = {
-                name: this.NewContactName,
-                user_id: this.opportunity.user_id
-            }
-            if (this.company) {
-                data['company_id'] = this.company.id
-            }
-            if (this.organization) {
-                data['organization_id'] = this.organization.id
-            }
-            this.$http.post(url, { contact: data }).then(resp => {
-                var op_url = '/api/v2/opportunity/'+ this.opportunity.id;
-                var contact_ids = []
-                this.opportunity_contacts.forEach(function(item) {
-                    contact_ids.push(item.id)
-                });
-                contact_ids.push(resp.data.data.id)
-                this.$http.put(op_url,{opportunity:{ contact_ids: contact_ids}})
-            })
+      addContact(){
+        var url = '/api/v2/contact';
+        var data = {
+          name: this.NewContactName,
+          user_id: this.opportunity.user_id
+        };
+        if (this.company) {
+          data['company_id'] = this.company.id;
+        }
+        if (this.organization) {
+          data['organization_id'] = this.organization.id;
+        }
+        this.$http.post(url, { contact: data }).then(resp => {
+          var op_url = '/api/v2/opportunity/'+ this.opportunity.id;
+          var contact_ids = [];
+          this.opportunity_contacts.forEach(function(item) {
+            contact_ids.push(item.id);
+          });
+          contact_ids.push(resp.data.data.id);
+          this.$http.put(op_url,{opportunity:{ contact_ids: contact_ids}});
+        });
 
-            this.NewContactName = ''
-            this.openContactModal = false
-        },
-        addComment(msg){
-            this.$emit('addComment', msg)
-        },
-        archiveOpportunity() {
-          this.$emit('archiveOpportunity', this.opportunity)
-        },
-        updateOpportunity(){
-          this.$emit('updateOpportunity', this.opportunity)
-        },
+        this.NewContactName = '';
+        this.openContactModal = false;
+      },
+      addComment(msg){
+        this.$emit('addComment', msg);
+      },
+      archiveOpportunity() {
+        this.$emit('archiveOpportunity', this.opportunity);
+      },
+      updateOpportunity(){
+        this.$emit('updateOpportunity', this.opportunity);
+      }
     },
     components: {
-        'inline-edit': InlineEdit,
-        'to-do': ToDo,
-        'comment_form': CommentForm,
-        'timeline_events': TimelineEvents,
-        'inline-text-edit': InlineTextEdit,
-        'v-select': vSelect.VueSelect,
-        'modal': VueStrap.modal
+      'inline-edit': InlineEdit,
+      'to-do': ToDo,
+      'comment_form': CommentForm,
+      'timeline_events': TimelineEvents,
+      'inline-text-edit': InlineTextEdit,
+      'v-select': vSelect.VueSelect,
+      'modal': VueStrap.modal
     }
 
-  }
+  };
 </script>
 
 <style lang="sass">

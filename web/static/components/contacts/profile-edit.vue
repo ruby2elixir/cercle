@@ -54,80 +54,80 @@
 
 <script>
 Vue.use(VueResource);
-import {Socket, Presence} from "phoenix"
+import {Socket, Presence} from 'phoenix';
 
-import InlineEdit from "../inline-common-edit.vue"
-import InlineTextEdit from "../inline-textedit.vue"
-import DropDown from "./dropdown.vue"
+import InlineEdit from '../inline-common-edit.vue';
+import InlineTextEdit from '../inline-textedit.vue';
+import DropDown from './dropdown.vue';
 
 export default {
-    props: [
+  props: [
     'contact',
     'tags'
-    ],
-    data(){
-      return {
-        availableTags: [],
-        openTagModal: false,
-        chooseTags: []
-     }
-    },
-    mounted(){
+  ],
+  data(){
+    return {
+      availableTags: [],
+      openTagModal: false,
+      chooseTags: []
+    };
+  },
+  mounted(){
 
-    },
-     watch: {
+  },
+  watch: {
 
-     },
-    methods: {
-        removeTag(index) {
-          this.tags.splice(index, 1);
-          this.tag_ids = this.tags.map(function(j) { return j.id })
-          this.$emit('updateTags', this.tag_ids)
-        },
-        addNewTag(input){
-          this.$http.post('/api/v2/tag', {
-            tags: { name: input }, company_id: this.contact.company_id 
-           }).then(resp => {
-          })
+  },
+  methods: {
+    removeTag(index) {
+      this.tags.splice(index, 1);
+      this.tag_ids = this.tags.map(function(j) { return j.id; });
+      this.$emit('updateTags', this.tag_ids);
+    },
+    addNewTag(input){
+      this.$http.post('/api/v2/tag', {
+        tags: { name: input }, company_id: this.contact.company_id 
+      }).then(resp => {
+      });
           
-          return { id: input, name: input }
-        },
-        saveChangesTag(){
-          this.tag_ids = this.chooseTags.map(function(j) { return j.id })
-          this.tags = this.chooseTags.map(function(j) { return {id: j.id, name: j.name }  })
-          this.$emit('updateTags', this.tag_ids)
-          this.openTagModal = false;
-        },
-        openTagsWindow(){
-        
-          this.chooseTags = this.tags.map(function(j) { return {id: j.id, name: j.name } })
-          this.getTags() 
-          this.openTagModal = true;
-        },
-        getTags() {
-          this.$http.get('/api/v2/tag', {
-            params: { company_id: this.contact.company_id }
-           }).then(resp => {
-             this.availableTags = resp.data
-          })
-        },
-
-        updateTags: function(data){
-            this.$emit('updateTags', data)
-        },
-        updateContact: function(){
-            this.$emit('update', this.contact)
-        }
+      return { id: input, name: input };
     },
-    components: {
-        'inline-edit': InlineEdit,
-        'inline-text-edit': InlineTextEdit,
-        'dropdown': DropDown,
-        'v-select': vSelect.VueSelect,
-        'modal': VueStrap.modal
+    saveChangesTag(){
+      this.tag_ids = this.chooseTags.map(function(j) { return j.id; });
+      this.tags = this.chooseTags.map(function(j) { return {id: j.id, name: j.name };  });
+      this.$emit('updateTags', this.tag_ids);
+      this.openTagModal = false;
+    },
+    openTagsWindow(){
+        
+      this.chooseTags = this.tags.map(function(j) { return {id: j.id, name: j.name }; });
+      this.getTags(); 
+      this.openTagModal = true;
+    },
+    getTags() {
+      this.$http.get('/api/v2/tag', {
+        params: { company_id: this.contact.company_id }
+      }).then(resp => {
+        this.availableTags = resp.data;
+      });
+    },
 
+    updateTags: function(data){
+      this.$emit('updateTags', data);
+    },
+    updateContact: function(){
+      this.$emit('update', this.contact);
     }
-}
+  },
+  components: {
+    'inline-edit': InlineEdit,
+    'inline-text-edit': InlineTextEdit,
+    'dropdown': DropDown,
+    'v-select': vSelect.VueSelect,
+    'modal': VueStrap.modal
+
+  }
+};
 </script>
 
 <style lang="sass">

@@ -46,7 +46,7 @@
                <i class="fa fa-fw fa-plus"></i>Create a card
               </button>
               <div v-show="ShowAddCard">
-                Create a card into the board: 
+                Create a card into the board:
                 <select v-model="NewBoard">
                   <option v-for="board in boards" :value="board">{{board.name}}</option>
                 </select>
@@ -84,233 +84,233 @@
 </template>
 
 <script>
-import {Socket, Presence} from "phoenix"
-import InlineEdit from "../inline-common-edit.vue"
-import ProfileEdit from "./profile-edit.vue"
-import OrganizationEdit from "./organization-edit.vue"
-import OpportunityEdit from "./opportunity-edit.vue"
+import {Socket, Presence} from 'phoenix';
+import InlineEdit from '../inline-common-edit.vue';
+import ProfileEdit from './profile-edit.vue';
+import OrganizationEdit from './organization-edit.vue';
+import OpportunityEdit from './opportunity-edit.vue';
 
 export default {
-    props: ['contact_id', 'current_user_id', 'time_zone'],
-    data() {
-        return {
-            ShowAddCard: false,
-            socket: null,
-            channel: null,
-            contact: { },
-            company: {},
-            company_users: [],
-            organization: null,
-            opportunity: null,
-            opportunities: [],
-            tags: [],
-            activitites: [],
-            events: [],
-            board: null,
-            boards: [],
-            board_columns: [],
-            opportunity_contacts: [],
-            NewBoard: null
+  props: ['contact_id', 'current_user_id', 'time_zone'],
+  data() {
+    return {
+      ShowAddCard: false,
+      socket: null,
+      channel: null,
+      contact: { },
+      company: {},
+      company_users: [],
+      organization: null,
+      opportunity: null,
+      opportunities: [],
+      tags: [],
+      activitites: [],
+      events: [],
+      board: null,
+      boards: [],
+      board_columns: [],
+      opportunity_contacts: [],
+      NewBoard: null
 
-        }
-    },
-    components: {
-        'inline-edit': InlineEdit,
-        'profile-edit': ProfileEdit,
-        'organization-edit': OrganizationEdit,
-        'opportunity-edit': OpportunityEdit
+    };
+  },
+  components: {
+    'inline-edit': InlineEdit,
+    'profile-edit': ProfileEdit,
+    'organization-edit': OrganizationEdit,
+    'opportunity-edit': OpportunityEdit
 
-    },
-    methods: {
-        addNewCard() {
-         var url = "/api/v2/opportunity/"
-          this.$http.post(url,
-          { opportunity: {
-            main_contact_id: this.contact.id,
-            contact_ids: [this.contact.id],
-            company_id: this.company.id,
-            name: '',
-            board_id: this.NewBoard.id,
-            board_column_id: this.NewBoard.board_columns[0].id
-          } }
+  },
+  methods: {
+    addNewCard() {
+      var url = '/api/v2/opportunity/';
+      this.$http.post(url,
+        { opportunity: {
+          main_contact_id: this.contact.id,
+          contact_ids: [this.contact.id],
+          company_id: this.company.id,
+          name: '',
+          board_id: this.NewBoard.id,
+          board_column_id: this.NewBoard.board_columns[0].id
+        } }
           ).then(resp => {
-            console.log('resp', resp.data)
-          })
-          this.NewBoard = null
-          this.ShowAddCard = false;
-        },
-        archiveOpportunity(){
-            var url = '/api/v2/opportunity/' + this.opportunity.id;
-            this.$http.put(url, { opportunity: { status: '1'} })
-        },
-        updateOpportunity(data) {
-            var url = '/api/v2/opportunity/' + this.opportunity.id;
-            this.$http.put(url, { opportunity: data })
-
-        },
-        addComment(msg) {
-            var url = '/api/v2/timeline_events';
-            this.$http.post(url,
-                            { timeline_event: {
-                                company_id: this.contact.company_id,
-                                contact_id: this.contact.id,
-                                content: msg,
-                                event_name: 'comment',
-                                opportunity_id: this.opportunity.id
-                            }
-                            }
-                           )
-
-        },
-        deleteContact: function(){
-            console.log('delete contact');
-        },
-
-        updateTags(data) {
-            var tag_ids = data
-            if (tag_ids.length  == 0) {
-                var url = '/api/v2/contact/' + this.contact_id + '/utags';
-                this.$http.put(url,
-                               { company_id: this.contact.company_id }
-                              )
-            } else {
-                var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
-                this.$http.put(url,
-                               { tags: tag_ids, company_id: this.contact.company_id }
-                              )
-            }
-        },
-        removeContact(){
-
-        },
-        updateContact(data) {
-            this.contact = data
-            var url = '/api/v2/contact/' + this.contact_id;
-            this.$http.put(url, { contact: data } )
-        },
-
-        chooseOrganization(data){
-            var vm = this;
-            var url = '/api/v2/contact/' + vm.contact.id;
-            this.$http.put(url, { contact: { organization_id: data.id }}).then(resp => {
-                vm.organization = data
-            })
-        },
-
-        addNewOrganization(data){
-            var vm = this;
-            var url = '/api/v2/organizations';
-            this.$http.post(url, { organization: { name: data.name, company_id: vm.company.id }}).then(resp => {
-                vm.chooseOrganization(resp.data.data)
-            })
-
-        },
-
-        updateOrganization(data){
-            var vm = this;
-            var url = '/api/v2/organizations/' + vm.organization.id;
-            this.$http.put(url, { contact_id: vm.contact.id, organization: vm.organization })
-        },
-
-        buildOrganization(){ this.organization = { name: '', website: '', description: '' } },
-        removeOrganization() {
-            var vm = this;
-            var url = '/api/v2/contact/' + vm.contact.id;
-            this.$http.put(url, { contact: {organization_id: '' }}).then(resp => {
-                vm.organization = null
-            })
-
-        },
-        setAuthToken(){
-            var vm = this
-            localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content)
-            Vue.http.headers.common['Authorization'] = "Bearer " + localStorage.getItem('auth_token');
-            vm.connectToSocket();
-        },
-        connectToSocket() {
-            this.socket = new Socket("/socket", {params: { token: localStorage.getItem('auth_token') }});
-            this.socket.connect();
-            this.channel = this.socket.channel("contacts:" + this.contact_id, {});
-            this.channel.join()
-                .receive("ok", resp => {
-                    this.channel.push("load_state");
-                })
-                .receive("error", resp => { console.log("Unable to join", resp) });
-            this.channel.on('activity:created', payload => {
-                this.activities.unshift(payload.activity)
-            })
-
-            this.channel.on('activity:deleted', payload => {
-                var index = this.activities.findIndex(function(item, index){
-                  return item.id == payload.activity_id
-                })
-               this.activities.splice(index, 1)
-            })
-
-           this.channel.on('activity:updated', payload => {
-                var index = this.activities.findIndex(function(item, index){
-                  return item.id == payload.activity.id
-                })
-               this.activities.splice(index, 1, payload.activity)
-            })
-            
-            this.channel.on('timeline_event:created', payload => {
-                this.events.unshift(payload.event)
-            })
-
-            this.channel.on('opportunity:updated', payload => {
-                if (payload.opportunity) {
-                    this.opportunity = payload.opportunity
-                    this.opportunity_contacts = payload.opportunity_contacts
-                }
-                if (payload.board) {
-                    this.board = payload.board
-                    this.board_columns = payload.board_columns
-                }
-            })
-
-            this.channel.on('state', payload => {
-                this.contact = payload.contact
-                if (payload.boards) {
-                    this.boards = payload.boards
-                }
-                if (payload.opportunity) {
-                    this.opportunity = payload.opportunity
-                    this.opportunity_contacts = payload.opportunity_contacts
-                }
-
-                if (payload.opportunities) {
-                    this.opportunities = payload.opportunities
-                }
-                if (payload.company) {
-                    this.company = payload.company
-                    this.company_users = payload.company_users
-                }
-                if (payload.tags) {
-                    this.tags = payload.tags
-                }
-                if (payload.organization) {
-                    this.organization = payload.organization
-                }
-                if (payload.activities) {
-                    this.activities = payload.activities
-                }
-                if (payload.events) {
-                    this.events = payload.events
-                }
-                if (payload.board) {
-                    this.board = payload.board
-                    this.board_columns = payload.board_columns
-                }
-
-            });
-        }
+            console.log('resp', resp.data);
+          });
+      this.NewBoard = null;
+      this.ShowAddCard = false;
     },
-    mounted(){
-        this.setAuthToken();
+    archiveOpportunity(){
+      var url = '/api/v2/opportunity/' + this.opportunity.id;
+      this.$http.put(url, { opportunity: { status: '1'} });
+    },
+    updateOpportunity(data) {
+      var url = '/api/v2/opportunity/' + this.opportunity.id;
+      this.$http.put(url, { opportunity: data });
 
+    },
+    addComment(msg) {
+      var url = '/api/v2/timeline_events';
+      this.$http.post(url,
+        { timeline_event: {
+          company_id: this.contact.company_id,
+          contact_id: this.contact.id,
+          content: msg,
+          event_name: 'comment',
+          opportunity_id: this.opportunity.id
+        }
+        }
+                           );
+
+    },
+    deleteContact: function(){
+      console.log('delete contact');
+    },
+
+    updateTags(data) {
+      var tag_ids = data;
+      if (tag_ids.length === 0) {
+        var url = '/api/v2/contact/' + this.contact_id + '/utags';
+        this.$http.put(url,
+                               { company_id: this.contact.company_id }
+                              );
+      } else {
+        var url = '/api/v2/contact/' + this.contact_id + '/update_tags';
+        this.$http.put(url,
+                               { tags: tag_ids, company_id: this.contact.company_id }
+                              );
+      }
+    },
+    removeContact(){
+
+    },
+    updateContact(data) {
+      this.contact = data;
+      var url = '/api/v2/contact/' + this.contact_id;
+      this.$http.put(url, { contact: data } );
+    },
+
+    chooseOrganization(data){
+      var vm = this;
+      var url = '/api/v2/contact/' + vm.contact.id;
+      this.$http.put(url, { contact: { organization_id: data.id }}).then(resp => {
+        vm.organization = data;
+      });
+    },
+
+    addNewOrganization(data){
+      var vm = this;
+      var url = '/api/v2/organizations';
+      this.$http.post(url, { organization: { name: data.name, company_id: vm.company.id }}).then(resp => {
+        vm.chooseOrganization(resp.data.data);
+      });
+
+    },
+
+    updateOrganization(data){
+      var vm = this;
+      var url = '/api/v2/organizations/' + vm.organization.id;
+      this.$http.put(url, { contact_id: vm.contact.id, organization: vm.organization });
+    },
+
+    buildOrganization(){ this.organization = { name: '', website: '', description: '' }; },
+    removeOrganization() {
+      var vm = this;
+      var url = '/api/v2/contact/' + vm.contact.id;
+      this.$http.put(url, { contact: {organization_id: '' }}).then(resp => {
+        vm.organization = null;
+      });
+
+    },
+    setAuthToken(){
+      var vm = this;
+      localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
+      Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
+      vm.connectToSocket();
+    },
+    connectToSocket() {
+      this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
+      this.socket.connect();
+      this.channel = this.socket.channel('contacts:' + this.contact_id, {});
+      this.channel.join()
+                .receive('ok', resp => {
+                  this.channel.push('load_state');
+                })
+                .receive('error', resp => { console.log('Unable to join', resp); });
+      this.channel.on('activity:created', payload => {
+        this.activities.unshift(payload.activity);
+      });
+
+      this.channel.on('activity:deleted', payload => {
+        var index = this.activities.findIndex(function(item){
+          return item.id === payload.activity_id;
+        });
+        this.activities.splice(index, 1);
+      });
+
+      this.channel.on('activity:updated', payload => {
+        var index = this.activities.findIndex(function(item, index){
+          return item.id === payload.activity.id;
+        });
+        this.activities.splice(index, 1, payload.activity);
+      });
+
+      this.channel.on('timeline_event:created', payload => {
+        this.events.unshift(payload.event);
+      });
+
+      this.channel.on('opportunity:updated', payload => {
+        if (payload.opportunity) {
+          this.opportunity = payload.opportunity;
+          this.opportunity_contacts = payload.opportunity_contacts;
+        }
+        if (payload.board) {
+          this.board = payload.board;
+          this.board_columns = payload.board_columns;
+        }
+      });
+
+      this.channel.on('state', payload => {
+        this.contact = payload.contact;
+        if (payload.boards) {
+          this.boards = payload.boards;
+        }
+        if (payload.opportunity) {
+          this.opportunity = payload.opportunity;
+          this.opportunity_contacts = payload.opportunity_contacts;
+        }
+
+        if (payload.opportunities) {
+          this.opportunities = payload.opportunities;
+        }
+        if (payload.company) {
+          this.company = payload.company;
+          this.company_users = payload.company_users;
+        }
+        if (payload.tags) {
+          this.tags = payload.tags;
+        }
+        if (payload.organization) {
+          this.organization = payload.organization;
+        }
+        if (payload.activities) {
+          this.activities = payload.activities;
+        }
+        if (payload.events) {
+          this.events = payload.events;
+        }
+        if (payload.board) {
+          this.board = payload.board;
+          this.board_columns = payload.board_columns;
+        }
+
+      });
     }
-}
+  },
+  mounted(){
+    this.setAuthToken();
+
+  }
+};
 </script>
 
 <style lang="sass">

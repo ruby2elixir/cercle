@@ -4,11 +4,11 @@
 
 <script>
 export default {
- props: ['value'],
+  props: ['value'],
   methods: {
-      updateValue: function(value){ this.$emit('input', value)  }
+    updateValue: function(value){ this.$emit('input', value);  }
   }
-}
+};
 </script>
 
 <style lang="sass">

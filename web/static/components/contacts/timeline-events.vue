@@ -26,19 +26,19 @@
 <script>
   import moment from 'moment';
   export default {
-  props: ['events'],
-  methods: {
-    timestamp(time) {
-      return Moment(time).fromNow()
-    }
-  },
-  computed: {
-            profile_image(event) {
-            return event.user && event.user.profile_image
-            }
-  },
-  components: {  },
-  }
+    props: ['events'],
+    methods: {
+      timestamp(time) {
+        return Moment(time).fromNow();
+      }
+    },
+    computed: {
+      profile_image(event) {
+        return event.user && event.user.profile_image;
+      }
+    },
+    components: {  }
+  };
 </script>
 
 <style lang="sass">

@@ -8,7 +8,7 @@
 </template>
 <script>
 export default {
-  data() { 
+  data() {
     return {  isActive: false };
   },
   methods: {
@@ -21,4 +21,3 @@ export default {
 </script>
 <style lang="sass">
 </style>
-
