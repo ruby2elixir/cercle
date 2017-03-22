@@ -6,7 +6,7 @@ defmodule CercleApi.APIV2.BulkController do
 
   plug Guardian.Plug.EnsureAuthenticated
 
-  def bulk_contact_create(conn,%{"items" => items}) do
+  def bulk_contact_create(conn,%{"items" => items, "return" => return}) do
     if Enum.count(items) > 100 do
       json conn, %{status: 422, error_message: "Maximum 100 records are permitted per call"}
     else
@@ -44,11 +44,15 @@ defmodule CercleApi.APIV2.BulkController do
           str_contact_id = Integer.to_string(contact_id)
         end
       end
-      json conn, %{status: 200, contacts: contacts}
+      if return do
+        contacts
+      else
+        json conn, %{status: 200, contacts: contacts}
+      end
     end
   end
 
-  def bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => tag_id, "untag" => untag}) do
+  def bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => tag_id, "untag" => untag, "return" => return}) do
     responses = []
     if contacts && Enum.count(contacts) > 100 do
       json conn, %{status: 422, error_message: "Maximum 100 records are permitted per call"}
@@ -97,7 +101,12 @@ defmodule CercleApi.APIV2.BulkController do
               %{status: 400, error: "Contact id missing"}
             end
           end
-          json conn, %{status: 200, responses: responses}
+          if return do
+            contacts
+          else
+            json conn, %{status: 200, responses: responses}
+          end
+
         else
           json conn, %{status: 400, responses: %{"errors" => "Tag id #{tag_id} not found"}}
         end

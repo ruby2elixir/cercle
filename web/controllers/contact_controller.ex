@@ -196,8 +196,8 @@ defmodule CercleApi.ContactController do
         organization_data = %{"name" => selected_row[mapping["organization"]["name"]], "website" => selected_row[mapping["organization"]["website"]],"description" => selected_row[mapping["organization"]["description"]]}
         Map.put(row_data, "contact", contact_data) |> Map.put("organization", organization_data)
       end
-      contacts = CercleApi.APIV2.BulkController.bulk_contact_create(conn,%{"items" => items})
-      CercleApi.APIV2.BulkController.bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => str_tag_id, "untag" => false})
+      contacts = CercleApi.APIV2.BulkController.bulk_contact_create(conn,%{"items" => items, "return" => true})
+      CercleApi.APIV2.BulkController.bulk_tag_or_untag_contacts(conn,%{"contacts" => contacts, "tag_id" => str_tag_id, "untag" => false, "return" => true})
     end
     File.rm!("tmp/#{temp_file}.csv")
     json conn, %{status: "200", message: "Records imported successfully"}
