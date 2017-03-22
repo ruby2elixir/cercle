@@ -1,6 +1,7 @@
 defmodule CercleApi.APIV2.ContactController do
   require Logger
   use CercleApi.Web, :controller
+  use Timex
 
   alias CercleApi.Contact
   alias CercleApi.Company
@@ -25,7 +26,7 @@ defmodule CercleApi.APIV2.ContactController do
   def create(conn, %{"contact" => contact_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
-    
+
     changeset = company
       |> Ecto.build_assoc(:contacts)
       |> Contact.changeset(contact_params)
@@ -42,7 +43,7 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def show(conn, %{"user_id" => user_id, "company_id" => company_id}) do
-    
+
     query = from contact in Contact,
       where: contact.user_id == ^user_id and contact.company_id == ^company_id,
       order_by: [desc: contact.id]
@@ -76,7 +77,7 @@ defmodule CercleApi.APIV2.ContactController do
     query = from c in ContactTag,
         where: c.contact_id == ^id
       Repo.delete_all(query)
-    
+
     if tag_params == "" do
       render(conn, "show.json", contact: contact)
     else
@@ -96,7 +97,7 @@ defmodule CercleApi.APIV2.ContactController do
         |> Repo.preload(:tags) # Load existing data
         |> Ecto.Changeset.change() # Build the changeset
         |> Ecto.Changeset.put_assoc(:tags, tags) # Set the association
-  
+
       case Repo.update(changeset) do
         {:ok, contact} ->
           render(conn, "show.json", contact: contact)
@@ -117,4 +118,5 @@ defmodule CercleApi.APIV2.ContactController do
 
     send_resp(conn, :no_content, "")
   end
+
 end

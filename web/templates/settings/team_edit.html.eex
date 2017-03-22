@@ -14,6 +14,7 @@
                <li ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
                <li ><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a>
                <li class='active'><a href="/"><i class="fa fa-edit"></i>Team</a></li>
+               <li><a href="/import"><i class="fa fa-edit"></i>Import</a></li>
              </ul>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
