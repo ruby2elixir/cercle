@@ -53,7 +53,7 @@ defmodule CercleApi.APIV2.BulkController do
     if contacts && Enum.count(contacts) > 100 do
       json conn, %{status: 422, error_message: "Maximum 100 records are permitted per call"}
     else
-      if tag_id && untag do
+      if tag_id && untag != nil do
         {tag_id, _rest} = Integer.parse(tag_id)
         tag = Repo.get(Tag,tag_id)
         if tag do
@@ -63,7 +63,7 @@ defmodule CercleApi.APIV2.BulkController do
             if c do
               {contact_id, _rest} = Integer.parse(c)
               contact = Repo.get(Contact,contact_id)
-             
+
               if contact do
                 contact = Repo.preload(contact,[:tags])
                 query = from c in ContactTag,

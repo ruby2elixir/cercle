@@ -43,7 +43,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
   end
 
   test "create bulk_tag_or_untag_contacts with invalid tag_id", %{conn: conn}  do
-    untag = true
+    untag = false
     tag_id = "1"
     contacts = ["1"]
     conn = post conn, "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: tag_id, untag: untag
@@ -54,7 +54,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
     company_id = state[:user].company_id
     tag_id = Repo.insert!(%Tag{name: "Test Tag", company_id: company_id}).id
     str_tag_id = Integer.to_string(tag_id)
-    untag = true
+    untag = false
     contacts = ["1111"]
     conn = post state[:conn], "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: str_tag_id, untag: untag
     assert json_response(conn, 200)["responses"] == [%{"error" => "Contact id 1111 not found", "status" => 400}]
@@ -70,7 +70,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
     contacts = [Integer.to_string(contact_id)]
     tag_id = Repo.insert!(%Tag{name: "Test Tag", company_id: company_id}).id
     str_tag_id = Integer.to_string(tag_id)
-    untag = true
+    untag = false
     conn = post state[:conn], "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: str_tag_id, untag: untag
     assert json_response(conn, 200)["responses"] == [%{"status" => 200, "success" => "Contact id #{contact_id} tagged/untagged successfully"}]
   end
