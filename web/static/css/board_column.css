@@ -1,0 +1,4 @@
+#actions .dropdown-menu>li>a{
+	cursor: pointer;
+	font-weight: bold;
+}

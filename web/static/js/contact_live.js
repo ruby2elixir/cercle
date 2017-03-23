@@ -1,10 +1,10 @@
 let ContactLive = {
-  init(socket, contact_id){
+  init(socket, contactId){
     // connect to the socket
     socket.connect()
    
    // Now that you are connected, you can join channels with a topic:
-   let channel = socket.channel("contacts:" + contact_id, {})
+   let channel = socket.channel("contacts:" + contactId, {})
    
    let tasks = $("#tasks")  
    let timeline_events = $("#timeline_events")   
