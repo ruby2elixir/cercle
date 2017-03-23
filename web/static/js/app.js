@@ -33,6 +33,7 @@ import contactAdd from './contact_add';
 import { ContactEdit } from './contact_edit';
 import contactLive from './contact_live';
 import { Pipeline } from './opportunity_pipeline';
+import { BoardColumnPipeline } from './board_column_pipeline';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 
@@ -42,6 +43,7 @@ export var App = {
   },
   pipelineInit: function(){
     Pipeline.start();
+    BoardColumnPipeline.start();
   },
   contactEditInit: function(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken){
     ContactEdit.start(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken);
