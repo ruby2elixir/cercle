@@ -8,12 +8,10 @@ export var BoardColumnPipeline = {
       start: function (event, ui) {
         ui.item.addClass('tilt');
         originalOrder = $( '#board_columns' ).sortable( 'toArray', { attribute: 'data-id' } );
-        console.log(originalOrder);
       },
       stop: function (event, ui) {
         ui.item.removeClass('tilt');
         var sorted = $( '#board_columns' ).sortable( 'toArray', { attribute: 'data-id' } );
-        console.log(sorted);
         var sourceId = $(ui.item).data('id');
         var sourceNewOrder = sorted.indexOf(sourceId.toString());
         var targetId = originalOrder[sourceNewOrder];
