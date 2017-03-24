@@ -51,8 +51,8 @@ defmodule CercleApi.APIV2.BoardColumnController do
     |> Repo.update_all([])
 
     Repo.delete!(board_column)
-
-    send_resp(conn, :no_content, "")
+    # send_resp(conn, :no_content, "") no method found to test this response
+    json conn, %{status: 200}
   end
 
 end

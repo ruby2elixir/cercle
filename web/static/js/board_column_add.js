@@ -36,6 +36,8 @@ $(function() {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + jwtToken },
         complete: function complete(xhr, status) {
+          console.log(xhr);
+          console.log(status);
           element.parents('div.column_master').remove();
         }
       });
