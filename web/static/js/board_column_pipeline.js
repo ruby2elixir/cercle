@@ -25,7 +25,7 @@ export var BoardColumnPipeline = {
             headers: {'Authorization': 'Bearer '+jwtToken},
             url: '/api/v2/board_column/'+ key,
             data: {
-              boardColumn : {order: idOrderList[key]}
+              'board_column': {order: idOrderList[key]}
             }
           });
         }
