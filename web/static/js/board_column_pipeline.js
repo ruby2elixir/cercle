@@ -4,7 +4,7 @@ export var BoardColumnPipeline = {
     var originalOrder;
     $( '#board_columns' ).sortable({
       cursor: 'move',
-      cancel: '#add_new_column',
+      cancel: '#add_new_column, :input,button,.contenteditable',
       start: function (event, ui) {
         ui.item.addClass('tilt');
         originalOrder = $( '#board_columns' ).sortable( 'toArray', { attribute: 'data-id' } );

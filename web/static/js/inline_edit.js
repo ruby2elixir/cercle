@@ -1,8 +1,5 @@
 $(function() {
   var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
-  $(document).on('click','.textarea-inline-editable',function(){
-    $(this).focus();
-  });
 
   $('.textarea-inline-editable').each(function(index){
     var ele = $(this);
