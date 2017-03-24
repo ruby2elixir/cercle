@@ -157,7 +157,7 @@ defmodule CercleApi.ContactController do
     end
   end
 
-  def view_uploaded_data(conn, %{"mapping" => mapping, "tempFile" => temp_file}) do
+  def view_uploaded_data(conn, %{"mapping" => mapping, "temp_file" => temp_file}) do
 
     table = File.read!("tmp/#{temp_file}.csv") |> ExCsv.parse! |> ExCsv.with_headings |> Enum.to_list
     total_rows = Enum.count(table) - 1
@@ -173,7 +173,7 @@ defmodule CercleApi.ContactController do
     json conn, %{contact_headers: contact_headers, organization_headers: organization_headers, contact_values: contact_values, organization_values: organization_values,  temp_file: temp_file}
   end
 
-  def create_nested_data(conn, %{"mapping" => mapping, "tempFile" => temp_file}) do
+  def create_nested_data(conn, %{"mapping" => mapping, "temp_file" => temp_file}) do
 
     user = Guardian.Plug.current_resource(conn)
     company_id = user.company_id

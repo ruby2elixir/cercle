@@ -127,8 +127,8 @@ $(function() {
         headers: {'Authorization': 'Bearer '+jwtToken},
         async: true,
         data: {
-          mapping: jsonData,
-          tempFile: tempFile
+          'mapping': jsonData,
+          'temp_file': tempFile
         },
         error: function(error) {
           $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">Some error occured, Please try again.</p>');
@@ -168,8 +168,8 @@ $(function() {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+jwtToken},
         data: {
-          mapping: jsonData,
-          tempFile: tempFile
+          'mapping': jsonData,
+          'temp_file': tempFile
         },
         success: function(result){
           $('#final-progress .progress-bar').toggleClass('hidden');
