@@ -19,7 +19,7 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
   test "update board column for board on PUT", state do
     changeset = BoardColumn.changeset(%BoardColumn{}, %{name: "Step1", order: "1", board_id: state[:board].id})
     board_column = Repo.insert!(changeset)
-    conn = put state[:conn], "/api/v2/board_column/#{board_column.id}", boardColumn: %{name: "ModifiedName"}
+    conn = put state[:conn], "/api/v2/board_column/#{board_column.id}", board_column: %{name: "ModifiedName"}
     assert json_response(conn, 200)["data"]["name"] == "ModifiedName"
   end
 
