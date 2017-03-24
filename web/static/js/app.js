@@ -1,6 +1,6 @@
 // Brunch automatically concatenates all files in your
 // watched paths. Those paths can be configured at
-// config.paths.watched in "brunch-config.js".
+// config.paths.watched in 'brunch-config.js'.
 //
 // However, those files will only be executed if
 // explicitly imported. The only exception are files
@@ -10,43 +10,46 @@
 // Import dependencies
 //
 // If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
-import "phoenix_html"
+// to also remove its path from 'config.paths.watched'.
+import 'phoenix_html';
 
 // Import local files
 //
 // Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
-import "bootstrap-datepicker"
-import icheck from "./adminlte/plugins/iCheck/icheck.min"
-import slimscroll from "./adminlte/plugins/slimScroll/jquery.slimscroll.min"
-import fastclick from "./adminlte/plugins/fastclick/fastclick"
-import adminlte from "./adminlte/dist/js/app.min"
+// paths './socket' or full ones 'web/static/js/socket'.
+import 'bootstrap-datepicker';
+import icheck from './adminlte/plugins/iCheck/icheck.min';
+import slimscroll from './adminlte/plugins/slimScroll/jquery.slimscroll.min';
+import fastclick from './adminlte/plugins/fastclick/fastclick';
+import adminlte from './adminlte/dist/js/app.min';
 
-import socket from "./socket"
-import selectize from "./selectize"
-import { Activity } from "./activity"
-import inline_edit from "./inline_edit"
-import board_add from "./board_add"
-import contact_add from "./contact_add"
-import { ContactEdit } from "./contact_edit"
-import contact_live from "./contact_live"
-import { Pipeline } from "./opportunity_pipeline"
-import contact_import from './contact_import'
-import blueimp_file_upload from './blueimp_file_upload'
+import socket from './socket';
+import selectize from './selectize';
+import { Activity } from './activity';
+import inlineEdit from './inline_edit';
+import boardAdd from './board_add';
+import boardColumnAdd from './board_column_add';
+import contactAdd from './contact_add';
+import { ContactEdit } from './contact_edit';
+import contactLive from './contact_live';
+import { Pipeline } from './opportunity_pipeline';
+import { BoardColumnPipeline } from './board_column_pipeline';
+import contactImport from './contact_import';
+import blueimpFileUpload from './blueimp_file_upload';
 
 export var App = {
-  activity_init: function(){
-    Activity.start()
+  activityInit: function(){
+    Activity.start();
   },
-  pipeline_init: function(){
-    Pipeline.start()
+  pipelineInit: function(){
+    Pipeline.start();
+    BoardColumnPipeline.start();
   },
-  contact_edit_init: function(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids, jwt_token){
-    ContactEdit.start(user_id, company_id, contact_id, organization_id, opportunity_id, opportunity_contact_ids, tag_ids, jwt_token);
+  contactEditInit: function(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken){
+    ContactEdit.start(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken);
   },
-  contact_socket_init: function(contact_id){
-    contact_live.init(socket, contact_id );
+  contactSocketInit: function(contactId){
+    contactLive.init(socket, contactId );
   }
-}
+};
 

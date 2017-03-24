@@ -88,7 +88,7 @@
 </section><!-- /.content -->
 <script>
   $(document).ready(function(){
-    require("web/static/js/app").App.activity_init();
+    require("web/static/js/app").App.activityInit();
   });
 </script>
 

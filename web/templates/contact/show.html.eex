@@ -244,12 +244,12 @@
 <script>
   $(document).ready(function(){
     var jwt = document.querySelector('meta[name="guardian_token"]').content;
-    require("web/static/js/app").App.contact_socket_init(<%=@contact.id%>);
+    require("web/static/js/app").App.contactSocketInit(<%=@contact.id%>);
     <%=if @opportunity do %>
-    require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, <%=@opportunity.id%>, <%=Poison.encode!(@opportunity.contact_ids)%>, <%=Poison.encode!(@tag_ids)%>, jwt );
+    require("web/static/js/app").App.contactEditInit(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, <%=@opportunity.id%>, <%=Poison.encode!(@opportunity.contact_ids)%>, <%=Poison.encode!(@tag_ids)%>, jwt );
     <%end%>
     <%=if !@opportunity do %>
-    require("web/static/js/app").App.contact_edit_init(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, null, null, <%=Poison.encode!(@tag_ids)%>, jwt);
+    require("web/static/js/app").App.contactEditInit(<%=@conn.assigns[:current_user].id%>, <%=@conn.assigns[:current_user].company_id%>, <%=@contact.id%>, <%=Poison.encode!(@contact.organization_id)%>, null, null, <%=Poison.encode!(@tag_ids)%>, jwt);
     <%end%>
   });
 </script>
