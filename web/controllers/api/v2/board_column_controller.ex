@@ -25,7 +25,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
     end
   end
 
-  def update(conn, %{"id" => id, "boardColumn" => board_column_params}) do
+  def update(conn, %{"id" => id, "board_column" => board_column_params}) do
     board = Repo.get!(BoardColumn, id)
     changeset = BoardColumn.changeset(board, board_column_params)
 
