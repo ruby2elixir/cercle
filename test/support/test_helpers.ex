@@ -19,6 +19,13 @@ defmodule CercleApi.TestHelpers do
     company
   end
 
+  def insert_board(attrs \\ %{}) do
+    board_params = Map.merge(%{name: "TestBoard1"}, Enum.into(attrs, %{}))
+    %CercleApi.Board{}
+      |> CercleApi.Board.changeset(board_params)
+      |> Repo.insert!()
+  end
+
   use Phoenix.ConnTest
 
   @endpoint CercleApi.Endpoint

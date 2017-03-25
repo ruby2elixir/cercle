@@ -1,6 +1,7 @@
 defmodule CercleApi.APIV2.ContactController do
   require Logger
   use CercleApi.Web, :controller
+  use Timex
 
   alias CercleApi.Contact
   alias CercleApi.Company
@@ -141,4 +142,5 @@ defmodule CercleApi.APIV2.ContactController do
 
     send_resp(conn, :no_content, "")
   end
+
 end

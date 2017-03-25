@@ -19,7 +19,7 @@ defmodule CercleApi.Mixfile do
   def application do
     [mod: {CercleApi, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :ex_aws, :httpoison, :tzdata]]
+                    :phoenix_ecto, :postgrex, :ex_aws, :httpoison, :tzdata, :csv, :ex_csv, :uuid]]
   end
 
   # Specifies which paths to compile per environment.
@@ -48,6 +48,9 @@ defmodule CercleApi.Mixfile do
      {:timex, "~> 3.1.8"},
      {:gettext, "~> 0.13.0"},
      {:basic_auth, "~> 2.0.0"},
+     {:csv, "~> 1.4.2"},
+     {:ex_csv, "~> 0.1.5"},
+     {:uuid, "~> 1.1"},
      {:tzdata, "~> 0.5.8"},
      {:guardian, "~> 0.14.2"},
      {:comeonin, "~> 2.5"},

@@ -19,9 +19,6 @@
     <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-
-
-
     <%= if Guardian.Plug.current_token(@conn) do %>
       <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
     <% end %>
@@ -62,6 +59,7 @@
                 <li>
                 <a href="/contact">People</a>
                 </li>
+                <li>
                 <%end%>
               </ul>
 

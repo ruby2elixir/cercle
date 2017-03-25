@@ -1,0 +1,1 @@
+require('blueimp-file-upload');

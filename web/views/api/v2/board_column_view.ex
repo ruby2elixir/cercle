@@ -10,6 +10,7 @@ defmodule CercleApi.APIV2.BoardColumnView do
   end
 
   def render("board.json", %{board_column: board_column}) do
-    %{id: board_column.id}
+    %{id: board_column.id,
+     name: board_column.name}
   end
 end

@@ -1,0 +1,176 @@
+<div class="import-parent-div">
+	<h2>Import data</h2>
+	<div>
+		<ul class="steps-ul">
+			<li class="steps-li active steps-li-active" id="step1"><b>Step 1:</b> Upload file
+	            <span class="arrow">
+	            </span>
+            </li>
+			<li class="steps-li steps-li-inactive" id="step2"><b>Step 2:</b> Mapping
+	            <span class="arrow">
+	            </span>
+            </li>
+			<li class="steps-li steps-li-inactive" id="step3"><b>Step 3:</b> Preview and finish
+	             <span class="">
+	            </span>
+            </li>
+		</ul>
+	</div>
+</div>
+<div class="upload-outer-box" id="sec-1">
+	<div class="upload-dashed-box">
+		<div class="upload-info-box">			
+		    <form id="fileupload" action="/import_data" method="POST" enctype="multipart/form-data">		       
+		        <div class="row fileupload-buttonbar">
+		            <div class="col-md-12">		                
+		                <span class="btn btn-success fileinput-button">
+		                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;
+		                    <span>Upload file</span>
+		                    <input type="file" name="file" id="fileupload">
+		                </span>
+		                &nbsp;&nbsp;
+		                <span><b>...or drag a file here.</b></span>
+		                <span class="fileupload-process"></span>
+		            </div>
+		            <br><br><br>
+		            <div class="col-md-12">Only Excel (.xls and .xlsx) and .csv file types are supported.
+		            </div>
+		        </div>
+		    </form>		       
+		</div>	
+	</div>
+	<div class="table-responsive hidden" id="list-uploaded-file">
+		<table class="table table-bordered">
+			<thead>	
+				<tr class="tb-head">
+					<th>File Name</th>
+					<th>File Size</th>
+					<th>File Type</th>
+					<th>Last Modified</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="success">
+				  <td></td><td></td><td></td><td></td>
+				</tr>			
+			</tbody>
+		</table>
+	</div>
+	<div class="progress-section">
+		<p id="uploaded-file-name"></p>
+		<div class="progress" id="progress">
+		  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+		  </div>
+		</div>
+	</div>
+</div>
+<div id="action-btns-step1">
+	<%=link "Next", to: "" , class: "btn btn-success pull-right disabled", id: "move-to-step2", style: "margin-left:5px"%>
+	<%=link "Cancel Import", to: "#", class: "cancel-import btn btn-danger pull-right"%>
+</div>
+<div class="upload-outer-box hidden" id="sec-2">
+	<div class="mapping-info">
+		<h4><i>Drag fields from the right side picker to the left side boxes matching your data. Unmapped columns will not be imported into Cercle.</i></h4>
+	</div>	
+	<div class="row mapping-sections">
+		<div class="col-md-8" id="left-section">
+			<i class="fa fa-file fa-lg" aria-hidden="true"></i> &nbsp; File Fields
+			<div class="table-responsive">
+				<table class="table table-bordered" id="left-section-table">
+					<tbody></tbody>
+				</table>
+			</div>			
+		</div>
+		<div class="col-md-4" id="right-section">
+			<ul class="nav nav-tabs" id="myTabs" role="tablist">
+			  <li role="presentation" class="active">
+			  	<a href="#contact" id="contact-tab" role="tab" data-toggle="tab" aria-controls="contact" aria-expanded="true"><i class="fa fa-user fa-lg" aria-hidden="true"></i> &nbsp; Contact Fields</a>
+			  </li>
+			  <li role="presentation">
+			  	<a href="#organization" id="organization-tab" role="tab" data-toggle="tab" aria-controls="organization" aria-expanded="true"><i class="fa fa-building fa-lg" aria-hidden="true"></i> &nbsp; Organization Fields</a>
+			  </li>
+			</ul>
+			<div class="tab-content" id="myTabContent"> 
+				<div class="tab-pane fade active in" role="tabpanel" id="contact" aria-labelledby="contact-tab">
+					<div class="table-responsive">
+						<table class="table table-bordered" id="contact-field-table">
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+				<div class="tab-pane fade" role="tabpanel" id="organization" aria-labelledby="organization-tab">
+					<div class="table-responsive">
+						<table class="table table-bordered" id="organization-field-table">
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="action-btns-step2" class="hidden">
+	<%=link "Back", to: "#" , id: "back-to-step1", class: "btn btn-default pull-left", style: "margin-left:5px"%>
+	<%=link "Next", to: "#" , class: "btn btn-success pull-right disabled", id: "move-to-step3",  style: "margin-left:5px"%>
+	<%=link "Cancel Import", to: "", class: "cancel-import btn btn-danger pull-right"%>
+</div>
+<div class="upload-outer-box hidden" id="sec-3">
+	<div class="preview-info-section">
+		<h3>Preview Data</h3>
+		<p>Have a preview data according to the mapping done in <b>Step 2</b></p>
+	</div>
+	<div class="preview-section">
+		<div class="table-responsive">
+			<table class="table table-bordered" id="preview-data-table">
+				<caption class="table-caption"></caption>
+				<thead id="preview-head"></thead>
+				<tbody id="preview-body"></tbody>
+			</table>
+		</div>	
+		<div class="progress-section">
+			<div class="progress" id="final-progress">
+				<div class="progress-bar progress-bar-success progress-bar-striped active hidden" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+			</div>
+		</div>
+	</div>	
+	</div>
+</div>
+<div id="action-btns-step3" class="hidden">
+	<%=link "Back", to: "#" , id: "back-to-step2", class: "btn btn-default pull-left", style: "margin-left:5px"%>
+	<%=link "Finish", to: "#" , class: "btn btn-success pull-right", id: "move-to-final",  style: "margin-left:5px"%>
+	<%=link "Cancel Import", to: "", class: "cancel-import btn btn-danger pull-right"%>
+</div>
+<script type="text/javascript">
+	
+var uploadType;
+var contact = {};
+var organization ={};
+var jsonData = {};	
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData('text/plain', ev.target.id);
+  uploadType = $('#'+ev.target.id).closest('div').parent().attr('id');
+}
+
+function drop(ev) {
+  var data = ev.dataTransfer.getData('text/plain');
+  ev.target.innerHTML = document.getElementById(data).innerHTML + '<i class="revert fa fa-times" aria-hidden="true" style="float:right; margin-top:2px; cursor: pointer;"></i>';
+  ev.target.className = ('contact-fields active');
+  var dbCol = $('#'+data).find('.db-field').text();
+  var csvCol = $('#'+ev.target.id).prev('td').find('.csv-col').text();
+  if(uploadType == 'contact'){
+    contact[dbCol] = csvCol;
+  }
+  else{
+    organization[dbCol] = csvCol;
+  }
+  jsonData['contact'] = contact;
+  jsonData['organization'] = organization;
+  $('#move-to-step3').removeClass('disabled');  
+}
+
+</script>
