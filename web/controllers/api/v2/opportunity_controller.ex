@@ -33,6 +33,12 @@ defmodule CercleApi.APIV2.OpportunityController do
 
     case Repo.insert(changeset) do
       {:ok, opportunity} ->
+        channel = "contacts:"  <> to_string(contact.id)
+        CercleApi.Endpoint.broadcast!(
+          channel, "opportunity:created", %{
+            "opportunity" => opportunity
+          }
+        )
         conn
         |> put_status(:created)
         |> render("show.json", opportunity: opportunity)
@@ -62,6 +68,11 @@ defmodule CercleApi.APIV2.OpportunityController do
             "board_columns" => board.board_columns
           }
         )
+        if opportunity.status == 1 do
+          CercleApi.Endpoint.broadcast!(
+            channel, "opportunity:closed", %{"opportunity" => opportunity }
+          )
+        end
         render(conn, "show.json", opportunity: opportunity)
       {:error, changeset} ->
         conn

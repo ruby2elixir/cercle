@@ -129,10 +129,7 @@ export default {
           name: '',
           board_id: this.NewBoard.id,
           board_column_id: this.NewBoard.board_columns[0].id
-        } }
-          ).then(resp => {
-            console.log('resp', resp.data);
-          });
+        } });
       this.NewBoard = null;
       this.ShowAddCard = false;
     },
@@ -148,31 +145,6 @@ export default {
       vm.connectToSocket();
     },
 
-
-    initOpportunityChannel(opportunity) {
-
-        // if (this.opportunity_channel) {
-        //     this.opportunity_channel.leave().receive("ok", () => {
-        //         this.opportunity_channel = this.socket.channel('opportunities:' + opportunity.id, {})
-        //         this.opportunity_channel.join()
-        //             .receive('ok', resp => {
-        //                 this.opportunity_channel.push('load', {contact_id: this.contact.id});
-        //             }).receive('error', resp => {  });
-
-        //         this.opportunitySubscribe(opportunity);
-        //     }
-        //                                             )
-        // } else {
-
-        //     this.opportunity_channel = this.socket.channel('opportunities:' + opportunity.id, {});
-        //     this.opportunity_channel.join()
-        //         .receive('ok', resp => {
-        //             this.opportunity_channel.push('load', {contact_id: this.contact.id});
-        //         }).receive('error', resp => {  });
-        //     this.opportunitySubscribe(opportunity);
-        // }
-    },
-
     connectToSocket() {
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
@@ -185,9 +157,15 @@ export default {
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
 
+        this.channel.on('opportunity:created', payload => {
+        if (payload.opportunity) {
+            this.opportunities.push(payload.opportunity);
+            this.opportunity || (this.opportunity = payload.opportunity)
+        }
+      });
+
       this.channel.on('state', payload => {
         this.contact = payload.contact;
-
         if (payload.boards) {
           this.boards = payload.boards;
         }
@@ -195,7 +173,6 @@ export default {
         if (payload.opportunities) {
             this.opportunities = payload.opportunities;
             this.opportunity = payload.opportunities[0];
-            //this.initOpportunityChannel(this.opportunity)
         }
         if (payload.company) {
           this.company = payload.company;
@@ -232,7 +209,13 @@ h1 {
 text-align: center;
 }
 .btn-link {
-font-weight:bold;display:inline-block;padding:0px 3px 3px 3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;
+  font-weight:bold;
+  display:inline-block;
+  padding:0px 3px 3px 3px;
+  border-radius:5px;
+  margin-right:7px;
+  color:grey;
+  text-decoration:underline;
 &:active {
 
     box-shadow: none;

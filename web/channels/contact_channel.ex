@@ -23,6 +23,7 @@ defmodule CercleApi.ContactChannel do
       tags: contact.tags,
       organization: contact.organization,
       opportunities: CercleApi.Contact.involved_in_opportunities(contact),
+      boards: contact.company.boards
     }
 
     push socket, "state", data

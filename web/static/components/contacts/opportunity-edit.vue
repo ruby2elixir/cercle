@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-12">
 
-    <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;padding:20px;margin-bottom:10px;">
+    <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;padding:20px;margin-bottom:10px;" v-if="item">
 
       <button type="button" class="btn btn-default pull-right" v-on:click="archiveOpportunity" >ARCHIVE</button>
 
@@ -77,7 +77,7 @@
 
   export default {
       props: [
-          'socket',
+      'socket',
       'contact', 'time_zone', 'current_user_id',
       'opportunity', 'company',
       'opportunities',
@@ -102,8 +102,8 @@
     },
     methods: {
       addContact(){
-        var url = '/api/v2/contact';
-        var data = {
+        let url = '/api/v2/contact';
+        let data = {
           name: this.NewContactName,
           user_id: this.opportunity.user_id
         };
@@ -114,8 +114,8 @@
           data['organization_id'] = this.organization.id;
         }
         this.$http.post(url, { contact: data }).then(resp => {
-          var op_url = '/api/v2/opportunity/'+ this.opportunity.id;
-          var contact_ids = [];
+          let op_url = '/api/v2/opportunity/'+ this.opportunity.id;
+          let contact_ids = [];
           this.opportunity_contacts.forEach(function(item) {
             contact_ids.push(item.id);
           });
@@ -128,24 +128,20 @@
       },
 
       archiveOpportunity() {
-        var url = '/api/v2/opportunity/' + this.item.id;
-        this.$http.put(url, { opportunity: { status: '1'} });
+        let url = '/api/v2/opportunity/' + this.item.id;
+        this.$http.put(url, { opportunity: { status: '1'} })
       },
         updateOpportunity(){
         if (this.allowUpdate) {
-          var url = '/api/v2/opportunity/' + this.item.id;
+          let url = '/api/v2/opportunity/' + this.item.id;
           this.$http.put(url, { opportunity: this.item });
         }
       },
 
 
-
-        // }
     subscribe() {
-        console.log('Subscribe')
 
         this.opportunity_channel.on('load', payload => {
-            console.log('load', payload.activities)
            if (payload.activities) {
              this.$data.activities = payload.activities;
            }
@@ -167,6 +163,20 @@
             this.allowUpdate = true
         });
 
+        this.opportunity_channel.on('opportunity:closed', payload => {
+            if (payload.opportunity) {
+                let item_index = this.opportunities.findIndex(function(item){
+                    return item.id === payload.opportunity.id;
+                });
+                this.$data.items.splice(item_index,1);
+                if (this.$data.items.length == 0) {
+                    this.clearOpportunity()
+                } else if (this.$data.item.id == payload.opportunity.id) {
+                    this.setOpportunity(this.$data.items[0])
+                }
+
+          }
+        })
         this.opportunity_channel.on('opportunity:updated', payload => {
           if (payload.opportunity) {
               this.$data.item = payload.opportunity
@@ -209,6 +219,9 @@
 
 
     },
+    leaveChannel() {
+      if (this.opportunity_channel) { this.opportunity_channel.leave() }
+    },
     initChannel(){
       if (this.opportunity_channel) {
         this.opportunity_channel.leave().receive("ok", () => {
@@ -229,14 +242,27 @@
               this.opportunity_channel.push('load', { contact_id: this.contact.id });
             }).receive('error', resp => {  });
       }
-     }
+    },
+
+    clearOpportunity() {
+      this.allowUpdate = false
+      this.$data.item = null
+      this.leaveChannel()
+    },
+    setOpportunity(opp) {
+      this.allowUpdate = false
+      this.$data.item = opp
+      this.initChannel();
+    }
     },
     watch: {
-        opportunity: function() {
+        opportunity() {
             this.allowUpdate = false
-            this.initChannel();
             this.$data.item = this.opportunity
-            //this.allowUpdate = true
+
+            if (this.opportunity){
+              this.initChannel();
+            } else { this.leaveChannel() }
         }
     },
     components: {
