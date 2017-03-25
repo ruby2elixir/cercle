@@ -46,7 +46,6 @@
         <slot name="timeline-events"></slot>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -74,6 +73,16 @@
         }
               )
       };
+    },
+
+    watch: {
+      activities: function(){
+        this.$data.tasks = this.activities.map(function(item){
+          item.due_time = Vue.moment(item.due_date).format('HH:mm');
+          item.due_only_date = Vue.moment(item.due_date).format('MM/DD/YYYY');
+          return item;
+        })
+      }
     },
     methods: {
       addTask() {

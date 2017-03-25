@@ -23,10 +23,9 @@ defmodule CercleApi.APIV2.ActivityController do
           user_id: activity_reload.user_id, company: company,
           current_user_time_zone: activity_params["current_user_time_zone"]
         )
-        channel = "contacts:"  <> to_string(activity.contact_id)
-        CercleApi.Endpoint.broadcast!(channel, "new:activity", %{"html" => html})
         CercleApi.Endpoint.broadcast!(
-          channel, "activity:created", %{"activity" => activity_reload}
+          "opportunities:" <> to_string(activity_reload.opportunity_id),
+          "activity:created", %{"activity" => activity_reload}
         )
         json conn, "{OK: true}"
       {:error, changeset} ->
@@ -43,9 +42,9 @@ defmodule CercleApi.APIV2.ActivityController do
 
     case Repo.update(changeset) do
       {:ok, activity} ->
-        channel = "contacts:"  <> to_string(activity.contact_id)
         CercleApi.Endpoint.broadcast!(
-          channel, "activity:updated", %{"activity" => activity}
+          "opportunities:" <> to_string(activity.opportunity_id),
+          "activity:updated", %{"activity" => activity}
         )
         render(conn, "show.json", activity: activity)
       {:error, changeset} ->
@@ -57,7 +56,8 @@ defmodule CercleApi.APIV2.ActivityController do
 
   def delete(conn, %{"id" => id}) do
     activity = Repo.get!(Activity, id)
-    channel = "contacts:"  <> to_string(activity.contact_id)
+    channel = "opportunities:" <> to_string(activity.opportunity_id)
+
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
     Repo.delete!(activity)
@@ -65,6 +65,7 @@ defmodule CercleApi.APIV2.ActivityController do
     CercleApi.Endpoint.broadcast!(
       channel, "activity:deleted", %{"activity_id" => id}
     )
+
     send_resp(conn, :no_content, "")
   end
 

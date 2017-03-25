@@ -53,17 +53,15 @@ defmodule CercleApi.APIV2.OpportunityController do
         board = Repo.get!(CercleApi.Board, opportunity.board_id)
         |> Repo.preload(:board_columns)
 
-        Enum.each opportunity.contact_ids, fn (contact_id) ->
-          channel = "contacts:"  <> to_string(contact_id)
-          CercleApi.Endpoint.broadcast!(
-            channel, "opportunity:updated", %{
-              "opportunity" => opportunity,
-              "opportunity_contacts" => opportunity_contacts,
-              "board" => board,
-              "board_columns" => board.board_columns
-            }
-          )
-        end
+        channel = "opportunities:"  <> to_string(opportunity.id)
+        CercleApi.Endpoint.broadcast!(
+          channel, "opportunity:updated", %{
+            "opportunity" => opportunity,
+            "opportunity_contacts" => opportunity_contacts,
+            "board" => board,
+            "board_columns" => board.board_columns
+          }
+        )
         render(conn, "show.json", opportunity: opportunity)
       {:error, changeset} ->
         conn

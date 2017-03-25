@@ -16,6 +16,8 @@ defmodule CercleApi.Opportunity do
     belongs_to :company, CercleApi.Company
     belongs_to :board, CercleApi.Board
     belongs_to :board_column, CercleApi.BoardColumn
+    has_many :activities, CercleApi.Activity
+    has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :opportunity_id
     timestamps
   end
 

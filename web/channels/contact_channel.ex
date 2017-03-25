@@ -15,7 +15,6 @@ defmodule CercleApi.ContactChannel do
     |> Repo.get(socket.assigns[:contact_id])
 
     Logger.debug "> LOAD STATE"
-    opportunity = Contact.opportunity(contact)
 
     data = %{
       contact: contact,
@@ -23,26 +22,8 @@ defmodule CercleApi.ContactChannel do
       company_users: contact.company.users,
       tags: contact.tags,
       organization: contact.organization,
-      activities:  CercleApi.Contact.activities_in_progress(contact),
-      events: contact.timeline_event,
-      opportunity: opportunity,
       opportunities: CercleApi.Contact.involved_in_opportunities(contact),
-      boards: contact.company.boards
     }
-
-    if opportunity do
-      opportunity_contacts = CercleApi.Opportunity.contacts(opportunity)
-
-      board = Repo.get!(CercleApi.Board, opportunity.board_id)
-      |> Repo.preload(:board_columns)
-      data = Map.merge(data,
-        %{
-          opportunity_contacts: opportunity_contacts,
-          board: board,
-          board_columns: board.board_columns
-        }
-      )
-    end
 
     push socket, "state", data
 

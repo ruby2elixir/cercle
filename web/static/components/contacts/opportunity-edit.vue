@@ -8,20 +8,20 @@
       <div style="" id="change_status">
         <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
           <span data-placeholder="Project Name" style="color:rgb(102,102,102);">
-            <inline-edit v-model.lazy="opportunity.name" v-on:input="updateOpportunity" placeholder="Project Name"></inline-edit>
+            <inline-edit v-model="item.name" v-on:input="updateOpportunity" placeholder="Project Name"></inline-edit>
           </span>
         </span>
-        <Br />
-        <Br />
+        <br />
+        <br />
         <div style="margin-right:20px;margin-bottom:10px;">
           Managed by:
-          <select v-model="opportunity.user_id"  v-on:change="updateOpportunity">
+          <select v-model="item.user_id"  v-on:change="updateOpportunity">
             <option v-for="user in company_users" :value="user.id">{{user.user_name}}</option>
           </select>
           &nbsp;&nbsp;
           Status:
-          <select  v-model="opportunity.board_column_id" v-on:change="updateOpportunity">
-            <option v-for="board_column in board_columns" :value="board_column.id">{{board_column.name}}</option>
+          <select  v-model="item.board_column_id" v-on:change="updateOpportunity">
+             <option v-for="board_column in board_columns" :value="board_column.id">{{board_column.name}}</option>
           </select>
         </div>
         Contacts Involved:
@@ -43,12 +43,12 @@
               Description
               <br />
               <div style="margin-top:10px;" data-placeholder="Write a description...">
-                <inline-text-edit v-model="opportunity.description" v-on:input="updateOpportunity" placeholder="Write a description..." ></inline-text-edit>
+               <inline-text-edit v-model="item.description" v-on:input="updateOpportunity" placeholder="Write a description..." ></inline-text-edit>
               </div>
             </div>
       </div>
       <to-do
-        :activities.sync="activities"
+        :activities="activities"
         :companyUsers="company_users"
         :contact="contact"
         :opportunity="opportunity"
@@ -76,17 +76,28 @@
   import InlineTextEdit from '../inline-textedit.vue';
 
   export default {
-    props: [
+      props: [
+          'socket',
       'contact', 'time_zone', 'current_user_id',
-      'activities', 'events', 'opportunity', 'company',
+      'opportunity', 'company',
       'opportunities',
-      'company_users', 'board',
-      'board_columns', 'opportunity_contacts',
+      'company_users',
       'organization'
     ],
-    data(){
+      data(){
       return {
-        openContactModal: false
+          openContactModal: false,
+          allowUpdate: true,
+          item: this.opportunity,
+          items: this.opportunities,
+          contacts: this.opportunity_contacts,
+          board_columns: [],
+          board: {},
+          opportunity_channel: null,
+          activities: [],
+          events: [],
+          opportunity_contacts: []
+
       };
     },
     methods: {
@@ -117,14 +128,116 @@
       },
 
       archiveOpportunity() {
-        var url = '/api/v2/opportunity/' + this.opportunity.id;
+        var url = '/api/v2/opportunity/' + this.item.id;
         this.$http.put(url, { opportunity: { status: '1'} });
       },
-      updateOpportunity(){
-        var url = '/api/v2/opportunity/' + this.opportunity.id;
-        this.$http.put(url, { opportunity: this.opportunity });
-      }
+        updateOpportunity(){
+        if (this.allowUpdate) {
+          var url = '/api/v2/opportunity/' + this.item.id;
+          this.$http.put(url, { opportunity: this.item });
+        }
+      },
 
+
+
+        // }
+    subscribe() {
+        console.log('Subscribe')
+
+        this.opportunity_channel.on('load', payload => {
+            console.log('load', payload.activities)
+           if (payload.activities) {
+             this.$data.activities = payload.activities;
+           }
+           if (payload.board) {
+             this.$data.board = payload.board;
+             this.$data.board_columns = payload.board_columns;
+           }
+
+           if (payload.events) {
+            this.$data.events = payload.events;
+           }
+
+            if (payload.opportunity) {
+                this.$data.item = payload.opportunity;
+            }
+            if (payload.opportunity_contacts) {
+                this.$data.opportunity_contacts = payload.opportunity_contacts
+                }
+            this.allowUpdate = true
+        });
+
+        this.opportunity_channel.on('opportunity:updated', payload => {
+          if (payload.opportunity) {
+              this.$data.item = payload.opportunity
+              this.$data.opportunity_contacts = payload.opportunity_contacts;
+
+              let item_index = this.opportunities.findIndex(function(item){
+                return item.id === payload.opportunity.id;
+              });
+
+              this.$data.items.splice(item_index, 1, payload.opportunity);
+          }
+          if (payload.board) {
+            this.$data.board = payload.board;
+            this.$data.board_columns = payload.board_columns;
+          }
+        });
+
+
+        this.opportunity_channel.on('activity:created', payload => {
+          this.$data.activities.unshift(payload.activity);
+        });
+
+        this.opportunity_channel.on('activity:deleted', payload => {
+          let item_index = this.$data.activities.findIndex(function(item){
+            return item.id === payload.activity_id;
+          });
+          this.$data.activities.splice(item_index, 1);
+        });
+
+        this.opportunity_channel.on('activity:updated', payload => {
+          let item_index = this.$data.activities.findIndex(function(item){
+            return item.id === payload.activity.id;
+          });
+          this.$data.activities.splice(item_index, 1, payload.activity);
+        });
+
+        this.opportunity_channel.on('timeline_event:created', payload => {
+          this.$data.events.unshift(payload.event);
+        });
+
+
+    },
+    initChannel(){
+      if (this.opportunity_channel) {
+        this.opportunity_channel.leave().receive("ok", () => {
+          this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {})
+          this.subscribe();
+          this.opportunity_channel.join()
+              .receive('ok', resp => {
+                this.opportunity_channel.push('load', {contact_id: this.contact.id});
+              }).receive('error', resp => {  });
+
+
+        })
+      } else {
+        this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {});
+        this.subscribe();
+        this.opportunity_channel.join()
+            .receive('ok', resp => {
+              this.opportunity_channel.push('load', { contact_id: this.contact.id });
+            }).receive('error', resp => {  });
+      }
+     }
+    },
+    watch: {
+        opportunity: function() {
+            this.allowUpdate = false
+            this.initChannel();
+            this.$data.item = this.opportunity
+            //this.allowUpdate = true
+        }
     },
     components: {
       'inline-edit': InlineEdit,
@@ -134,6 +247,11 @@
       'inline-text-edit': InlineTextEdit,
       'v-select': vSelect.VueSelect,
       'modal': VueStrap.modal
+    },
+
+
+      mounted() {
+       this.initChannel()
     }
 
   };

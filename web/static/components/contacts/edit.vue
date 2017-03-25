@@ -34,9 +34,9 @@
         <div class="row">
           <div class="col-md-12">
             <div style="padding:15px;">
-              <a v-for="opportunity in opportunities" :href="'/contact/'+contact.id + '/opportunity/' + opportunity.id" class="opportunity-tags">
-                {{opportunity.name}}
-              </a>
+              <button v-for="opp in opportunities" v-on:click="changeOpportunity(opp)" class="btn btn-link opportunity-tags">
+                {{opp.name}}
+              </button>
               <button v-show="!ShowAddCard" v-on:click="ShowAddCard=true" type="button" class="btn btn-link show-add-card-form">
                <i class="fa fa-fw fa-plus"></i>Create a card
               </button>
@@ -53,20 +53,18 @@
         </div>
 
         <div class="row" v-if="opportunity">
+
           <opportunity-edit
+            ref="opportunityEdit"
             :time_zone="time_zone"
             :current_user_id="current_user_id"
             :organization="organization"
             :contact="contact"
             :company="company"
             :company_users="company_users"
-            :board="board"
-            :board_columns="board_columns"
             :opportunity="opportunity"
             :opportunities="opportunities"
-            :opportunity_contacts="opportunity_contacts"
-            :activities.sync="activities"
-            :events="events"
+            :socket="socket"
             />
 
         </div>
@@ -89,6 +87,7 @@ export default {
       ShowAddCard: false,
       socket: null,
       channel: null,
+      opportunity_channel: null,
       contact: { },
       company: {},
       company_users: [],
@@ -96,7 +95,7 @@ export default {
       opportunity: null,
       opportunities: [],
       tags: [],
-      activitites: [],
+      activities: [],
       events: [],
       board: null,
       boards: [],
@@ -114,6 +113,12 @@ export default {
 
   },
   methods: {
+      changeOpportunity(opp) {
+          this.opportunity = opp
+          //this.initOpportunityChannel(opp)
+
+      return false
+    },
     addNewCard() {
       var url = '/api/v2/opportunity/';
       this.$http.post(url,
@@ -142,60 +147,55 @@ export default {
       Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
       vm.connectToSocket();
     },
+
+
+    initOpportunityChannel(opportunity) {
+
+        // if (this.opportunity_channel) {
+        //     this.opportunity_channel.leave().receive("ok", () => {
+        //         this.opportunity_channel = this.socket.channel('opportunities:' + opportunity.id, {})
+        //         this.opportunity_channel.join()
+        //             .receive('ok', resp => {
+        //                 this.opportunity_channel.push('load', {contact_id: this.contact.id});
+        //             }).receive('error', resp => {  });
+
+        //         this.opportunitySubscribe(opportunity);
+        //     }
+        //                                             )
+        // } else {
+
+        //     this.opportunity_channel = this.socket.channel('opportunities:' + opportunity.id, {});
+        //     this.opportunity_channel.join()
+        //         .receive('ok', resp => {
+        //             this.opportunity_channel.push('load', {contact_id: this.contact.id});
+        //         }).receive('error', resp => {  });
+        //     this.opportunitySubscribe(opportunity);
+        // }
+    },
+
     connectToSocket() {
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
       this.channel = this.socket.channel('contacts:' + this.contact_id, {});
+
       this.channel.join()
                 .receive('ok', resp => {
                   this.channel.push('load_state');
                 })
                 .receive('error', resp => { console.log('Unable to join', resp); });
-      this.channel.on('activity:created', payload => {
-        this.activities.unshift(payload.activity);
-      });
 
-      this.channel.on('activity:deleted', payload => {
-        var index = this.activities.findIndex(function(item){
-          return item.id === payload.activity_id;
-        });
-        this.activities.splice(index, 1);
-      });
-
-      this.channel.on('activity:updated', payload => {
-        var index = this.activities.findIndex(function(item, index){
-          return item.id === payload.activity.id;
-        });
-        this.activities.splice(index, 1, payload.activity);
-      });
-
-      this.channel.on('timeline_event:created', payload => {
-        this.events.unshift(payload.event);
-      });
-
-      this.channel.on('opportunity:updated', payload => {
-        if (payload.opportunity) {
-          this.opportunity = payload.opportunity;
-          this.opportunity_contacts = payload.opportunity_contacts;
-        }
-        if (payload.board) {
-          this.board = payload.board;
-          this.board_columns = payload.board_columns;
-        }
-      });
 
       this.channel.on('state', payload => {
         this.contact = payload.contact;
+
         if (payload.boards) {
           this.boards = payload.boards;
         }
-        if (payload.opportunity) {
-          this.opportunity = payload.opportunity;
-          this.opportunity_contacts = payload.opportunity_contacts;
-        }
 
         if (payload.opportunities) {
-          this.opportunities = payload.opportunities;
+            this.opportunities = payload.opportunities;
+            this.opportunity = payload.opportunities[0];
+            //this.initOpportunityChannel(this.opportunity)
         }
         if (payload.company) {
           this.company = payload.company;
@@ -210,16 +210,6 @@ export default {
           } else {
             this.organization = null;
           }
-        }
-        if (payload.activities) {
-          this.activities = payload.activities;
-        }
-        if (payload.events) {
-          this.events = payload.events;
-        }
-        if (payload.board) {
-          this.board = payload.board;
-          this.board_columns = payload.board_columns;
         }
 
       });
@@ -240,6 +230,20 @@ width: 800px;
 
 h1 {
 text-align: center;
+}
+.btn-link {
+font-weight:bold;display:inline-block;padding:0px 3px 3px 3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;
+&:active {
+
+    box-shadow: none;
+    border: none;
+    outline: none;
+    }
+    &:focus {
+    box-shadow: none;
+    border: none;
+    outline: none;
+    }
 }
 .show-add-card-form {
 font-weight:bold;display:inline-block;padding:0px 3px 3px 3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;

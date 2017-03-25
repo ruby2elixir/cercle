@@ -25,7 +25,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
         channel = "contacts:"  <> to_string(timeline_event_reload.contact_id)
         CercleApi.Endpoint.broadcast!(channel, "new:timeline_event", %{"html" => html})
         CercleApi.Endpoint.broadcast!(
-          channel, "timeline_event:created", %{"event" => timeline_event_reload}
+          "opportunities:"  <> to_string(timeline_event_reload.opportunity_id),
+          "timeline_event:created", %{"event" => timeline_event_reload}
         )
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
