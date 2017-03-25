@@ -10,7 +10,10 @@ defmodule CercleApi.APIV2.TagView do
   end
 
   def render("tag.json", %{tag: tag}) do
-    %{id: tag.id,
-      company_id: tag.company_id}
+    %{
+      id: tag.id,
+      company_id: tag.company_id,
+      name: tag.name
+    }
   end
 end
