@@ -41,7 +41,7 @@
       <div style="padding:15px;background-color:#EDF0F5;">
         <%= for opportunity <- @opportunities do %>
          
-          <div style="vertical-align: top;background-color:white;display:inline-block;width:120px;height:120px;padding:15px;margin-right:10px;" > <a href="/contact/<%=@contact.id%>/opportunity/<%=opportunity.id%>" class="opportunity_status<%=opportunity.status %>" style="font-weight:bold;color:grey;font-size:15px;"><%= opportunity.name %></a></div>
+          <div onclick="location.href='/contact/<%=@contact.id%>/opportunity/<%=opportunity.id%>';"style="cursor:pointer;font-weight:bold;color:grey;font-size:15px;vertical-align: top;background-color:white;display:inline-block;width:120px;height:120px;padding:15px;margin-right:10px;" ><%= opportunity.name %></div>
             
           
         <% end %>
