@@ -282,37 +282,3 @@
 
   };
 </script>
-
-<style lang="sass">
-  a.o_contact  {
-  font-weight:bold;
-  display:inline-block;
-  padding:3px;
-  border-radius:5px;
-  margin-right:7px;
-  color:grey;
-  text-decoration:underline;
-  }
-  .add_o_contact {
-  font-size: small;
-  font-weight:bold;
-  display:inline-block;
-  padding:3px;
-  border-radius:5px;
-  margin-right:7px;
-  color:grey;
-  &:hover {
-  color:grey;
-  box-shadow: none;
-  }
-  &:active {
-  color:grey;
-  box-shadow: none;
-  }
-
-  &:focus {
-  color:grey;
-  box-shadow: none;
-  }
-  }
-</style>

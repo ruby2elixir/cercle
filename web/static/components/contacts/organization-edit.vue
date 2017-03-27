@@ -116,9 +116,3 @@
 
   };
 </script>
-
-<style lang="sass">
-.add-organization {
-                  font-size:16px;
-}
-</style>

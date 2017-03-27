@@ -136,11 +136,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-    .contact-tags-box {
-      .open-indicator{
-        display: none !important;
-      }
-    }
-</style>

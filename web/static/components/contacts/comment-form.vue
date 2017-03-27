@@ -42,22 +42,3 @@
     }
   };
 </script>
-
-<style lang="sass">
-  .contact-comments-form {
-    h3 {
-      margin-top:0px;
-      border-bottom:0px solid #d8d8d8;
-        i {
-          color:#d8d8d8;
-        }
-    }
-    .message-block {
-      margin-left:50px;
-      margin-right:10px;
-      textarea {
-        height:70px;
-      }
-    }
-  }
-</style>

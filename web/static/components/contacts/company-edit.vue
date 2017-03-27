@@ -34,7 +34,3 @@
     components: { 'inline-edit': InlineEdit  }
   };
 </script>
-
-<style lang="sass">
-
-</style>

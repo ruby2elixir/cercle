@@ -40,30 +40,3 @@
     components: {  }
   };
 </script>
-
-<style lang="sass">
-  .contact-page-events {
-  .event {
-      padding:5px;
-      padding-top:0px;
-      margin-bottom:20px;
-     .user-block {
-       float:left;
-       width:45px;
-       margin-left:10px;
-     }
-     .message-block {
-       margin-left:60px;
-  .well {
-     padding:15px;
-     font-size:15px;
-     color:#292929;
-     background-color:white;
-     border-radius:5px;
-     margin-bottom:5px;
-     margin-right:18px;
-  }
-  }
-    }
-  }
-</style>
