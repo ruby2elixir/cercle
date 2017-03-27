@@ -31,7 +31,6 @@ import inlineEdit from './inline_edit';
 import boardAdd from './board_add';
 import boardColumnAdd from './board_column_add';
 import contactAdd from './contact_add';
-import { ContactEdit } from './contact_edit';
 import contactLive from './contact_live';
 import { Pipeline } from './opportunity_pipeline';
 import { BoardColumnPipeline } from './board_column_pipeline';
@@ -45,9 +44,6 @@ export var App = {
   pipelineInit: function(){
     Pipeline.start();
     BoardColumnPipeline.start();
-  },
-  contactEditInit: function(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken){
-    ContactEdit.start(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken);
   },
   contactSocketInit: function(contactId){
     contactLive.init(socket, contactId );
