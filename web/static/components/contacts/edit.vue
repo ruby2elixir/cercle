@@ -31,12 +31,12 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" v-if="browseOpportunities">
           <div class="col-md-12">
-            <div style="padding:15px;">
-              <button v-for="opp in opportunities" v-on:click="changeOpportunity(opp)" class="btn btn-link opportunity-tags">
+          <div style="padding:15px;background-color:#EDF0F5;">
+              <div v-for="opp in opportunities" v-on:click="changeOpportunity(opp)" class="opportunity-tags">
                 {{opp.name}}
-              </button>
+              </div>
               <button v-show="!ShowAddCard" v-on:click="ShowAddCard=true" type="button" class="btn btn-link show-add-card-form">
                <i class="fa fa-fw fa-plus"></i>Create a card
               </button>
@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <div class="row" v-if="opportunity">
+        <div class="row" v-if="opportunity && !browseOpportunities">
 
           <opportunity-edit
             ref="opportunityEdit"
@@ -64,6 +64,7 @@
             :company_users="company_users"
             :opportunity="opportunity"
             :opportunities="opportunities"
+            v-on:browse="browseOpportunities = true"
             :socket="socket"
             />
 
@@ -101,7 +102,8 @@ export default {
       boards: [],
       board_columns: [],
       opportunity_contacts: [],
-      NewBoard: null
+      NewBoard: null,
+      browseOpportunities: true
 
     };
   },
@@ -114,9 +116,8 @@ export default {
   },
   methods: {
     changeOpportunity(opp) {
+      this.browseOpportunities = false;
       this.opportunity = opp;
-          //this.initOpportunityChannel(opp)
-
       return false;
     },
     addNewCard() {
@@ -172,7 +173,6 @@ export default {
 
         if (payload.opportunities) {
           this.opportunities = payload.opportunities;
-          this.opportunity = payload.opportunities[0];
         }
         if (payload.company) {
           this.company = payload.company;
@@ -204,7 +204,19 @@ export default {
 margin-left: auto;
 margin-right: auto;
 width: 800px;
-
+.opportunity-tags {
+cursor:pointer;
+font-weight:bold;
+color:grey;
+font-size:15px;
+vertical-align: top;
+background-color:white;
+display:inline-block;
+width:120px;
+height:120px;
+padding:15px;
+margin-right:10px;
+}
 h1 {
 text-align: center;
 }
