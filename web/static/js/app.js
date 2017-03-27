@@ -54,7 +54,11 @@ export var App = {
   }
 };
 
-Vue.use(require('vue-moment-jalaali'))
+import elementLang from 'element-ui/lib/locale/lang/en';
+import elementLocale from 'element-ui/lib/locale';
+elementLocale.use(elementLang);
+
+Vue.use(require('vue-moment-jalaali'));
 import ContactAppEdit from "../components/contacts/edit.vue";
 
 

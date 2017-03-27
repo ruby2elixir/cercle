@@ -7,17 +7,19 @@
       <div style="padding:15px;">
         <div  v-for="task in tasks" class="task row">
           <div class="col-md-1 task-is-done">
-    <input type="checkbox" :id="'task-' + task.id" v-model.sync="task.is_done" :class="{'active': task.is_done}" v-on:click="updateTask(task)">
-    <label :for="'task-'+task.id"></label>
+            <el-checkbox v-model="task.is_done" v-on:change="updateTask(task)"></el-checkbox>
           </div>
+
           <div class="col-md-5">
             <inline-edit v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" class="title-input"></inline-edit>
           </div>
-          <div class="col-md-2">
-            <inline-edit v-model.sync="task.due_only_date" v-on:input="updateTask(task)" placeholder="Time" class="title-input"></inline-edit>
-          </div>
-          <div class="col-md-2">
-            <inline-edit v-model.sync="task.due_time" v-on:input="updateTask(task)" placeholder="Time" class="title-input"></inline-edit>
+          <div class="col-md-4">
+            <el-date-picker
+             v-on:change="updateTask(task)"
+             v-model="task.due_date"
+             type="datetime"
+             placeholder="Select date and time">
+            </el-date-picker>
           </div>
 
           <div class="col-md-1">
@@ -66,25 +68,16 @@
     },
     data() {
       return {
-        tasks: this.activities.map(function(item){
-          item.due_time = Vue.moment(item.due_date).format('HH:mm');
-          item.due_only_date = Vue.moment(item.due_date).format('MM/DD/YYYY');
-          return item;
-        }
-              )
+        tasks: this.activities
       };
     },
 
     watch: {
       activities: function(){
-        this.$data.tasks = this.activities.map(function(item){
-          item.due_time = Vue.moment(item.due_date).format('HH:mm');
-          item.due_only_date = Vue.moment(item.due_date).format('MM/DD/YYYY');
-          return item;
-        })
+        this.$data.tasks = this.activities
       }
     },
-    methods: {
+      methods: {
       addTask() {
         var url = '/api/v2/activity/';
         this.$http.post(url, {
@@ -105,12 +98,11 @@
       },
       updateTask(task) {
         var url = '/api/v2/activity/' + task.id;
-        var due_date = new Date(task.due_only_date + ' ' + task.due_time);
 
         this.$http.put(url, {
           activity: {
             title: task.title,
-            due_date: Vue.moment(due_date).toISOString(),
+            due_date: task.due_date,
             contact_id: this.contact.id,
             opportunity_id: this.opportunity.id,
             user_id: this.currentUserId,
@@ -122,7 +114,9 @@
     },
     components: {
       'inline-edit': InlineEdit,
-      'checkbox': VueStrap.checkbox
+      'checkbox': VueStrap.checkbox,
+      'el-date-picker': Element.DatePicker,
+      'el-checkbox': Element.Checkbox
     }
   };
 </script>

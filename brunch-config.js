@@ -79,10 +79,13 @@ exports.config = {
             vSelect: 'vue-select/dist/vue-select.js',
             VueResource: 'vue-resource',
             VueStrap: 'vue-strap',
-            Moment: 'moment'
+            Moment: 'moment',
+            Element: 'element-ui'
         },
         // Whitelist the npm deps to be pulled in as front-end assets.
         // All other deps in package.json will be excluded from the bundle.
-        whitelist: ['phoenix', 'phoenix_html', 'jquery', 'bootstrap-datepicker', 'blueimp-file-upload', 'vue-select', 'vue-resource', 'vue-strap', 'moment']
+        whitelist: ['phoenix', 'phoenix_html', 'jquery', 'bootstrap-datepicker',
+                    'blueimp-file-upload', 'vue-select', 'vue-resource',
+                    'vue-strap', 'moment', 'element']
     }
 };
