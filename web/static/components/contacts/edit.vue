@@ -240,7 +240,7 @@ text-align: center;
 font-weight:bold;display:inline-block;padding:0px 3px 3px 3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;
 }
 .opportunity-tags {
-font-weight:bold;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;
+font-weight:bold;padding:3px;margin-right:17px;color:grey;text-decoration:underline;
 }
 }
 </style>

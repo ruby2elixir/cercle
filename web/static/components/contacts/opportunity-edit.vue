@@ -1,8 +1,8 @@
 <template>
   <div class="col-md-12">
-    <div class="post" style="background-color:white;padding:20px;margin-bottom:10px;" v-if="item">
+    <div class="post" style="background-color:white;padding:20px;margin-bottom:10px;padding-top: 0px;" v-if="item">
     <div class="pull-right">
-      <button type="button" class="btn btn-primary pull-right" v-on:click="$emit('browse')"  style="margin-top:10px;margin-right:10px;width:110px;" >Browse</button>
+      <button type="button" class="btn btn-primary pull-right" v-on:click="$emit('browse')"  style="margin-top:10px;margin-right:10px;width:110px;" >BROWSE</button>
       <br />
       <button type="button" class="btn btn-default " v-on:click="archiveOpportunity" style="margin-top:10px;margin-right:10px;width:110px;" >ARCHIVE</button>
     </div>
