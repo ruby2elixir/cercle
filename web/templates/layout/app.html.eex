@@ -17,7 +17,6 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/dist/css/AdminLTE.min.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/dist/css/skins/_all-skins.min.css") %>">
-    <link rel="stylesheet" href="http://selectize.github.io/selectize.js/css/selectize.default.css">
     <link href="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
      <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
