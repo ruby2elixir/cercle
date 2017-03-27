@@ -76,7 +76,7 @@
   import InlineTextEdit from '../inline-textedit.vue';
 
   export default {
-      props: [
+    props: [
       'socket',
       'contact', 'time_zone', 'current_user_id',
       'opportunity', 'company',
@@ -84,19 +84,19 @@
       'company_users',
       'organization'
     ],
-      data(){
+    data(){
       return {
-          openContactModal: false,
-          allowUpdate: true,
-          item: this.opportunity,
-          items: this.opportunities,
-          contacts: this.opportunity_contacts,
-          board_columns: [],
-          board: {},
-          opportunity_channel: null,
-          activities: [],
-          events: [],
-          opportunity_contacts: []
+        openContactModal: false,
+        allowUpdate: true,
+        item: this.opportunity,
+        items: this.opportunities,
+        contacts: this.opportunity_contacts,
+        board_columns: [],
+        board: {},
+        opportunity_channel: null,
+        activities: [],
+        events: [],
+        opportunity_contacts: []
 
       };
     },
@@ -129,9 +129,9 @@
 
       archiveOpportunity() {
         let url = '/api/v2/opportunity/' + this.item.id;
-        this.$http.put(url, { opportunity: { status: '1'} })
+        this.$http.put(url, { opportunity: { status: '1'} });
       },
-        updateOpportunity(){
+      updateOpportunity(){
         if (this.allowUpdate) {
           let url = '/api/v2/opportunity/' + this.item.id;
           this.$http.put(url, { opportunity: this.item });
@@ -139,54 +139,54 @@
       },
 
 
-    subscribe() {
+      subscribe() {
 
         this.opportunity_channel.on('load', payload => {
-           if (payload.activities) {
-             this.$data.activities = payload.activities;
-           }
-           if (payload.board) {
-             this.$data.board = payload.board;
-             this.$data.board_columns = payload.board_columns;
-           }
+          if (payload.activities) {
+            this.$data.activities = payload.activities;
+          }
+          if (payload.board) {
+            this.$data.board = payload.board;
+            this.$data.board_columns = payload.board_columns;
+          }
 
-           if (payload.events) {
+          if (payload.events) {
             this.$data.events = payload.events;
-           }
+          }
 
-            if (payload.opportunity) {
-                this.$data.item = payload.opportunity;
-            }
-            if (payload.opportunity_contacts) {
-                this.$data.opportunity_contacts = payload.opportunity_contacts
-                }
-            this.allowUpdate = true
+          if (payload.opportunity) {
+            this.$data.item = payload.opportunity;
+          }
+          if (payload.opportunity_contacts) {
+            this.$data.opportunity_contacts = payload.opportunity_contacts;
+          }
+          this.allowUpdate = true;
         });
 
         this.opportunity_channel.on('opportunity:closed', payload => {
-            if (payload.opportunity) {
-                let item_index = this.opportunities.findIndex(function(item){
-                    return item.id === payload.opportunity.id;
-                });
-                this.$data.items.splice(item_index,1);
-                if (this.$data.items.length == 0) {
-                    this.clearOpportunity()
-                } else if (this.$data.item.id == payload.opportunity.id) {
-                    this.setOpportunity(this.$data.items[0])
-                }
+          if (payload.opportunity) {
+            let item_index = this.opportunities.findIndex(function(item){
+              return item.id === payload.opportunity.id;
+            });
+            this.$data.items.splice(item_index,1);
+            if (this.$data.items.length === 0) {
+              this.clearOpportunity();
+            } else if (this.$data.item.id === payload.opportunity.id) {
+              this.setOpportunity(this.$data.items[0]);
+            }
 
           }
-        })
+        });
         this.opportunity_channel.on('opportunity:updated', payload => {
           if (payload.opportunity) {
-              this.$data.item = payload.opportunity
-              this.$data.opportunity_contacts = payload.opportunity_contacts;
+            this.$data.item = payload.opportunity;
+            this.$data.opportunity_contacts = payload.opportunity_contacts;
 
-              let item_index = this.opportunities.findIndex(function(item){
-                return item.id === payload.opportunity.id;
-              });
+            let item_index = this.opportunities.findIndex(function(item){
+              return item.id === payload.opportunity.id;
+            });
 
-              this.$data.items.splice(item_index, 1, payload.opportunity);
+            this.$data.items.splice(item_index, 1, payload.opportunity);
           }
           if (payload.board) {
             this.$data.board = payload.board;
@@ -218,52 +218,52 @@
         });
 
 
-    },
-    leaveChannel() {
-      if (this.opportunity_channel) { this.opportunity_channel.leave() }
-    },
-    initChannel(){
-      if (this.opportunity_channel) {
-        this.opportunity_channel.leave().receive("ok", () => {
-          this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {})
-          this.subscribe();
-          this.opportunity_channel.join()
+      },
+      leaveChannel() {
+        if (this.opportunity_channel) { this.opportunity_channel.leave(); }
+      },
+      initChannel(){
+        if (this.opportunity_channel) {
+          this.opportunity_channel.leave().receive('ok', () => {
+            this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {});
+            this.subscribe();
+            this.opportunity_channel.join()
               .receive('ok', resp => {
                 this.opportunity_channel.push('load', {contact_id: this.contact.id});
               }).receive('error', resp => {  });
 
 
-        })
-      } else {
-        this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {});
-        this.subscribe();
-        this.opportunity_channel.join()
+          });
+        } else {
+          this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {});
+          this.subscribe();
+          this.opportunity_channel.join()
             .receive('ok', resp => {
               this.opportunity_channel.push('load', { contact_id: this.contact.id });
             }).receive('error', resp => {  });
+        }
+      },
+
+      clearOpportunity() {
+        this.allowUpdate = false;
+        this.$data.item = null;
+        this.leaveChannel();
+      },
+      setOpportunity(opp) {
+        this.allowUpdate = false;
+        this.$data.item = opp;
+        this.initChannel();
       }
     },
-
-    clearOpportunity() {
-      this.allowUpdate = false
-      this.$data.item = null
-      this.leaveChannel()
-    },
-    setOpportunity(opp) {
-      this.allowUpdate = false
-      this.$data.item = opp
-      this.initChannel();
-    }
-    },
     watch: {
-        opportunity() {
-            this.allowUpdate = false
-            this.$data.item = this.opportunity
+      opportunity() {
+        this.allowUpdate = false;
+        this.$data.item = this.opportunity;
 
-            if (this.opportunity){
-              this.initChannel();
-            } else { this.leaveChannel() }
-        }
+        if (this.opportunity){
+          this.initChannel();
+        } else { this.leaveChannel(); }
+      }
     },
     components: {
       'inline-edit': InlineEdit,
@@ -276,8 +276,8 @@
     },
 
 
-      mounted() {
-       this.initChannel()
+    mounted() {
+      this.initChannel();
     }
 
   };

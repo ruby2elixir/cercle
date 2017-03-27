@@ -105,7 +105,7 @@ export default {
       this.openTagModal = true;
     },
     getTags() {
-        this.$http.get('/api/v2/tag').then(resp => {
+      this.$http.get('/api/v2/tag').then(resp => {
         this.availableTags = resp.data.data;
       });
     },

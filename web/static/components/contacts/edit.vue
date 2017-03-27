@@ -113,11 +113,11 @@ export default {
 
   },
   methods: {
-      changeOpportunity(opp) {
-          this.opportunity = opp
+    changeOpportunity(opp) {
+      this.opportunity = opp;
           //this.initOpportunityChannel(opp)
 
-      return false
+      return false;
     },
     addNewCard() {
       var url = '/api/v2/opportunity/';
@@ -157,10 +157,10 @@ export default {
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
 
-        this.channel.on('opportunity:created', payload => {
+      this.channel.on('opportunity:created', payload => {
         if (payload.opportunity) {
-            this.opportunities.push(payload.opportunity);
-            this.opportunity || (this.opportunity = payload.opportunity)
+          this.opportunities.push(payload.opportunity);
+          this.opportunity || (this.opportunity = payload.opportunity);
         }
       });
 
@@ -171,8 +171,8 @@ export default {
         }
 
         if (payload.opportunities) {
-            this.opportunities = payload.opportunities;
-            this.opportunity = payload.opportunities[0];
+          this.opportunities = payload.opportunities;
+          this.opportunity = payload.opportunities[0];
         }
         if (payload.company) {
           this.company = payload.company;

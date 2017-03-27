@@ -74,10 +74,10 @@
 
     watch: {
       activities: function(){
-        this.$data.tasks = this.activities
+        this.$data.tasks = this.activities;
       }
     },
-      methods: {
+    methods: {
       addTask() {
         var url = '/api/v2/activity/';
         this.$http.post(url, {
