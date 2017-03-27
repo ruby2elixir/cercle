@@ -18,6 +18,7 @@
              v-on:change="updateTask(task)"
              v-model="task.due_date"
              type="datetime"
+             :editable="false"
              placeholder="Select date and time">
             </el-date-picker>
           </div>
