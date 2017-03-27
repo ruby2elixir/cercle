@@ -1,13 +1,11 @@
 <template>
   <div class="col-md-12">
-
-    <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;padding:20px;margin-bottom:10px;" v-if="item">
+    <div class="post" style="background-color:white;padding:20px;margin-bottom:10px;" v-if="item">
     <div class="pull-right">
       <button type="button" class="btn btn-primary pull-right" v-on:click="$emit('browse')"  style="margin-top:10px;margin-right:10px;width:110px;" >Browse</button>
       <br />
       <button type="button" class="btn btn-default " v-on:click="archiveOpportunity" style="margin-top:10px;margin-right:10px;width:110px;" >ARCHIVE</button>
     </div>
-
       <div style="" id="change_status">
         <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
           <span data-placeholder="Project Name" style="color:rgb(102,102,102);">
@@ -29,7 +27,6 @@
         </div>
         Contacts Involved:
         <a v-for="o_contact in opportunity_contacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
-
         <modal title="What is his name?" large :show.sync="openContactModal">
             <div slot="modal-body" class="modal-body">
             <input class="form-control" v-model="NewContactName" type="text" placeholder="Name of the Contact">

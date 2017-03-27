@@ -5,7 +5,7 @@
       <section class="content" style="margin-top:20px;">
         <div class="row">
           <div class="col-md-12">
-            <table style="width:100%;background-color:white;margin-bottom:40px;">
+            <table style="width:100%;background-color:white;">
               <tr>
                 <td style="width:50%;padding:20px;vertical-align: top;">
                   <profile-edit
@@ -25,12 +25,8 @@
                 </td>
               </tr>
             </table>
-
-
-
           </div>
         </div>
-
         <div class="row" v-if="browseOpportunities">
           <div class="col-md-12">
           <div style="padding:15px;background-color:#EDF0F5;">
