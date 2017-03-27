@@ -1,9 +1,19 @@
 <template>
-  <div class="">
-    <dropdown>
-      <li><a href="#" v-on:click="removeOrganization">Remove Organization</a></li>
-      <slot name="menu"></slot>
-    </dropdown>
+  <div>
+  <div class="box-tools pull-right dropdown ">
+    <button type="button" class="btn btn-box-tool"  v-on:click="menuModal = !menuModal"><i class="fa fa-fw fa-angle-down"></i></button>
+    <modal title="What do you want to do?"  :show.sync="menuModal">
+      <div slot="modal-body" class="modal-body">
+        <button type="button" class="btn btn-block btn-default" v-on:click="removeOrganization">Remove this company</button>
+        <br />
+        <button type="button" class="btn btn-block btn-default">Display Archived Boards</button>
+        <br />
+        <button type="button" class="btn btn-block btn-default">Delete this Contact</button>
+      </div>
+
+      <div slot="modal-footer" class="modal-footer"></div>
+    </modal>
+  </div>
 
     <div class="" style="" v-if="!organization">
       <modal title="Where is the contact working currently?" large :show.sync="openModal">
@@ -56,6 +66,7 @@
     },
     data(){
       return {
+        menuModal: false,
         openModal: false,
         chooseOrganization: null,
         organizations: [],
@@ -64,14 +75,14 @@
     },
     methods: {
       saveOrganization(){
-        var url = '/api/v2/contact/' + this.contact.id;
+        let url = '/api/v2/contact/' + this.contact.id;
         this.$http.put(url, { contact: { organization_id: this.chooseOrganization.id }});
         this.openModal = false;
       },
 
       addOrganization(item) {
-        var vm = this;
-        var url = '/api/v2/organizations';
+        let vm = this;
+        let url = '/api/v2/organizations';
         this.$http.post(url, { organization: { name: item, company_id: vm.company.id }}).then(resp => {
           this.getOrganizations(function(r){
             vm.organizations = r.data;
@@ -82,7 +93,8 @@
         return this.chooseOrganization;
       },
       removeOrganization() {
-        var url = '/api/v2/contact/' + this.contact.id;
+        this.menuModal = false;
+        let url = '/api/v2/contact/' + this.contact.id;
         this.$http.put(url, { contact: {organization_id: '' }});
       },
       buildOrganization(event) {
@@ -98,8 +110,8 @@
         });
       },
       update(){
-        var vm = this;
-        var url = '/api/v2/organizations/' + this.organization.id;
+        let vm = this;
+        let url = '/api/v2/organizations/' + this.organization.id;
         this.$http.put(url, {
           contact_id: this.contact.id,
           organization: this.organization

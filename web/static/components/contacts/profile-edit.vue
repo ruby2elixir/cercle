@@ -27,6 +27,7 @@
                <i class="fa fa-fw fa-plus"></i>Add
              </button>
           </div>
+
           <modal title="Tags" large :show.sync="openTagModal">
             <div slot="modal-body" class="modal-body">
             <v-select
@@ -58,7 +59,6 @@ import {Socket, Presence} from 'phoenix';
 
 import InlineEdit from '../inline-common-edit.vue';
 import InlineTextEdit from '../inline-textedit.vue';
-import DropDown from './dropdown.vue';
 
 export default {
   props: [
@@ -129,7 +129,6 @@ export default {
   components: {
     'inline-edit': InlineEdit,
     'inline-text-edit': InlineTextEdit,
-    'dropdown': DropDown,
     'v-select': vSelect.VueSelect,
     'modal': VueStrap.modal
 
