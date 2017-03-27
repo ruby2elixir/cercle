@@ -88,7 +88,11 @@
     <div class="col-md-12">
       <div class="post" style="background-color:#EDF0F5;padding:20px;margin-bottom:10px;">
         
-          <a href="/contact/<%=@contact.id%>"  class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" >See other cards</a>
+          <div class="pull-right">
+          <a href="/contact/<%=@contact.id%>"  class="btn btn-primary " style="margin-top:10px;margin-right:10px;width:110px;" >Browse</a>
+          <Br />
+          <a href="/contact/<%=@contact.id%>"  class="btn btn-default" style="margin-top:10px;margin-right:10px;width:110px;" >Archive</a>
+          </div>
         
         <div style="" id="change_status">
           <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
