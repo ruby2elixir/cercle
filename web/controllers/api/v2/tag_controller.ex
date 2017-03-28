@@ -16,7 +16,7 @@ defmodule CercleApi.APIV2.TagController do
 
     if q do
       query = from tag in query,
-      where: tag.company_id == ^company_id,
+        where: tag.company_id == ^company_id,
         where: like(tag.name, ^"#{q}%")
     end
 
@@ -32,5 +32,4 @@ defmodule CercleApi.APIV2.TagController do
       Repo.insert!(%Tag{name: tag_name, company_id: company_id})
     render(conn, "show.json", tag: tag)
   end
-
 end

@@ -5,6 +5,8 @@ defmodule CercleApi.Company do
   use CercleApi.Web, :model
   use Arc.Ecto.Model
 
+  @derive {Poison.Encoder, only: [:id, :title, :logo_image, :data_fields]}
+
   schema "companies" do
     field :title, :string
     field :logo_image, CercleApi.CompanyLogoImage.Type
@@ -13,7 +15,7 @@ defmodule CercleApi.Company do
     has_many :organizations, CercleApi.Organization
     has_many :opportunities, CercleApi.Opportunity
     has_many :boards, CercleApi.Board
-    field :data_fields, :map 
+    field :data_fields, :map
     timestamps
   end
 
@@ -34,5 +36,5 @@ defmodule CercleApi.Company do
     |> cast(params, @required_fields, @optional_fields)
     |> cast_attachments(params, @required_file_fields, @optional_file_fields)
   end
-  
+
 end

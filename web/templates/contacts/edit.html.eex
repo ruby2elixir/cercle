@@ -1,0 +1,3 @@
+<div id="contact-app-edit">
+  <contact-app-edit contact_id="<%= Poison.encode!(@contact.id) %>" />
+</div>

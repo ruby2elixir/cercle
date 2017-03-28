@@ -1,6 +1,11 @@
 defmodule CercleApi.TimelineEvent do
   use CercleApi.Web, :model
 
+  @derive {Poison.Encoder, only: [
+              :id, :event_name, :content, :metadata,
+              :company_id, :contact_id, :user_id, :opportunity_id, :inserted_at,
+              :user
+            ]}
   schema "timeline_events" do
     belongs_to :opportunity, CercleApi.Opportunity
     belongs_to :contact, CercleApi.Contact

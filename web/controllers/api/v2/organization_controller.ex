@@ -1,8 +1,6 @@
 defmodule CercleApi.APIV2.OrganizationController do
   use CercleApi.Web, :controller
-
-  alias CercleApi.Organization
-  alias CercleApi.Company
+  alias CercleApi.{Organization, Contact, Company}
 
   plug Guardian.Plug.EnsureAuthenticated
 
@@ -16,7 +14,7 @@ defmodule CercleApi.APIV2.OrganizationController do
   def create(conn, %{"organization" => organization_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
-    
+
     changeset = company
       |> Ecto.build_assoc(:organizations)
       |> Organization.changeset(organization_params)
@@ -39,8 +37,10 @@ defmodule CercleApi.APIV2.OrganizationController do
     render(conn, "show.json", organization: organization)
   end
 
-  def update(conn, %{"id" => id, "organization" => organization_params}) do
+  def update(conn, %{"id" => id, "organization" => organization_params} = params) do
     organization = Repo.get!(Organization, id)
+    contact_id = params |> Dict.get("contact_id")
+
     if organization_params["data"] do
       new_data = Map.merge(organization.data , organization_params["data"])
       organization_params = %{organization_params | "data" => new_data}
@@ -48,6 +48,16 @@ defmodule CercleApi.APIV2.OrganizationController do
     changeset = Organization.changeset(organization, organization_params)
     case Repo.update(changeset) do
       {:ok, organization} ->
+        if contact_id do
+          contact = Contact
+          |> Contact.preload_data
+          |> Repo.get(contact_id)
+          channel = "contacts:"  <> to_string(contact.id)
+          CercleApi.Endpoint.broadcast!(channel, "state", %{
+                contact: contact,
+                organization: contact.organization
+                                        })
+        end
         render(conn, "show.json", organization: organization)
       {:error, changeset} ->
         conn

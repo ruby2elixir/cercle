@@ -7,7 +7,7 @@ defmodule CercleApi.BoardController do
   alias CercleApi.Opportunity
   alias CercleApi.TimelineEvent
   alias CercleApi.Board
-  
+
   alias CercleApi.Company
 
   require Logger
@@ -19,7 +19,7 @@ defmodule CercleApi.BoardController do
       where: p.company_id == ^company_id,
       order_by: [desc: p.updated_at]
 
-    boards = Repo.all(query) 
+    boards = Repo.all(query)
 
     conn
       |> put_layout("adminlte.html")
@@ -37,7 +37,7 @@ defmodule CercleApi.BoardController do
   end
 
   def show(conn, %{"id" => id}) do
-    
+
     board = Repo.get!(CercleApi.Board, id)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
     board_id = board.id
     company_id = conn.assigns[:current_user].company_id
@@ -63,7 +63,7 @@ defmodule CercleApi.BoardController do
   end
 
   def new(conn, _params) do
-    
+
     company_id = conn.assigns[:current_user].company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 

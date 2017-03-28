@@ -12,6 +12,11 @@ defmodule CercleApi.Router do
     plug BasicAuth, use_config: {:cercleApi, :basic_auth}
   end
 
+  pipeline :browser_json do
+    plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
   pipeline :api_auth do
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
@@ -66,7 +71,7 @@ defmodule CercleApi.Router do
     get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
     get "/contact/:id/opportunity/:opportunity_id", ContactController, :show
-    
+
     resources "/board", BoardController
     get "/activity", ActivityController, :index
     get "/import", ContactController, :import
@@ -83,12 +88,15 @@ defmodule CercleApi.Router do
 
     get "/api/v2/timeline_events", APIV2.TimelineEventController, :index
     post "/api/v2/timeline_events", APIV2.TimelineEventController, :create
-    
+
     post "/api/v2/register", APIV2.UserController, :create
     post "/api/v2/login", APIV2.SessionController, :create
 
     resources "/api/v2/contact", APIV2.ContactController
     put "/api/v2/contact/:id/update_tags", APIV2.ContactController, :update_tags
+    put "/api/v2/contact/:id/utags", APIV2.ContactController, :utags
+    resources "/api/v2/tag", APIV2.TagController, only: [:index, :create]
+
 
     resources "/api/v2/companies", APIV2.CompanyController
     resources "/api/v2/organizations", APIV2.OrganizationController
@@ -97,14 +105,16 @@ defmodule CercleApi.Router do
     resources "/api/v2/tag", APIV2.TagController
     resources "/api/v2/board", APIV2.BoardController
     resources "/api/v2/board_column", APIV2.BoardColumnController
-    
+
+
     post "/api/v2/webhook", APIV2.WebhookController, :create
     post "/api/v2/bulk_contact_create", APIV2.BulkController, :bulk_contact_create
     post "/api/v2/bulk_tag_or_untag_contacts", APIV2.BulkController, :bulk_tag_or_untag_contacts
 
+    get "/api/v2/user/organizations", APIV2.UserController, :organizations
   end
 
-  scope "/admin" , CercleApi.Admin,  as: :admin do
+  scope "/admin" , CercleApi.Admin, as: :admin do
     pipe_through :browser # Use the default browser stack
     pipe_through :basic_auth
 

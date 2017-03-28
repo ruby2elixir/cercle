@@ -10,8 +10,10 @@
 // Import dependencies
 //
 // If you no longer want to use a dependency, remember
-// to also remove its path from 'config.paths.watched'.
-import 'phoenix_html';
+// to also remove its path from "config.paths.watched".
+import "phoenix_html"
+import "jquery-ui"
+import moment from 'moment';
 
 // Import local files
 //
@@ -24,13 +26,12 @@ import fastclick from './adminlte/plugins/fastclick/fastclick';
 import adminlte from './adminlte/dist/js/app.min';
 
 import socket from './socket';
-import selectize from './selectize';
+
 import { Activity } from './activity';
 import inlineEdit from './inline_edit';
 import boardAdd from './board_add';
 import boardColumnAdd from './board_column_add';
 import contactAdd from './contact_add';
-import { ContactEdit } from './contact_edit';
 import contactLive from './contact_live';
 import { Pipeline } from './opportunity_pipeline';
 import { BoardColumnPipeline } from './board_column_pipeline';
@@ -45,11 +46,35 @@ export var App = {
     Pipeline.start();
     BoardColumnPipeline.start();
   },
-  contactEditInit: function(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken){
-    ContactEdit.start(userId, companyId, contactId, organizationId, opportunityId, opportunityContactIds, tagIds, jwtToken);
-  },
   contactSocketInit: function(contactId){
     contactLive.init(socket, contactId );
   }
 };
 
+import elementLang from 'element-ui/lib/locale/lang/en';
+import elementLocale from 'element-ui/lib/locale';
+elementLocale.use(elementLang);
+
+Vue.use(require('vue-moment-jalaali'));
+Vue.use(VueResource);
+Vue.use(VueResourceCaseConverter);
+
+import ContactAppEdit from "../components/contacts/edit.vue";
+
+
+if ($("#contact-app-edit").length > 0){
+    new Vue({
+        el: "#contact-app-edit",
+        components: {
+            'contact-app-edit' : ContactAppEdit
+        }
+    });
+};
+
+
+if (
+    ($("#opportunity_pipeline").length > 0) ||
+        ($("[data-pipeline_init]").length > 0)
+){
+  App.pipelineInit();
+}

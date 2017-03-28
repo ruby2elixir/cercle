@@ -7,6 +7,10 @@ defmodule CercleApi.User do
   use CercleApi.Web, :model
   use Arc.Ecto.Model
 
+  @derive {Poison.Encoder, only: [
+              :id, :user_name, :profile_image
+            ]}
+
   schema "users" do
     field :user_name, :string #is full rname
     field :password, :string, virtual: true
@@ -69,5 +73,14 @@ defmodule CercleApi.User do
       _ ->
         current_changeset
     end
+  end
+end
+
+defimpl Poison.Encoder, for: CercleApi.User do
+  def encode(model, options) do
+    model
+    |> Map.take([:id, :user_name, :profile_image])
+    |> Map.put(:profile_image_url, CercleApi.UserProfileImage.url({model.profile_image,model}, :small))
+    |> Poison.Encoder.encode(options)
   end
 end

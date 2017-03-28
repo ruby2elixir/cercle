@@ -1,16 +1,23 @@
 defmodule CercleApi.Opportunity do
   use CercleApi.Web, :model
-  
+
+  @derive {Poison.Encoder, only: [
+              :id, :name, :description, :status, :contact_ids, :user_id,
+              :board_id, :board_column_id
+            ]}
+
   schema "opportunities" do
     field :name, :string
     field :description, :string
-    field :status, :integer  , default: 0 #### 0 OPEN, 1 CLOSED
+    field :status, :integer, default: 0 #### 0 OPEN, 1 CLOSED
     belongs_to :main_contact, CercleApi.Contact
     field :contact_ids, {:array, :integer}
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
     belongs_to :board, CercleApi.Board
     belongs_to :board_column, CercleApi.BoardColumn
+    has_many :activities, CercleApi.Activity
+    has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :opportunity_id
     timestamps
   end
 
@@ -27,5 +34,11 @@ defmodule CercleApi.Opportunity do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-  
+
+  def contacts(opportunity) do
+    opportunity_contacts = from contact in CercleApi.Contact,
+      where: contact.id in ^opportunity.contact_ids
+    CercleApi.Repo.all(opportunity_contacts)
+  end
+
 end

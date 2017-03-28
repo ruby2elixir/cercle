@@ -14,4 +14,5 @@ defmodule CercleApi.APIV2.ContactView do
       company_id: contact.company_id,
       data: contact.data}
   end
+
 end

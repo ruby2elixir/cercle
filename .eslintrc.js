@@ -1,5 +1,6 @@
-/*eslint-env node*/
+  /*eslint-env node*/
 module.exports = {
+  'plugins': ['vue'],
   'parserOptions': {
     'ecmaVersion': 6,
     'sourceType': 'module'
@@ -10,7 +11,13 @@ module.exports = {
   },
   'globals': {
     '$': true,
-    'exports': true
+    'exports': true,
+      'Vue': true,
+      'VueStrap': true,
+      'vSelect': true,
+      'VueResource': true,
+      'Moment': true,
+      'Element': true
   },
   'ecmaFeatures': {
     'modules': true
