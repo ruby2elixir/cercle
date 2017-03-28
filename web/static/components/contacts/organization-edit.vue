@@ -76,14 +76,14 @@
     methods: {
       saveOrganization(){
         let url = '/api/v2/contact/' + this.contact.id;
-        this.$http.put(url, { contact: { organization_id: this.chooseOrganization.id }});
+        this.$http.put(url, { contact: { organizationId: this.chooseOrganization.id }});
         this.openModal = false;
       },
 
       addOrganization(item) {
         let vm = this;
         let url = '/api/v2/organizations';
-        this.$http.post(url, { organization: { name: item, company_id: vm.company.id }}).then(resp => {
+        this.$http.post(url, { organization: { name: item, companyId: vm.company.id }}).then(resp => {
           this.getOrganizations(function(r){
             vm.organizations = r.data;
             vm.chooseOrganization = resp.data.data;
@@ -95,7 +95,7 @@
       removeOrganization() {
         this.menuModal = false;
         let url = '/api/v2/contact/' + this.contact.id;
-        this.$http.put(url, { contact: {organization_id: '' }});
+        this.$http.put(url, { contact: {organizationId: '' }});
       },
       buildOrganization(event) {
         event.preventDefault();
@@ -113,7 +113,7 @@
         let vm = this;
         let url = '/api/v2/organizations/' + this.organization.id;
         this.$http.put(url, {
-          contact_id: this.contact.id,
+          contactId: this.contact.id,
           organization: this.organization
         });
       }

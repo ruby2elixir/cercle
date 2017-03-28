@@ -33,12 +33,12 @@
               <div v-for="opp in opportunities" v-on:click="changeOpportunity(opp)" class="opportunity-tags">
                 {{opp.name}}
               </div>
-              <button v-show="!ShowAddCard" v-on:click="ShowAddCard=true" type="button" class="btn btn-link show-add-card-form">
+              <button v-show="!showAddCard" v-on:click="showAddCard=true" type="button" class="btn btn-link show-add-card-form">
                <i class="fa fa-fw fa-plus"></i>Create a card
               </button>
-              <div v-show="ShowAddCard">
+              <div v-show="showAddCard">
                 Create a card into the board:
-                <select v-model="NewBoard">
+                <select v-model="newBoard">
                   <option v-for="board in boards" :value="board">{{board.name}}</option>
                 </select>
                 &nbsp;&nbsp;
@@ -82,7 +82,7 @@ export default {
   props: ['contact_id', 'current_user_id', 'time_zone', 'user_image'],
   data() {
     return {
-      ShowAddCard: false,
+      showAddCard: false,
       socket: null,
       channel: null,
       contact: { },
@@ -97,7 +97,7 @@ export default {
       board: null,
       boards: [],
       boardColumns: [],
-      NewBoard: null,
+      newBoard: null,
       browseOpportunities: true
 
     };
@@ -123,11 +123,11 @@ export default {
           contactIds: [this.contact.id],
           companyId: this.company.id,
           name: '',
-          boardId: this.NewBoard.id,
-          boardColumnId: this.NewBoard.board_columns[0].id
+          boardId: this.newBoard.id,
+          boardColumnId: this.newBoard.board_columns[0].id
         } });
-      this.NewBoard = null;
-      this.ShowAddCard = false;
+      this.newBoard = null;
+      this.showAddCard = false;
     },
 
     deleteContact: function(){

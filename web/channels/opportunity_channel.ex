@@ -8,16 +8,10 @@ defmodule CercleApi.OpportunityChannel do
     {:ok, socket}
   end
 
-  def handle_in("load", %{"contact_id" => contact_id }, socket) do
+  def handle_in("load", _message, socket) do
     opportunity = Opportunity
     |> Repo.get(socket.assigns[:opportunity_id])
     |> Repo.preload([activities: [:user], timeline_event: [:user]])
-
-    contact = Contact
-    |> Contact.preload_data
-    |> Repo.get(contact_id)
-
-    Logger.debug "> LOAD"
 
     data = %{
       opportunity: opportunity,

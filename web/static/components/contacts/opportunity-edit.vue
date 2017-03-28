@@ -233,7 +233,7 @@
             this.subscribe();
             this.opportunityChannel.join()
               .receive('ok', resp => {
-                this.opportunityChannel.push('load', {contact_id: this.contact.id});
+                this.opportunityChannel.push('load');
               }).receive('error', resp => {  });
 
 
@@ -243,7 +243,7 @@
           this.subscribe();
           this.opportunityChannel.join()
             .receive('ok', resp => {
-              this.opportunityChannel.push('load', { contact_id: this.contact.id });
+              this.opportunityChannel.push('load');
             }).receive('error', resp => {  });
         }
       },
