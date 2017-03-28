@@ -2,9 +2,9 @@
   <div class="col-md-12 opportunity-block">
     <div class="post" v-if="item">
     <div class="pull-right">
-      <button type="button" class="btn btn-primary pull-right" v-on:click="$emit('browse')">BROWSE</button>
+      <button type="button" class="btn btn-primary pull-right browse" v-on:click="$emit('browse')">BROWSE</button>
       <br />
-      <button type="button" class="btn btn-default " v-on:click="archiveOpportunity">ARCHIVE</button>
+      <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
     </div>
       <div style="" id="change_status">
         <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
