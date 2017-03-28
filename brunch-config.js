@@ -61,6 +61,9 @@ exports.config = {
         vue: {
             extractCSS: true,
             out: 'priv/static/css/components.css'
+        },
+        sass: {
+            mode: "native" // This is the important part!
         }
     },
 
