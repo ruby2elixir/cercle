@@ -22,11 +22,11 @@
           &nbsp;&nbsp;
           Status:
           <select v-model="item.board_column_id" v-on:change="updateOpportunity">
-             <option v-for="board_column in board_columns" :value="board_column.id">{{board_column.name}}</option>
+             <option v-for="board_column in boardColumns" :value="board_column.id">{{board_column.name}}</option>
           </select>
         </div>
         Contacts Involved:
-        <a v-for="o_contact in opportunity_contacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
+        <a v-for="o_contact in opportunityContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
         <modal title="What is his name?" large :show.sync="openContactModal">
             <div slot="modal-body" class="modal-body">
             <input class="form-control" v-model="NewContactName" type="text" placeholder="Name of the Contact">
@@ -93,13 +93,13 @@
         allowUpdate: true,
         item: this.opportunity,
         items: this.opportunities,
-        contacts: this.opportunity_contacts,
-        board_columns: [],
+        contacts: this.opportunityContacts,
+        boardColumns: [],
         board: {},
-        opportunity_channel: null,
+        opportunityChannel: null,
         activities: [],
         events: [],
-        opportunity_contacts: []
+        opportunityContacts: []
 
       };
     },
@@ -108,7 +108,7 @@
         let url = '/api/v2/contact';
         let data = {
           name: this.NewContactName,
-          user_id: this.opportunity.user_id
+          userId: this.opportunity.user_id
         };
         if (this.company) {
           data['company_id'] = this.company.id;
@@ -117,13 +117,13 @@
           data['organization_id'] = this.organization.id;
         }
         this.$http.post(url, { contact: data }).then(resp => {
-          let op_url = '/api/v2/opportunity/'+ this.opportunity.id;
-          let contact_ids = [];
-          this.opportunity_contacts.forEach(function(item) {
-            contact_ids.push(item.id);
+          let urlOpp = '/api/v2/opportunity/'+ this.opportunity.id;
+          let contactIds = [];
+          this.opportunityContacts.forEach(function(item) {
+            contactIds.push(item.id);
           });
-          contact_ids.push(resp.data.data.id);
-          this.$http.put(op_url,{opportunity:{ contact_ids: contact_ids}});
+          contactIds.push(resp.data.data.id);
+          this.$http.put(urlOpp,{opportunity:{ contactIds: contactIds}});
         });
 
         this.NewContactName = '';
@@ -144,13 +144,13 @@
 
       subscribe() {
 
-        this.opportunity_channel.on('load', payload => {
+        this.opportunityChannel.on('load', payload => {
           if (payload.activities) {
             this.$data.activities = payload.activities;
           }
           if (payload.board) {
             this.$data.board = payload.board;
-            this.$data.board_columns = payload.board_columns;
+            this.$data.boardColumns = payload.board_columns;
           }
 
           if (payload.events) {
@@ -161,17 +161,17 @@
             this.$data.item = payload.opportunity;
           }
           if (payload.opportunity_contacts) {
-            this.$data.opportunity_contacts = payload.opportunity_contacts;
+            this.$data.opportunityContacts = payload.opportunity_contacts;
           }
           this.allowUpdate = true;
         });
 
-        this.opportunity_channel.on('opportunity:closed', payload => {
+        this.opportunityChannel.on('opportunity:closed', payload => {
           if (payload.opportunity) {
-            let item_index = this.opportunities.findIndex(function(item){
+            let itemIndex = this.opportunities.findIndex(function(item){
               return item.id === payload.opportunity.id;
             });
-            this.$data.items.splice(item_index,1);
+            this.$data.items.splice(itemIndex,1);
 
             if (this.$data.items.length === 0) {
               this.clearOpportunity();
@@ -181,69 +181,69 @@
             this.$emit('browse');
           }
         });
-        this.opportunity_channel.on('opportunity:updated', payload => {
+        this.opportunityChannel.on('opportunity:updated', payload => {
           if (payload.opportunity) {
             this.$data.item = payload.opportunity;
-            this.$data.opportunity_contacts = payload.opportunity_contacts;
+            this.$data.opportunityContacts = payload.opportunity_contacts;
 
-            let item_index = this.opportunities.findIndex(function(item){
+            let itemIndex = this.opportunities.findIndex(function(item){
               return item.id === payload.opportunity.id;
             });
 
-            this.$data.items.splice(item_index, 1, payload.opportunity);
+            this.$data.items.splice(itemIndex, 1, payload.opportunity);
           }
           if (payload.board) {
             this.$data.board = payload.board;
-            this.$data.board_columns = payload.board_columns;
+            this.$data.boardColumns = payload.board_columns;
           }
         });
 
 
-        this.opportunity_channel.on('activity:created', payload => {
+        this.opportunityChannel.on('activity:created', payload => {
           this.$data.activities.unshift(payload.activity);
         });
 
-        this.opportunity_channel.on('activity:deleted', payload => {
-          let item_index = this.$data.activities.findIndex(function(item){
+        this.opportunityChannel.on('activity:deleted', payload => {
+          let itemIndex = this.$data.activities.findIndex(function(item){
             return item.id === payload.activity_id;
           });
-          this.$data.activities.splice(item_index, 1);
+          this.$data.activities.splice(itemIndex, 1);
         });
 
-        this.opportunity_channel.on('activity:updated', payload => {
-          let item_index = this.$data.activities.findIndex(function(item){
+        this.opportunityChannel.on('activity:updated', payload => {
+          let itemIndex = this.$data.activities.findIndex(function(item){
             return item.id === payload.activity.id;
           });
-          this.$data.activities.splice(item_index, 1, payload.activity);
+          this.$data.activities.splice(itemIndex, 1, payload.activity);
         });
 
-        this.opportunity_channel.on('timeline_event:created', payload => {
+        this.opportunityChannel.on('timeline_event:created', payload => {
           this.$data.events.unshift(payload.event);
         });
 
 
       },
       leaveChannel() {
-        if (this.opportunity_channel) { this.opportunity_channel.leave(); }
+        if (this.opportunityChannel) { this.opportunityChannel.leave(); }
       },
       initChannel(){
-        if (this.opportunity_channel) {
-          this.opportunity_channel.leave().receive('ok', () => {
-            this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {});
+        if (this.opportunityChannel) {
+          this.opportunityChannel.leave().receive('ok', () => {
+            this.opportunityChannel = this.socket.channel('opportunities:' + this.opportunity.id, {});
             this.subscribe();
-            this.opportunity_channel.join()
+            this.opportunityChannel.join()
               .receive('ok', resp => {
-                this.opportunity_channel.push('load', {contact_id: this.contact.id});
+                this.opportunityChannel.push('load', {contact_id: this.contact.id});
               }).receive('error', resp => {  });
 
 
           });
         } else {
-          this.opportunity_channel = this.socket.channel('opportunities:' + this.opportunity.id, {});
+          this.opportunityChannel = this.socket.channel('opportunities:' + this.opportunity.id, {});
           this.subscribe();
-          this.opportunity_channel.join()
+          this.opportunityChannel.join()
             .receive('ok', resp => {
-              this.opportunity_channel.push('load', { contact_id: this.contact.id });
+              this.opportunityChannel.push('load', { contact_id: this.contact.id });
             }).receive('error', resp => {  });
         }
       },

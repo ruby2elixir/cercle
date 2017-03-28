@@ -57,7 +57,7 @@
             :organization="organization"
             :contact="contact"
             :company="company"
-            :company_users="company_users"
+            :company_users="companyUsers"
             :opportunity="opportunity"
             :opportunities="opportunities"
             :user_image="user_image"
@@ -85,10 +85,9 @@ export default {
       ShowAddCard: false,
       socket: null,
       channel: null,
-      opportunity_channel: null,
       contact: { },
       company: {},
-      company_users: [],
+      companyUsers: [],
       organization: null,
       opportunity: null,
       opportunities: [],
@@ -97,8 +96,7 @@ export default {
       events: [],
       board: null,
       boards: [],
-      board_columns: [],
-      opportunity_contacts: [],
+      boardColumns: [],
       NewBoard: null,
       browseOpportunities: true
 
@@ -121,12 +119,12 @@ export default {
       var url = '/api/v2/opportunity/';
       this.$http.post(url,
         { opportunity: {
-          main_contact_id: this.contact.id,
-          contact_ids: [this.contact.id],
-          company_id: this.company.id,
+          mainContactId: this.contact.id,
+          contactIds: [this.contact.id],
+          companyId: this.company.id,
           name: '',
-          board_id: this.NewBoard.id,
-          board_column_id: this.NewBoard.board_columns[0].id
+          boardId: this.NewBoard.id,
+          boardColumnId: this.NewBoard.board_columns[0].id
         } });
       this.NewBoard = null;
       this.ShowAddCard = false;
@@ -173,7 +171,7 @@ export default {
         }
         if (payload.company) {
           this.company = payload.company;
-          this.company_users = payload.company_users;
+          this.companyUsers = payload.company_users;
         }
         if (payload.tags) {
           this.tags = payload.tags;

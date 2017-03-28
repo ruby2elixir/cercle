@@ -83,13 +83,13 @@
         var url = '/api/v2/activity/';
         this.$http.post(url, {
           activity: {
-            contact_id: this.contact.id,
-            opportunity_id: this.opportunity.id,
-            user_id: this.currentUserId,
-            due_date: new Date().toISOString(),
-            company_id: this.company.id,
+            contactId: this.contact.id,
+            opportunityId: this.opportunity.id,
+            userId: this.currentUserId,
+            dueDate: new Date().toISOString(),
+            companyId: this.company.id,
             title: 'Call',
-            current_user_time_zone: this.timeZone
+            currentUserTimeZone: this.timeZone
           } });
       },
       removeTask(task) {
@@ -103,12 +103,12 @@
         this.$http.put(url, {
           activity: {
             title: task.title,
-            due_date: task.due_date,
-            contact_id: this.contact.id,
-            opportunity_id: this.opportunity.id,
-            user_id: this.currentUserId,
-            company_id: this.company.id,
-            is_done: task.is_done
+            dueDate: task.due_date,
+            contactId: this.contact.id,
+            opportunityId: this.opportunity.id,
+            userId: this.currentUserId,
+            companyId: this.company.id,
+            isDone: task.is_done
           }
         });
       }

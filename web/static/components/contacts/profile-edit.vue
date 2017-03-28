@@ -81,7 +81,7 @@ export default {
   methods: {
     removeTag(index) {
       this.tags.splice(index, 1);
-      this.tag_ids = this.tags.map(function(j) { return j.id; });
+      this.tagIds = this.tags.map(function(j) { return j.id; });
       this.updateTags();
     },
     addNewTag(input){
@@ -93,7 +93,7 @@ export default {
       return { id: input, name: input };
     },
     saveChangesTag(){
-      this.tag_ids = this.chooseTags.map(function(j) { return j.id; });
+      this.tagIds = this.chooseTags.map(function(j) { return j.id; });
       this.tags = this.chooseTags.map(function(j) { return {id: j.id, name: j.name };  });
       this.updateTags();
       this.openTagModal = false;
@@ -111,13 +111,13 @@ export default {
     },
 
     updateTags() {
-      if (this.tag_ids.length === 0) {
+      if (this.tagIds.length === 0) {
         var url = '/api/v2/contact/' + this.contact.id + '/utags';
-        this.$http.put(url, { company_id: this.contact.company_id } );
+        this.$http.put(url, { companyId: this.contact.company_id } );
       } else {
         var url = '/api/v2/contact/' + this.contact.id + '/update_tags';
         this.$http.put(url,
-                           { tags: this.tag_ids, company_id: this.contact.company_id }
+                           { tags: this.tagIds, companyId: this.contact.company_id }
                           );
       }
     },
