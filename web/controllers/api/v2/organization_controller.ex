@@ -8,7 +8,7 @@ defmodule CercleApi.APIV2.OrganizationController do
 
   plug :scrub_params, "organization" when action in [:create, :update]
 
-  plug :authorize_resource, model: Organization, only: [:update, :delete, :show], 
+  plug :authorize_resource, model: Organization, only: [:update, :delete, :show],
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
@@ -20,7 +20,7 @@ defmodule CercleApi.APIV2.OrganizationController do
   def create(conn, %{"organization" => organization_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
-    
+
     changeset = company
       |> Ecto.build_assoc(:organizations)
       |> Organization.changeset(organization_params)

@@ -10,7 +10,6 @@ defmodule CercleApi.ContactController do
   unauthorized_handler: {CercleApi.Helpers, :handle_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_not_found}
 
-
   def index(conn, params) do
 
     user = Guardian.Plug.current_resource(conn)

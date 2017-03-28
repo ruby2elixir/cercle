@@ -16,13 +16,13 @@ defmodule CercleApi.APIV2.TimelineEventController do
     changeset = TimelineEvent.changeset(%TimelineEvent{}, timeline_event_params)
     case Repo.insert(changeset) do
       {:ok, timeline_event} ->
-        
+
         timeline_event_reload = Repo.get!(CercleApi.TimelineEvent, timeline_event.id) |> Repo.preload [:user]
         html = Phoenix.View.render_to_string(CercleApi.ContactView, "_timeline_event.html", timeline_event: timeline_event_reload)
         channel = "contacts:"  <> to_string(timeline_event_reload.contact_id)
         CercleApi.Endpoint.broadcast!(channel, "new:timeline_event", %{"html" => html})
 
-        
+
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
         user = Repo.get_by(User, id: timeline_event_params["user_id"])
         contact = Repo.get!(CercleApi.Contact, timeline_event_params["contact_id"]) |> Repo.preload [:company]
@@ -30,12 +30,12 @@ defmodule CercleApi.APIV2.TimelineEventController do
         company = contact.company
         company_id = company.id
         parts = String.split(comment, " ")
-          
-            
+
+
         query = from p in User,
           where: p.company_id == ^company_id
         users = Repo.all(query)
-        
+
         Enum.each parts, fn x ->
           Enum.each users, fn u ->
             if x == ("@" <> u.name) do
@@ -47,8 +47,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
         conn
         |> put_status(:created)
         |> render("show.json", timeline_event: timeline_event)
-        
-        
+
+
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

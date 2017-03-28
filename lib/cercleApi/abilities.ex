@@ -1,6 +1,6 @@
 defimpl Canada.Can, for: CercleApi.User do
 	alias CercleApi.{Contact,Board,Organization,Opportunity}
-	
+
  	def can?(user, action, contact = %Contact{}) when action in [:show, :delete, :update] do
  		if user.company_id == contact.company_id, do: true, else: false
  	end

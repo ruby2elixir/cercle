@@ -1,4 +1,3 @@
-
 defmodule CercleApi.ContactChannel do
   use Phoenix.Channel
   require Logger

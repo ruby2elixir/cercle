@@ -6,10 +6,10 @@ defmodule CercleApi.APIV2.OpportunityController do
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
-  
+
   plug :scrub_params, "opportunity" when action in [:create, :update]
 
-  plug :authorize_resource, model: Opportunity, only: [:update, :delete], 
+  plug :authorize_resource, model: Opportunity, only: [:update, :delete],
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
@@ -18,7 +18,7 @@ defmodule CercleApi.APIV2.OpportunityController do
     company = Repo.get!(Company, user.company_id)
 
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
-    
+
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
 
     name = ""

@@ -28,7 +28,6 @@ defmodule CercleApi.Helpers do
 		|> halt
   end
 
-
 	defp respond(conn, status, msg) do
     try do
       conn
@@ -40,4 +39,5 @@ defmodule CercleApi.Helpers do
       |> send_resp(status, Poison.encode!(%{error: msg}))
     end
   end
+
 end

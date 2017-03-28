@@ -10,7 +10,7 @@ defmodule CercleApi.APIV2.ContactController do
 
   plug :scrub_params, "contact" when action in [:create, :update]
 
-  plug :authorize_resource, model: Contact, only: [:update, :delete, :show], 
+  plug :authorize_resource, model: Contact, only: [:update, :delete, :show],
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
@@ -77,7 +77,7 @@ defmodule CercleApi.APIV2.ContactController do
     else
       tag_ids = Enum.map tag_params, fn tag ->
         #tag
-        if Regex.run(~r/^[\d]+$/, tag) do 
+        if Regex.run(~r/^[\d]+$/, tag) do
           {tag_id, _rest} = Integer.parse(tag)
           tag_id
         else
