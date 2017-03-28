@@ -12,6 +12,7 @@
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
 import "phoenix_html"
+import "jquery-ui"
 import moment from 'moment';
 
 // Import local files
@@ -55,6 +56,9 @@ import elementLocale from 'element-ui/lib/locale';
 elementLocale.use(elementLang);
 
 Vue.use(require('vue-moment-jalaali'));
+Vue.use(VueResource);
+Vue.use(VueResourceCaseConverter);
+
 import ContactAppEdit from "../components/contacts/edit.vue";
 
 
@@ -68,6 +72,9 @@ if ($("#contact-app-edit").length > 0){
 };
 
 
-if ($("#opportunity_pipeline").length > 0){
-  App.pipeline_init();
+if (
+    ($("#opportunity_pipeline").length > 0) ||
+        ($("[data-pipeline_init]").length > 0)
+){
+  App.pipelineInit();
 }

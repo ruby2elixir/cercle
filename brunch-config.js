@@ -81,6 +81,7 @@ exports.config = {
             Vue: 'vue/dist/vue.common.js',
             vSelect: 'vue-select/dist/vue-select.js',
             VueResource: 'vue-resource',
+            VueResourceCaseConverter: 'vue-resource-case-converter',
             VueStrap: 'vue-strap',
             Moment: 'moment',
             Element: 'element-ui'
