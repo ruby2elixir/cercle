@@ -14,6 +14,9 @@ defmodule CercleApi.APIV2.OpportunityController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def create(conn, %{"opportunity" => opportunity_params}) do
+    user = Guardian.Plug.current_resource(conn)
+    company = Repo.get!(Company, user.company_id)
+
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
     
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
@@ -24,9 +27,13 @@ defmodule CercleApi.APIV2.OpportunityController do
     else
       name = contact.name <> " / " <> board.name
     end
-    
+
     opportunity_params = %{opportunity_params | "name" => name}
-    changeset = Opportunity.changeset(%Opportunity{}, opportunity_params)
+
+    changeset = company
+      |> Ecto.build_assoc(:opportunities)
+      |> Opportunity.changeset(opportunity_params)
+
     case Repo.insert(changeset) do
       {:ok, opportunity} ->
         conn
