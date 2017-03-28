@@ -195,4 +195,3 @@ export default {
   }
 };
 </script>
-<style src="./contacts.css" lang="sass"></style>
