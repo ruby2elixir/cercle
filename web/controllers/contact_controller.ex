@@ -80,12 +80,8 @@ defmodule CercleApi.ContactController do
     if params["opportunity_id"] do
       opportunity = Repo.get!(CercleApi.Opportunity, params["opportunity_id"])
     else
-      query = from opportunity in CercleApi.Opportunity,
-        where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
-        where: opportunity.status == 0,
-        order_by: [desc: opportunity.inserted_at]
       opportunities = Repo.all(query)
-      opportunity = List.first(opportunities)
+      opportunity = nil
     end
     
     events = []

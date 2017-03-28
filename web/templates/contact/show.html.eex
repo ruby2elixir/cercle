@@ -3,7 +3,7 @@
   <section class="content" style="margin-top:10px;">
     <div class="row">
       <div class="col-md-12">
-        <table style="width:100%;background-color:white;;"><tr><td style="width:50%;padding:20px;">          
+        <table style="width:100%;background-color:#EDF0F5;;"><tr><td style="width:50%;padding:20px;">          
             <h3 class="profile-username" style="font-size:24px;margin-bottom:0px;"><i class="fa fa-user" style="color:#d8d8d8;"></i>&nbsp;<span class='inline-editable' data-type='PUT' data-param-name="contact[name]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>"><%= @contact.name %></span></h3>
             <div style="margin-top:10px;" class='inline-editable' data-type='PUT' data-param-name="contact[job_title]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>" data-placeholder="Job Title"><%= @contact.job_title %></div>
             <div style="margin-top:10px;" class='inline-editable' data-type='PUT' data-param-name="contact[phone]" data-inline-editurl="/api/v2/contact/<%= @contact.id %>" data-placeholder="Phone"><%= @contact.phone %></div>
@@ -35,11 +35,15 @@
       </div><!-- /.box --></td></tr></table>
     </div>
   </div>
+  <%=if !@opportunity do %>
   <div class="row">
-    <div class="col-md-12">
-      <div style="padding:15px;">
+    <div class="col-md-12" >
+      <div style="padding:15px;background-color:#EDF0F5;">
         <%= for opportunity <- @opportunities do %>
-          <a href="/contact/<%=@contact.id%>/opportunity/<%=opportunity.id%>" class="opportunity_status<%=opportunity.status %>" style="font-weight:bold;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;"><%= opportunity.name %></a>
+         
+          <div onclick="location.href='/contact/<%=@contact.id%>/opportunity/<%=opportunity.id%>';"style="cursor:pointer;font-weight:bold;color:grey;font-size:15px;vertical-align: top;background-color:white;display:inline-block;width:120px;height:120px;padding:15px;margin-right:10px;" ><%= opportunity.name %></div>
+            
+          
         <% end %>
         <a  href ="javascript:void(0);" onclick="$('#add_into_a_board').show();" style="font-weight:bold;display:inline-block;padding:3px;border-radius:5px;margin-right:7px;color:grey;text-decoration:underline;">+ Create a card...</a>
         <div style="display:none;" id="add_into_a_board">
@@ -55,6 +59,7 @@
       </div>
     </div>
   </div>
+  <% end %>
   <%=if @opportunity do %>
   <div class="modal fade" tabindex="-1" role="dialog" id="myModal3" >
     <div class="modal-dialog" role="document">
@@ -81,13 +86,14 @@
   </div><!-- /.modal -->
   <div class="row">
     <div class="col-md-12">
-      <div class="post" style="background-color:white;box-shadow: 0 1px 1px rgba(0,0,0,0.1);border-radius: 3px;padding:20px;margin-bottom:10px;">
-        <%= if @opportunity.status == 0  do %>
-          <button type="button" class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" id="opportunity_win" data-id="<%=@opportunity.id%>">ARCHIVE</button>
-        <%= end %>
-        <%= if @opportunity.status == 1  do %>
-          <button type="button" class="btn btn-default pull-right" style="margin-top:10px;margin-right:10px;" id="opportunity_lost" data-id="<%=@opportunity.id%>">UNARCHIVE</button>
-        <%= end %>
+      <div class="post" style="background-color:#EDF0F5;padding:20px;margin-bottom:10px;">
+        
+          <div class="pull-right">
+          <a href="/contact/<%=@contact.id%>"  class="btn btn-primary " style="margin-top:10px;margin-right:10px;width:110px;" >Browse</a>
+          <Br />
+          <a href="/contact/<%=@contact.id%>"  class="btn btn-default" style="margin-top:10px;margin-right:10px;width:110px;" >Archive</a>
+          </div>
+        
         <div style="" id="change_status">
           <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
             <span data-placeholder="Project Name" style="color:rgb(102,102,102);" class='inline-editable' data-type='PUT' data-param-name="opportunity[name]" data-inline-editurl="/api/v2/opportunity/<%= @opportunity.id %>"><%=@opportunity.name %></span>
