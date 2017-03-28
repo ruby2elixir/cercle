@@ -2,16 +2,14 @@ defmodule CercleApi.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.Contact
-  alias CercleApi.Organization
-  alias CercleApi.TimelineEvent
-  alias CercleApi.Activity
-  alias CercleApi.Company
-  alias CercleApi.ContactTag
-  alias CercleApi.Tag
-  alias CercleApi.Board
+  alias CercleApi.{Contact,Organization,TimelineEvent,Activity,Company,ContactTag,Tag,Board}
 
   require Logger
+
+  plug :authorize_resource, model: Contact, only: [:show], 
+  unauthorized_handler: {CercleApi.Helpers, :handle_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_not_found}
+
 
   def index(conn, params) do
 
@@ -125,7 +123,8 @@ defmodule CercleApi.ContactController do
   end
 
   def import(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
+    user = Guardian.Plug.current_resource(conn)
+    company_id = user.company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload([:users])
 
     conn

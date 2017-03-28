@@ -2,15 +2,16 @@ defmodule CercleApi.APIV2.OpportunityController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.Opportunity
-  alias CercleApi.Contact
-  alias CercleApi.Company
-  alias CercleApi.Organization
-  alias CercleApi.User
+  alias CercleApi.{Opportunity,Contact,Company,Organization,User}
 
   plug Guardian.Plug.EnsureAuthenticated
-
+  plug CercleApi.Plugs.CurrentUser
+  
   plug :scrub_params, "opportunity" when action in [:create, :update]
+
+  plug :authorize_resource, model: Opportunity, only: [:update, :delete], 
+  unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def create(conn, %{"opportunity" => opportunity_params}) do
     contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
@@ -53,12 +54,12 @@ defmodule CercleApi.APIV2.OpportunityController do
   end
 
   def delete(conn, %{"id" => id}) do
-    contact = Repo.get!(Contact, id)
+    opportunity = Repo.get!(Opportunity, id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
-    Repo.delete!(contact)
+    Repo.delete!(opportunity)
 
-    send_resp(conn, :no_content, "")
+    json conn, %{status: 200}
   end
 end

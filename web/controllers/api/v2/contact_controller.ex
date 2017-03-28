@@ -3,20 +3,16 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.Contact
-  alias CercleApi.Company
-  alias CercleApi.Organization
-  alias CercleApi.Opportunity
-  alias CercleApi.User
-  alias CercleApi.Activity
-  alias CercleApi.Tag
-  alias CercleApi.ContactTag
+  alias CercleApi.{Contact,Company,Organization,Opportunity,User,Activity,Tag,ContactTag}
 
   plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plugs.CurrentUser
 
   plug :scrub_params, "contact" when action in [:create, :update]
 
-  plug Guardian.Plug.EnsureAuthenticated
+  plug :authorize_resource, model: Contact, only: [:update, :delete, :show], 
+  unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, _params) do
     contacts = Repo.all(Contact)
@@ -43,11 +39,9 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def show(conn, %{"user_id" => user_id, "company_id" => company_id}) do
-
     query = from contact in Contact,
       where: contact.user_id == ^user_id and contact.company_id == ^company_id,
       order_by: [desc: contact.id]
-
     contacts = Repo.all(query)
     render(conn, "index.json", contacts: contacts)
   end
@@ -116,7 +110,8 @@ defmodule CercleApi.APIV2.ContactController do
     # it to always work (and if it does not, it will raise).
     Repo.delete!(contact)
 
-    send_resp(conn, :no_content, "")
+    # send_resp(conn, :no_content, "")
+    json conn, %{status: 200}
   end
 
 end

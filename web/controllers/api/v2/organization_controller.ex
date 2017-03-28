@@ -1,12 +1,16 @@
 defmodule CercleApi.APIV2.OrganizationController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.Organization
-  alias CercleApi.Company
+  alias CercleApi.{Organization,Company}
 
   plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plugs.CurrentUser
 
   plug :scrub_params, "organization" when action in [:create, :update]
+
+  plug :authorize_resource, model: Organization, only: [:update, :delete, :show], 
+  unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, _params) do
     organizations = Repo.all(Organization)
@@ -61,6 +65,7 @@ defmodule CercleApi.APIV2.OrganizationController do
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
     Repo.delete!(organization)
-    send_resp(conn, :no_content, "")
+    # send_resp(conn, :no_content, "")
+    json conn, %{status: 200}
   end
 end

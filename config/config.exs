@@ -34,4 +34,7 @@ config :guardian, Guardian,
   verify_issuer: true,
   serializer: CercleApi.GuardianSerializer
 
+config :canary, 
+  repo: CercleApi.Repo
+
 config :cercleApi, ecto_repos: [CercleApi.Repo]

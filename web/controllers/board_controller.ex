@@ -1,16 +1,13 @@
 defmodule CercleApi.BoardController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.User
-  alias CercleApi.Contact
-  alias CercleApi.Organization
-  alias CercleApi.Opportunity
-  alias CercleApi.TimelineEvent
-  alias CercleApi.Board
-  
-  alias CercleApi.Company
+  alias CercleApi.{User,Contact,Organization,Opportunity,TimelineEvent,Board,Company}
 
   require Logger
+
+  plug :authorize_resource, model: Board, only: [:show],
+  unauthorized_handler: {CercleApi.Helpers, :handle_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_not_found}
 
   def index(conn, _params) do
     company_id = conn.assigns[:current_user].company_id

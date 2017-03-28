@@ -10,8 +10,13 @@ defmodule CercleApi.APIV2.BoardController do
   alias CercleApi.User
 
   plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plugs.CurrentUser
 
   plug :scrub_params, "board" when action in [:create, :update]
+
+  plug :authorize_resource, model: Board, only: [:update,:delete],
+  unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def create(conn, %{"board" => board_params}) do
     changeset = Board.changeset(%Board{}, board_params)
