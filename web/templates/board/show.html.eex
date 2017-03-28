@@ -59,25 +59,25 @@
 #board_columns>div.column_master {display:inline-table}
 </style>
 <section class="content-header" style="margin-bottom:20px;margin-left:20px;">
-  
+
   <h2>
     <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>"><%= @board.name %></span>
     &nbsp;&nbsp;&nbsp;
      <a href="/contact/new" class="btn btn-default">+ Add a Contact</a>
   </h2>
- 
-  <!-- 
+
+  <!--
   <select name="select" id="change_filter_user_id" style="float:right;" >
-  <option value="" >All </option> 
+  <option value="" >All </option>
   <%= for u <- @company.users do %>
-        <option value="<%=u.id%>" ><%= u.user_name %> </option> 
+        <option value="<%=u.id%>" ><%= u.user_name %> </option>
       <%end%>
               </select>
               -->
-   
+
 </section>
 <!-- Main content -->
-<div style="display: block;width: 100vw;height: 80vh;overflow: scroll;white-space:nowrap;">
+<div data-pipeline_init=true  style="display: block;width: 100vw;height: 80vh;overflow: scroll;white-space:nowrap;">
 <div id="board_columns">
 <%= for col <- @board.board_columns do %>
 <div class="column_master" data-id="<%=col.id%>" style="width: 250px;display:inline-block;vertical-align:top;margin-left:30px;background-color:#e0e0e0;border-radius:5px;white-space:normal;">
@@ -90,7 +90,7 @@
   <li><a class="delete-column-link">Delete This Column..</a></li>
   </ul>
  </div>
-   
+
 </div>
 <br />
 <div class="column" data-id="<%=col.id%>">
@@ -99,7 +99,7 @@
   <%=if card.board_column_id == col.id do %>
   <%= render "_opportunity.html", opportunity: card %>
   <%=end%>
-<%end%>  
+<%end%>
 </div>
 </div>
 <%=end%>
@@ -114,8 +114,3 @@
   </div>
 </div>
 </div><!-- /.content -->
-<script>
-$(document).ready(function(){
-  require("web/static/js/app").App.pipelineInit();
-});
-</script>

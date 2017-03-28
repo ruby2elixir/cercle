@@ -1,6 +1,10 @@
 defmodule CercleApi.BoardColumn do
   use CercleApi.Web, :model
-  
+
+  @derive {Poison.Encoder, only: [
+              :id, :name, :order, :board_id
+            ]}
+
   schema "boards_columns" do
     field :name, :string
     field :order, :integer
@@ -22,4 +26,5 @@ defmodule CercleApi.BoardColumn do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
+
 end

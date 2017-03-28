@@ -14,10 +14,9 @@ defmodule CercleApi.APIV2.OpportunityController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def create(conn, %{"opportunity" => opportunity_params}) do
-    user = Guardian.Plug.current_resource(conn)
-    company = Repo.get!(Company, user.company_id)
-
-    contact = Repo.get!(CercleApi.Contact, opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
+    current_user = Guardian.Plug.current_resource(conn)
+    contact = Repo.get!(CercleApi.Contact,
+      opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
 
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
 
@@ -29,13 +28,18 @@ defmodule CercleApi.APIV2.OpportunityController do
     end
 
     opportunity_params = %{opportunity_params | "name" => name}
-
-    changeset = company
-      |> Ecto.build_assoc(:opportunities)
-      |> Opportunity.changeset(opportunity_params)
+    changeset = current_user
+    |> build_assoc(:opportunities)
+    |> Opportunity.changeset(opportunity_params)
 
     case Repo.insert(changeset) do
       {:ok, opportunity} ->
+        channel = "contacts:"  <> to_string(contact.id)
+        CercleApi.Endpoint.broadcast!(
+          channel, "opportunity:created", %{
+            "opportunity" => opportunity
+          }
+        )
         conn
         |> put_status(:created)
         |> render("show.json", opportunity: opportunity)
@@ -52,6 +56,24 @@ defmodule CercleApi.APIV2.OpportunityController do
 
     case Repo.update(changeset) do
       {:ok, opportunity} ->
+        opportunity_contacts = CercleApi.Opportunity.contacts(opportunity)
+        board = Repo.get!(CercleApi.Board, opportunity.board_id)
+        |> Repo.preload(:board_columns)
+
+        channel = "opportunities:"  <> to_string(opportunity.id)
+        CercleApi.Endpoint.broadcast!(
+          channel, "opportunity:updated", %{
+            "opportunity" => opportunity,
+            "opportunity_contacts" => opportunity_contacts,
+            "board" => board,
+            "board_columns" => board.board_columns
+          }
+        )
+        if opportunity.status == 1 do
+          CercleApi.Endpoint.broadcast!(
+            channel, "opportunity:closed", %{"opportunity" => opportunity }
+          )
+        end
         render(conn, "show.json", opportunity: opportunity)
       {:error, changeset} ->
         conn

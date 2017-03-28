@@ -26,6 +26,7 @@ defmodule CercleApi.APIV2.ContactController do
     changeset = company
       |> Ecto.build_assoc(:contacts)
       |> Contact.changeset(contact_params)
+
     case Repo.insert(changeset) do
       {:ok, contact} ->
         conn
@@ -54,8 +55,15 @@ defmodule CercleApi.APIV2.ContactController do
     end
     changeset = Contact.changeset(contact, contact_params)
 
+
     case Repo.update(changeset) do
       {:ok, contact} ->
+        contact = contact |> Repo.preload(:organization)
+        channel = "contacts:"  <> to_string(contact.id)
+        CercleApi.Endpoint.broadcast!(channel, "state", %{
+              contact: contact,
+              organization: (contact.organization || %{})})
+
         render(conn, "show.json", contact: contact)
       {:error, changeset} ->
         conn
@@ -64,9 +72,19 @@ defmodule CercleApi.APIV2.ContactController do
     end
   end
 
-  def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id_string}) do
+  def utags(conn, %{"id" => id, "company_id" => company_id_string}) do
     contact = Repo.get!(Contact, id)
-    {company_id, _rest} = Integer.parse(company_id_string)
+    query = from c in ContactTag,
+      where: c.contact_id == ^id
+    Repo.delete_all(query)
+    channel = "contacts:"  <> to_string(contact.id)
+    CercleApi.Endpoint.broadcast!(channel, "state", %{contact: contact, tags: []})
+    render(conn, "show.json", contact: contact)
+  end
+
+  def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id}) do
+    contact = Repo.get!(Contact, id)
+
     #tag_params
     query = from c in ContactTag,
         where: c.contact_id == ^id
@@ -76,12 +94,16 @@ defmodule CercleApi.APIV2.ContactController do
       render(conn, "show.json", contact: contact)
     else
       tag_ids = Enum.map tag_params, fn tag ->
-        #tag
-        if Regex.run(~r/^[\d]+$/, tag) do
-          {tag_id, _rest} = Integer.parse(tag)
-          tag_id
-        else
-          Repo.insert!(%Tag{name: tag, company_id: company_id}).id
+        cond do
+          is_number(tag) -> tag
+          Regex.run(~r/^[\d]+$/, tag) ->
+            {tag_id, _rest} = Integer.parse(tag)
+            tag_id
+          true ->
+          (
+            Repo.get_by(Tag, name: tag, company_id: company_id) ||
+              Repo.insert!(%Tag{name: tag, company_id: company_id})
+          ).id
         end
       end
       query = from tag in Tag,
@@ -94,6 +116,8 @@ defmodule CercleApi.APIV2.ContactController do
 
       case Repo.update(changeset) do
         {:ok, contact} ->
+          channel = "contacts:"  <> to_string(contact.id)
+          CercleApi.Endpoint.broadcast!(channel, "state", %{contact: contact, tags: contact.tags})
           render(conn, "show.json", contact: contact)
         {:error, changeset} ->
           conn

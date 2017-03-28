@@ -1,6 +1,10 @@
 defmodule CercleApi.Board do
   use CercleApi.Web, :model
-  
+
+  @derive {Poison.Encoder, only: [
+              :id, :name, :company_id, :board_columns
+            ]}
+
   schema "boards" do
     field :name, :string
     belongs_to :company, CercleApi.Company
@@ -21,5 +25,5 @@ defmodule CercleApi.Board do
     model
     |> cast(params, @required_fields, @optional_fields)
   end
-  
+
 end

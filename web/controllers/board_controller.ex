@@ -17,7 +17,7 @@ defmodule CercleApi.BoardController do
       where: p.company_id == ^company_id,
       order_by: [desc: p.updated_at]
 
-    boards = Repo.all(query) 
+    boards = Repo.all(query)
 
     conn
       |> put_layout("adminlte.html")

@@ -1,11 +1,9 @@
 defmodule CercleApi.APIV2.TimelineEventController do
   use CercleApi.Web, :controller
-
-  alias CercleApi.TimelineEvent
-  alias CercleApi.User
-  alias CercleApi.Contact
+  alias CercleApi.{TimelineEvent, User, Contact, Repo}
 
   plug Guardian.Plug.EnsureAuthenticated
+  plug :scrub_params, "timeline_event" when action in [:create]
 
   def index(conn, _params) do
     te = Repo.all(TimelineEvent)
@@ -13,7 +11,12 @@ defmodule CercleApi.APIV2.TimelineEventController do
   end
 
   def create(conn, %{"timeline_event" => timeline_event_params}) do
-    changeset = TimelineEvent.changeset(%TimelineEvent{}, timeline_event_params)
+    current_user = Guardian.Plug.current_resource(conn)
+
+    changeset = current_user
+    |> build_assoc(:timeline_event)
+    |> TimelineEvent.changeset(timeline_event_params)
+
     case Repo.insert(changeset) do
       {:ok, timeline_event} ->
 
@@ -21,25 +24,26 @@ defmodule CercleApi.APIV2.TimelineEventController do
         html = Phoenix.View.render_to_string(CercleApi.ContactView, "_timeline_event.html", timeline_event: timeline_event_reload)
         channel = "contacts:"  <> to_string(timeline_event_reload.contact_id)
         CercleApi.Endpoint.broadcast!(channel, "new:timeline_event", %{"html" => html})
-
+        CercleApi.Endpoint.broadcast!(
+          "opportunities:"  <> to_string(timeline_event_reload.opportunity_id),
+          "timeline_event:created", %{"event" => timeline_event_reload}
+        )
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
-        user = Repo.get_by(User, id: timeline_event_params["user_id"])
+        user = current_user
         contact = Repo.get!(CercleApi.Contact, timeline_event_params["contact_id"]) |> Repo.preload [:company]
-        comment = timeline_event_params["content"]
-        company = contact.company
-        company_id = company.id
-        parts = String.split(comment, " ")
+      	comment = timeline_event_params["content"]
+      	company = contact.company
+      	parts = String.split(comment, " ")
 
-
-        query = from p in User,
-          where: p.company_id == ^company_id
-        users = Repo.all(query)
+        users = company
+        |> assoc(:users)
+        |> Repo.all
 
         Enum.each parts, fn x ->
           Enum.each users, fn u ->
-            if x == ("@" <> u.name) do
-              CercleApi.Mailer.deliver notification_email(u.login, contact, true, comment, company, user ,  u)
+            if x == ("@" <> to_string(u.name)) do
+              CercleApi.Mailer.deliver notification_email(u.login, contact, true, comment, company, user , u)
             end
           end
         end
@@ -65,4 +69,4 @@ defmodule CercleApi.APIV2.TimelineEventController do
         }
   end
 
- end
+end
