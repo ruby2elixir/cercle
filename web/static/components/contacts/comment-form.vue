@@ -18,9 +18,9 @@
     props: ['contact', 'opportunity', 'user_image'],
     data(){
       return {
-          message: '',
-          default_img: '/images/pp_2.png',
-          user_img: this.user_image
+        message: '',
+        default_img: '/images/pp_2.png',
+        user_img: this.user_image
       };
     },
     methods: {

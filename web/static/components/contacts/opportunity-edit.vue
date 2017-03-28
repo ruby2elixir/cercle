@@ -178,7 +178,7 @@
             } else if (this.$data.item.id === payload.opportunity.id) {
               this.setOpportunity(this.$data.items[0]);
             }
-            this.$emit('browse')
+            this.$emit('browse');
           }
         });
         this.opportunity_channel.on('opportunity:updated', payload => {
