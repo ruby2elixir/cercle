@@ -14,6 +14,9 @@
     height:120px;
     padding:15px;
     margin-right:10px;
+    text-align: center;
+    padding:3px;
+    text-decoration:underline;
   }
   h1 {
     text-align: center;
@@ -47,14 +50,6 @@
     color:grey;
     text-decoration:underline;
   }
-  .opportunity-tags {
-    font-weight:bold;
-    padding:3px;
-    margin-right:17px;
-    color:grey;
-    text-decoration:underline;
-  }
-
   /* profile block */
   .contact-tags-box {
     .open-indicator{
@@ -69,35 +64,57 @@
   }
 
   /* opportunity block */
-  a.o_contact  {
-    font-weight:bold;
-    display:inline-block;
-    padding:3px;
-    border-radius:5px;
-    margin-right:7px;
-    color:grey;
-    text-decoration:underline;
-  }
-  .add_o_contact {
-    font-size: small;
-    font-weight:bold;
-    display:inline-block;
-    padding:3px;
-    border-radius:5px;
-    margin-right:7px;
-    color:grey;
-    &:hover {
-      color:grey;
-      box-shadow: none;
+  .opportunity-block {
+    .post {
+      background-color:white;
+      padding:20px;
+      margin-bottom:10px;
+      padding-top: 0px;
     }
-    &:active {
-      color:grey;
-      box-shadow: none;
+    button.browse {
+      margin-top:10px;
+      margin-right:10px;
+      width:110px;
     }
+    button.archive {
+      margin-top:10px;
+      margin-right:10px;
+      width:110px;
+    }
+    .managers {
+      margin-right:20px;
+      margin-bottom:10px;
+    }
+    a.o_contact  {
+      font-weight:bold;
+      display:inline-block;
+      padding:3px;
+      border-radius:5px;
+      margin-right:7px;
+      color:grey;
+      text-decoration:underline;
+    }
+    .add_o_contact {
+      font-size: small;
+      font-weight:bold;
+      display:inline-block;
+      padding:3px;
+      border-radius:5px;
+      margin-right:7px;
+      color:grey;
+      &:hover {
+        color:grey;
+        box-shadow: none;
+      }
+      &:active {
+        color:grey;
+        box-shadow: none;
+      }
 
-    &:focus {
-      color:grey;
-      box-shadow: none;
+      &:focus {
+        color:grey;
+        box-shadow: none;
+      }
     }
   }
 

@@ -1,10 +1,10 @@
 <template>
-  <div class="col-md-12">
-    <div class="post" style="background-color:white;padding:20px;margin-bottom:10px;padding-top: 0px;" v-if="item">
+  <div class="col-md-12 opportunity-block">
+    <div class="post" v-if="item">
     <div class="pull-right">
-      <button type="button" class="btn btn-primary pull-right" v-on:click="$emit('browse')"  style="margin-top:10px;margin-right:10px;width:110px;" >BROWSE</button>
+      <button type="button" class="btn btn-primary pull-right" v-on:click="$emit('browse')">BROWSE</button>
       <br />
-      <button type="button" class="btn btn-default " v-on:click="archiveOpportunity" style="margin-top:10px;margin-right:10px;width:110px;" >ARCHIVE</button>
+      <button type="button" class="btn btn-default " v-on:click="archiveOpportunity">ARCHIVE</button>
     </div>
       <div style="" id="change_status">
         <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
@@ -14,14 +14,14 @@
         </span>
         <br />
         <br />
-        <div style="margin-right:20px;margin-bottom:10px;">
+        <div class="managers">
           Managed by:
           <select v-model="item.user_id"  v-on:change="updateOpportunity">
             <option v-for="user in company_users" :value="user.id">{{user.user_name}}</option>
           </select>
           &nbsp;&nbsp;
           Status:
-          <select  v-model="item.board_column_id" v-on:change="updateOpportunity">
+          <select v-model="item.board_column_id" v-on:change="updateOpportunity">
              <option v-for="board_column in board_columns" :value="board_column.id">{{board_column.name}}</option>
           </select>
         </div>
@@ -39,11 +39,12 @@
           <i class="fa fa-fw fa-plus"></i>Add ...
         </button>
 
-            <div style="margin-top:10px;margin-bottom:10px;">
+            <div class="mt-1 mb-1">
               Description
               <br />
-              <div style="margin-top:10px;" data-placeholder="Write a description...">
-               <inline-text-edit v-model="item.description" v-on:input="updateOpportunity" placeholder="Write a description..." ></inline-text-edit>
+              <div class="mt-1" data-placeholder="Write a description...">
+               <inline-text-edit v-model="item.description" v-on:input="updateOpportunity" placeholder="Write a description..." >
+               </inline-text-edit>
               </div>
             </div>
       </div>
@@ -56,10 +57,11 @@
         :timeZone="time_zone"
         :currentUserId="current_user_id"
       >
-        <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" />
+        <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" :user_image="user_image" />
         <timeline_events
           slot="timeline-events"
           :events="events"
+
           />
       </to-do>
 
@@ -82,7 +84,8 @@
       'opportunity', 'company',
       'opportunities',
       'company_users',
-      'organization'
+      'organization',
+      'user_image'
     ],
     data(){
       return {
@@ -169,12 +172,13 @@
               return item.id === payload.opportunity.id;
             });
             this.$data.items.splice(item_index,1);
+
             if (this.$data.items.length === 0) {
               this.clearOpportunity();
             } else if (this.$data.item.id === payload.opportunity.id) {
               this.setOpportunity(this.$data.items[0]);
             }
-
+            this.$emit('browse')
           }
         });
         this.opportunity_channel.on('opportunity:updated', payload => {

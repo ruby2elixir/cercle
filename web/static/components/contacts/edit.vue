@@ -60,6 +60,7 @@
             :company_users="company_users"
             :opportunity="opportunity"
             :opportunities="opportunities"
+            :user_image="user_image"
             v-on:browse="browseOpportunities = true"
             :socket="socket"
             />
@@ -78,7 +79,7 @@ import OrganizationEdit from './organization-edit.vue';
 import OpportunityEdit from './opportunity-edit.vue';
 
 export default {
-  props: ['contact_id', 'current_user_id', 'time_zone'],
+  props: ['contact_id', 'current_user_id', 'time_zone', 'user_image'],
   data() {
     return {
       ShowAddCard: false,
