@@ -66,6 +66,7 @@ defmodule CercleApi.Router do
     put "/settings/team_update", SettingsController, :team_update
     get "/settings/fields_edit", SettingsController, :fields_edit
     put "/settings/fields_update", SettingsController, :fields_update
+    post "/settings/team_invitation", SettingsController, :team_invitation
 
     get "/contact", ContactController, :index
     get "/contact/new", ContactController, :new
@@ -78,6 +79,7 @@ defmodule CercleApi.Router do
     post "/import_data", ContactController, :import_data
     post "/view_uploaded_data", ContactController, :view_uploaded_data
     post "/create_nested_data", ContactController, :create_nested_data
+
     
   end
 

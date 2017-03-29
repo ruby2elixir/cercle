@@ -4,9 +4,12 @@ defmodule CercleApi.RegistrationController do
   alias CercleApi.{User, Company, Board, BoardColumn}
 
   def new(conn, _params) do
+    if _params["email"] do email = _params["email"] end
+    if _params["company"] do company = _params["company"] end
+
     changeset = User.changeset(%CercleApi.User{})
     conn
-    |> render(:new, changeset: changeset)
+    |> render(:new, changeset: changeset, email: email, company: company)
   end
 
   def create(conn, %{"user" => registration_params, "company" => company_params}) do
@@ -35,11 +38,11 @@ defmodule CercleApi.RegistrationController do
             |> redirect(to: "/board")
           {:error, changeset} ->
             conn
-            |> render(:new, changeset: changeset)
+            |> render(:new, changeset: changeset, company: company_params["title"], email: registration_params["login"])
         end
       {:error, changeset} ->
         conn
-          |> render(:new, changeset: changeset)
+          |> render(:new, changeset: changeset, company: company_params["title"], email: registration_params["login"])
     end
   end
 end
