@@ -19,11 +19,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
     case Repo.insert(changeset) do
       {:ok, timeline_event} ->
-
-        timeline_event_reload = Repo.get!(CercleApi.TimelineEvent, timeline_event.id) |> Repo.preload [:user]
-        html = Phoenix.View.render_to_string(CercleApi.ContactView, "_timeline_event.html", timeline_event: timeline_event_reload)
-        channel = "contacts:"  <> to_string(timeline_event_reload.contact_id)
-        CercleApi.Endpoint.broadcast!(channel, "new:timeline_event", %{"html" => html})
+        timeline_event_reload = Repo.get!(CercleApi.TimelineEvent, timeline_event.id)
+        |> Repo.preload [:user]
         CercleApi.Endpoint.broadcast!(
           "opportunities:"  <> to_string(timeline_event_reload.opportunity_id),
           "timeline_event:created", %{"event" => timeline_event_reload}
