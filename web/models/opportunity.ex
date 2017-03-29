@@ -41,4 +41,14 @@ defmodule CercleApi.Opportunity do
     CercleApi.Repo.all(opportunity_contacts)
   end
 
+  def preload_data(query \\ %CercleApi.Opportunity{}) do
+    comments_query = from c in CercleApi.TimelineEvent,
+      order_by: [desc: c.inserted_at],
+      preload: :user
+
+    from q in query, preload: [
+      activities: [:user],
+      timeline_event: ^comments_query
+    ]
+  end
 end
