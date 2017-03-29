@@ -21,20 +21,24 @@ defmodule CercleApi.APIV2.BoardColumnController do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
     board = Repo.get(Board, board_column_params["board_id"])
-    if board and (board.company_id == company.id) do
-      board = Repo.get(Board, board_column_params["board_id"]) |> Repo.preload(:board_columns)
-      boardcol_params = Map.put(board_column_params, "order", Enum.count(board.board_columns))
-      changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
-      case Repo.insert(changeset) do
-        {:ok, board_column} ->
-          render(conn, "show.json", board_column: board_column)
-        {:error, changeset} ->
-          conn
-          |> put_status(:unprocessable_entity)
-          |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+    if board do 
+      if (board.company_id == company.id) do
+        board = Repo.get(Board, board_column_params["board_id"]) |> Repo.preload(:board_columns)
+        boardcol_params = Map.put(board_column_params, "order", Enum.count(board.board_columns))
+        changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
+        case Repo.insert(changeset) do
+          {:ok, board_column} ->
+            render(conn, "show.json", board_column: board_column)
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+        end
+      else
+        json conn, %{status: 403, error: "You are not authorized for this action!"}
       end
     else
-      json conn, %{status: 403, error: "You are not authorized for this action!"}
+      json conn, %{status: 404, error: "Resource not found!"}
     end
   end
 
