@@ -29,7 +29,7 @@
     props: ['events'],
     methods: {
       timestamp(time) {
-        return Moment(time).fromNow();
+        return Moment.utc(time).fromNow();
       }
     },
     computed: {

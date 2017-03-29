@@ -1,7 +1,7 @@
 defmodule CercleApi.OpportunityChannel do
   use Phoenix.Channel
   require Logger
-  alias CercleApi.{Opportunity, Repo, Contact}
+  alias CercleApi.{Opportunity, Repo, Contact, TimelineEvent}
 
   def join("opportunities:" <> opportunity_id, _message, socket) do
     socket = assign(socket, :opportunity_id, opportunity_id)
@@ -10,8 +10,8 @@ defmodule CercleApi.OpportunityChannel do
 
   def handle_in("load", _message, socket) do
     opportunity = Opportunity
+    |> Opportunity.preload_data
     |> Repo.get(socket.assigns[:opportunity_id])
-    |> Repo.preload([activities: [:user], timeline_event: [:user]])
 
     data = %{
       opportunity: opportunity,
