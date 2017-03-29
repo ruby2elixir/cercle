@@ -17,11 +17,6 @@ defmodule CercleApi.APIV2.BoardControllerTest do
     assert json_response(conn, 201)["data"]["id"]
   end
 
-  test "create board with invalid params", %{conn: conn} do
-    conn = post conn, "/api/v2/board", board: @invalid_attrs
-    assert json_response(conn, 422)["errors"]["company_id"] == ["can't be blank"]
-  end
-
   test "try to update authorized board with valid params", state do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)

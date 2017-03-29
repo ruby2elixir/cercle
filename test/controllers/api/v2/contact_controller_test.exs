@@ -19,7 +19,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
   test "create contact with invalid params", %{conn: conn} do
     conn = post conn, "/api/v2/contact", contact: @invalid_attrs
-    assert json_response(conn, 422)["errors"]["name"]
+    assert json_response(conn, 422)["errors"]["name"] == ["can't be blank"]
   end
 
   test "try to update authorized contact with valid params", state do
