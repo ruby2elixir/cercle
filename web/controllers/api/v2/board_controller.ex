@@ -10,11 +10,22 @@ defmodule CercleApi.APIV2.BoardController do
   alias CercleApi.User
 
   plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plugs.CurrentUser
 
   plug :scrub_params, "board" when action in [:create, :update]
 
+  plug :authorize_resource, model: Board, only: [:update,:delete],
+  unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
+
   def create(conn, %{"board" => board_params}) do
-    changeset = Board.changeset(%Board{}, board_params)
+    user = Guardian.Plug.current_resource(conn)
+    company = Repo.get!(Company, user.company_id)
+
+    changeset = company
+      |> Ecto.build_assoc(:boards)
+      |> Board.changeset(board_params)
+
     case Repo.insert(changeset) do
       {:ok, board} ->
         steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"]

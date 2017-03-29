@@ -7,7 +7,7 @@ defmodule CercleApi.ActivityController do
 
   def index(conn, _params) do
     current_user = Repo.preload(Guardian.Plug.current_resource(conn), :company)
-    
+
     current_user_id = current_user.id
     current_user_time_zone = current_user.time_zone
     company_id = current_user.company.id

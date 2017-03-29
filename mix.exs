@@ -53,6 +53,8 @@ defmodule CercleApi.Mixfile do
      {:uuid, "~> 1.1"},
      {:tzdata, "~> 0.5.8"},
      {:guardian, "~> 0.14.2"},
+     {:canary, "~> 1.1.0"},
+     {:canada, "~> 1.0.1"},
      {:comeonin, "~> 2.5"},
      {:credo, "~> 0.5", only: [:dev, :test]}
     ]

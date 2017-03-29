@@ -1,19 +1,17 @@
 defmodule CercleApi.BoardController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.User
-  alias CercleApi.Contact
-  alias CercleApi.Organization
-  alias CercleApi.Opportunity
-  alias CercleApi.TimelineEvent
-  alias CercleApi.Board
-
-  alias CercleApi.Company
+  alias CercleApi.{User,Contact,Organization,Opportunity,TimelineEvent,Board,Company}
 
   require Logger
 
+  plug :authorize_resource, model: Board, only: [:show],
+  unauthorized_handler: {CercleApi.Helpers, :handle_unauthorized},
+  not_found_handler: {CercleApi.Helpers, :handle_not_found}
+
   def index(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
+    user = Guardian.Plug.current_resource(conn)
+    company_id = Repo.get!(Company, user.company_id).id
 
     query = from p in Board,
       where: p.company_id == ^company_id,
@@ -27,8 +25,8 @@ defmodule CercleApi.BoardController do
   end
 
   def new(conn, _params) do
-
-    company_id = conn.assigns[:current_user].company_id
+    user = Guardian.Plug.current_resource(conn)
+    company_id = Repo.get!(Company, user.company_id).id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
     conn
@@ -63,8 +61,8 @@ defmodule CercleApi.BoardController do
   end
 
   def new(conn, _params) do
-
-    company_id = conn.assigns[:current_user].company_id
+    user = Guardian.Plug.current_resource(conn)
+    company_id = Repo.get!(Company, user.company_id).id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
     conn
@@ -73,7 +71,8 @@ defmodule CercleApi.BoardController do
   end
 
   def edit(conn, %{"id" => id}) do
-    company_id = conn.assigns[:current_user].company_id
+    user = Guardian.Plug.current_resource(conn)
+    company_id = Repo.get!(Company, user.company_id).id
     reward = Repo.get!(Contact, id) |> Repo.preload [:organization, :company]
     company = Repo.get!(CercleApi.Company, reward.company_id) |> Repo.preload [:users]
 
@@ -81,10 +80,10 @@ defmodule CercleApi.BoardController do
       order_by: [desc: p.inserted_at]
     organizations = Repo.all(query)
 
-    query = from reward_status_history in CercleApi.TimelineEvent,
+    query1 = from reward_status_history in CercleApi.TimelineEvent,
       where: reward_status_history.contact_id == ^reward.id,
       order_by: [desc: reward_status_history.inserted_at]
-    reward_status_history = Repo.all(query) |> Repo.preload [:user]
+    reward_status_history = Repo.all(query1) |> Repo.preload [:user]
 
     changeset = Contact.changeset(reward)
     conn

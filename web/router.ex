@@ -84,8 +84,6 @@ defmodule CercleApi.Router do
   scope "/", CercleApi do
     pipe_through [:api, :api_auth]
 
-
-
     get "/api/v2/timeline_events", APIV2.TimelineEventController, :index
     post "/api/v2/timeline_events", APIV2.TimelineEventController, :create
 
