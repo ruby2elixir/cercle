@@ -5,7 +5,7 @@
           <%=@opportunity.name%>  
           <Br />
           <span style="color:grey;">
-          for <%=@opportunity.main_contact.name %>
+          with <%=@opportunity.main_contact.name %>
           </span>
         </a>
       </div>
