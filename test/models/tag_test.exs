@@ -3,7 +3,7 @@ defmodule CercleApi.TagTest do
 
   alias CercleApi.Tag
 
-  @valid_attrs %{}
+  @valid_attrs %{name: "Tag1", company_id: 1}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

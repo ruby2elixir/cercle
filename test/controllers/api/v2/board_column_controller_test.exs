@@ -11,10 +11,22 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
     {:ok, conn: conn, company: company, user: user, board: board}
   end
 
-  test "create board column for board with valid params", state do
+  test "create authorized board column for board with valid params", state do
     conn = post state[:conn], "/api/v2/board_column", board_column: %{name: "Step1", order: "1", board_id: state[:board].id}
     assert json_response(conn, 200)["data"]["id"]
   end
+
+  test "create board column for invalid board with valid params", state do
+    conn = post state[:conn], "/api/v2/board_column", board_column: %{name: "Step1", order: "1", board_id: state[:board].id + 1}
+    assert json_response(conn, 200)["error"] == "Resource not found!"
+  end
+
+  test "create board column for unauthorized board with valid params", state do
+    board = insert_board(company_id: state[:company].id + 1)
+    conn = post state[:conn], "/api/v2/board_column", board_column: %{name: "Step1", order: "1", board_id: board.id}
+    assert json_response(conn, 200)["error"] == "You are not authorized for this action!"
+  end
+
 
   test "try to update authorized board column for board", state do
     changeset = BoardColumn.changeset(%BoardColumn{}, %{name: "Step1", order: "1", board_id: state[:board].id})

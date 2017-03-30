@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width">
+<meta name="format-detection" content="address=no;email=no;telephone=no">
+<title>Welcome to SimpleApp</title>
+</head>
+<body>
+  <table id="emailBody" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;border-collapse: collapse;border-spacing: 0;height: 100%;width: 100%;min-height: 200px;background-color: #f2f2f2;">
+    <tr>
+      <td style="line-height: 20px; padding: 10px">
+        Hi, <%= @receiver_email%>
+        <br>
+        <%=@sender.login%> has invited to join Company <b><%=@company_name%></b> on Cercle.
+        <br>
+        For joining this company click on the Join button
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="middle" class="btnMain" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 8px;padding-bottom: 8px;padding-left: 18px;padding-right: 18px;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;background-color: #f6ba78;height: 20px;font-size: 18px;line-height: 20px;mso-line-height-rule: exactly;text-align: center;vertical-align: middle;"><a href="http://localhost:4000/register?company=<%=@company_name%>&email=<%=@sender.login%>" style="padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;color: #ffffff;font-weight: bold;"><span style="text-decoration: none;color: #ffffff;">Join</span></a>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
