@@ -29,9 +29,11 @@
               </div>
               <div class="form-group has-feedback">
                 <input type='hidden' name='user[time_zone]' id='time_zone'/>
-                <input type='hidden' name='user[company_id]'/>
-                <%= if @company do %>
-                  <input type='text' name='company[title]' placeholder="Name of your Company" class="signup-name form-control" value='<%=@company%>' readonly="readonly"/>
+                <%= if @company_id do %>
+                  <input type='hidden' name='user[company_id]' value="<%= @company_id %>"/>
+                <% end %>
+                <%= if @company_name do %>
+                  <input type='text' name='company[title]' placeholder="Name of your Company" class="signup-name form-control" value='<%=@company_name%>' readonly="readonly"/>
                 <% else %>
                   <input type='text' name='company[title]' placeholder="Name of your Company" class="signup-name form-control" />
                 <% end %>
