@@ -4,7 +4,7 @@
         <a href="/contact/<%=@opportunity.main_contact.id%>/opportunity/<%=@opportunity.id%>">
           <%=@opportunity.name%>  
           <Br />
-          <span style="color:grey;">
+          <span style="color:#222222;">
           with <%=@opportunity.main_contact.name %>
           </span>
         </a>
