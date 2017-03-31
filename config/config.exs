@@ -38,3 +38,6 @@ config :canary,
   repo: CercleApi.Repo
 
 config :cercleApi, ecto_repos: [CercleApi.Repo]
+
+config :cipher, keyphrase: "testiekeyphraseforcipher",
+  ivphrase: "testieivphraseforcipher"
