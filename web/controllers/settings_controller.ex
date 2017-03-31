@@ -1,7 +1,7 @@
 defmodule CercleApi.SettingsController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User, Company}
+  alias CercleApi.{User, Company, Tag}
 
   def profile_edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
@@ -83,6 +83,18 @@ defmodule CercleApi.SettingsController do
       {:error, changeset} ->
         render(conn, "company_edit.html", company: company, changeset: changeset, settings: true)
     end
+  end
+
+  def tags_edit(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+    company = Repo.get(Company, user.company_id)
+    query = from t in Tag,
+      where: t.company_id == ^company.id,
+      order_by: [desc: t.inserted_at]
+    tags = Repo.all(query)
+    conn
+    |> put_layout("adminlte.html")
+    |> render "tags_edit.html", tags: tags
   end
 
   def team_invitation(conn, %{"user" => user_params}) do

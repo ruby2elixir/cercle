@@ -6,7 +6,7 @@ defmodule CercleApi.Tag do
   schema "tags" do
     field :name, :string
     belongs_to :company, CercleApi.Company
-    many_to_many :contacts, CercleApi.Contact, join_through: CercleApi.ContactTag
+    many_to_many :contacts, CercleApi.Contact, join_through: CercleApi.ContactTag, on_delete: :delete_all
     timestamps
   end
 

@@ -11,8 +11,8 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import "phoenix_html"
-import "jquery-ui"
+import 'phoenix_html';
+import 'jquery-ui';
 import moment from 'moment';
 
 // Import local files
@@ -26,7 +26,6 @@ import fastclick from './adminlte/plugins/fastclick/fastclick';
 import adminlte from './adminlte/dist/js/app.min';
 
 import socket from './socket';
-
 import { Activity } from './activity';
 import inlineEdit from './inline_edit';
 import boardAdd from './board_add';
@@ -37,6 +36,7 @@ import { Pipeline } from './opportunity_pipeline';
 import { BoardColumnPipeline } from './board_column_pipeline';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
+import tagEdit from './tag_edit';
 
 export var App = {
   activityInit: function(){
