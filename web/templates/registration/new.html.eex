@@ -25,25 +25,15 @@
                 </div>
               <% end %>
               <div class="form-group has-feedback">
-                <input type='text' name='user[user_name]' placeholder="Your Name" class="signup-name form-control" />
+                <input type='text' name='user[user_name]' placeholder="Your Name" class="signup-name form-control" value="<%=assigns[:user_name]%>" />
               </div>
               <div class="form-group has-feedback">
                 <input type='hidden' name='user[time_zone]' id='time_zone'/>
-                <%= if @company_id do %>
-                  <input type='hidden' name='user[company_id]' value="<%= @company_id %>"/>
-                <% end %>
-                <%= if @company_name do %>
-                  <input type='text' name='company[title]' placeholder="Name of your Company" class="signup-name form-control" value='<%=@company_name%>' readonly="readonly"/>
-                <% else %>
-                  <input type='text' name='company[title]' placeholder="Name of your Company" class="signup-name form-control" />
-                <% end %>
+                <input type='hidden' name='company[id]' value="<%= assigns[:company_id]%>" />
+                <input type='text' name='company[title]' placeholder="Name of your Company" class="signup-name form-control" value="<%=assigns[:company_title]%>" />
               </div>
               <div class="form-group has-feedback">
-                <%= if @email do %>
-                  <%= text_input f, :login, placeholder: "Email", class: "form-control", value: @email, readonly: "readonly" %>
-                <% else %>
-                  <%= text_input f, :login, placeholder: "Email", class: "form-control" %>
-                <% end %>
+                  <%= text_input f, :login, placeholder: "Email", class: "form-control", value: assigns[:user_login] %>
               </div>
               <div class="form-group has-feedback">
                 <%= password_input f, :password, placeholder: "Password", class: "form-control" %>

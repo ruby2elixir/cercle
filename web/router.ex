@@ -52,6 +52,7 @@ defmodule CercleApi.Router do
     post "/reset-password", PasswordController, :reset_password
     get "/password/reset/:password_reset_code/confirm", PasswordController, :confirm
     post "/password/reset/:password_reset_code/confirm", PasswordController, :confirm_submit
+    get "/register/:register_values/join", RegistrationController, :accept_team_invitation
   end
 
   scope "/", CercleApi do

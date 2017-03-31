@@ -1,7 +1,7 @@
 defmodule CercleApi.SettingsController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User,Company}
+  alias CercleApi.{User, Company}
 
   def profile_edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
@@ -87,10 +87,12 @@ defmodule CercleApi.SettingsController do
 
   def team_invitation(conn, %{"user" => user_params}) do
     user = Guardian.Plug.current_resource(conn)
-    company = Repo.get!(Company,user.company_id)
+    company = Repo.get!(Company, user.company_id)
     receiver_email = user_params["email"]
+    values = %{"company_id": "#{company.id}", "email": "#{receiver_email}"}
+    encoded_values = Cipher.cipher values
     try do
-      CercleApi.Mailer.deliver invitation_email(user,receiver_email,company.title)
+      CercleApi.Mailer.deliver invitation_email(user, receiver_email, company.title, encoded_values)
       conn
       |> put_flash(:success, "Invitation link sent successfully!")
       |> redirect(to: "/settings/team_edit")
@@ -101,12 +103,12 @@ defmodule CercleApi.SettingsController do
     end
   end
 
-  def invitation_email(sender,receiver_email,company_name) do
+  def invitation_email(sender, receiver_email, company_name, encoded_values) do
     %Mailman.Email{
       subject: sender.user_name <> " invited to join " <> company_name,
       from: "referral@cercle.co",
       to: [receiver_email],
-      html: Phoenix.View.render_to_string(CercleApi.EmailView, "team_invitation.html", sender: sender, receiver_email: receiver_email, company_name: company_name)
+      html: Phoenix.View.render_to_string(CercleApi.EmailView, "team_invitation.html", sender: sender, receiver_email: receiver_email, company_name: company_name, encoded_values: encoded_values)
       }
   end
 end
