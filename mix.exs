@@ -43,7 +43,7 @@ defmodule CercleApi.Mixfile do
      {:arc, ">= 0.5.1"},
      {:ex_aws, ">= 0.4.10"},
      {:httpoison, "~> 0.7"},
-     {:poison, ">= 1.3.0"},
+     {:poison, ">= 2.0.0"},
      {:arc_ecto, "~> 0.3.2"},
      {:timex, "~> 3.1.8"},
      {:gettext, "~> 0.13.0"},
@@ -56,7 +56,8 @@ defmodule CercleApi.Mixfile do
      {:canary, "~> 1.1.0"},
      {:canada, "~> 1.0.1"},
      {:comeonin, "~> 2.5"},
-     {:credo, "~> 0.5", only: [:dev, :test]}
+     {:credo, "~> 0.5", only: [:dev, :test]},
+     {:cipher, ">= 1.3.0"}
     ]
   end
 

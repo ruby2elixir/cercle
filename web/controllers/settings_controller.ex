@@ -1,13 +1,13 @@
 defmodule CercleApi.SettingsController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.User
+  alias CercleApi.{User, Company}
 
   def profile_edit(conn, _params) do
-    user = conn.assigns[:current_user]
-    changeset = User.changeset(conn.assigns[:current_user])
-    if conn.assigns[:current_user].company_id do
-      company = CercleApi.Repo.get(CercleApi.Company, conn.assigns[:current_user].company_id)
+    user = Guardian.Plug.current_resource(conn)
+    changeset = User.changeset(user)
+    if user.company_id do
+      company = Repo.get(Company, user.company_id)
     end
 
     conn
@@ -16,10 +16,10 @@ defmodule CercleApi.SettingsController do
   end
 
   def profile_update(conn, %{"user" => user_params}) do
-    user = conn.assigns[:current_user]
+    user = Guardian.Plug.current_resource(conn)
     changeset = User.update_changeset(user, user_params)
-    if conn.assigns[:current_user].company_id do
-      company = CercleApi.Repo.get(CercleApi.Company, conn.assigns[:current_user].company_id)
+    if user.company_id do
+      company = Repo.get(Company, user.company_id)
     end
 
     case Repo.update(changeset) do
@@ -35,8 +35,9 @@ defmodule CercleApi.SettingsController do
   end
 
   def team_edit(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+    user = Guardian.Plug.current_resource(conn)
+    company_id = user.company_id
+    company = Repo.get!(Company, company_id) |> Repo.preload [:users]
 
     conn
     |> put_layout("adminlte.html")
@@ -44,9 +45,10 @@ defmodule CercleApi.SettingsController do
   end
 
   def fields_edit(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id)
-    changeset = CercleApi.Company.changeset(company)
+    user = Guardian.Plug.current_resource(conn)
+    company_id = user.company_id
+    company = Repo.get!(Company, company_id)
+    changeset = Company.changeset(company)
 
     conn
     |> put_layout("adminlte.html")
@@ -55,9 +57,10 @@ defmodule CercleApi.SettingsController do
 
 
   def company_edit(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id)
-    changeset = CercleApi.Company.changeset(company)
+    user = Guardian.Plug.current_resource(conn)
+    company_id = user.company_id
+    company = Repo.get!(Company, company_id)
+    changeset = Company.changeset(company)
 
     conn
     |> put_layout("adminlte.html")
@@ -65,11 +68,12 @@ defmodule CercleApi.SettingsController do
   end
 
   def company_update(conn, _params) do
-    company_id = conn.assigns[:current_user].company_id
+    user = Guardian.Plug.current_resource(conn)
+    company_id = user.company_id
     company_params = _params["company"]
 
-    company = Repo.get!(CercleApi.Company, company_id)
-    changeset = CercleApi.Company.changeset(company, company_params)
+    company = Repo.get!(Company, company_id)
+    changeset = Company.changeset(company, company_params)
 
     case Repo.update(changeset) do
       {:ok, company} ->
@@ -81,5 +85,30 @@ defmodule CercleApi.SettingsController do
     end
   end
 
+  def team_invitation(conn, %{"user" => user_params}) do
+    user = Guardian.Plug.current_resource(conn)
+    company = Repo.get!(Company, user.company_id)
+    receiver_email = user_params["email"]
+    values = %{"company_id": "#{company.id}", "email": "#{receiver_email}"}
+    encoded_values = Cipher.cipher values
+    try do
+      CercleApi.Mailer.deliver invitation_email(user, receiver_email, company.title, encoded_values)
+      conn
+      |> put_flash(:success, "Invitation link sent successfully!")
+      |> redirect(to: "/settings/team_edit")
+    rescue RuntimeError ->
+      conn
+      |> put_flash(:error, "Unable to send invitation link due to some error!")
+      |> redirect(to: "/settings/team_edit")
+    end
+  end
 
+  def invitation_email(sender, receiver_email, company_name, encoded_values) do
+    %Mailman.Email{
+      subject: sender.user_name <> " invited to join " <> company_name,
+      from: "referral@cercle.co",
+      to: [receiver_email],
+      html: Phoenix.View.render_to_string(CercleApi.EmailView, "team_invitation.html", sender: sender, receiver_email: receiver_email, company_name: company_name, encoded_values: encoded_values)
+      }
+  end
 end

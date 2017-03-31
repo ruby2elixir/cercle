@@ -4,8 +4,6 @@
 <!-- Main content -->
 <section class="content">
    <div class="row">
-     
-     
       <div class="col-md-3">
          <div class="box box-solid">
            <div class="box-header with-border">
@@ -23,9 +21,8 @@
              </ul>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
-         
        </div><!-- /.col -->
-       
+
        <div class="col-md-9">
          <!-- Horizontal Form -->
          <!-- general form elements disabled -->
@@ -107,8 +104,7 @@
              </div>
           <% end %>
          </div><!-- /.box -->
-       </div> 
-         
+       </div>
   </div>
-    
+
 </section><!-- /.content -->

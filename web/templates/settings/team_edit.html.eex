@@ -3,73 +3,62 @@
 
 <!-- Main content -->
 <section class="content">
-   <div class="row">
-      <div class="col-md-3">
-         <div class="box box-solid">
-           <div class="box-header with-border">
-             <h3 class="box-title" style="">Settings</h3>
-           </div>
-           <div class="box-body no-padding">
-             <ul class="nav nav-pills nav-stacked">
-               <li ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
-               <li ><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a>
-               <li class='active'><a href="/"><i class="fa fa-edit"></i>Team</a></li>
-               <li><a href="/import"><i class="fa fa-edit"></i>Import</a></li>
-             </ul>
-           </div><!-- /.box-body -->
-         </div><!-- /. box -->
-         
-       </div><!-- /.col -->
-       
-       <div class="col-md-9">
-         <!-- Horizontal Form -->
-         <!-- general form elements disabled -->
-         <div class="box box-primary">
-          <div class="box-header with-border">
-               <h3 class="box-title">Team</h3>
-             </div><!-- /.box-header -->
-         <div class="box-body">
-        <div class="row">
-          <div class="col-md-9">
-            <input type="email" class="form-control" placeholder="Type an email address" />
-          </div>
-           <div class="col-md-3">
-           <input type="submit" class="btn btn-primary" value="Invite" class="" />
-           </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <h3 class="box-title" style="">Settings</h3>
         </div>
-         <div class="row">
-         <div class="col-md-12">
-         <Br />
-         <h4>Members</h4>
-         	<table class="table table-bordered">
-         		<%= for u <- @company.users do %>
-          
+        <div class="box-body no-padding">
+          <ul class="nav nav-pills nav-stacked">
+            <li ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
+            <li ><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a>
+            <li class='active'><a href="/"><i class="fa fa-edit"></i>Team</a></li>
+            <li><a href="/import"><i class="fa fa-edit"></i>Import</a></li>
+          </ul>
+        </div><!-- /.box-body -->
+      </div><!-- /. box -->
+    </div><!-- /.col -->
+     
+    <div class="col-md-9">
+       <!-- Horizontal Form -->
+       <!-- general form elements disabled -->
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">Team</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <div class="row">
+            <%= form_for @conn, settings_path(@conn, :team_invitation), [as: :user], fn f -> %>
+              <div class="col-md-9">
+                <div class="form-group">
+                  <%= text_input f, :email, placeholder: "Type an email address", class: "form-control" %>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <%= submit "Invite", class: "btn btn-primary" %>
+              </div>
+            <%end%>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4>Members</h4>
+           	  <table class="table table-bordered">
+             		<%= for u <- @company.users do %>
           				<tr>
                     <td>
                       <img src="<%= CercleApi.UserProfileImage.url({u.profile_image, u}, :small) %>" class="user-image" alt="User Image" style="width:34px;border-radius:128px;">
-                      
                     </<td>
-                    <td>
-                    <%=u.user_name%>
-                    <br />
-                    <%=u.login%>
-                    </td>
-                    <td>
-                    <%=u.name%>
-                    </td>
-                     <td>
-                    <a href="#">Remove</a>
-                    </td>
-                    </tr>
-        <%end%>
-
-                    
-                </table>
-       </div> 
-       </div> 
-       </div> 
+                    <td><%=u.user_name%><br /><%=u.login%></td>
+                    <td><%=u.name%></td>
+                    <td><a href="#">Remove</a></td>
+                  </tr>
+                <%end%>   
+              </table>
+            </div> 
+          </div> 
         </div> 
-         
+      </div>
+    </div>
   </div>
-    
 </section><!-- /.content -->
