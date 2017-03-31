@@ -96,3 +96,6 @@ config :mailman,
 # Configure guardian
 config :guardian, Guardian,
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+config :cercleApi,
+  site_url: "http://www.cercle.co"
