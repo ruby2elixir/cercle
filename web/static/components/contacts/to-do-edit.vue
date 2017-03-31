@@ -24,7 +24,7 @@
           </div>
 
           <div class="col-md-1">
-            <select v-model="task.user_id">
+            <select v-model="task.user_id" v-on:change="updateTask(task)">
               <option v-for="user in companyUsers" :value="user.id">{{(user.user_name.toUpperCase()).slice(0, 2)}}</option>
             </select>
           </div>
@@ -106,7 +106,7 @@
             dueDate: task.due_date,
             contactId: this.contact.id,
             opportunityId: this.opportunity.id,
-            userId: this.currentUserId,
+            userId: task.user_id,
             companyId: this.company.id,
             isDone: task.is_done
           }
