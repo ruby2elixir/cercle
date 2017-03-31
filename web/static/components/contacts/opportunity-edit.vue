@@ -2,7 +2,7 @@
   <div class="col-md-12 opportunity-block">
     <div class="post" v-if="item">
     <div class="pull-right">
-      <button type="button" class="btn btn-primary pull-right browse" v-on:click="$emit('browse')">BROWSE</button>
+      <button type="button" class="btn btn-primary pull-right browse" v-on:click="browse">BROWSE</button>
       <br />
       <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
     </div>
@@ -104,6 +104,10 @@
       };
     },
     methods: {
+      browse(){
+        this.leaveChannel();
+        this.$emit('browse');
+      },
       addContact(){
         let url = '/api/v2/contact';
         let data = {
@@ -220,31 +224,26 @@
         this.opportunityChannel.on('timeline_event:created', payload => {
           this.$data.events.unshift(payload.event);
         });
-
-
       },
       leaveChannel() {
-        if (this.opportunityChannel) { this.opportunityChannel.leave(); }
+        if (this.$data.opportunityChannel) {
+          this.$data.opportunityChannel.leave();
+        }
       },
       initChannel(){
+        let channelTopic = 'opportunities:' + this.opportunity.id;
+        this.opportunityChannel = this.socket.channels.find(function(item){
+          return channelTopic === item.topic;
+        });
+
         if (this.opportunityChannel) {
-          this.opportunityChannel.leave().receive('ok', () => {
-            this.opportunityChannel = this.socket.channel('opportunities:' + this.opportunity.id, {});
-            this.subscribe();
-            this.opportunityChannel.join()
-              .receive('ok', resp => {
-                this.opportunityChannel.push('load');
-              }).receive('error', resp => {  });
-
-
-          });
+          this.subscribe();
         } else {
-          this.opportunityChannel = this.socket.channel('opportunities:' + this.opportunity.id, {});
+          this.opportunityChannel = this.socket.channel(channelTopic, {});
           this.subscribe();
           this.opportunityChannel.join()
-            .receive('ok', resp => {
-              this.opportunityChannel.push('load');
-            }).receive('error', resp => {  });
+                .receive('ok', resp => { this.opportunityChannel.push('load'); })
+                .receive('error', resp => {  });
         }
       },
 
