@@ -61,9 +61,7 @@
 <section class="content-header" style="margin-bottom:20px;margin-left:20px;">
 
   <h2>
-    <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>"><%= @board.name %></span>
-    &nbsp;&nbsp;&nbsp;
-     <a href="/contact/new" class="btn btn-default">+ Add a Contact</a>
+    <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>" style="color:white;font-weight:bold;"><%= @board.name %></span>
   </h2>
 
   <!--

@@ -111,7 +111,7 @@
         </nav>
       </header>
       <!-- Full Width Column -->
-      <div class="content-wrapper" <%= if assigns[:contact] do %> style="background-color:#A5A5A5;" <%end%>>
+      <div class="content-wrapper" <%= if assigns[:contact] do %> style="background-color:#A5A5A5;" <%end%> <%= if assigns[:board] do %> style="background-color:#d831ff;" <%end%>  >
          <%= if get_flash(@conn, :info) do %>
             <p class="alert alert-info" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :info) %></p>
           <% end %>
