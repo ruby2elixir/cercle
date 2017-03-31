@@ -17,7 +17,7 @@ defmodule CercleApi.DateHelpers do
 
   def time_ago_in_words(datetime) do
     date = datetime
-      |> DateTime.to_erl
+      |> NaiveDateTime.to_erl
       |> :calendar.datetime_to_gregorian_seconds
       |> Kernel.-(62167219200)
       |> Timex.from_unix
