@@ -15,7 +15,7 @@ defmodule CercleApi.SessionController do
         |> put_flash(:info, "Welcome back!")
         |> Guardian.Plug.sign_in(user)
         |> redirect(to:  path)
-        
+
       :error ->
         conn
         |> put_flash(:error, "Invalid username/password combination")

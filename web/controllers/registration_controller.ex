@@ -14,8 +14,8 @@ defmodule CercleApi.RegistrationController do
     if company_changeset.valid? do
       user_changeset = User.registration_changeset(%User{}, registration_params)
       if user_changeset.valid? do
-        if company_params["id"] != "" do 
-          company = Repo.get_by(Company, id: company_params["id"]) 
+        if company_params["id"] != "" do
+          company = Repo.get_by(Company, id: company_params["id"])
         else
           {:ok, company} = Repo.insert(company_changeset)
         end
