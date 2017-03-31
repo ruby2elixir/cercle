@@ -13,7 +13,7 @@ defmodule CercleApi.APIV2.CompanyView do
     %{id: company.id,
       title: company.title,
       admin_email: company.admin_email,
-      image_url: CercleApi.Image.url({company.image, company}),
+      image_url: CercleApi.CompanyLogoImage.url({company.image, company}),
       subtitle1: company.subtitle1,
       description1: company.description1,
       subtitle2: company.subtitle2,
