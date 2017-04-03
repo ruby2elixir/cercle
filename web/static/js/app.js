@@ -60,6 +60,7 @@ Vue.use(VueResource);
 Vue.use(VueResourceCaseConverter);
 
 import ContactAppEdit from "../components/contacts/edit.vue";
+import ContactList from "../components/contacts/list.vue";
 
 
 if ($("#contact-app-edit").length > 0){
@@ -70,6 +71,14 @@ if ($("#contact-app-edit").length > 0){
         }
     });
 };
+if ($("#contacts-app").length > 0) {
+    new Vue({
+        el: "#contacts-app",
+        components: {
+            'contact-list' : ContactList
+        }
+    });
+}
 
 
 if (

@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Contact,Company,Organization,Opportunity,User,Activity,Tag,ContactTag}
+  alias CercleApi.{Repo, Contact,Company,Organization,Opportunity,User,Activity,Tag,ContactTag, TimelineEvent}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -15,7 +15,19 @@ defmodule CercleApi.APIV2.ContactController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, _params) do
-    contacts = Repo.all(Contact)
+    current_user = Guardian.Plug.current_resource(conn)
+    company_id  = current_user.company_id
+    query = from p in Contact,
+      where: p.company_id == ^company_id,
+      order_by: [desc: p.updated_at]
+
+    contacts = Repo.all(query)
+    |> Repo.preload(
+      [
+        :organization, :tags,
+        timeline_event: from(TimelineEvent, order_by: [desc: :inserted_at])
+      ]
+    )
     render(conn, "index.json", contacts: contacts)
   end
 

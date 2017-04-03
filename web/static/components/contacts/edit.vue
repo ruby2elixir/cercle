@@ -79,6 +79,7 @@ import OrganizationEdit from './organization-edit.vue';
 import OpportunityEdit from './opportunity-edit.vue';
 
 export default {
+
   props: ['contact_id', 'current_user_id', 'time_zone', 'user_image'],
   data() {
     return {
@@ -101,6 +102,11 @@ export default {
       browseOpportunities: true
 
     };
+  },
+  watch: {
+    'contact_id': function() {
+      this.initConn();
+    }
   },
   components: {
     'inline-edit': InlineEdit,
@@ -138,10 +144,12 @@ export default {
       var vm = this;
       localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
       Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
-      vm.connectToSocket();
+      if (this.contact_id) {
+          vm.initConn();
+      }
     },
 
-    connectToSocket() {
+    initConn() {
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
       this.channel = this.socket.channel('contacts:' + this.contact_id, {});
@@ -189,7 +197,7 @@ export default {
   },
   mounted(){
     this.setAuthToken();
-
   }
+
 };
 </script>

@@ -10,9 +10,18 @@ defmodule CercleApi.APIV2.ContactView do
   end
 
   def render("contact.json", %{contact: contact}) do
-    %{id: contact.id,
+    %{
+      id: contact.id,
       company_id: contact.company_id,
-      data: contact.data}
+      data: contact.data,
+      name: contact.name,
+      email: contact.email,
+      job_title: contact.job_title,
+      phone: contact.phone,
+      updated_at: contact.updated_at,
+      organization: contact.organization,
+      tags: contact.tags
+    }
   end
 
 end
