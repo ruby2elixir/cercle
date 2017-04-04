@@ -27,19 +27,17 @@
 </tbody>
     </table>
 
-     <modal large title="Edit contact" :show.sync="showContact">
+     <modal large :show.sync="showContact" class="contact-modal">
       <div slot="modal-body" class="modal-body">
         <component
          keep-alive
          v-bind:is="contactView"
          :contact_id.sync="contact.id"
-         :current_user_id="current_user_id"
-         :user_image="user_image"
-         :time_zone="time_zone"
         >
-        <div slot="modal-footer" class="modal-footer"></div>
+
         </component>
       </div>
+      <span slot="modal-footer"></span>
     </modal>
   </div>
 </template>
@@ -49,7 +47,7 @@ import {Socket, Presence} from 'phoenix';
 import moment from 'moment';
 import ContactForm from './edit.vue';
 export default {
-  props: ['company_id', 'current_user_id', 'time_zone', 'user_image'],
+  props: ['company_id'],
   data() {
     return {
       contacts: [],
@@ -102,6 +100,19 @@ export default {
   },
   mounted(){
     this.setAuthToken();
+    let vm = this;
+    window.addEventListener('keyup', function(event) {
+      if (event.keyCode === 27) { vm.showContact = false; }
+    });
+
   }
 };
+
 </script>
+<style lang="sass">
+.contact-modal {
+  .modal-header {
+    border: none;
+  }
+}
+</style>

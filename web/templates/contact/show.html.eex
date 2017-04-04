@@ -1,8 +1,3 @@
 <div id="contact-app-edit">
-  <contact-app-edit
-    contact_id="<%= Poison.encode!(@contact.id) %>"
-    current_user_id="<%= @conn.assigns[:current_user].id %>"
-    user_image="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>"
-    time_zone="<%= @conn.assigns[:current_user].time_zone %>"
-    />
+  <contact-app-edit contact_id="<%= Poison.encode!(@contact.id) %>" />
 </div>

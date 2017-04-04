@@ -19,7 +19,9 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//unpkg.com/element-ui/lib/theme-default/index.css">
     <%= if Guardian.Plug.current_token(@conn) do %>
-      <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
+    <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
+    <meta name="user_image", content="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" >
+    <meta name="time_zone", content="<%= @conn.assigns[:current_user].time_zone %>" >
     <% end %>
 
   </head>

@@ -52,15 +52,14 @@
 
           <opportunity-edit
             ref="opportunityEdit"
-            :time_zone="time_zone"
-            :current_user_id="current_user_id"
+            :time_zone="timeZone"
             :organization="organization"
             :contact="contact"
             :company="company"
             :company_users="companyUsers"
             :opportunity="opportunity"
             :opportunities="opportunities"
-            :user_image="user_image"
+            :user_image="userImage"
             v-on:browse="browseOpportunities = true"
             :socket="socket"
             />
@@ -80,7 +79,7 @@ import OpportunityEdit from './opportunity-edit.vue';
 
 export default {
 
-  props: ['contact_id', 'current_user_id', 'time_zone', 'user_image'],
+  props: ['contact_id'],
   data() {
     return {
       showAddCard: false,
@@ -99,8 +98,9 @@ export default {
       boards: [],
       boardColumns: [],
       newBoard: null,
-      browseOpportunities: true
-
+      browseOpportunities: true,
+      timeZone: null,
+      userImage: null
     };
   },
   watch: {
@@ -145,7 +145,7 @@ export default {
       localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
       Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
       if (this.contact_id) {
-          vm.initConn();
+        vm.initConn();
       }
     },
 
@@ -196,6 +196,8 @@ export default {
     }
   },
   mounted(){
+    this.timeZone = document.querySelector('meta[name="time_zone"]').content;
+    this.userImage = document.querySelector('meta[name="user_image"]').content;
     this.setAuthToken();
   }
 

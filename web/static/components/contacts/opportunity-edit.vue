@@ -55,7 +55,6 @@
         :opportunity="opportunity"
         :company="company"
         :timeZone="time_zone"
-        :currentUserId="current_user_id"
       >
         <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" :user_image="user_image" />
         <timeline_events

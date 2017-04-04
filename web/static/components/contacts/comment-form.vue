@@ -23,7 +23,9 @@
         userImg: this.user_image
       };
     },
+
     methods: {
+
       sendMessage(){
         var url = '/api/v2/timeline_events';
         this.$http.post(url,
