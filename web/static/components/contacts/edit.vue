@@ -1,8 +1,8 @@
 <template>
   <div class="contact-edit">
-    <div style="max-width:800px;margin: 0px auto;"  >
+    <div style=""  >
       <!-- Main content -->
-      <section class="content" style="margin-top:20px;">
+      <section class="" style="margin-top:20px;">
         <div class="row">
           <div class="col-md-12">
             <table style="width:100%;background-color:white;">
@@ -20,7 +20,6 @@
                     :contact="contact"
                     :company="company"
                     >
-                    <li slot="menu"><a href="#"  v-on:click="deleteContact">Delete Contact</a></li>
                    </organization-edit>
                 </td>
               </tr>

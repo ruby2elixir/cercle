@@ -6,6 +6,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
   plug :scrub_params, "timeline_event" when action in [:create]
 
   def index(conn, _params) do
+    current_user = Guardian.Plug.current_resource(conn)
     te = Repo.all(TimelineEvent)
     render(conn, "index.json", timeline_events: te)
   end

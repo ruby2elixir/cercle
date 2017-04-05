@@ -1,20 +1,5 @@
 <template>
   <div>
-  <div class="box-tools pull-right dropdown ">
-    <button type="button" class="btn btn-box-tool"  v-on:click="menuModal = !menuModal"><i class="fa fa-fw fa-angle-down"></i></button>
-    <modal title="What do you want to do?"  :show.sync="menuModal">
-      <div slot="modal-body" class="modal-body">
-        <button type="button" class="btn btn-block btn-default" v-on:click="removeOrganization">Remove this company</button>
-        <br />
-        <button type="button" class="btn btn-block btn-default">Display Archived Boards</button>
-        <br />
-        <button type="button" class="btn btn-block btn-default">Delete this Contact</button>
-      </div>
-
-      <div slot="modal-footer" class="modal-footer"></div>
-    </modal>
-  </div>
-
     <div class="" style="" v-if="!organization">
       <modal title="Where is the contact working currently?" large :show.sync="openModal">
         <div slot="modal-body" class="modal-body">
