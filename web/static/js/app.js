@@ -62,6 +62,7 @@ Vue.use(VueResourceCaseConverter);
 import ContactAppEdit from "../components/contacts/edit.vue";
 import ContactList from "../components/contacts/list.vue";
 import Board from "../components/boards/board.vue";
+import Activities from "../components/activities/list.vue";
 
 
 if ($("#contact-app-edit").length > 0){
@@ -86,6 +87,15 @@ if ($("#board-app").length > 0) {
         el: "#board-app",
         components: {
             'board': Board
+        }
+    });
+}
+
+if ($("#activities-app").length > 0) {
+    new Vue({
+        el: "#activities-app",
+        components: {
+            'activities': Activities
         }
     });
 }

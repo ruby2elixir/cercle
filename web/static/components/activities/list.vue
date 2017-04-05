@@ -4,10 +4,8 @@
   import ContactForm from '../contacts/edit.vue';
 
   export default {
-    props: ['board_id'],
     data() {
       return {
-        board: {},
         showContact: false,
         contact: {},
         opportunity: {},

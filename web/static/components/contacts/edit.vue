@@ -175,6 +175,11 @@ export default {
 
         if (payload.opportunities) {
           this.opportunities = payload.opportunities;
+          if (this.opportunity_id) {
+            let opp = payload.opportunities.find(
+                    (item) => { item.id === this.opportunity_id;});
+            if (opp) { this.changeOpportunity(opp); }
+          }
         }
         if (payload.company) {
           this.company = payload.company;
