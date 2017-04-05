@@ -2,7 +2,7 @@
   <div class="contact-edit">
     <div style=""  >
       <!-- Main content -->
-      <section class="" style="margin-top:20px;">
+      <section>
         <div class="row">
           <div class="col-md-12">
             <table style="width:100%;background-color:white;">
@@ -78,7 +78,7 @@ import OpportunityEdit from './opportunity-edit.vue';
 
 export default {
 
-  props: ['contact_id'],
+  props: ['contact_id', 'opportunity_id'],
   data() {
     return {
       showAddCard: false,

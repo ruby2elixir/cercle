@@ -1,8 +1,8 @@
 <div class="portlet" data-id="<%=@opportunity.id%>">
     <div class="portlet-content">
       <div style="font-size:14px;font-weight:800;padding-bottom:10px;">
-        <a href="/contact/<%=@opportunity.main_contact.id%>/opportunity/<%=@opportunity.id%>">
-          <%=@opportunity.name%>  
+        <a v-on:click.stop="contactShow(<%=@opportunity.main_contact.id%>, <%=@opportunity.id%>)">
+          <%=@opportunity.name%>
           <Br />
           <span style="color:#222222;">
           with <%=@opportunity.main_contact.name %>
@@ -17,7 +17,7 @@
         <% else %>
           <i class="fa fa-check-square-o" aria-hidden="true"></i>
         0/<%=length(@opportunity.main_contact.activities)%>
-      
+
         <% end %>
         </div>
       <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({@opportunity.user.profile_image, @opportunity.user}, :small) %>" alt="user image" style="width:25px;">

@@ -28,7 +28,11 @@
     </table>
 
      <modal large :show.sync="showContact" class="contact-modal">
+      <span slot="modal-header"></span>
       <div slot="modal-body" class="modal-body">
+        <button type="button" class="close" @click="showContact=false">
+          <span>&times;</span>
+        </button>
         <component
          keep-alive
          v-bind:is="contactView"
@@ -113,6 +117,9 @@ export default {
 .contact-modal {
   .modal-header {
     border: none;
+    }
+  button.close {
+    position: absolute;right: 10px;top: 4px; z-index: 999;
   }
 }
 </style>
