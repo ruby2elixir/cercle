@@ -92,3 +92,13 @@ body, form, ul, table {
 		transition: none !important;
 	}
 }
+
+
+.modal-lg {
+    width: 750px;
+}
+
+
+.modal-body {
+	padding:0px;
+}

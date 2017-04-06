@@ -13,6 +13,7 @@ export default {
 
 <style lang="sass">
   .inline-input {
+  background-color:transparent;
   border:0px solid grey;
   display:inline !important;
   }

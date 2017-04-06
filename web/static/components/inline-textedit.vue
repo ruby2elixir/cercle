@@ -13,6 +13,7 @@ export default {
 
 <style lang="sass">
   .inline-textarea {
+  background-color:transparent;
   border:0px solid grey;
   width:100%;
   height:60px;
