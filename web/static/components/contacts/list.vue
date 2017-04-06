@@ -85,14 +85,6 @@ export default {
 
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
-      this.channel = this.socket.channel('companies:' + this.company_id, {});
-
-      this.channel.join()
-            .receive('ok', resp => {
-
-            })
-            .receive('error', resp => { console.log('Unable to join', resp); });
-
       this.loadContacts();
     },
     setAuthToken(){

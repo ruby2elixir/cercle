@@ -11,8 +11,8 @@ defmodule CercleApi.APIV2.ContactController do
   plug :scrub_params, "contact" when action in [:create, :update]
 
   plug :authorize_resource, model: Contact, only: [:update, :delete, :show],
-  unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
-  not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
+    unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
+    not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
@@ -86,6 +86,7 @@ defmodule CercleApi.APIV2.ContactController do
 
   def utags(conn, %{"id" => id, "company_id" => company_id_string}) do
     contact = Repo.get!(Contact, id)
+    |> Repo.preload([:tags, :organization])
     query = from c in ContactTag,
       where: c.contact_id == ^id
     Repo.delete_all(query)
@@ -96,6 +97,7 @@ defmodule CercleApi.APIV2.ContactController do
 
   def update_tags(conn, %{"id" => id, "tags" => tag_params, "company_id" => company_id}) do
     contact = Repo.get!(Contact, id)
+    |> Repo.preload([:organization])
 
     #tag_params
     query = from c in ContactTag,
@@ -121,7 +123,7 @@ defmodule CercleApi.APIV2.ContactController do
       query = from tag in Tag,
         where: tag.id in ^tag_ids
       tags = Repo.all(query)
-          changeset = contact
+      changeset = contact
         |> Repo.preload(:tags) # Load existing data
         |> Ecto.Changeset.change() # Build the changeset
         |> Ecto.Changeset.put_assoc(:tags, tags) # Set the association
