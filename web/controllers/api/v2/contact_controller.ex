@@ -70,7 +70,7 @@ defmodule CercleApi.APIV2.ContactController do
 
     case Repo.update(changeset) do
       {:ok, contact} ->
-        contact = contact |> Repo.preload(:organization)
+        contact = contact |> Repo.preload([:tags, :organization])
         channel = "contacts:"  <> to_string(contact.id)
         CercleApi.Endpoint.broadcast!(channel, "state", %{
               contact: contact,

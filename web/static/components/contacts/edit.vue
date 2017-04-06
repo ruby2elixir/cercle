@@ -5,7 +5,7 @@
       <section>
         <div class="row">
           <div class="col-md-12">
-            <table style="width:100%;background-color:white;">
+            <table style="width:100%;background-color: #edf0f5;">
               <tr>
                 <td style="width:50%;padding:20px;vertical-align: top;">
                   <profile-edit
@@ -104,7 +104,7 @@ export default {
   },
   watch: {
     'contact_id': function() {
-      this.initConn();
+      this.initConn(true);
     }
   },
   components: {
@@ -148,7 +148,7 @@ export default {
       }
     },
 
-    initConn() {
+    initConn(reset) {
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
       this.channel = this.socket.channel('contacts:' + this.contact_id, {});
@@ -159,7 +159,14 @@ export default {
                 })
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
-
+      if (reset) {
+        this.opportunities = []
+        this.opportunity = null
+        this.company = null
+        this.tags = []
+        this.organization = null
+        this.browseOpportunities = true
+      }
       this.channel.on('opportunity:created', payload => {
         if (payload.opportunity) {
           this.opportunities.push(payload.opportunity);
@@ -169,6 +176,7 @@ export default {
 
       this.channel.on('state', payload => {
         this.contact = payload.contact;
+
         if (payload.boards) {
           this.boards = payload.boards;
         }
