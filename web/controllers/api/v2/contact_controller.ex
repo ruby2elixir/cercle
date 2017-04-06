@@ -59,6 +59,15 @@ defmodule CercleApi.APIV2.ContactController do
     render(conn, "index.json", contacts: contacts)
   end
 
+  def show(conn, %{"id" => id}) do
+    contact = Contact
+    |> Contact.preload_data
+    |> Repo.get(id)
+
+    render(conn, "full_contact.json", contact: contact)
+  end
+
+
   def update(conn, %{"id" => id, "contact" => contact_params}) do
     contact = Repo.get!(Contact, id)
     if contact_params["data"] do

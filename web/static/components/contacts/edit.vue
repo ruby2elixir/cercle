@@ -147,25 +147,61 @@ export default {
         vm.initConn();
       }
     },
+    loadContact() {
+      if (this.contact_id) {
+        this.$http.get('/api/v2/contact/' + this.contact_id).then(resp => {
+          let payload = resp.data;
+          this.contact = payload.contact;
 
+          if (payload.boards) {
+            this.boards = payload.boards;
+          }
+
+          if (payload.opportunities) {
+            this.opportunities = payload.opportunities;
+            if (this.opportunity_id) {
+              let opp = payload.opportunities.find(
+                           (item) => { item.id === this.opportunity_id;});
+              if (opp) { this.changeOpportunity(opp); }
+            }
+          }
+
+          if (payload.company) {
+            this.company = payload.company;
+          }
+          if (payload.company_users) {
+            this.companyUsers = payload.company_users;
+          }
+          if (payload.tags) {
+            this.tags = payload.tags;
+          }
+          if (payload.organization) {
+            if (payload.organization['id']) {
+              this.organization = payload.organization;
+            } else {
+              this.organization = null;
+            }
+          }
+
+        });
+      }
+    },
     initConn(reset) {
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
       this.channel = this.socket.channel('contacts:' + this.contact_id, {});
 
       this.channel.join()
-                .receive('ok', resp => {
-                  this.channel.push('load_state');
-                })
+                .receive('ok', resp => {  })
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
       if (reset) {
-        this.opportunities = []
-        this.opportunity = null
-        this.company = null
-        this.tags = []
-        this.organization = null
-        this.browseOpportunities = true
+        this.opportunities = [];
+        this.opportunity = null;
+        this.company = null;
+        this.tags = [];
+        this.organization = null;
+        this.browseOpportunities = true;
       }
       this.channel.on('opportunity:created', payload => {
         if (payload.opportunity) {
@@ -173,38 +209,7 @@ export default {
           this.opportunity || (this.opportunity = payload.opportunity);
         }
       });
-
-      this.channel.on('state', payload => {
-        this.contact = payload.contact;
-
-        if (payload.boards) {
-          this.boards = payload.boards;
-        }
-
-        if (payload.opportunities) {
-          this.opportunities = payload.opportunities;
-          if (this.opportunity_id) {
-            let opp = payload.opportunities.find(
-                    (item) => { item.id === this.opportunity_id;});
-            if (opp) { this.changeOpportunity(opp); }
-          }
-        }
-        if (payload.company) {
-          this.company = payload.company;
-          this.companyUsers = payload.company_users;
-        }
-        if (payload.tags) {
-          this.tags = payload.tags;
-        }
-        if (payload.organization) {
-          if (payload.organization['id']) {
-            this.organization = payload.organization;
-          } else {
-            this.organization = null;
-          }
-        }
-
-      });
+      this.loadContact();
     }
   },
   mounted(){
