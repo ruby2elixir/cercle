@@ -1,7 +1,7 @@
 <template>
   <div class="contact-to-dos">
     <div>
-      <h3>
+      <h3 style="color:rgb(99,99,99);font-weight:bold;">
         <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i> To-Do
       </h3>
       <div style="padding:15px;">

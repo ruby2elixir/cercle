@@ -7,8 +7,8 @@
       <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
     </div>
       <div style="" id="change_status">
-        <span style="font-size:24px;color:rgb(150,150,150);"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
-          <span data-placeholder="Project Name" style="color:rgb(102,102,102);">
+        <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
+          <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;">
             <inline-edit v-model="item.name" v-on:input="updateOpportunity" placeholder="Project Name"></inline-edit>
           </span>
         </span>

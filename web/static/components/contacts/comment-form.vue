@@ -1,6 +1,6 @@
 <template>
   <div class="contact-comments-form">
-    <h3><i class="fa fa-fw fa-comments-o"></i>Comment</h3>
+    <h3 style="color:rgb(99,99,99);font-weight:bold;"><i class="fa fa-fw fa-comments-o"></i>Comment</h3>
     <br />
     <div class="mb=0">
       <img class="img-circle img-bordered-sm" :src="userImg || defaultImg" alt="user image" style="width:40px;float:left;">
