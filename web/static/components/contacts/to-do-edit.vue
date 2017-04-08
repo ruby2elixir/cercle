@@ -2,7 +2,7 @@
   <div class="contact-to-dos">
     <div>
       <h3 style="color:rgb(99,99,99);font-weight:bold;">
-        <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i> Tasks
+        <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i>Tasks
       </h3>
       <div style="padding:15px;">
         <div  v-for="task in tasks" class="task row">
