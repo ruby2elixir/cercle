@@ -13,7 +13,7 @@ defimpl Canada.Can, for: CercleApi.User do
     if user.company_id == organization.company_id, do: true, else: false
   end
 
-  def can?(user, action, opportunity = %Opportunity{}) when action in [:delete, :update] do
+  def can?(user, action, opportunity = %Opportunity{}) when action in [:delete, :update, :show] do
     if user.company_id == opportunity.company_id, do: true, else: false
   end
 

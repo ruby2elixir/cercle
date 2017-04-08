@@ -41,6 +41,11 @@ defmodule CercleApi.APIV2.ContactController do
 
     case Repo.insert(changeset) do
       {:ok, contact} ->
+        contact = contact
+        |> Repo.preload(
+          [:organization, :tags, :opportunities,
+           company: [:users, boards: [:board_columns]]]
+        )
         conn
         |> put_status(:created)
         |> render("show.json", contact: contact)

@@ -57,7 +57,11 @@ elementLocale.use(elementLang);
 
 Vue.use(require('vue-moment-jalaali'));
 Vue.use(VueResource);
-Vue.use(VueResourceCaseConverter);
+Vue.use(VueResourceCaseConverter, {
+    responseUrlFilter(url) {
+        return false;
+    }
+});
 
 import ContactAppEdit from "../components/contacts/edit.vue";
 import ContactList from "../components/contacts/list.vue";
