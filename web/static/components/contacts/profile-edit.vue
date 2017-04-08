@@ -1,11 +1,9 @@
 <template>
     <div class="">
       <div class="">
-
         <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;font-weight:bold;color:rgb(99,99,99);">
           <i class="fa fa-user" style="color:#d8d8d8;"></i>
-
-          <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name"></inline-edit>
+          <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name" style="width:300px;"></inline-edit>
         </h3>
             <div>
               <inline-edit v-model="contact.job_title" v-on:input="updateContact"  placeholder="Job Title" ></inline-edit>

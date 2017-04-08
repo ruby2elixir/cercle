@@ -7,7 +7,7 @@
           <div class="col-md-12">
             <table style="width:100%;background-color: #edf0f5;">
               <tr>
-                <td style="width:50%;padding:20px;vertical-align: top;">
+                <td style="width:50%;padding:20px;vertical-align: top;padding-right:0px;">
                   <profile-edit
                     :contact="contact"
                     :tags="tags"
