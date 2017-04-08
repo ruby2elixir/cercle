@@ -2,16 +2,34 @@ defmodule CercleApi.APIV2.OpportunityController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.{Opportunity,Contact,Company,Organization,User}
+  alias CercleApi.{Opportunity,Contact,Company,Organization,User,Board}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
 
   plug :scrub_params, "opportunity" when action in [:create, :update]
 
-  plug :authorize_resource, model: Opportunity, only: [:update, :delete],
+  plug :authorize_resource, model: Opportunity, only: [:update, :delete, :show],
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
+
+  def show(conn, %{"id" => id}) do
+    opportunity = Opportunity
+    |> Opportunity.preload_data
+    |> Repo.get(id)
+
+    opportunity_contacts = Opportunity.contacts(opportunity)
+
+    board = Board
+    |> Repo.get!(opportunity.board_id)
+    |> Repo.preload([:board_columns])
+
+    render(conn, "full_opportunity.json",
+      opportunity: opportunity,
+      opportunity_contacts: opportunity_contacts,
+      board: board
+    )
+  end
 
   def create(conn, %{"opportunity" => opportunity_params}) do
     current_user = Guardian.Plug.current_resource(conn)
@@ -19,7 +37,7 @@ defmodule CercleApi.APIV2.OpportunityController do
       opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
 
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
-    
+
     name = board.name
 
     opportunity_params = %{opportunity_params | "name" => name}

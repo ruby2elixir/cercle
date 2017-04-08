@@ -21,7 +21,7 @@
           <span v-for="tag in contact.tags">{{tag.name}} </span>
         </td>
         <td style="width:120px;">
-          <span style="color:grey;font-size:14px;">{{contact.updatedAt | moment("from")}}</span>
+          <span style="color:grey;font-size:14px;">{{contact.updated_at | moment("from")}}</span>
         </td>
       </tr>
 </tbody>

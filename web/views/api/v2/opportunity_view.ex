@@ -13,4 +13,19 @@ defmodule CercleApi.APIV2.OpportunityView do
     %{id: opportunity.id,
       company_id: opportunity.company_id}
   end
+
+  def render("full_opportunity.json",
+    %{opportunity: opportunity,
+      opportunity_contacts: opportunity_contacts,
+      board: board }) do
+    %{
+      opportunity: opportunity,
+      activities:  opportunity.activities,
+      events: opportunity.timeline_event,
+      opportunity_contacts: opportunity_contacts,
+      board: board,
+      board_columns: board.board_columns
+
+      }
+  end
 end

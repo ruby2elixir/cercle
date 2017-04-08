@@ -3,29 +3,25 @@ defmodule CercleApi.APIV2.ActivityController do
   require Logger
   use CercleApi.Web, :controller
   use Timex
-  alias CercleApi.{Contact, Activity, Organization, User, Company}
+  alias CercleApi.{Contact, Activity, Repo}
 
   plug Guardian.Plug.EnsureAuthenticated
 
   plug :scrub_params, "activity" when action in [:create, :update]
 
   def create(conn, %{"activity" => activity_params}) do
-   changeset = Activity.changeset(%Activity{}, activity_params)
+    current_user = Guardian.Plug.current_resource(conn)
+    changeset = current_user
+    |> build_assoc(:activities)
+    |> Activity.changeset(activity_params)
+
     case Repo.insert(changeset) do
       {:ok, activity} ->
-        activity_reload = Repo.preload(Repo.get!(CercleApi.Activity, activity.id), [:user])
-        company = Repo.preload(Repo.get!(CercleApi.Company, activity_reload.user.company_id), [:users])
-        html = Phoenix.View.render_to_string(
-          CercleApi.ContactView, "_task.html",
-          id: activity.id, is_done: activity.is_done,
-          title: activity.title, due_date: activity.due_date,
-          user_name: activity_reload.user.user_name,
-          user_id: activity_reload.user_id, company: company,
-          current_user_time_zone: activity_params["current_user_time_zone"]
-        )
+        activity = activity
+        |> Repo.preload([:user])
         CercleApi.Endpoint.broadcast!(
-          "opportunities:" <> to_string(activity_reload.opportunity_id),
-          "activity:created", %{"activity" => activity_reload}
+          "opportunities:" <> to_string(activity.opportunity_id),
+          "activity:created", %{"activity" => activity}
         )
         json conn, "{OK: true}"
       {:error, changeset} ->
@@ -36,7 +32,8 @@ defmodule CercleApi.APIV2.ActivityController do
   end
 
   def update(conn, %{"id" => id, "activity" => activity_params}) do
-    activity = Repo.get!(Activity, id) |> Repo.preload(:user)
+    activity = Repo.get!(Activity, id)
+    |> Repo.preload(:user)
 
     changeset = Activity.changeset(activity, activity_params)
 

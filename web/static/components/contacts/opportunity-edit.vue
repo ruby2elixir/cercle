@@ -16,13 +16,13 @@
         <br />
         <div class="managers">
           Managed by:
-          <select v-model="item.user_id"  v-on:change="updateOpportunity">
-            <option v-for="user in company_users" :value="user.id">{{user.user_name}}</option>
+          <select v-model.number="item.user_id"  v-on:change="updateOpportunity">
+            <option v-for="user in company_users" :value.number="user.id">{{user.user_name}}</option>
           </select>
           &nbsp;&nbsp;
           Status:
           <select v-model="item.board_column_id" v-on:change="updateOpportunity">
-             <option v-for="board_column in boardColumns" :value="board_column.id">{{board_column.name}}</option>
+             <option v-for="board_column in boardColumns" :value.number="board_column.id">{{board_column.name}}</option>
           </select>
         </div>
         Contacts Involved:
@@ -126,7 +126,7 @@
             contactIds.push(item.id);
           });
           contactIds.push(resp.data.data.id);
-          this.$http.put(urlOpp,{opportunity:{ contactIds: contactIds}});
+          this.$http.put(urlOpp,{ opportunity: { contactIds: contactIds } });
         });
 
         this.NewContactName = '';
@@ -137,6 +137,7 @@
         let url = '/api/v2/opportunity/' + this.item.id;
         this.$http.put(url, { opportunity: { status: '1'} });
       },
+
       updateOpportunity(){
         if (this.allowUpdate) {
           let url = '/api/v2/opportunity/' + this.item.id;
@@ -144,41 +145,45 @@
         }
       },
 
+      loadOpportunity(){
+        if (this.opportunity.id) {
+          this.$http.get('/api/v2/opportunity/' + this.opportunity.id).then(resp => {
+            let payload = resp.data;
 
+            if (payload.activities) {
+              this.$data.activities = payload.activities;
+            }
+            if (payload.board) {
+              this.$data.board = payload.board;
+              this.$data.boardColumns = payload.board_columns;
+            }
+
+            if (payload.events) {
+              this.$data.events = payload.events;
+            }
+
+            if (payload.opportunity) {
+              this.$data.item = payload.opportunity;
+            }
+            if (payload.opportunity_contacts) {
+              this.$data.opportunityContacts = payload.opportunity_contacts;
+            }
+            this.allowUpdate = true;
+          });
+        }
+      },
       subscribe() {
-
-        this.opportunityChannel.on('load', payload => {
-          if (payload.activities) {
-            this.$data.activities = payload.activities;
-          }
-          if (payload.board) {
-            this.$data.board = payload.board;
-            this.$data.boardColumns = payload.board_columns;
-          }
-
-          if (payload.events) {
-            this.$data.events = payload.events;
-          }
-
-          if (payload.opportunity) {
-            this.$data.item = payload.opportunity;
-          }
-          if (payload.opportunity_contacts) {
-            this.$data.opportunityContacts = payload.opportunity_contacts;
-          }
-          this.allowUpdate = true;
-        });
 
         this.opportunityChannel.on('opportunity:closed', payload => {
           if (payload.opportunity) {
             let itemIndex = this.opportunities.findIndex(function(item){
-              return item.id === payload.opportunity.id;
+              return item.id === parseInt(payload.opportunity.id);
             });
             this.$data.items.splice(itemIndex,1);
 
             if (this.$data.items.length === 0) {
               this.clearOpportunity();
-            } else if (this.$data.item.id === payload.opportunity.id) {
+            } else if (this.$data.item.id === parseInt(payload.opportunity.id)) {
               this.setOpportunity(this.$data.items[0]);
             }
             this.$emit('browse');
@@ -190,7 +195,7 @@
             this.$data.opportunityContacts = payload.opportunity_contacts;
 
             let itemIndex = this.opportunities.findIndex(function(item){
-              return item.id === payload.opportunity.id;
+              return item.id === parseInt(payload.opportunity.id);
             });
 
             this.$data.items.splice(itemIndex, 1, payload.opportunity);
@@ -208,14 +213,14 @@
 
         this.opportunityChannel.on('activity:deleted', payload => {
           let itemIndex = this.$data.activities.findIndex(function(item){
-            return item.id === payload.activity_id;
+            return item.id === parseInt(payload.activity_id);
           });
           this.$data.activities.splice(itemIndex, 1);
         });
 
         this.opportunityChannel.on('activity:updated', payload => {
           let itemIndex = this.$data.activities.findIndex(function(item){
-            return item.id === payload.activity.id;
+            return item.id === parseInt(payload.activity.id);
           });
           this.$data.activities.splice(itemIndex, 1, payload.activity);
         });
@@ -231,6 +236,7 @@
       },
       initChannel(){
         let channelTopic = 'opportunities:' + this.opportunity.id;
+        this.loadOpportunity();
         this.opportunityChannel = this.socket.channels.find(function(item){
           return channelTopic === item.topic;
         });
