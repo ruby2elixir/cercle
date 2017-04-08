@@ -25,7 +25,6 @@
                <i class="fa fa-fw fa-plus"></i>Add
              </button>
           </div>
-
           <modal title="Tags" large :show.sync="openTagModal">
             <div slot="modal-body" class="modal-body">
             <v-select
