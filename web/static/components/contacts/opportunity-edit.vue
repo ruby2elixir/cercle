@@ -145,33 +145,28 @@
         }
       },
 
-      loadOpportunity(){
-        if (this.opportunity.id) {
-          this.$http.get('/api/v2/opportunity/' + this.opportunity.id).then(resp => {
-            let payload = resp.data;
-
-            if (payload.activities) {
-              this.$data.activities = payload.activities;
-            }
-            if (payload.board) {
-              this.$data.board = payload.board;
-              this.$data.boardColumns = payload.board_columns;
-            }
-
-            if (payload.events) {
-              this.$data.events = payload.events;
-            }
-
-            if (payload.opportunity) {
-              this.$data.item = payload.opportunity;
-            }
-            if (payload.opportunity_contacts) {
-              this.$data.opportunityContacts = payload.opportunity_contacts;
-            }
-            this.allowUpdate = true;
-          });
+      refreshOpportunity(payload){
+        if (payload.activities) {
+          this.$data.activities = payload.activities;
         }
+        if (payload.board) {
+          this.$data.board = payload.board;
+          this.$data.boardColumns = payload.board_columns;
+        }
+
+        if (payload.events) {
+          this.$data.events = payload.events;
+        }
+
+        if (payload.opportunity) {
+          this.$data.item = payload.opportunity;
+        }
+        if (payload.opportunity_contacts) {
+          this.$data.opportunityContacts = payload.opportunity_contacts;
+        }
+        this.allowUpdate = true;
       },
+
       subscribe() {
 
         this.opportunityChannel.on('opportunity:closed', payload => {
@@ -236,7 +231,11 @@
       },
       initChannel(){
         let channelTopic = 'opportunities:' + this.opportunity.id;
-        this.loadOpportunity();
+        if (this.opportunity.id) {
+          this.$http.get('/api/v2/opportunity/' + this.opportunity.id).then(resp => {
+            this.refreshOpportunity(resp.data);
+          });
+        }
         this.opportunityChannel = this.socket.channels.find(function(item){
           return channelTopic === item.topic;
         });
@@ -247,7 +246,7 @@
           this.opportunityChannel = this.socket.channel(channelTopic, {});
           this.subscribe();
           this.opportunityChannel.join()
-                .receive('ok', resp => { this.opportunityChannel.push('load'); })
+                .receive('ok', resp => { })
                 .receive('error', resp => {  });
         }
       },

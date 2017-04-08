@@ -163,6 +163,8 @@ export default {
               let opp = payload.opportunities.find(
                            (item) => { item.id === this.opportunity_id;});
               if (opp) { this.changeOpportunity(opp); }
+            } else if (this.opportunities.length === 1) {
+              this.changeOpportunity(this.opportunities[0]);
             }
           }
 
