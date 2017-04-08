@@ -6,13 +6,13 @@
           <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name" style="width:300px;"></inline-edit>
         </h3>
             <div>
-              <inline-edit v-model="contact.job_title" v-on:input="updateContact"  placeholder="Job Title" ></inline-edit>
+              <inline-edit v-model="contact.job_title" v-on:input="updateContact"  placeholder="Job Title" style="width:300px;" ></inline-edit>
             </div>
             <div>
-            <inline-edit v-model="contact.email" v-on:input="updateContact"  placeholder="Email" ></inline-edit>
+            <inline-edit v-model="contact.email" v-on:input="updateContact"  placeholder="Email" style="width:300px;" ></inline-edit>
             </div>
             <div>
-            <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone"></inline-edit>
+            <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone" style="width:300px;"></inline-edit>
             </div>
           <div class="" style="padding-bottom:4px;">
 
