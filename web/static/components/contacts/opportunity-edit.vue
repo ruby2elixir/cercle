@@ -177,13 +177,13 @@
         this.opportunityChannel.on('opportunity:closed', payload => {
           if (payload.opportunity) {
             let itemIndex = this.opportunities.findIndex(function(item){
-              return item.id === payload.opportunity.id;
+              return item.id === parseInt(payload.opportunity.id);
             });
             this.$data.items.splice(itemIndex,1);
 
             if (this.$data.items.length === 0) {
               this.clearOpportunity();
-            } else if (this.$data.item.id === payload.opportunity.id) {
+            } else if (this.$data.item.id === parseInt(payload.opportunity.id)) {
               this.setOpportunity(this.$data.items[0]);
             }
             this.$emit('browse');
@@ -195,7 +195,7 @@
             this.$data.opportunityContacts = payload.opportunity_contacts;
 
             let itemIndex = this.opportunities.findIndex(function(item){
-              return item.id === payload.opportunity.id;
+              return item.id === parseInt(payload.opportunity.id);
             });
 
             this.$data.items.splice(itemIndex, 1, payload.opportunity);
@@ -213,14 +213,14 @@
 
         this.opportunityChannel.on('activity:deleted', payload => {
           let itemIndex = this.$data.activities.findIndex(function(item){
-            return item.id === payload.activity_id;
+            return item.id === parseInt(payload.activity_id);
           });
           this.$data.activities.splice(itemIndex, 1);
         });
 
         this.opportunityChannel.on('activity:updated', payload => {
           let itemIndex = this.$data.activities.findIndex(function(item){
-            return item.id === payload.activity.id;
+            return item.id === parseInt(payload.activity.id);
           });
           this.$data.activities.splice(itemIndex, 1, payload.activity);
         });
