@@ -9,7 +9,7 @@
       <div style="" id="change_status">
         <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
           <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;">
-            <inline-edit v-model="item.name" v-on:input="updateOpportunity" placeholder="Project Name"></inline-edit>
+            <inline-edit v-model="item.name" v-on:input="updateOpportunity" placeholder="Card Name" style="width:500px;"></inline-edit>
           </span>
         </span>
         <br />
