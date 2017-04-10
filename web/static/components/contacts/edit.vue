@@ -143,7 +143,7 @@ export default {
       var vm = this;
       localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
       Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
-      if (this.contact_id) {
+      if (vm.contact_id) {
         vm.initConn();
       }
     },
@@ -160,8 +160,9 @@ export default {
           if (payload.opportunities) {
             this.opportunities = payload.opportunities;
             if (this.opportunity_id) {
-              let opp = payload.opportunities.find(
-                           (item) => { item.id === this.opportunity_id;});
+              let opp = payload.opportunities.find((item) => {
+                return item.id === this.opportunity_id;
+              });
               if (opp) { this.changeOpportunity(opp); }
             } else if (this.opportunities.length === 1) {
               this.changeOpportunity(this.opportunities[0]);
