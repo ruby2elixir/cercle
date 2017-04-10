@@ -57,7 +57,8 @@ defmodule CercleApi.Mixfile do
      {:canada, "~> 1.0.1"},
      {:comeonin, "~> 2.5"},
      {:credo, "~> 0.5", only: [:dev, :test]},
-     {:cipher, ">= 1.3.0"}
+     {:cipher, ">= 1.3.0"},
+     {:rummage_ecto, "~> 1.1.0"}
     ]
   end
 

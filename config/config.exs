@@ -41,3 +41,7 @@ config :cercleApi, ecto_repos: [CercleApi.Repo]
 
 config :cipher, keyphrase: "testiekeyphraseforcipher",
   ivphrase: "testieivphraseforcipher"
+
+config :rummage_ecto, Rummage.Ecto,
+  default_repo: CercleApi.Repo,
+  default_per_page: 100
