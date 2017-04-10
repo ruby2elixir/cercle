@@ -28,7 +28,7 @@
 
       <br /><br />
       <div>
-        Working at <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit>
+        Working at <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit> <span style="color:grey;text-decoration:underline;">Remove</span>
       </div>
       <inline-edit v-model="organization.website" v-on:input="update" placeholder="WebSite"></inline-edit>
       <inline-text-edit v-model="organization.description" v-on:input="update" placeholder="Note about the organization"></inline-text-edit>
