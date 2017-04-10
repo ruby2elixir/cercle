@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="organization-block">
     <div class="" style="" v-if="!organization">
       <modal title="Where is the contact working currently?" large :show.sync="openModal">
         <div slot="modal-body" class="modal-body">
@@ -28,7 +28,8 @@
 
       <br /><br />
       <div>
-        Working at <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit> <span style="color:grey;text-decoration:underline;">Remove</span>
+        Working at <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit>
+        <button v-on:click="removeOrganization" class="btn btn-link removeOrg">Remove</button>
       </div>
       <inline-edit v-model="organization.website" v-on:input="update" placeholder="WebSite"></inline-edit>
       <inline-text-edit v-model="organization.description" v-on:input="update" placeholder="Note about the organization"></inline-text-edit>

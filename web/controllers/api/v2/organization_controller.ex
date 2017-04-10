@@ -58,7 +58,7 @@ defmodule CercleApi.APIV2.OrganizationController do
           |> Contact.preload_data
           |> Repo.get(contact_id)
           channel = "contacts:"  <> to_string(contact.id)
-          CercleApi.Endpoint.broadcast!(channel, "state", %{
+          CercleApi.Endpoint.broadcast!(channel, "update", %{
                 contact: contact,
                 organization: contact.organization
                                         })

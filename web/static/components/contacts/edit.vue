@@ -147,48 +147,54 @@ export default {
         vm.initConn();
       }
     },
+    refreshContact(payload) {
+      if (payload.contact) {
+        this.contact = payload.contact;
+      }
+
+      if (payload.boards) {
+        this.boards = payload.boards;
+      }
+
+      if (payload.opportunities) {
+        this.opportunities = payload.opportunities;
+        if (this.opportunity_id) {
+          let opp = payload.opportunities.find((item) => {
+            return item.id === this.opportunity_id;
+          });
+          if (opp) { this.changeOpportunity(opp); }
+        } else if (this.opportunities.length === 1) {
+          this.changeOpportunity(this.opportunities[0]);
+        }
+      }
+
+      if (payload.company) {
+        this.company = payload.company;
+      }
+      if (payload.company_users) {
+        this.companyUsers = payload.company_users;
+      }
+      if (payload.tags) {
+        this.tags = payload.tags;
+      }
+      if (payload.organization) {
+        if (payload.organization['id']) {
+          this.organization = payload.organization;
+        } else {
+          this.organization = null;
+        }
+      }
+
+    },
+
     loadContact() {
       if (this.contact_id) {
         this.$http.get('/api/v2/contact/' + this.contact_id).then(resp => {
-          let payload = resp.data;
-          this.contact = payload.contact;
-
-          if (payload.boards) {
-            this.boards = payload.boards;
-          }
-
-          if (payload.opportunities) {
-            this.opportunities = payload.opportunities;
-            if (this.opportunity_id) {
-              let opp = payload.opportunities.find((item) => {
-                return item.id === this.opportunity_id;
-              });
-              if (opp) { this.changeOpportunity(opp); }
-            } else if (this.opportunities.length === 1) {
-              this.changeOpportunity(this.opportunities[0]);
-            }
-          }
-
-          if (payload.company) {
-            this.company = payload.company;
-          }
-          if (payload.company_users) {
-            this.companyUsers = payload.company_users;
-          }
-          if (payload.tags) {
-            this.tags = payload.tags;
-          }
-          if (payload.organization) {
-            if (payload.organization['id']) {
-              this.organization = payload.organization;
-            } else {
-              this.organization = null;
-            }
-          }
-
+          this.refreshContact(resp.data);
         });
       }
     },
+
     initConn(reset) {
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
@@ -206,12 +212,18 @@ export default {
         this.organization = null;
         this.browseOpportunities = true;
       }
+
+      this.channel.on('update', payload => {
+        this.refreshContact(payload);
+      });
+
       this.channel.on('opportunity:created', payload => {
         if (payload.opportunity) {
           this.opportunities.push(payload.opportunity);
           this.opportunity || (this.opportunity = payload.opportunity);
         }
       });
+
       this.loadContact();
     }
   },

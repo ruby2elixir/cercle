@@ -1,4 +1,11 @@
 .contact-edit {
+  .organization-block {
+    .removeOrg {
+      color:grey;
+      text-decoration:underline;
+      font-weight: normal;
+    }
+  }
   .opportunity-tags {
     cursor:pointer;
     font-weight:bold;
@@ -279,7 +286,7 @@
     font-style: italic;
     font-size: 20px;
 }
-	
+
 .upload-info-box{
 	margin: 60px 60px 30px;
 	text-align: center;
@@ -388,7 +395,7 @@ li.completed span.arrow:after {
 .mapping-sections #left-section #left-section-table{
     table-layout: fixed;
     border-collapse: separate;
-    border-spacing: 0 8px; 
+    border-spacing: 0 8px;
     margin-bottom: 0px;
 }
 .mapping-sections #left-section #left-section-table .csv-fields{
