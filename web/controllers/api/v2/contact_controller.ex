@@ -60,7 +60,9 @@ defmodule CercleApi.APIV2.ContactController do
     query = from contact in Contact,
       where: contact.user_id == ^user_id and contact.company_id == ^company_id,
       order_by: [desc: contact.id]
-    contacts = Repo.all(query)
+    contacts = query
+    |> Contact.preload_data
+    |> Repo.all
     render(conn, "index.json", contacts: contacts)
   end
 
@@ -86,7 +88,8 @@ defmodule CercleApi.APIV2.ContactController do
       {:ok, contact} ->
         contact = contact |> Repo.preload([:tags, :organization])
         channel = "contacts:"  <> to_string(contact.id)
-        CercleApi.Endpoint.broadcast!(channel, "state", %{
+
+        CercleApi.Endpoint.broadcast!(channel, "update", %{
               contact: contact,
               organization: (contact.organization || %{})})
 
@@ -105,7 +108,7 @@ defmodule CercleApi.APIV2.ContactController do
       where: c.contact_id == ^id
     Repo.delete_all(query)
     channel = "contacts:"  <> to_string(contact.id)
-    CercleApi.Endpoint.broadcast!(channel, "state", %{contact: contact, tags: []})
+    CercleApi.Endpoint.broadcast!(channel, "update", %{contact: contact, tags: []})
     render(conn, "show.json", contact: contact)
   end
 
@@ -145,7 +148,7 @@ defmodule CercleApi.APIV2.ContactController do
       case Repo.update(changeset) do
         {:ok, contact} ->
           channel = "contacts:"  <> to_string(contact.id)
-          CercleApi.Endpoint.broadcast!(channel, "state", %{contact: contact, tags: contact.tags})
+          CercleApi.Endpoint.broadcast!(channel, "update", %{contact: contact, tags: contact.tags})
           render(conn, "show.json", contact: contact)
         {:error, changeset} ->
           conn
