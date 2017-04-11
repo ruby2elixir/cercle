@@ -28,9 +28,6 @@ defmodule CercleApi.Contact do
     timestamps
   end
 
-  @required_fields ~w(company_id name)
-  @optional_fields ~w(data organization_id user_id email phone description job_title)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -39,7 +36,11 @@ defmodule CercleApi.Contact do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [
+          :company_id, :name, :data, :organization_id, :user_id,
+          :email, :phone, :description, :job_title
+        ])
+    |> validate_required([:company_id, :name])
   end
 
   def opportunity(contact) do

@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact,Company,Organization,Opportunity,User,Activity,Tag,ContactTag, TimelineEvent}
+  alias CercleApi.{Repo, Contact,Company,Tag,ContactTag, TimelineEvent}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -14,7 +14,7 @@ defmodule CercleApi.APIV2.ContactController do
     unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
     not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
-  def index(conn, params) do
+  def index(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
     company_id  = current_user.company_id
     query = from p in Contact,
@@ -101,7 +101,7 @@ defmodule CercleApi.APIV2.ContactController do
     end
   end
 
-  def utags(conn, %{"id" => id, "company_id" => company_id_string}) do
+  def utags(conn, %{"id" => id, "company_id" => _company_id_string}) do
     contact = Repo.get!(Contact, id)
     |> Repo.preload([:tags, :organization])
     query = from c in ContactTag,

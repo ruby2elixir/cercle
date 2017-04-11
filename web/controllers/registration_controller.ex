@@ -29,7 +29,7 @@ defmodule CercleApi.RegistrationController do
             Enum.each [0, 1, 2, 3, 4], fn (index) ->
               boardcol_params = %{:board_id => board.id, :order => index, :name => Enum.at(steps, index)}
               changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
-              board_column = CercleApi.Repo.insert!(changeset)
+              CercleApi.Repo.insert!(changeset)
             end
 
             conn
@@ -59,8 +59,8 @@ defmodule CercleApi.RegistrationController do
         company = Repo.get(Company, company_id)
         changeset = User.changeset(%CercleApi.User{})
         conn
-        |> render(:new, changeset: changeset, company_id: company.id , company_title: company.title, user_login: email)
-      {:error, error} ->
+        |> render(:new, changeset: changeset, company_id: company.id, company_title: company.title, user_login: email)
+      {:error, _error} ->
         conn
         |> put_flash(:error, "Invalid link!")
         |> redirect(to: "/")
