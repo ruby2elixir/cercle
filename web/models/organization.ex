@@ -28,9 +28,6 @@ defmodule CercleApi.Organization do
     timestamps
   end
 
-  @required_fields ~w(company_id name)
-  @optional_fields ~w(data website description)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -39,7 +36,8 @@ defmodule CercleApi.Organization do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [:company_id, :name, :data, :website, :description])
+    |> validate_required([:company_id, :name])
   end
 
 end

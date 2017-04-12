@@ -3,7 +3,7 @@ defmodule CercleApi.User do
   User are the people who use Cercle CRM.
   Each User belongs to a company.
   """
-  
+
   use CercleApi.Web, :model
   use Arc.Ecto.Model
 
@@ -28,8 +28,6 @@ defmodule CercleApi.User do
     has_many :opportunities, CercleApi.Opportunity
   end
 
-  @required_fields ~w(login)
-  @optional_fields ~w(user_name password_reset_code company_id name time_zone)
   @required_file_fields ~w()
   @optional_file_fields ~w(profile_image)
 
@@ -41,14 +39,16 @@ defmodule CercleApi.User do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [:login, :user_name, :password_reset_code, :company_id,
+                    :name, :time_zone])
+    |> validate_required([:login])
     |> cast_attachments(params, @required_file_fields, @optional_file_fields)
     |> unique_constraint(:login)
   end
 
   def registration_changeset(model, params) do model
     |> changeset(params)
-    |> cast(params, ~w(password), [])
+    |> cast(params, [:password])
     |> validate_length(:password, min: 6, max: 100)
     |> generate_encrypted_password()
   end
@@ -57,7 +57,7 @@ defmodule CercleApi.User do
     if params["password"] != "" do
       model
       |> changeset(params)
-      |> cast(params, ~w(password), [])
+      |> cast(params, [:password])
       |> validate_length(:password, min: 6, max: 100)
       |> generate_encrypted_password()
     else

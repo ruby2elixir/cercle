@@ -10,9 +10,6 @@ defmodule CercleApi.Tag do
     timestamps
   end
 
-  @required_fields ~w(name company_id)
-  @optional_fields ~w()
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -21,7 +18,8 @@ defmodule CercleApi.Tag do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [:company_id, :name])
+    |> validate_required([:company_id, :name])
   end
 
 end
