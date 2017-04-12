@@ -12,9 +12,6 @@ defmodule CercleApi.BoardColumn do
     timestamps
   end
 
-  @required_fields ~w(board_id)
-  @optional_fields ~w(name order)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -24,7 +21,8 @@ defmodule CercleApi.BoardColumn do
 
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [:board_id, :name, :order])
+    |> validate_required([:board_id])
   end
 
 end

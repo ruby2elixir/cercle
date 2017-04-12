@@ -17,9 +17,6 @@ defmodule CercleApi.TimelineEvent do
     timestamps
   end
 
-  @required_fields ~w(content event_name opportunity_id)
-  @optional_fields ~w(user_id company_id metadata contact_id)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -28,6 +25,10 @@ defmodule CercleApi.TimelineEvent do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [
+          :content, :event_name, :opportunity_id, :user_id,
+          :company_id, :metadata, :contact_id
+        ])
+    |> validate_required([:content, :event_name, :opportunity_id])
   end
 end

@@ -18,9 +18,6 @@ defmodule CercleApi.Activity do
     timestamps
   end
 
-  @required_fields ~w(user_id contact_id company_id)
-  @optional_fields ~w(due_date is_done title  opportunity_id)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -29,7 +26,9 @@ defmodule CercleApi.Activity do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [
+          :user_id, :contact_id, :company_id, :due_date, :is_done,
+          :title, :opportunity_id])
+    |> validate_required([:user_id, :contact_id, :company_id])
   end
-
 end
