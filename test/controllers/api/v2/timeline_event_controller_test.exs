@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   use CercleApi.ConnCase
   @valid_attrs %{name: "Board1"}
   @invalid_attrs %{}
-  alias CercleApi.{User,Contact,Board,TimelineEvent,Opportunity}
+  alias CercleApi.{Contact,TimelineEvent,Opportunity}
 
   setup %{conn: conn} do
     company = insert_company()
@@ -13,18 +13,26 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   end
 
   test "timeline_event index with valid params", state do
-    conn = get state[:conn], "/api/v2/timeline_events"
 
-    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", company_id: state[:company].id})
+
+    changeset = Contact.changeset(%Contact{}, %{
+          name: "Contact1", company_id: state[:company].id})
     contact = Repo.insert!(changeset)
 
-    changeset = Opportunity.changeset(%Opportunity{}, %{name: "Project #1", main_contact_id: contact.id, company_id: state[:company].id, user_id: state[:user].id})
+    changeset = Opportunity.changeset(%Opportunity{}, %{
+          name: "Project #1", main_contact_id: contact.id,
+          company_id: state[:company].id, user_id: state[:user].id})
     opportunity = Repo.insert!(changeset)
 
-    changeset = TimelineEvent.changeset(%TimelineEvent{}, %{event_name: "Comment", content: "Good", contact_id: contact.id, opportunity_id: opportunity.id , company_id: state[:company].id, user_id: state[:user].id})
+    changeset = TimelineEvent.changeset(%TimelineEvent{}, %{
+          event_name: "Comment", content: "Good", contact_id: contact.id,
+          opportunity_id: opportunity.id , company_id: state[:company].id,
+          user_id: state[:user].id})
     te = Repo.insert!(changeset)
+    conn = get state[:conn], "/api/v2/timeline_events"
 
-    assert json_response(conn, 201)["data"]["id"]
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.TimelineEventView, "index.json", timeline_events: [te]
+    )
   end
-
 end
