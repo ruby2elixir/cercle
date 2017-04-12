@@ -7,7 +7,7 @@
           <v-select
             label="name"
             v-model="chooseOrganization"
-            :options="organizations"
+            :options="organizations | presenceOrg"
 
             :pushTags="true"
             :taggable="true"
@@ -58,6 +58,13 @@
         organizations: [],
         newOrganization: false
       };
+    },
+    filters: {
+      presenceOrg(items) {
+        return items.filter(function(item) {
+          return item['id'] && item['name'];
+        });
+      }
     },
     methods: {
       saveOrganization(){
