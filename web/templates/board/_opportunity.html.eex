@@ -5,18 +5,23 @@
           <%=@opportunity.name%>
           <Br />
           <span style="color:#222222;">
-          with <%=@opportunity.main_contact.name %>
+          <%=if @opportunity.main_contact.organization do %>
+          with <%=@opportunity.main_contact.organization.name %>
+          <%end%>
+           <%=if !@opportunity.main_contact.organization do %>
+           with <%=@opportunity.main_contact.name %>
+           <%end%>
           </span>
         </a>
       </div>
       <div style="font-size:12px;">
       </div>
       <div style="font-size:11px;margin-top:5px;color:grey;float:right;">
-        <%=if(length(@opportunity.main_contact.activities) == 0) do %>
+        <%=if(length(@opportunity.activities) == 0) do %>
         <a href="/contact/<%=@opportunity.main_contact.id%>/opportunity/<%=@opportunity.id%>"><i class="fa fa-circle" aria-hidden="true" style="color:yellow;"></i></a>
         <% else %>
           <i class="fa fa-check-square-o" aria-hidden="true"></i>
-        0/<%=length(@opportunity.main_contact.activities)%>
+        0/<%=length(@opportunity.activities)%>
 
         <% end %>
         </div>
