@@ -13,7 +13,7 @@
       </tr>
       <tr v-for="contact in contacts" v-on:click="contactShow(contact)">
         <td>{{contact.name}}</td>
-        <td>{{contact.jobTitle}}</td>
+        <td>{{contact.job_title}}</td>
         <td>{{contact.organization && contact.organization.name}}</td>
         <td>{{contact.email}}</td>
         <td>{{contact.phone}}</td>
