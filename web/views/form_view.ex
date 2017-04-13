@@ -1,6 +1,6 @@
 defmodule CercleApi.FormView do
   use CercleApi.Web, :view
-  
+
   def auto_submit_selectize(form, field_name, collection, opts \\ []) do
     select(
       form,
@@ -9,7 +9,7 @@ defmodule CercleApi.FormView do
       opts ++ default_autosubmit_selectize_options
     )
   end
-  
+
   defp default_autosubmit_selectize_options do
     [
       prompt: "Type the name",

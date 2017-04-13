@@ -55,7 +55,6 @@ defmodule CercleApi.SettingsController do
     |> render "fields_edit.html", company: company, changeset: changeset, settings: true
   end
 
-
   def company_edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
     company_id = user.company_id

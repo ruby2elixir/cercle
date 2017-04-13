@@ -5,7 +5,6 @@ defmodule CercleApi.Organization do
 
   use CercleApi.Web, :model
 
-
   @derive {Poison.Encoder, only: [
               :id, :user_id, :company_id, :name, :website,
               :description, :data

@@ -5,7 +5,7 @@ defmodule CercleApi.User do
   """
 
   use CercleApi.Web, :model
-  use Arc.Ecto.Model
+  use Arc.Ecto.Schema
 
   @derive {Poison.Encoder, only: [
               :id, :user_name, :profile_image
@@ -28,21 +28,18 @@ defmodule CercleApi.User do
     has_many :opportunities, CercleApi.Opportunity
   end
 
-  @required_file_fields ~w()
-  @optional_file_fields ~w(profile_image)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
   If no params are provided, an invalid changeset is returned
   with no validation performed.
   """
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ :invalid) do
     model
     |> cast(params, [:login, :user_name, :password_reset_code, :company_id,
                     :name, :time_zone])
+    |> cast_attachments(params, [:profile_image])
     |> validate_required([:login])
-    |> cast_attachments(params, @required_file_fields, @optional_file_fields)
     |> unique_constraint(:login)
   end
 
@@ -80,7 +77,7 @@ defimpl Poison.Encoder, for: CercleApi.User do
   def encode(model, options) do
     model
     |> Map.take([:id, :user_name, :profile_image])
-    |> Map.put(:profile_image_url, CercleApi.UserProfileImage.url({model.profile_image,model}, :small))
+    |> Map.put(:profile_image_url, CercleApi.UserProfileImage.url({model.profile_image, model}, :small))
     |> Poison.Encoder.encode(options)
   end
 end

@@ -1,5 +1,5 @@
 defmodule CercleApi.SettingsView do
-  use CercleApi.Web,:view
+  use CercleApi.Web, :view
 
   def load_timezones do
     ["(GMT-11:00) Midway Island, Samoa": "Pacific/Midway",

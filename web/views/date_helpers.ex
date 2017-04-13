@@ -1,11 +1,9 @@
 defmodule CercleApi.DateHelpers do
   import Ecto
-  
+
   use Phoenix.HTML
   use Timex
   alias Ecto.DateTime
-  
-
 
   def timex_date_format(datetime) do
     Timex.format!(Ecto.DateTime.to_erl(datetime), "%a %d %b - %H:%M", :strftime)
@@ -24,8 +22,8 @@ defmodule CercleApi.DateHelpers do
       |> Timex.from_now
   end
 
-  def change_time_zone(datetime,time_zone) do
-    Timezone.convert(Ecto.DateTime.to_erl(datetime),time_zone)
+  def change_time_zone(datetime, time_zone) do
+    Timezone.convert(Ecto.DateTime.to_erl(datetime), time_zone)
   end
 
   def change_timex_date_format(datetime) do

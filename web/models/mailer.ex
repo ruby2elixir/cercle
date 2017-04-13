@@ -4,7 +4,7 @@ defmodule CercleApi.Mailer do
   end
 
   def config do
-    %Mailman.Context{                                        
+    %Mailman.Context{
      composer: %Mailman.EexComposeConfig{}
     }
   end

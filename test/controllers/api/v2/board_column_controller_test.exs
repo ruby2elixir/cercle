@@ -1,6 +1,6 @@
 defmodule CercleApi.APIV2.BoardColumnControllerTest do
   use CercleApi.ConnCase
-  alias CercleApi.{User,Contact,Board,BoardColumn}
+  alias CercleApi.{BoardColumn}
 
   setup %{conn: conn} do
     company = insert_company()
@@ -59,4 +59,3 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
   end
 
 end
-

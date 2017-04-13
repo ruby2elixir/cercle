@@ -14,7 +14,7 @@
 
   <li>
     <strong>Image url:</strong>
-    <img src="<%= CercleApi.Image.url({@company.image, @company}, :thumb) %>" />
+    <img src="<%= CercleApi.CompanyLogoImage.url({@company.logo_image, @company}, :small) %>" />
   </li>
 
   <li>

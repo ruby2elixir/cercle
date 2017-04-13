@@ -1,7 +1,5 @@
 defmodule CercleApi.APIV2.TimelineEventTest do
   use CercleApi.ConnCase
-  @valid_attrs %{name: "Board1"}
-  @invalid_attrs %{}
   alias CercleApi.{Contact,TimelineEvent,Opportunity}
 
   setup %{conn: conn} do

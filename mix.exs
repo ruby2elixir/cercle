@@ -18,8 +18,12 @@ defmodule CercleApi.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {CercleApi, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :ex_aws, :httpoison, :tzdata, :csv, :ex_csv, :uuid]]
+     applications: [
+       :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
+       :gettext, :phoenix_ecto, :postgrex, :ex_aws, :httpoison, :tzdata,
+       :csv, :ex_csv, :uuid, :arc_ecto
+     ]
+    ]
   end
 
   # Specifies which paths to compile per environment.
@@ -31,7 +35,7 @@ defmodule CercleApi.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:phoenix, "~> 1.2.1"},
-      {:phoenix_pubsub, "~> 1.0"},
+     {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_ecto, ">= 3.0.0"},
      {:db_connection, ">= 0.0.0"},
@@ -40,11 +44,11 @@ defmodule CercleApi.Mixfile do
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
      {:mailman, "~> 0.2.2"},
-     {:arc, ">= 0.5.1"},
+     {:arc, "~> 0.7.0"},
      {:ex_aws, ">= 0.4.10"},
      {:httpoison, "~> 0.7"},
      {:poison, ">= 2.0.0"},
-     {:arc_ecto, "~> 0.3.2"},
+     {:arc_ecto, "~> 0.6.0"},
      {:timex, "~> 3.1.8"},
      {:gettext, "~> 0.13.0"},
      {:basic_auth, "~> 2.0.0"},
