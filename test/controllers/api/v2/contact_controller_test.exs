@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   use CercleApi.ConnCase
   @valid_attrs %{name: "John Doe"}
   @invalid_attrs %{}
-  alias CercleApi.{User,Contact}
+  alias CercleApi.{Contact}
 
   setup %{conn: conn} do
     company = insert_company()

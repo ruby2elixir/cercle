@@ -1,5 +1,5 @@
 %{"arc": {:hex, :arc, "0.7.0", "36ba65e390c2f869b98ebbe79d66eedf383788875986a20a546f19d87e4f13ac", [:mix], [{:ex_aws, "~> 1.1", [hex: :ex_aws, optional: true]}, {:httpoison, "~> 0.11", [hex: :httpoison, optional: false]}, {:poison, "~> 2.2 or ~> 3.1", [hex: :poison, optional: true]}, {:sweet_xml, "~> 0.6", [hex: :sweet_xml, optional: true]}]},
-  "arc_ecto": {:hex, :arc_ecto, "0.3.2", "8893135fe4d5cf9b2a6aeb0e17bedd5c6f7ad5d89f760995805451c859bf8f89", [:mix], [{:arc, "~> 0.2", [hex: :arc, optional: false]}, {:ecto, ">= 0.10.0", [hex: :ecto, optional: false]}]},
+  "arc_ecto": {:hex, :arc_ecto, "0.6.0", "8d87ea96be5d9896d689698a5991f24ed145496e6e0976c15e18896a49462daf", [:mix], [{:arc, "~> 0.7.0", [hex: :arc, optional: false]}, {:ecto, "~> 2.0", [hex: :ecto, optional: false]}]},
   "base64url": {:hex, :base64url, "0.0.1", "36a90125f5948e3afd7be97662a1504b934dd5dac78451ca6e9abf85a10286be", [:rebar], []},
   "basic_auth": {:hex, :basic_auth, "2.0.0", "13a79d699c8530a15d7de84d2d58dc178f1c940f9f52306669797508adbe52cd", [:mix], [{:cowboy, "~> 1.0", [hex: :cowboy, optional: false]}, {:plug, "~> 0.14 or ~> 1.0", [hex: :plug, optional: false]}]},
   "bunt": {:hex, :bunt, "0.2.0", "951c6e801e8b1d2cbe58ebbd3e616a869061ddadcc4863d0a2182541acae9a38", [:mix], []},

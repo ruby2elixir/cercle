@@ -1,8 +1,6 @@
 defmodule CercleApi.APIV2.BulkControllerTest do
   use CercleApi.ConnCase
-  @valid_attrs %{name: "John Doe"}
-  @invalid_attrs %{}
-  alias CercleApi.{User,Company,Contact,Tag}
+  alias CercleApi.{Company,Contact,Tag}
 
   setup %{conn: conn} do
     company = insert_company()
@@ -76,4 +74,3 @@ defmodule CercleApi.APIV2.BulkControllerTest do
   end
 
 end
-

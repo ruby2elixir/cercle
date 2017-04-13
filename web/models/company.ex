@@ -3,7 +3,7 @@ defmodule CercleApi.Company do
   Company reprends the group of users who use Cercle CRM.
   """
   use CercleApi.Web, :model
-  use Arc.Ecto.Model
+  use Arc.Ecto.Schema
 
   @derive {Poison.Encoder, only: [:id, :title, :logo_image, :data_fields]}
 
@@ -19,11 +19,6 @@ defmodule CercleApi.Company do
     timestamps
   end
 
-  @required_fields ~w(title)
-  @optional_fields ~w( )
-  @required_file_fields ~w()
-  @optional_file_fields ~w(logo_image)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -31,10 +26,11 @@ defmodule CercleApi.Company do
   with no validation performed.
   """
 
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ :invalid) do
     model
-    |> cast(params, @required_fields, @optional_fields)
-    |> cast_attachments(params, @required_file_fields, @optional_file_fields)
+    |> cast(params, [:title])
+    |> cast_attachments(params, [:logo_image])
+    |> validate_required([:title])
   end
 
 end

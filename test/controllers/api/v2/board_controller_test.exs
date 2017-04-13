@@ -1,8 +1,6 @@
 defmodule CercleApi.APIV2.BoardControllerTest do
   use CercleApi.ConnCase
-  @valid_attrs %{name: "Board1"}
-  @invalid_attrs %{}
-  alias CercleApi.{User,Contact,Board}
+  alias CercleApi.{Board}
 
   setup %{conn: conn} do
     company = insert_company()
