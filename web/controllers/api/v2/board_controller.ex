@@ -14,7 +14,7 @@ defmodule CercleApi.APIV2.BoardController do
 
   plug :scrub_params, "board" when action in [:create, :update]
 
-  plug :authorize_resource, model: Board, only: [:update,:delete],
+  plug :authorize_resource, model: Board, only: [:update, :delete],
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
@@ -29,7 +29,7 @@ defmodule CercleApi.APIV2.BoardController do
     case Repo.insert(changeset) do
       {:ok, board} ->
         steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"]
-        Enum.each [0,1,2,3,4], fn (index) ->
+        Enum.each [0, 1, 2, 3, 4], fn (index) ->
           boardcol_params = %{:board_id => board.id, :order => index, :name => Enum.at(steps, index)}
           changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
           board_column = CercleApi.Repo.insert!(changeset)

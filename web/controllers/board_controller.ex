@@ -1,7 +1,7 @@
 defmodule CercleApi.BoardController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User,Contact,Organization,Opportunity,TimelineEvent,Board,Company}
+  alias CercleApi.{User, Contact, Organization, Opportunity, TimelineEvent, Board, Company}
 
   require Logger
 
@@ -47,13 +47,10 @@ defmodule CercleApi.BoardController do
         where: p.status == 0,
         order_by: [desc: p.updated_at]
 
-
     #order_by: [desc: p.rating]
     #from(CercleApi.TimelineEvent], order_by: [desc: :inserted_at])
     query = (from a in CercleApi.Activity, where: a.is_done == false)
     cards = Repo.all(query_cards)  |> Repo.preload([:user, main_contact: [:organization], activities: query, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])])
-
-
 
     conn
       |> put_layout("adminlte.html")

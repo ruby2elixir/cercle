@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact,Company,Tag,ContactTag, TimelineEvent}
+  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -21,13 +21,13 @@ defmodule CercleApi.APIV2.ContactController do
       where: p.company_id == ^company_id,
       order_by: [desc: p.updated_at]
 
-    contacts = Repo.all(query)
+    contacts = query
     |> Repo.preload(
-      [
-        :organization, :tags,
+      [ :organization, :tags,
         timeline_event: from(TimelineEvent, order_by: [desc: :inserted_at])
       ]
     )
+    |> Repo.all
     render(conn, "index.json", contacts: contacts)
   end
 
@@ -74,7 +74,6 @@ defmodule CercleApi.APIV2.ContactController do
     render(conn, "full_contact.json", contact: contact)
   end
 
-
   def update(conn, %{"id" => id, "contact" => contact_params}) do
     contact = Repo.get!(Contact, id)
     if contact_params["data"] do
@@ -82,7 +81,6 @@ defmodule CercleApi.APIV2.ContactController do
       contact_params = %{contact_params | "data" => new_data}
     end
     changeset = Contact.changeset(contact, contact_params)
-
 
     case Repo.update(changeset) do
       {:ok, contact} ->

@@ -13,7 +13,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
   plug CercleApi.Plugs.CurrentUser
   plug :scrub_params, "board_column" when action in [:create, :update]
 
-  plug :authorize_resource, model: BoardColumn, only: [:update,:delete],
+  plug :authorize_resource, model: BoardColumn, only: [:update, :delete],
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 

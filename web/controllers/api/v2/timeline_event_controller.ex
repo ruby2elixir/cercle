@@ -8,7 +8,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
   def index(conn, params) do
     current_user = Guardian.Plug.current_resource(conn)
     te = Repo.all(TimelineEvent)
-    
+
     render(conn, "index.json", timeline_events: te)
   end
 
@@ -30,10 +30,11 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
         user = current_user
-        contact = Repo.get!(CercleApi.Contact, timeline_event_params["contact_id"]) |> Repo.preload [:company]
-      	comment = timeline_event_params["content"]
-      	company = contact.company
-      	parts = String.split(comment, " ")
+        contact = Repo.get!(CercleApi.Contact, timeline_event_params["contact_id"])
+        |> Repo.preload [:company]
+        comment = timeline_event_params["content"]
+        company = contact.company
+        parts = String.split(comment, " ")
 
         users = company
         |> assoc(:users)
@@ -50,7 +51,6 @@ defmodule CercleApi.APIV2.TimelineEventController do
         conn
         |> put_status(:created)
         |> render("show.json", timeline_event: timeline_event)
-
 
       {:error, changeset} ->
         conn

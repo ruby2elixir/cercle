@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.OpportunityController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.{Opportunity,Contact,Company,Organization,User,Board}
+  alias CercleApi.{Opportunity, Contact, Company, Organization, User, Board}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
