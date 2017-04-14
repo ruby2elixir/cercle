@@ -22,12 +22,13 @@ defmodule CercleApi.APIV2.ContactController do
       order_by: [desc: p.updated_at]
 
     contacts = query
+    |> Repo.all
     |> Repo.preload(
       [ :organization, :tags,
         timeline_event: from(TimelineEvent, order_by: [desc: :inserted_at])
       ]
     )
-    |> Repo.all
+
     render(conn, "index.json", contacts: contacts)
   end
 
