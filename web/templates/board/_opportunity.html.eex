@@ -2,12 +2,10 @@
     <div class="portlet-content">
       <div style="font-size:14px;font-weight:800;padding-bottom:10px;cursor:pointer;" v-on:click.stop="contactShow(<%=@opportunity.main_contact.id%>, <%=@opportunity.id%>)">          
           <span style="color:#222222;">
+          <%=@opportunity.main_contact.name %>
           <%=if @opportunity.main_contact.organization do %>
-          <%=@opportunity.main_contact.organization.name %>
-          <%end%>
-           <%=if !@opportunity.main_contact.organization do %>
-           <%=@opportunity.main_contact.name %>
-           <%end%>
+          - <%=@opportunity.main_contact.organization.name %>
+          <%end%> 
           </span>
           <Br />
           <%=@opportunity.name%>
