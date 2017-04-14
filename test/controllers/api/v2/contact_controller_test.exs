@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   use CercleApi.ConnCase
   @valid_attrs %{name: "John Doe"}
   @invalid_attrs %{}
-  alias CercleApi.{Contact}
+  alias CercleApi.{Contact, TimelineEvent}
 
   setup %{conn: conn} do
     company = insert_company()
@@ -10,6 +10,32 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
     {:ok, conn: conn, user: user, company: company}
+  end
+
+  test "index/2 responds with all Contacts", state do
+    contacts_data = [ Contact.changeset(%Contact{}, %{name: "John", company_id: state[:company].id}),
+                 Contact.changeset(%Contact{}, %{name: "Jane", company_id: state[:company].id}) ]
+
+    Enum.each(contacts_data, &Repo.insert!(&1))
+    query = from p in Contact,
+      where: p.company_id == ^state[:company].id,
+      order_by: [desc: p.updated_at]
+
+    contacts = query
+    |> Repo.all
+    |> Repo.preload(
+      [ :organization, :tags,
+        timeline_event: from(TimelineEvent, order_by: [desc: :inserted_at])
+      ]
+    )
+
+    response = get(state[:conn], "/api/v2/contact")
+    |> json_response(200)
+
+
+    assert response == render_json(
+      CercleApi.APIV2.ContactView, "index.json", contacts: contacts
+    )
   end
 
   test "create contact with valid params", %{conn: conn} do
