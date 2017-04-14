@@ -80,7 +80,6 @@
                   <div id="actions" class="dropdown" style="position: absolute;right: 4px;top: 4px;width:18px;height:18px;color:grey;font-size:12px;">
                     <span class="fa fa-ellipsis-h" role="button" data-id="<%= col.id%>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                     <ul class="dropdown-menu" aria-labelledby="dLabel">
-                      <li><a class="add-card-link">Add Card..</a></li>
                       <li><a class="delete-column-link">Delete This Column..</a></li>
                     </ul>
                   </div>
