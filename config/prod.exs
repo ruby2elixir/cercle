@@ -99,3 +99,15 @@ config :guardian, Guardian,
 
 config :cercleApi,
   site_url: "http://www.cercle.co"
+
+config :rollbax,
+  access_token: System.get_env("ROLLBAR_SECRET_KEY"),
+  environment: "production"
+
+# We register Rollbax.Logger as a Logger backend.
+config :logger,
+  backends: [Rollbax.Logger]
+
+# We configure the Rollbax.Logger backend.
+config :logger, Rollbax.Logger,
+  level: :error
