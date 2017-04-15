@@ -64,10 +64,13 @@ Vue.use(VueResourceCaseConverter, {
   }
 });
 
+
 import ContactAppEdit from '../components/contacts/edit.vue';
 import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
 import Activities from '../components/activities/list.vue';
+import RecentActivities from '../components/activities/recent.vue';
+
 
 Vue.use(require('vue-autosize'));
 
@@ -127,6 +130,15 @@ if ($('#activities-app').length > 0) {
   });
 }
 
+if ($("#recent-activities-app").length > 0) {
+    new Vue({
+        el: "#recent-activities-app",
+        components: {
+            'activities': RecentActivities
+        }
+    });
+}
+
 
 if (
   $('#opportunity_pipeline').length > 0 ||
@@ -134,3 +146,13 @@ if (
 ){
   App.pipelineInit();
 }
+
+$('#toggle-activity-panel').on('click', function(){
+    $('.control-sidebar-light').toggleClass('open');
+    $(this).hide();
+});
+
+$('#close-sidebar').on('click', function(){
+    $('.control-sidebar-light').toggleClass('open');
+    $('#toggle-activity-panel').show()
+});

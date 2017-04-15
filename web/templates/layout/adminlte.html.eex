@@ -55,12 +55,8 @@
                   Inbox
                 </a>
                 </li>
-                <li>
-                <a href="/board">Boards</a>
-                </li>
-                <li>
-                <a href="/contact">People</a>
-                </li>
+                <li><a href="/board">Boards</a></li>
+                <li><a href="/contact">People</a></li>
                 <li>
                 <%end%>
               </ul>
@@ -70,7 +66,6 @@
               <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                   <!-- Messages: style can be found in dropdown.less-->
-
                     <!-- User Account Menu -->
                   <li class="dropdown user user-menu">
                     <!-- Menu Toggle Button -->
@@ -126,9 +121,15 @@
           <% end %>
         <%= if assigns[:no_container] do %>
           <%= render @view_module, @view_template, assigns %>
-        <%= end %>
+          <%= end %>
+          <a href="#" id="toggle-activity-panel" class="btn pull-right">
+            <i class="fa fa-fw fa-ellipsis-h"></i>
+            Show Menu
+          </a>
+
+
         <%= if !assigns[:no_container] do %>
-          <div class="container">
+        <div class="container">
             <%= render @view_module, @view_template, assigns %>
           </div><!-- /.container -->
         <%end%>
@@ -141,50 +142,16 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
+
+    <h3>
+      Menu
+      <button type="button" class="close" aria-label="Close" id="close-sidebar" ><span aria-hidden="true">&times;</span></button>
+    </h3>
+
       <!-- Home tab content -->
-      <div class="tab-pane active" id="control-sidebar-home-tab">
-        <h3 class="control-sidebar-heading">Recent Activity</h3>
-        <ul class="control-sidebar-menu">
-             <li>
-            <a href="javascript:void(0)">
-              <img src="https://cercle-prod.s3.amazonaws.com/uploads/users/profile_images/12/small_5.png" style="max-width:40px;border-radius:40px;float:left;" />
-
-              <div class="menu-info" style="margin-left:55px;">
-                <h4 class="control-sidebar-subheading" style="font-size:16px;"><span style="font-weight:600;">Antoine Herzog</span> <span style="font-weight:normal;">mentioned you on the contact</span>
-                <span style="font-weight:normal;text-decoration:underline;"> Bello Mama</span></h4>
-
-                <p style="font-size:16px;background-color:white;border-radius:5px;margin-top:10px;padding:5px;"> <span style="color:blue;"> @azeem</span> ok</p>
-              </div>
-            </a>
-          </li>
-         <li>
-            <a href="javascript:void(0)">
-              <img src="https://cercle-prod.s3.amazonaws.com/uploads/users/profile_images/12/small_5.png" style="max-width:40px;border-radius:40px;float:left;" />
-
-              <div class="menu-info" style="margin-left:55px;">
-                <h4 class="control-sidebar-subheading" style="font-size:16px;"><span style="font-weight:600;">Antoine Herzog</span> <span style="font-weight:normal;">mentioned you on the contact</span>
-                <span style="font-weight:normal;text-decoration:underline;"> Bello Mama</span></h4>
-
-                <p style="font-size:16px;background-color:white;border-radius:5px;margin-top:10px;padding:5px;"> <span style="color:blue;"> @azeem</span> ok</p>
-              </div>
-            </a>
-          </li>
-             <li>
-            <a href="javascript:void(0)">
-              <img src="https://cercle-prod.s3.amazonaws.com/uploads/users/profile_images/12/small_5.png" style="max-width:40px;border-radius:40px;float:left;" />
-
-              <div class="menu-info" style="margin-left:55px;">
-                <h4 class="control-sidebar-subheading" style="font-size:16px;"><span style="font-weight:600;">Antoine Herzog</span> <span style="font-weight:normal;">mentioned you on the contact</span>
-                <span style="font-weight:normal;text-decoration:underline;"> Bello Mama</span></h4>
-
-                <p style="font-size:16px;background-color:white;border-radius:5px;margin-top:10px;padding:5px;"> <span style="color:blue;"> @azeem</span> ok</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-      </div>
+        <activities id="recent-activities-app"/>
       <!-- /.tab-pane -->
+
       <!-- Settings tab content -->
       <div class="tab-pane" id="control-sidebar-settings-tab">
         <form method="post">
