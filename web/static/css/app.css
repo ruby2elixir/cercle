@@ -102,3 +102,9 @@ body, form, ul, table {
 .modal-body {
 	padding:0px;
 }
+
+
+.control-sidebar.open {
+    right: 4px !important;
+    width: 378px !important;
+}
