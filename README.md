@@ -6,6 +6,17 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 [To test it, You can go here: http://www.cercle.co/register](http://www.cercle.co/register)
 
+Cercle is:
+- realtime
+- visual
+- simple
+- API ready
+- and Free!
+
+## Current Release
+
+Cercle is still in beta test. We are planning to release version 1.0 in May, 2017.
+
 
 ## To install Cercle on Local
 
