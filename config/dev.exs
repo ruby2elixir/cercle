@@ -36,3 +36,8 @@ config :phoenix, :stacktrace_depth, 20
 config :guardian, Guardian,
   secret_key: "7JyRrsVsYB8izuJTJvgMfkbl45pYIIRefD2wOnzrhoIkNbJDLQzeigVGryThQc/O"
 import_config "dev.secret.exs"
+
+config :rollbax,
+  access_token: "",
+  environment: "development",
+  enabled: :log
