@@ -27,3 +27,7 @@ config :cercleApi, basic_auth: [
     password: "admin",
     realm: "Admin Area"
   ]
+config :rollbax,
+  access_token: "",
+  environment: "test",
+  enabled: :log
