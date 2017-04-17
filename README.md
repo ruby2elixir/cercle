@@ -1,6 +1,6 @@
-# Cercle - World-Class Open Source CRM
+# Cercle.co - Free Open Source CRM Phoenix Vuejs where each contact is a Trello Card.
 
-Cercle is an open source CRM easy to use and inspired by Trello.
+Cercle is an open source CRM easy to use, visual, inspired by Trello.
 
 [To test it, You can go here: http://www.cercle.co/register](http://www.cercle.co/register)
 
