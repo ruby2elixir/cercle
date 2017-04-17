@@ -1,6 +1,6 @@
 # Cercle.co - Open Source CRM Phoenix Vuejs. 
 
-Cerche stick to only one principle: Each contact is a Trello Card.
+Cercle.co stick to only one principle: Each contact is a Trello Card.
 
 Easy & Visual to keep track of your sales, partnerships, support tickets, onboarding clients. 
 
