@@ -7,7 +7,7 @@
     <a v-on:click.stop="$emit('contact-show')" href='#' style="color: #565656;"> {{item.contact && item.contact.name}} </a>
   </td>
   <td style="font-size:16px;">
-  <a style="color: #565656;"> <span style=""> {{item.title}}</span> </a><br />
+  <a v-on:click.stop="$emit('contact-show')" style="color: #565656;"> <span style=""> {{item.title}}</span> </a><br />
   </td>
   <td style="width:150px;">
     {{item.due_date| moment(timeFormat) }}
