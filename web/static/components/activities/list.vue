@@ -50,9 +50,9 @@
               .receive('error', resp => { console.log('Unable to join', resp); });
 
         this.channel.on('activity:deleted', payload => {
-          this.deleteItem(this.$data.activitiesOverdue, payload.activity_id);
-          this.deleteItem(this.$data.activitiesToday, payload.activity_id);
-          this.deleteItem(this.$data.activitiesLater, payload.activity_id);
+          this.deleteItem(this.activitiesOverdue, payload.activity_id);
+          this.deleteItem(this.activitiesToday, payload.activity_id);
+          this.deleteItem(this.activitiesLater, payload.activity_id);
         });
 
         this.channel.on('activity:created', payload => {
@@ -60,9 +60,9 @@
         });
 
         this.channel.on('activity:updated', payload => {
-          this.updateItem(this.$data.activitiesOverdue, payload.activity);
-          this.updateItem(this.$data.activitiesToday, payload.activity);
-          this.updateItem(this.$data.activitiesLater, payload.activity);
+          this.updateItem(this.activitiesOverdue, payload.activity);
+          this.updateItem(this.activitiesToday, payload.activity);
+          this.updateItem(this.activitiesLater, payload.activity);
         });
       },
       updateItem(collection, data) {

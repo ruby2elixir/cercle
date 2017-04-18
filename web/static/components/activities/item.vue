@@ -1,5 +1,5 @@
 <template>
- <tr>
+ <tr v-if="!item.is_done">
   <td style="width:30px;">
     <img :src="'/images/letters/' + item.contact.name.slice(0,1).toLowerCase() + '.png'" style="border-radius:14px;" />
   </td>
