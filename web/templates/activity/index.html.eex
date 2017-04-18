@@ -1,101 +1,105 @@
 <div id="activities-app">
   <activities inline-template>
+    <!-- Content Header (Page header) -->
+    <section class="content-header" style="margin-top:20px;margin-bottom:0px;max-width:900px;margin-right: auto;margin-left: auto;">
+      <h2 style="padding-left:15px;">Inbox<br /> <span style="font-size:16px;color:grey;"></h2>
+      <!-- Main content -->
+      <section class="content" style="max-width:900px;">
+        <div class="row" v-if="activitiesOverdue.length > 0">
+          <div class="col-xs-12">
+            <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;color:red;font-weight:bold;margin-top :0px;padding-top:0px;" >
+              Overdue
+            </h4>
+            <div class="box" style="border:0px solid grey;">
+              <!-- /.box-header -->
+              <div class="nav-tabs-custom ">
 
-<!-- Content Header (Page header) -->
-<section class="content-header" style="margin-top:20px;margin-bottom:0px;max-width:900px;margin-right: auto;margin-left: auto;">
-  <h2 style="padding-left:15px;">Inbox<br /> <span style="font-size:16px;color:grey;"></h2>
-  <!-- Main content -->
-  <section class="content" style="max-width:900px;">
-    <%=if Enum.count(@activities_overdue) > 0 do %>
-    <div class="row">
-      <div class="col-xs-12">
-        <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;color:red;font-weight:bold;margin-top :0px;padding-top:0px;" >
-          Overdue
-        </h4>
-        <div class="box" style="border:0px solid grey;">
-          <!-- /.box-header -->
-
-          <div class="nav-tabs-custom ">
-
-            <table class="table">
-              <%= for activity <- @activities_overdue do %>
-                  <%= if activity.contact do %>
-                  <%= render "_activity.html", activity: activity, hour: false,current_user_time_zone: @current_user_time_zone %>
-                  <% end %>
-                  <% end %>
-            </table>
-          </div><!-- /.box-body -->
-        </div><!-- /.box -->
-      </div>
-    </div>
-    <%end%>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;margin-top :0px;padding-top:0px;" class="">
-          Today
-        </h4>
-        <%=if Enum.count(@activities_today) > 0 do %>
-              <div class="box" style="border:0px solid grey;">
-                <!-- /.box-header -->
-
-                <div class="nav-tabs-custom ">
-
-
-                  <table class="table">
-                    <%= for activity <- @activities_today do %>
-                        <%= render "_activity.html", activity: activity, hour: true, current_user_time_zone: @current_user_time_zone  %>
-                        <% end %>
-                  </table>
-
-                </div><!-- /.box-body -->
-
-              </div><!-- /.box -->
-              <% else %>
-              <span style="font-size:16px;">Nothing to do... Go to the park!</span>
-              <%end%>
+                <table class="table">
+                  <tbody>
+                    <tr
+                      is="activity-item"
+                      v-for="item in activitiesOverdue"
+                      :item="item"
+                      :time_zone="timeZone"
+                      :key="item.id"
+                       v-on:contact-show="contactShow(item.contact_id)"
+                      ></tr>
+                  </tbody>
+                </table>
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
           </div>
         </div>
-        <%=if Enum.count(@activities_later) > 0 do %>
-                    <div class="row">
-                      <div class="col-xs-12">
-                        <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;" class="">
-                          Scheduled
-                        </h4>
-                        <div class="box" style="border:0px solid grey;">
-                          <!-- /.box-header -->
 
-                          <div class="nav-tabs-custom ">
+        <div class="row">
+          <div class="col-xs-12">
+            <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;margin-top :0px;padding-top:0px;" class="">
+              Today
+            </h4>
+            <div class="box" style="border:0px solid grey;"  v-if="activitiesToday.length > 0">
+              <!-- /.box-header -->
+              <div class="nav-tabs-custom ">
+                <table class="table">
+                  <tr
+                    is="activity-item"
+                    v-for="item in activitiesToday"
+                    :item="item"
+                    time-format="h:m"
+                    :key="item.id"
+                    v-on:contact-show="contactShow(item.contact_id)"
+                    ></tr>
+                </table>
 
-                            <table class="table">
-                              <%= for activity <- @activities_later do %>
-                                  <%= render "_activity.html", activity: activity, hour: false, current_user_time_zone: @current_user_time_zone %>
-                                  <% end %>
-                            </table>
-                          </div><!-- /.box-body -->
-                        </div><!-- /.box -->
-                      </div>
-                    </div>
-                    <%end%>
+              </div><!-- /.box-body -->
 
-
-      <modal large :show.sync="showContact" class="contact-modal">
-        <span slot="modal-header"></span>
-        <div slot="modal-body" class="modal-body">
-          <button type="button" class="close" @click="showContact=false">
-            <span>&times;</span>
-          </button>
-          <component
-            keep-alive
-            v-bind:is="contactView"
-            :contact_id.sync="contact.id"
-            >
-
-          </component>
+            </div><!-- /.box -->
+            <span style="font-size:16px;" v-else="activitiesToday.length > 0">Nothing to do... Go to the park!</span>
+          </div>
         </div>
-        <span slot="modal-footer"></span>
-      </modal>
 
-  </section><!-- /.content -->
+        <div class="row">
+          <div class="col-xs-12">
+            <h4 style="margin-bottom:20px;padding:20px;padding-left:0px;border-bottom:1px solid #cecece;" class="">
+              Scheduled
+            </h4>
+            <div class="box" style="border:0px solid grey;">
+              <!-- /.box-header -->
+
+              <div class="nav-tabs-custom ">
+
+                <table class="table">
+                  <tr
+                    is="activity-item"
+                    v-for="item in activitiesLater"
+                    :item="item"
+                    :time_zone="timeZone"
+                    :key="item.id"
+                    v-on:contact-show="contactShow(item.contact_id)"
+                    ></tr>
+                </table>
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div>
+        </div>
+
+
+        <modal large :show.sync="showContact" class="contact-modal">
+          <span slot="modal-header"></span>
+          <div slot="modal-body" class="modal-body">
+            <button type="button" class="close" @click="showContact=false">
+              <span>&times;</span>
+            </button>
+            <component
+              keep-alive
+              v-bind:is="contactView"
+              :contact_id.sync="contact.id"
+              >
+
+            </component>
+          </div>
+          <span slot="modal-footer"></span>
+        </modal>
+
+      </section><!-- /.content -->
   </activities>
-  </div>
+</div>

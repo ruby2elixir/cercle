@@ -5,7 +5,7 @@
         <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i>Tasks
       </h3>
       <div style="padding:15px;">
-        <div  v-for="task in tasks" class="task row">
+        <div  v-for="task in tasks" class="task row" v-if="!task.is_done">
           <div class="col-md-1 task-is-done">
             <el-checkbox v-model="task.is_done" v-on:change="updateTask(task)"></el-checkbox>
           </div>
