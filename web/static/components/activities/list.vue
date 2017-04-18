@@ -14,7 +14,10 @@
         contactView: null,
         activitiesOverdue: [],
         activitiesLater: [],
-        activitiesToday: []
+        activitiesToday: [],
+        socket: null,
+        channel: null,
+        userId: null
       };
     },
     components: {
@@ -37,6 +40,42 @@
           this.activitiesToday = resp.data.activities.today;
           this.activitiesLater = resp.data.activities.later;
         });
+
+        this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
+        this.socket.connect();
+        this.channel = this.socket.channel('users:' + this.userId, {});
+
+        this.channel.join()
+              .receive('ok', resp => {  })
+              .receive('error', resp => { console.log('Unable to join', resp); });
+
+        this.channel.on('activity:deleted', payload => {
+          this.deleteItem(this.$data.activitiesOverdue, payload.activity_id);
+          this.deleteItem(this.$data.activitiesToday, payload.activity_id);
+          this.deleteItem(this.$data.activitiesLater, payload.activity_id);
+        });
+
+        this.channel.on('activity:created', payload => {
+          this.$data.activitiesToday.unshift(payload.activity);
+        });
+
+        this.channel.on('activity:updated', payload => {
+          this.updateItem(this.$data.activitiesOverdue, payload.activity);
+          this.updateItem(this.$data.activitiesToday, payload.activity);
+          this.updateItem(this.$data.activitiesLater, payload.activity);
+        });
+      },
+      updateItem(collection, data) {
+        let itemIndex = collection.findIndex(function(item){
+          return item.id === parseInt(data.id);
+        });
+        if (itemIndex >= 0) { collection.splice(itemIndex, 1, data); }
+      },
+      deleteItem(collection, id) {
+        let itemIndex = collection.findIndex(function(item){
+          return item.id === parseInt(id);
+        });
+        if (itemIndex >= 0) { collection.splice(itemIndex, 1); }
       },
       setAuthToken(){
         var vm = this;
@@ -46,6 +85,7 @@
       }},
     mounted() {
       this.timeZone = document.querySelector('meta[name="time_zone"]').content;
+      this.userId = document.querySelector('meta[name="user_id"]').content;
       this.setAuthToken();
     }
   };

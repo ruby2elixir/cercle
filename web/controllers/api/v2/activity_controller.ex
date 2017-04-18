@@ -77,6 +77,11 @@ defmodule CercleApi.APIV2.ActivityController do
           "opportunities:" <> to_string(activity.opportunity_id),
           "activity:created", %{"activity" => activity}
         )
+
+        CercleApi.Endpoint.broadcast!(
+          "users:" <> to_string(current_user.id),
+          "activity:created", %{"activity" => activity}
+        )
         json conn, "{OK: true}"
       {:error, changeset} ->
         conn
@@ -86,6 +91,7 @@ defmodule CercleApi.APIV2.ActivityController do
   end
 
   def update(conn, %{"id" => id, "activity" => activity_params}) do
+    current_user = Guardian.Plug.current_resource(conn)
     activity = Repo.get!(Activity, id)
     |> Repo.preload(:user)
 
@@ -93,8 +99,15 @@ defmodule CercleApi.APIV2.ActivityController do
 
     case Repo.update(changeset) do
       {:ok, activity} ->
+        activity = activity
+        |> Repo.preload([:contact, :user])
         CercleApi.Endpoint.broadcast!(
           "opportunities:" <> to_string(activity.opportunity_id),
+          "activity:updated", %{"activity" => activity}
+        )
+
+        CercleApi.Endpoint.broadcast!(
+          "users:" <> to_string(current_user.id),
           "activity:updated", %{"activity" => activity}
         )
         render(conn, "show.json", activity: activity)
@@ -106,6 +119,7 @@ defmodule CercleApi.APIV2.ActivityController do
   end
 
   def delete(conn, %{"id" => id}) do
+    current_user = Guardian.Plug.current_resource(conn)
     activity = Repo.get!(Activity, id)
     channel = "opportunities:" <> to_string(activity.opportunity_id)
 
@@ -116,7 +130,9 @@ defmodule CercleApi.APIV2.ActivityController do
     CercleApi.Endpoint.broadcast!(
       channel, "activity:deleted", %{"activity_id" => id}
     )
-
+    CercleApi.Endpoint.broadcast!("users:" <> to_string(current_user.id),
+      "activity:deleted", %{"activity_id" => id}
+    )
     send_resp(conn, :no_content, "")
   end
 
