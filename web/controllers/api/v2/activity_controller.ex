@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ActivityController do
   require Logger
   use CercleApi.Web, :controller
   use Timex
-  alias CercleApi.{Contact, Activity, Repo}
+  alias CercleApi.{Activity, Repo}
 
   plug Guardian.Plug.EnsureAuthenticated
 
@@ -11,51 +11,10 @@ defmodule CercleApi.APIV2.ActivityController do
 
   def index(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
-    current_user_id = current_user.id
-    current_user_time_zone = current_user.time_zone
-    company_id = current_user.company_id
 
-    company = Repo.preload(Repo.get!(CercleApi.Company, company_id), [:users])
-
-    %{year: year, month: month, day: day} = Timex.now(current_user_time_zone)
-
-    {:ok, date} = Date.new(year, month, day)
-
-    date_erl = Date.to_erl(date)
-    from_time = Ecto.DateTime.from_erl({date_erl, {0, 0, 0}})
-    to_time = Ecto.DateTime.from_erl({date_erl, {23, 59, 59}})
-
-    query_overdue = from p in Activity,
-      where: p.is_done == false,
-      where: p.user_id == ^current_user_id,
-      where: p.company_id == ^company_id,
-      where: p.due_date  <= ^from_time,
-      where: not is_nil(p.contact_id),
-      order_by: [asc: p.due_date]
-
-    activities_overdue = Repo.all(query_overdue)
-    |> Repo.preload([:contact, :user])
-
-    query_today = from p in Activity,
-      where: p.is_done == false,
-      where: p.user_id == ^current_user_id,
-      where: p.company_id == ^company_id,
-      where: p.due_date  >= ^from_time,
-      where: p.due_date <= ^to_time,
-      order_by: [asc: p.due_date]
-
-    activities_today = Repo.all(query_today)
-    |> Repo.preload([:contact, :user])
-
-    query_later = from p in Activity,
-      where: p.is_done == false,
-      where: p.user_id == ^current_user_id,
-      where: p.company_id == ^company_id,
-      where: p.due_date >= ^to_time,
-      order_by: [asc: p.due_date]
-
-    activities_later = Repo.all(query_later)
-    |> Repo.preload([:contact, :user])
+    activities_overdue = Activity.overdue(current_user)
+    activities_today = Activity.today(current_user)
+    activities_later = Activity.later(current_user)
     render(conn, "list.json",
       activities_today: activities_today,
       activities_overdue: activities_overdue,
@@ -92,7 +51,8 @@ defmodule CercleApi.APIV2.ActivityController do
 
   def update(conn, %{"id" => id, "activity" => activity_params}) do
     current_user = Guardian.Plug.current_resource(conn)
-    activity = Repo.get!(Activity, id)
+    activity = Activity
+    |> Repo.get!(id)
     |> Repo.preload(:user)
 
     changeset = Activity.changeset(activity, activity_params)
