@@ -2,7 +2,6 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
   use CercleApi.ConnCase
   use Timex
   import CercleApi.Factory
-  alias CercleApi.{Activity}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -34,5 +33,24 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
         activities_later: [later_activity],
       }
     )
+  end
+
+  test "create/2 create activity with valid data", state do
+    CercleApi.Endpoint.subscribe("users:#{state[:user].id}")
+
+    conn = post state[:conn], "/api/v2/activity",
+      activity: %{ "company_id" => 1, "contact_id" => 7,
+                   "current_user_time_zone" => "Europe",
+                   "due_date" => "2017-04-19T10:45:14.609Z",
+                   "opportunity_id" => 59,
+                   "title" => "Call"}
+
+    assert_receive %Phoenix.Socket.Broadcast{
+      event: "activity:created",
+      payload: %{"activity" => _}
+    }
+
+    CercleApi.Endpoint.unsubscribe("users:#{state[:user].id}")
+    assert json_response(conn, 200) == "{OK: true}"
   end
 end
