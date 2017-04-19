@@ -1,17 +1,26 @@
 defmodule CercleApi.APIV2.OpportunityControllerTest do
   use CercleApi.ConnCase
+  import CercleApi.Factory
   alias CercleApi.{Contact,Opportunity}
 
   setup %{conn: conn} do
-    company = insert_company()
-    user = insert_user(username: "test", company_id: company.id)
-    organization = insert_organization(company_id: company.id, user_id: user.id)
-    contact = insert_contact(company_id: company.id, organization_id: organization.id , user_id: user.id)
-    board = insert_board(company_id: company.id)
-    board_column = insert_board_column(board_id: board.id)
+    user = insert(:user)
+    organization = insert(:organization,
+      company: user.company, user: user
+    )
+    contact = insert(:contact,
+      company: user.company, organization: organization, user: user
+    )
+    board = insert(:board, company: user.company)
+    board_column = insert(:board_column, board: board)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
-    {:ok, conn: conn, user: user, organization: organization, contact: contact, company: company, board: board, board_column: board_column}
+    {
+      :ok, conn: conn,
+      user: user, organization: organization,
+      contact: contact, company: user.company,
+      board: board, board_column: board_column
+    }
   end
 
   test "try to delete authorized Opportunity", state do

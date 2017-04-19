@@ -1,14 +1,14 @@
 defmodule CercleApi.APIV2.BoardColumnControllerTest do
   use CercleApi.ConnCase
+  import CercleApi.Factory
   alias CercleApi.{BoardColumn}
 
   setup %{conn: conn} do
-    company = insert_company()
-    user = insert_user(username: "test", company_id: company.id)
-    board = insert_board(company_id: company.id)
+    user = insert(:user)
+    board = insert(:board, company: user.company)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
-    {:ok, conn: conn, company: company, user: user, board: board}
+    {:ok, conn: conn, company: user.company, user: user, board: board}
   end
 
   test "create authorized board column for board with valid params", state do
@@ -22,7 +22,7 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
   end
 
   test "create board column for unauthorized board with valid params", state do
-    board = insert_board(company_id: state[:company].id + 1)
+    board = insert(:board)
     conn = post state[:conn], "/api/v2/board_column", board_column: %{name: "Step1", order: "1", board_id: board.id}
     assert json_response(conn, 200)["error"] == "You are not authorized for this action!"
   end
@@ -36,7 +36,7 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
   end
 
   test "try to update unauthorized board column for board", state do
-    board = insert_board(company_id: state[:company].id + 1)
+    board = insert(:board)
     changeset = BoardColumn.changeset(%BoardColumn{}, %{name: "Step1", order: "1", board_id: board.id})
     board_column = Repo.insert!(changeset)
     conn = put state[:conn], "/api/v2/board_column/#{board_column.id}", board_column: %{name: "ModifiedName"}
@@ -51,7 +51,7 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
   end
 
   test "try to delete unauthorized board column for board", state do
-    board = insert_board(company_id: state[:company].id + 1)
+    board = insert(:board)
     changeset = BoardColumn.changeset(%BoardColumn{}, %{name: "Step1", order: "1", board_id: board.id})
     board_column = Repo.insert!(changeset)
     conn = delete state[:conn], "/api/v2/board_column/#{board_column.id}"

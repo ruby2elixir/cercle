@@ -1,8 +1,9 @@
 defmodule CercleApi.ContactControllerTest do
   use CercleApi.ConnCase
+  import CercleApi.Factory
 
   setup %{conn: conn} do
-    user = insert_user(username: "test")
+    user = insert(:user)
     {:ok, conn: conn, user: user}
   end
 

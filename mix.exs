@@ -63,7 +63,8 @@ defmodule CercleApi.Mixfile do
      {:credo, "~> 0.5", only: [:dev, :test]},
      {:cipher, ">= 1.3.0"},
      {:rummage_ecto, "~> 1.1.0"},
-     {:rollbax, "~> 0.8.2"}
+     {:rollbax, "~> 0.8.2"},
+     {:ex_machina, "~> 2.0", only: [:test]}
     ]
   end
 
