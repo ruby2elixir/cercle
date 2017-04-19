@@ -2,7 +2,7 @@ defmodule CercleApi.Factory do
   use ExMachina.Ecto, repo: CercleApi.Repo
 
   alias CercleApi.{User, Company, Activity, Organization, Contact}
-  alias CercleApi.{Board, BoardColumn, Opportunity}
+  alias CercleApi.{Board, BoardColumn, Opportunity, TimelineEvent}
 
   def company_factory do
     %Company{ title: "Coca-Cola Inc." }
@@ -67,6 +67,17 @@ defmodule CercleApi.Factory do
       name: "Test",
       description: "Test Desc",
       status: 0
+    }
+  end
+
+  def timeline_event_factory do
+    %TimelineEvent{
+      event_name: "Test Event",
+      content: "Test Content",
+      user: build(:user),
+      company: build(:company),
+      opportunity: build(:opportunity),
+      contact: build(:contact)
     }
   end
 end

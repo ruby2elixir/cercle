@@ -10,7 +10,13 @@ defmodule CercleApi.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      aliases: aliases(),
-     deps: deps()]
+     deps: deps(),
+     test_coverage: [tool: ExCov],
+     preferred_cli_env: [
+       "cov": :test,
+       "cov.detail": :test
+     ]
+    ]
   end
 
   # Configuration for the OTP application.
@@ -66,7 +72,9 @@ defmodule CercleApi.Mixfile do
      {:cipher, ">= 1.3.0"},
      {:rummage_ecto, "~> 1.1.0"},
      {:rollbax, "~> 0.8.2"},
-     {:ex_machina, "~> 2.0", only: [:test]}
+     {:ex_machina, "~> 2.0", only: [:test]},
+     {:excov, "~> 0.1", only: :test},
+     {:excov_reporter_console, "~> 0.1", only: :test}
     ]
   end
 

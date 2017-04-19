@@ -48,197 +48,195 @@
               <ul class="nav navbar-nav">
                 <%= if is_integer(assigns[:current_user].company_id) do %>
                 <li>
-                <a href="/activity">
-                 <!--
-                  <span class="label label-primary">4</span>
-                  -->
-                  Inbox
-                </a>
+                  <a href="/activity">
+                    <!--
+                        <span class="label label-primary">4</span>
+                        -->
+                    Inbox
+                  </a>
                 </li>
                 <li><a href="/board">Boards</a></li>
                 <li><a href="/contact">People</a></li>
                 <li>
-                <%end%>
+                  <%end%>
               </ul>
 
             </div><!-- /.navbar-collapse -->
             <!-- Navbar Right Menu -->
-              <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                  <!-- Messages: style can be found in dropdown.less-->
-                    <!-- User Account Menu -->
-                  <li class="dropdown user user-menu">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                      <!-- The user image in the navbar-->
+            <div class="navbar-custom-menu">
+              <ul class="nav navbar-nav">
+                <!-- Messages: style can be found in dropdown.less-->
+                <!-- User Account Menu -->
+                <li class="dropdown user user-menu">
+                  <!-- Menu Toggle Button -->
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <!-- The user image in the navbar-->
+                    <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
+                    <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="user-image" alt="User Image">
+                    <%= end %>
+                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                    <span class="hidden-xs"><%= @conn.assigns[:current_user].user_name %></span>
+                  </a>
+
+                  <ul class="dropdown-menu">
+                    <!-- The user image in the menu -->
+                    <li class="user-header" style="background-color:#3C8DBC;">
                       <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
-                        <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="user-image" alt="User Image">
+                      <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="img-circle" alt="User Image">
                       <%= end %>
-                      <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                      <span class="hidden-xs"><%= @conn.assigns[:current_user].user_name %></span>
-                    </a>
+                      <p style="color:#FFFFFF;">
+                        <%= @conn.assigns[:current_user].user_name %>
+                        <small style="color:#FFFFFF;">
+                          (<%= @conn.assigns[:current_user].name %>)
+                        </small>
+                      </p>
+                    </li>
+                    <li class="user-footer">
+                      <div class="pull-left">
+                        <a href="/settings/profile_edit" class="btn btn-default btn-flat">Settings</a>
+                      </div>
+                      <div class="pull-right">
+                        <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
+                      </div>
+                    </li>
+                  </ul>
 
-                    <ul class="dropdown-menu">
-                      <!-- The user image in the menu -->
-                      <li class="user-header" style="background-color:#3C8DBC;">
-                        <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
-                          <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="img-circle" alt="User Image">
-                        <%= end %>
-                        <p style="color:#FFFFFF;">
-                          <%= @conn.assigns[:current_user].user_name %>
-                          <small style="color:#FFFFFF;">
-                            (<%= @conn.assigns[:current_user].name %>)
-                          </small>
-                        </p>
-                      </li>
-                      <li class="user-footer">
-                        <div class="pull-left">
-                          <a href="/settings/profile_edit" class="btn btn-default btn-flat">Settings</a>
-                        </div>
-                        <div class="pull-right">
-                          <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
-                        </div>
-                      </li>
-                    </ul>
+                </li>
 
-                  </li>
-
-                </ul>
-              </div><!-- /.navbar-custom-menu -->
+              </ul>
+            </div><!-- /.navbar-custom-menu -->
           </div><!-- /.container-fluid -->
         </nav>
       </header>
       <!-- Full Width Column -->
-      <div class="content-wrapper" <%= if assigns[:contact] do %> style="background-color:#A5A5A5;" <%end%> <%= if assigns[:board] do %> style="background-color:orange;" <%end%>  >
-         <%= if get_flash(@conn, :info) do %>
-            <p class="alert alert-info" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :info) %></p>
-          <% end %>
-          <%= if get_flash(@conn, :success) do %>
-            <p class="alert alert-success" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :success) %></p>
-          <% end %>
-          <%= if get_flash(@conn, :error) do %>
-            <p class="alert alert-danger" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :error) %></p>
-          <% end %>
-        <%= if assigns[:no_container] do %>
-          <%= render @view_module, @view_template, assigns %>
-          <%= end %>
-          <a href="#" id="toggle-activity-panel" class="btn pull-right">
-            <i class="fa fa-fw fa-ellipsis-h"></i>
-            Show Menu
-          </a>
+      <div class="content-wrapper <%= wrapper_css_class @conn %>">
+        <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
 
+        <%= if show_menu?(@conn) do %>
+        <a href="#" id="toggle-activity-panel" class="btn pull-right">
+          <i class="fa fa-fw fa-ellipsis-h"></i>
+          Show Menu
+        </a>
+        <% end %>
+
+        <%= if assigns[:no_container] do %>
+        <%= render @view_module, @view_template, assigns %>
+        <%= end %>
 
         <%= if !assigns[:no_container] do %>
-        <div class="container">
+          <div class="container">
             <%= render @view_module, @view_template, assigns %>
           </div><!-- /.container -->
         <%end%>
+
       </div><!-- /.content-wrapper -->
 
 
 
-<aside class="control-sidebar control-sidebar-light" >
-    <!-- Create the tabs -->
+      <aside class="control-sidebar control-sidebar-light" >
+        <!-- Create the tabs -->
 
-    <!-- Tab panes -->
-    <div class="tab-content">
+        <!-- Tab panes -->
+        <div class="tab-content">
 
-    <h3>
-      Menu
-      <button type="button" class="close" aria-label="Close" id="close-sidebar" ><span aria-hidden="true">&times;</span></button>
-    </h3>
+          <h3>
+            Menu
+            <button type="button" class="close" aria-label="Close" id="close-sidebar" ><span aria-hidden="true">&times;</span></button>
+          </h3>
 
-      <!-- Home tab content -->
-        <activities id="recent-activities-app"/>
-      <!-- /.tab-pane -->
+          <!-- Home tab content -->
+          <%= if show_recent_activities?(@conn) do %>
+            <activities id="recent-activities-app" board_id="<%= assigns[:board].id %>"/>
+          <% end %>
+          <!-- /.tab-pane -->
 
-      <!-- Settings tab content -->
-      <div class="tab-pane" id="control-sidebar-settings-tab">
-        <form method="post">
-          <h3 class="control-sidebar-heading">General Settings</h3>
+          <!-- Settings tab content -->
+          <div class="tab-pane" id="control-sidebar-settings-tab">
+            <form method="post">
+              <h3 class="control-sidebar-heading">General Settings</h3>
 
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Report panel usage
-              <input type="checkbox" class="pull-right" checked="">
-            </label>
+              <div class="form-group">
+                <label class="control-sidebar-subheading">
+                  Report panel usage
+                  <input type="checkbox" class="pull-right" checked="">
+                </label>
 
-            <p>
-              Some information about this general settings option
-            </p>
+                <p>
+                  Some information about this general settings option
+                </p>
+              </div>
+              <!-- /.form-group -->
+
+              <div class="form-group">
+                <label class="control-sidebar-subheading">
+                  Allow mail redirect
+                  <input type="checkbox" class="pull-right" checked="">
+                </label>
+
+                <p>
+                  Other sets of options are available
+                </p>
+              </div>
+              <!-- /.form-group -->
+
+              <div class="form-group">
+                <label class="control-sidebar-subheading">
+                  Expose author name in posts
+                  <input type="checkbox" class="pull-right" checked="">
+                </label>
+
+                <p>
+                  Allow the user to show his name in blog posts
+                </p>
+              </div>
+              <!-- /.form-group -->
+
+              <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+              <div class="form-group">
+                <label class="control-sidebar-subheading">
+                  Show me as online
+                  <input type="checkbox" class="pull-right" checked="">
+                </label>
+              </div>
+              <!-- /.form-group -->
+
+              <div class="form-group">
+                <label class="control-sidebar-subheading">
+                  Turn off notifications
+                  <input type="checkbox" class="pull-right">
+                </label>
+              </div>
+              <!-- /.form-group -->
+
+              <div class="form-group">
+                <label class="control-sidebar-subheading">
+                  Delete chat history
+                  <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+                </label>
+              </div>
+              <!-- /.form-group -->
+            </form>
           </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Allow mail redirect
-              <input type="checkbox" class="pull-right" checked="">
-            </label>
-
-            <p>
-              Other sets of options are available
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Expose author name in posts
-              <input type="checkbox" class="pull-right" checked="">
-            </label>
-
-            <p>
-              Allow the user to show his name in blog posts
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <h3 class="control-sidebar-heading">Chat Settings</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Show me as online
-              <input type="checkbox" class="pull-right" checked="">
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Turn off notifications
-              <input type="checkbox" class="pull-right">
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Delete chat history
-              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-            </label>
-          </div>
-          <!-- /.form-group -->
-        </form>
-      </div>
-      <!-- /.tab-pane -->
-    </div>
-  </aside>
-</div><!-- ./wrapper -->
+          <!-- /.tab-pane -->
+        </div>
+      </aside>
+    </div><!-- ./wrapper -->
 
     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
- <%= if (@conn.assigns[:current_user].id) do %>
-<script>
-  if (window.location.hostname == "www.cercle.co") {
-  window.intercomSettings = {
-    app_id: "mkbrkdwj",
-    name: "<%=@conn.assigns[:current_user].user_name%>", // Full name
-    email: "<%=@conn.assigns[:current_user].login%>" // Email address
-  };
-}
-</script>
-<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/mkbrkdwj';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
-<%end%>
+    <%= if (@conn.assigns[:current_user].id) do %>
+    <script>
+      if (window.location.hostname == "www.cercle.co") {
+      window.intercomSettings = {
+      app_id: "mkbrkdwj",
+      name: "<%=@conn.assigns[:current_user].user_name%>", // Full name
+      email: "<%=@conn.assigns[:current_user].login%>" // Email address
+      };
+      }
+    </script>
+    <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/mkbrkdwj';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+    <%end%>
 
   </body>
 </html>

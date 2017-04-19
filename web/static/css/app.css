@@ -108,3 +108,17 @@ body, form, ul, table {
     right: 4px !important;
     width: 378px !important;
 }
+
+.content-wrapper.board {
+  background-color:orange;
+}
+
+.content-wrapper.contact {
+  background-color:#A5A5A5;
+}
+
+#toggle-activity-panel {
+  position: absolute;
+  z-index: 99;
+  right: 0px;
+}
