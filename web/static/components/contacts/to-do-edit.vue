@@ -116,8 +116,8 @@
     components: {
       'inline-edit': InlineEdit,
       'checkbox': VueStrap.checkbox,
-      'el-date-picker': Element.DatePicker,
-      'el-checkbox': Element.Checkbox
+      'el-date-picker': ElementUi.DatePicker,
+      'el-checkbox': ElementUi.Checkbox
     }
   };
 </script>
