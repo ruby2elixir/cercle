@@ -72,7 +72,7 @@ defmodule CercleApi.APIV2.ActivityController do
     case Repo.insert(changeset) do
       {:ok, activity} ->
         activity = activity
-        |> Repo.preload([:user])
+        |> Repo.preload([:contact, :user])
         CercleApi.Endpoint.broadcast!(
           "opportunities:" <> to_string(activity.opportunity_id),
           "activity:created", %{"activity" => activity}
