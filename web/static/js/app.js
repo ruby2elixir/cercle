@@ -68,6 +68,7 @@ import ContactList from "../components/contacts/list.vue";
 import Board from "../components/boards/board.vue";
 import Activities from "../components/activities/list.vue";
 
+Vue.use(require('vue-autosize'))
 
 if ($("#contact-app-edit").length > 0){
     new Vue({
