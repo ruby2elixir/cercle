@@ -1,4 +1,4 @@
-# Cercle CRM for Trello lovers - Open Source CRM Phoenix Vuejs. 
+# Cercle CRM for Trello lovers - Open Source - Phoenix & Vuejs 
 
 Cercle is a CRM for Trello lovers.
 
