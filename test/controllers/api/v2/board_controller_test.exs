@@ -1,13 +1,13 @@
 defmodule CercleApi.APIV2.BoardControllerTest do
   use CercleApi.ConnCase
+  import CercleApi.Factory
   alias CercleApi.{Board}
 
   setup %{conn: conn} do
-    company = insert_company()
-    user = insert_user(username: "test", company_id: company.id)
+    user = insert(:user)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
-    {:ok, conn: conn, user: user, company: company}
+    {:ok, conn: conn, user: user, company: user.company}
   end
 
   test "create board with valid params", state do
