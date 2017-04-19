@@ -130,13 +130,13 @@ if ($('#activities-app').length > 0) {
   });
 }
 
-if ($("#recent-activities-app").length > 0) {
-    new Vue({
-        el: "#recent-activities-app",
-        components: {
-            'activities': RecentActivities
-        }
-    });
+if ($('#recent-activities-app').length > 0) {
+  new Vue({
+    el: '#recent-activities-app',
+    components: {
+      'activities': RecentActivities
+    }
+  });
 }
 
 
@@ -148,11 +148,11 @@ if (
 }
 
 $('#toggle-activity-panel').on('click', function(){
-    $('.control-sidebar-light').toggleClass('open');
-    $(this).hide();
+  $('.control-sidebar-light').toggleClass('open');
+  $(this).hide();
 });
 
 $('#close-sidebar').on('click', function(){
-    $('.control-sidebar-light').toggleClass('open');
-    $('#toggle-activity-panel').show()
+  $('.control-sidebar-light').toggleClass('open');
+  $('#toggle-activity-panel').show();
 });

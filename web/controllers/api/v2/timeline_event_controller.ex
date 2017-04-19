@@ -1,6 +1,6 @@
 defmodule CercleApi.APIV2.TimelineEventController do
   use CercleApi.Web, :controller
-  alias CercleApi.{TimelineEvent, User, Contact, Repo}
+  alias CercleApi.{TimelineEvent, User, Contact, Board, Repo}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug :scrub_params, "timeline_event" when action in [:create]
@@ -21,11 +21,18 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
     case Repo.insert(changeset) do
       {:ok, timeline_event} ->
-        timeline_event_reload = Repo.get!(CercleApi.TimelineEvent, timeline_event.id)
-        |> Repo.preload [:user]
+        timeline_event_reload = CercleApi.TimelineEvent
+        |> Repo.get!(timeline_event.id)
+        |> Repo.preload [:user, :opportunity]
         CercleApi.Endpoint.broadcast!(
           "opportunities:"  <> to_string(timeline_event_reload.opportunity_id),
           "timeline_event:created", %{"event" => timeline_event_reload}
+        )
+        CercleApi.Endpoint.broadcast!(
+          "board:" <> to_string(timeline_event_reload.opportunity.board_id),
+          "timeline_event:created",
+          CercleApi.APIV2.TimelineEventView.render(
+            "recent_item.json", timeline_event: timeline_event_reload)
         )
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA

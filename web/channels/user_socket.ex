@@ -10,6 +10,7 @@ defmodule CercleApi.UserSocket do
   channel "timeline_events:*", CercleApi.TimelineEventChannel
   channel "opportunities:*", CercleApi.OpportunityChannel
   channel "users:*", CercleApi.UserChannel
+  channel "board:*", CercleApi.BoardChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket,
