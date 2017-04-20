@@ -69,6 +69,7 @@ defmodule CercleApi.Router do
     put "/settings/fields_update", SettingsController, :fields_update
     post "/settings/team_invitation", SettingsController, :team_invitation
     get "/settings/tags_edit", SettingsController, :tags_edit
+    get "/settings/api_key", SettingsController, :api_key
 
     get "/contact", ContactController, :index
     get "/contact/new", ContactController, :new

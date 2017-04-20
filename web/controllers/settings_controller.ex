@@ -96,6 +96,14 @@ defmodule CercleApi.SettingsController do
     |> render "tags_edit.html", tags: tags
   end
 
+  def api_key(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+    company = Repo.get(Company, user.company_id)
+    conn
+    |> put_layout("adminlte.html")
+    |> render "api_key.html", company: company
+  end
+
   def team_invitation(conn, %{"user" => user_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
