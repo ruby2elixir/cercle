@@ -5,7 +5,7 @@
       <button class="btn btn-success" v-on:click="updateValue">Save</button>
       <a @click="cancelEdit">Cancel</a>
     </div>
-    <div v-html="compiledMarkdown" v-show="!editMode" @click="editMode=true"></div>
+    <div v-html="compiledMarkdown" v-show="!editMode" @click="editMode=true" class="opportunity-description-rendering"></div>
   </div>
 </template>
 
@@ -38,6 +38,9 @@ export default {
 </script>
 
 <style lang="sass">
+  .opportunity-description-rendering{
+    color:rgb(51, 51, 51);
+  }
   .opportunity-textarea {
     background-color:white;
     border:1px solid #eeeeee;

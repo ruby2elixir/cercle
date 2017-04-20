@@ -47,6 +47,7 @@
               <div class="mt-1" data-placeholder="Write a description...">
                <markdown-text-edit v-model="item.description" v-on:input="updateOpportunity" placeholder="Write a description" ></markdown-text-edit>
               </div>
+              <br />
             </div>
       </div>
       <to-do
