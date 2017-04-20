@@ -11,13 +11,16 @@ module.exports = {
   },
   'globals': {
     '$': true,
+    'require': true,
     'exports': true,
-      'Vue': true,
-      'VueStrap': true,
-      'vSelect': true,
-      'VueResource': true,
-      'Moment': true,
-      'Element': true
+    'Vue': true,
+    'VueStrap': true,
+    'vSelect': true,
+    'VueResource': true,
+    'VueResourceCaseConverter': true,
+    'Moment': true,
+    'ElementUi': true,
+    'MarkdownIt': true
   },
   'ecmaFeatures': {
     'modules': true

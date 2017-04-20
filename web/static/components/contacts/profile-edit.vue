@@ -44,7 +44,7 @@
           </modal>
 
           </div>
-        <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
+          <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
       </div><!-- /.box-body -->
     </div><!-- /.box -->
 

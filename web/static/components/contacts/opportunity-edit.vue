@@ -45,8 +45,7 @@
               Description
               <br />
               <div class="mt-1" data-placeholder="Write a description...">
-               <inline-text-edit v-model="item.description" v-on:input="updateOpportunity" placeholder="Write a description..." >
-               </inline-text-edit>
+               <markdown-text-edit v-model="item.description" v-on:input="updateOpportunity" placeholder="Write a description" ></markdown-text-edit>
               </div>
             </div>
       </div>
@@ -76,7 +75,7 @@
   import ToDo from './to-do-edit.vue';
   import CommentForm from './comment-form.vue';
   import TimelineEvents from './timeline-events.vue';
-  import InlineTextEdit from '../inline-textedit.vue';
+  import MarkdownTextEdit from '../markdown-textedit.vue';
 
   export default {
     props: [
@@ -279,7 +278,7 @@
       'to-do': ToDo,
       'comment_form': CommentForm,
       'timeline_events': TimelineEvents,
-      'inline-text-edit': InlineTextEdit,
+      'markdown-text-edit': MarkdownTextEdit,
       'v-select': vSelect.VueSelect,
       'modal': VueStrap.modal
     },
