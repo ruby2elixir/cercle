@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="editMode">
-      <textarea v-model="rawText" v-autosize="rawText" class="inline-textarea"  />
+      <textarea v-model="rawText" v-autosize="rawText" class="opportunity-textarea"  />
       <button class="btn btn-success" v-on:click="updateValue">Save</button>
       <a @click="cancelEdit">Cancel</a>
     </div>
@@ -38,12 +38,16 @@ export default {
 </script>
 
 <style lang="sass">
-  .inline-textarea {
-    background-color:transparent;
-    border:0px solid grey;
+  .opportunity-textarea {
+    background-color:white;
+    border:1px solid #eeeeee;
     width:100%;
-    height:60px;
+    min-height:100px;
     overflow: hidden;
+    margin-bottom:10px;
+    border-radius:3px;
+    resize: none;
+
   }
   .inline-textarea:focus {
     outline-width: 0;
