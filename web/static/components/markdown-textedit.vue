@@ -33,12 +33,6 @@ export default {
       this.rawText = this.value;
       this.editMode=false;
     }
-  },
-  mounted: function(){
-    var _v = this;
-    window.setTimeout(function(){
-      _v.rawText = _v.value;
-    }, 1000);
   }
 };
 </script>
