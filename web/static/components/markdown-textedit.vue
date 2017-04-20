@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     compiledMarkdown: function () {
-      return this.rawText ? (new MarkdownIt()).render(this.rawText) : this.placeholder;
+      return this.rawText ? (new MarkdownIt({breaks:true})).render(this.rawText) : this.placeholder;
     }
   },
   methods: {
