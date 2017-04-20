@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="editMode">
-      <textarea v-bind:value="value" v-autosize="value" class="inline-textarea"  />
+      <textarea v-model="rawText" v-autosize="rawText" class="inline-textarea"  />
       <button class="btn btn-success" v-on:click="updateValue">Save</button>
       <a @click="cancelEdit">Cancel</a>
     </div>
@@ -16,25 +16,32 @@ export default {
   data: function() {
     return {
       editMode: false,
-      markdownText: '-empty-' //(new MarkdownIt()).render(this.value)
+      rawText: this.value,
+      markdownText: ''
     };
   },
   computed: {
     compiledMarkdown: function () {
-      return this.markdownText || '-empty-';
+      return this.markdownText || this.rawText;
     }
   },
   methods: {
     updateValue: function(){
-      var text = this.$el.querySelector('textarea').value;
-      this.$emit('input', text);
-      this.markdownText = (new MarkdownIt()).render(text);
+      this.$emit('input', this.rawText);
+      this.markdownText = (new MarkdownIt()).render(this.rawText);
       this.editMode=false;
     },
     cancelEdit: function() {
-      this.$el.querySelector('textarea').value = this.value;
+      this.rawText = this.value;
       this.editMode=false;
     }
+  },
+  mounted: function(){
+    var _v = this;
+    window.setTimeout(function(){
+      _v.rawText = _v.value;
+      _v.markdownText = (new MarkdownIt()).render(_v.rawText);
+    }, 1000);
   }
 };
 </script>
