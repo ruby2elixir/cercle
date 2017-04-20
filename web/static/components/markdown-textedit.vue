@@ -17,18 +17,16 @@ export default {
     return {
       editMode: false,
       rawText: this.value,
-      markdownText: ''
     };
   },
   computed: {
     compiledMarkdown: function () {
-      return this.markdownText || this.rawText;
+      return this.rawText ? (new MarkdownIt()).render(this.rawText) : '-empty-';
     }
   },
   methods: {
     updateValue: function(){
       this.$emit('input', this.rawText);
-      this.markdownText = (new MarkdownIt()).render(this.rawText);
       this.editMode=false;
     },
     cancelEdit: function() {
@@ -40,7 +38,6 @@ export default {
     var _v = this;
     window.setTimeout(function(){
       _v.rawText = _v.value;
-      _v.markdownText = (new MarkdownIt()).render(_v.rawText);
     }, 1000);
   }
 };
