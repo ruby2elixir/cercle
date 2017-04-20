@@ -58,57 +58,58 @@ elementLocale.use(elementLang);
 Vue.use(require('vue-moment-jalaali'));
 Vue.use(VueResource);
 Vue.use(VueResourceCaseConverter, {
-    responseUrlFilter(url) {
-        return false;
-    }
+  responseUrlFilter(url) {
+    return false;
+  }
 });
 
-import ContactAppEdit from "../components/contacts/edit.vue";
-import ContactList from "../components/contacts/list.vue";
-import Board from "../components/boards/board.vue";
-import Activities from "../components/activities/list.vue";
+import ContactAppEdit from '../components/contacts/edit.vue';
+import ContactList from '../components/contacts/list.vue';
+import Board from '../components/boards/board.vue';
+import Activities from '../components/activities/list.vue';
 
-Vue.use(require('vue-autosize'))
+Vue.use(require('vue-autosize'));
 
-if ($("#contact-app-edit").length > 0){
-    new Vue({
-        el: "#contact-app-edit",
-        components: {
-            'contact-app-edit' : ContactAppEdit
-        }
-    });
-};
-if ($("#contacts-app").length > 0) {
-    new Vue({
-        el: "#contacts-app",
-        components: {
-            'contact-list' : ContactList
-        }
-    });
+if ($('#contact-app-edit').length > 0){
+  new Vue({
+    el: '#contact-app-edit',
+    components: {
+      'contact-app-edit' : ContactAppEdit
+    }
+  });
 }
 
-if ($("#board-app").length > 0) {
-    new Vue({
-        el: "#board-app",
-        components: {
-            'board': Board
-        }
-    });
+if ($('#contacts-app').length > 0) {
+  new Vue({
+    el: '#contacts-app',
+    components: {
+      'contact-list' : ContactList
+    }
+  });
 }
 
-if ($("#activities-app").length > 0) {
-    new Vue({
-        el: "#activities-app",
-        components: {
-            'activities': Activities
-        }
-    });
+if ($('#board-app').length > 0) {
+  new Vue({
+    el: '#board-app',
+    components: {
+      'board': Board
+    }
+  });
+}
+
+if ($('#activities-app').length > 0) {
+  new Vue({
+    el: '#activities-app',
+    components: {
+      'activities': Activities
+    }
+  });
 }
 
 
 if (
-    ($("#opportunity_pipeline").length > 0) ||
-        ($("[data-pipeline_init]").length > 0)
+  $('#opportunity_pipeline').length > 0 ||
+    $('[data-pipeline_init]').length > 0
 ){
   App.pipelineInit();
 }
