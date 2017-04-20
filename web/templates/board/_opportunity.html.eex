@@ -4,11 +4,11 @@
           <span style="color:#222222;">
           <%=@opportunity.main_contact.name %>
           <%=if @opportunity.main_contact.organization do %>
+          <span style="color:rgb(119, 119, 119);">
           - <%=@opportunity.main_contact.organization.name %>
+          </span>
           <%end%> 
           </span>
-          <Br />
-          <%=@opportunity.name%>
       </div>
       <div style="font-size:12px;">
       </div>
