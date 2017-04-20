@@ -38,7 +38,7 @@
         }
       },
       components: {
-        'el-checkbox': Element.Checkbox
+        'el-checkbox': ElementUi.Checkbox
       }
 };
 </script>
