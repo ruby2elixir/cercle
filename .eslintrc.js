@@ -17,7 +17,9 @@ module.exports = {
       'vSelect': true,
       'VueResource': true,
       'Moment': true,
-      'Element': true
+      'Element': true,
+      'MarkdownIt': true
+
   },
   'ecmaFeatures': {
     'modules': true

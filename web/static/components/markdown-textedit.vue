@@ -16,7 +16,7 @@ export default {
   data: function() {
     return {
       editMode: false,
-      rawText: this.value,
+      rawText: this.value
     };
   },
   computed: {
