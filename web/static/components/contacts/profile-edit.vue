@@ -44,7 +44,7 @@
           </modal>
 
           </div>
-        <markdown-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></markdown-text-edit>
+          <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
       </div><!-- /.box-body -->
     </div><!-- /.box -->
 
@@ -55,7 +55,7 @@ Vue.use(VueResource);
 import {Socket, Presence} from 'phoenix';
 
 import InlineEdit from '../inline-common-edit.vue';
-import MarkdownTextEdit from '../markdown-textedit.vue';
+import InlineTextEdit from '../inline-textedit.vue';
 
 export default {
   props: [
@@ -125,7 +125,7 @@ export default {
   },
   components: {
     'inline-edit': InlineEdit,
-    'markdown-text-edit': MarkdownTextEdit,
+    'inline-text-edit': InlineTextEdit,
     'v-select': vSelect.VueSelect,
     'modal': VueStrap.modal
 

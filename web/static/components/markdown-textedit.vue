@@ -12,7 +12,7 @@
 <script>
 
 export default {
-  props: ['value'],
+  props: ['value', 'placeholder'],
   data: function() {
     return {
       editMode: false,
@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     compiledMarkdown: function () {
-      return this.rawText ? (new MarkdownIt()).render(this.rawText) : '-empty-';
+      return this.rawText ? (new MarkdownIt()).render(this.rawText) : this.placeholder;
     }
   },
   methods: {
