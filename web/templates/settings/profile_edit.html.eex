@@ -11,14 +11,11 @@
            </div>
            <div class="box-body no-padding">
              <ul class="nav nav-pills nav-stacked">
-               <li class="active" ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
-               <%=if @company do %>
-                <li><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a>
-                <li><a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a></li>
-                <li><a href="/import"><i class="fa fa-edit"></i>Import</a></li>
-                <li><a href="/settings/tags_edit"><i class="fa fa-edit"></i>Edit Tags</a></li>
-                <!-- <li class="active"><a href="/companies/<%= @company.id %>/benifits"><i class="fa fa-edit"></i> Benefits</a></li>-->
-              <%end%>
+              <li class="active" ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
+              <li><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a>
+              <li><a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a></li>
+              <li><a href="/import"><i class="fa fa-edit"></i>Import</a></li>
+              <li><a href="/settings/tags_edit"><i class="fa fa-edit"></i>Edit Tags</a></li>
              </ul>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
