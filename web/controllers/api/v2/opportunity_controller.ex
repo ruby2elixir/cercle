@@ -37,10 +37,7 @@ defmodule CercleApi.APIV2.OpportunityController do
       opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
 
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
-
-    name = board.name
-
-    opportunity_params = %{opportunity_params | "name" => name}
+    
     changeset = current_user
     |> build_assoc(:opportunities)
     |> Opportunity.changeset(opportunity_params)
