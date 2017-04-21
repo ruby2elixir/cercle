@@ -33,10 +33,10 @@
                 {{opp.name}}
               </div>
               <button v-show="!showAddCard" v-on:click="showAddCard=true" type="button" class="btn btn-link show-add-card-form">
-               <i class="fa fa-fw fa-plus"></i>Create a card
+               <i class="fa fa-fw fa-plus"></i>Insert this contact into a board
               </button>
               <div v-show="showAddCard">
-                Create a card into the board:
+                Insert the contact into the board:
                 <select v-model="newBoard">
                   <option v-for="board in boards" :value="board">{{board.name}}</option>
                 </select>
