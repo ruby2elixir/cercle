@@ -51,7 +51,8 @@ defmodule CercleApi.RegistrationController do
     end
   end
 
-  def accept_team_invitation(conn, %{"register_values" => register_values}) do
+  def accept_team_invitation(conn, params) do
+    register_values = params["register_values"]
     case Cipher.parse register_values do
       {:ok, decoded_values} ->
         if decoded_values["company_id"] do company_id = decoded_values["company_id"] end

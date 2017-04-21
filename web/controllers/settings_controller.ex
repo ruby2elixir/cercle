@@ -109,7 +109,7 @@ defmodule CercleApi.SettingsController do
     company = Repo.get!(Company, user.company_id)
     receiver_email = user_params["email"]
     values = %{"company_id": "#{company.id}", "email": "#{receiver_email}"}
-    encoded_values = Cipher.cipher values
+    encoded_values = Cipher.cipher(values)
     try do
       CercleApi.Mailer.deliver invitation_email(user, receiver_email, company.title, encoded_values)
       conn
