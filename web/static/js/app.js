@@ -75,6 +75,11 @@ if ($('#contact-app-edit').length > 0){
     el: '#contact-app-edit',
     components: {
       'contact-app-edit' : ContactAppEdit
+    },
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
     }
   });
 }
@@ -84,6 +89,11 @@ if ($('#contacts-app').length > 0) {
     el: '#contacts-app',
     components: {
       'contact-list' : ContactList
+    },
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
     }
   });
 }
@@ -93,6 +103,11 @@ if ($('#board-app').length > 0) {
     el: '#board-app',
     components: {
       'board': Board
+    },
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
     }
   });
 }
@@ -102,6 +117,11 @@ if ($('#activities-app').length > 0) {
     el: '#activities-app',
     components: {
       'activities': Activities
+    },
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
     }
   });
 }
