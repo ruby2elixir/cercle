@@ -10,8 +10,13 @@
         <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
           <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;">
             In {{board.name}}
-            <Br />
+            -
+          <select v-model="item.board_column_id" v-on:change="updateOpportunity">
+             <option v-for="board_column in boardColumns" :value.number="board_column.id">{{board_column.name}}</option>
+          </select>
+            <div v-if="item.name">
             <inline-edit v-model="item.name" v-on:input="updateOpportunity" placeholder="Card Name" style="width:500px;margin-left:25px;color:grey;"></inline-edit>
+            </div>
           </span>
         </span>
         <br />
@@ -21,11 +26,7 @@
           <select v-model.number="item.user_id"  v-on:change="updateOpportunity">
             <option v-for="user in company_users" :value.number="user.id">{{user.user_name}}</option>
           </select>
-          &nbsp;&nbsp;
-          Status:
-          <select v-model="item.board_column_id" v-on:change="updateOpportunity">
-             <option v-for="board_column in boardColumns" :value.number="board_column.id">{{board_column.name}}</option>
-          </select>
+  
         </div>
         Contacts Involved:
         <a v-for="o_contact in opportunityContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
