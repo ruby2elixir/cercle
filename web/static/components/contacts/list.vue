@@ -96,11 +96,7 @@ export default {
   },
   mounted(){
     this.setAuthToken();
-    let vm = this;
-    window.addEventListener('keyup', function(event) {
-      if (event.keyCode === 27) { vm.showContact = false; }
-    });
-
+    this.$root.$on('esc-keyup', () => { this.showContact = false; });
   }
 };
 

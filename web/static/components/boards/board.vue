@@ -29,6 +29,7 @@
       }
     },
     mounted() {
+      this.$root.$on('esc-keyup', () => { this.showContact = false; });
     }
   };
 </script>
