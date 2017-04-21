@@ -86,6 +86,7 @@
     mounted() {
       this.timeZone = document.querySelector('meta[name="time_zone"]').content;
       this.userId = document.querySelector('meta[name="user_id"]').content;
+      this.$root.$on('esc-keyup', () => { this.showContact = false; });
       this.setAuthToken();
     }
   };
