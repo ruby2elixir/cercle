@@ -80,6 +80,7 @@
                   <div id="actions" class="dropdown" style="position: absolute;right: 4px;top: 4px;width:18px;height:18px;color:grey;font-size:12px;">
                     <span class="fa fa-ellipsis-h" role="button" data-id="<%= col.id%>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                     <ul class="dropdown-menu" aria-labelledby="dLabel">
+                      <li><a class="add-card" @click="showNewCard(<%=col.id%>)">Add card</a></li>
                       <li><a class="delete-column-link">Delete This Column..</a></li>
                     </ul>
                   </div>
@@ -90,9 +91,11 @@
 
                   <%= for card <- @cards do %>
                       <%=if card.board_column_id == col.id do %>
-                      <%= render "_opportunity.html", opportunity: card %>
+                        <%= render "_opportunity.html", opportunity: card %>
                       <%=end%>
-                      <%end%>
+                  <%end%>
+
+                  <new-card v-show="false" v-on:save-new-card="data => {addContact(<%=assigns[:current_user].id%>, <%= @company.id %>, <%=col.id%>, data)}" v-on:hide-new-card="hideNewCard(<%=col.id%>)"></new-card>
                 </div>
               </div>
               <%=end%>

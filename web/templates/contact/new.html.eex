@@ -12,7 +12,7 @@
     </div>
 
     <div class='referral-form-content'>
-      <form id='referral-form'>
+      <form class='referral-form'>
         <input type='hidden' name='contact[company_id]' value='<%= @company.id %>' id="company_id" />
         <input type='hidden' name='contact[user_id]' value='<%=assigns[:current_user].id%>' id="user_id" />
 
@@ -39,7 +39,7 @@
         <br />
         <Br />
         <div class='referral-form-footer'>
-          <input type='submit' value='CREATE' class="btn btn-primary"
+          <input type='submit' value='CREATE' class="btn btn-primary">
         </div>
       </form>
     </div>
