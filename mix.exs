@@ -20,7 +20,7 @@ defmodule CercleApi.Mixfile do
     [mod: {CercleApi, []},
      applications: [
        :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
-       :gettext, :phoenix_ecto, :postgrex, :ex_aws, :httpoison, :tzdata,
+       :gettext, :phoenix_ecto, :postgrex, :ex_aws, :hackney, :httpoison, :tzdata,
        :csv, :ex_csv, :uuid, :arc_ecto, :rollbax
      ]
     ]
@@ -44,11 +44,13 @@ defmodule CercleApi.Mixfile do
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
      {:mailman, "~> 0.2.2"},
-     {:arc, "~> 0.7.0"},
-     {:ex_aws, ">= 0.4.10"},
+     {:arc, "~> 0.8.0"},
+     {:ex_aws, "~> 1.1"},
      {:httpoison, "~> 0.7"},
-     {:poison, ">= 2.0.0"},
-     {:arc_ecto, "~> 0.6.0"},
+     {:poison, "~> 2.2"},
+     {:hackney, "~> 1.7.0"},
+     {:sweet_xml, "~> 0.6.5"},
+     {:arc_ecto, "~> 0.7.0"},
      {:timex, "~> 3.1.8"},
      {:gettext, "~> 0.13.0"},
      {:basic_auth, "~> 2.0.0"},
