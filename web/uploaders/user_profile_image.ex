@@ -14,11 +14,6 @@ defmodule CercleApi.UserProfileImage do
   # To add a thumbnail version:
   @versions [:original, :small]
 
-  # Whitelist file extensions:
-  def validate({file, _}) do
-    ~w(.jpg .jpeg .gif .png) |> Enum.member?(Path.extname(file.file_name))
-  end
-
   # Define a thumbnail transformation:
   def transform(:small, _) do
     {:convert, "-strip -thumbnail 75x75^ -gravity center -extent 75x75 -format png", :png}
@@ -57,7 +52,7 @@ defmodule CercleApi.UserProfileImage do
   #   [content_type: Plug.MIME.path(file.file_name)]
   # end
 
-  def validate({file, _}) do   
+  def validate({file, _}) do
     file_extension = file.file_name |> Path.extname |> String.downcase
     Enum.member?(@extension_whitelist, file_extension)
   end
