@@ -2,13 +2,14 @@
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../inline-common-edit.vue';
   import ContactForm from '../contacts/edit.vue';
-  import NewCard from './new-card.vue';
+  import NewContact from './new-contact.vue';
 
   export default {
     props: ['board_id'],
     data() {
       return {
         board: {},
+        newContact: false,
         showContact: false,
         contact: {},
         opportunity: {},
@@ -19,7 +20,7 @@
       'inline-edit': InlineEdit,
       'modal': VueStrap.modal,
       'contact-form': ContactForm,
-      'new-card': NewCard
+      'new-contact': NewContact
     },
     methods: {
       contactShow(contactId, opportunityId) {
@@ -30,15 +31,7 @@
         this.showContact = true;
       },
 
-      showNewCard(colId) {
-        $('.column_master[data-id='+colId+'] .new-card').show();
-      },
-
-      hideNewCard(colId) {
-        $('.column_master[data-id='+colId+'] .new-card').hide();
-      },
-
-      addContact(userId, companyId, colId, data) {
+      createContact(userId, companyId, data) {
         var boardId = this.board_id;
         var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
         if(data.name !== ''){
@@ -63,7 +56,7 @@
                   'opportunity[user_id]': userId,
                   'opportunity[company_id]': companyId,
                   'opportunity[board_id]': boardId,
-                  'opportunity[board_column_id]': colId,
+                  'opportunity[board_column_id]': data.column,
                   'opportunity[name]': ''
                 },
                 complete: function(xhr, status){
