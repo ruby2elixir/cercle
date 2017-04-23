@@ -29,10 +29,6 @@
         this.opportunity = { id: opportunityId };
         this.contactView = 'contact-form';
         this.showContact = true;
-      },
-
-      createContact(userId, companyId, data) {
-        var boardId = this.board_id;
       }
     },
     mounted() {
