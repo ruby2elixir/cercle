@@ -61,10 +61,14 @@
 <div id="board-app">
   <board board_id="<%= Poison.encode!(@board.id) %>"  inline-template >
     <div>
-      <section class="content-header" style="margin-bottom:20px;margin-left:20px;">
-        <h2>
+      <section class="content-header clearfix" style="margin-bottom:20px;margin-left:20px;">
+        <h2 class="pull-left">
           <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>" style="color:white;font-weight:bold;"><%= @board.name %></span>
         </h2>
+
+        <h2 class='pull-right'>
+          <span @click="newContact=true" style="font-weight:bold; font-size: 16px;">Add contact</span>
+        </a>
 
       </section>
       <!-- Main content -->
@@ -80,7 +84,6 @@
                   <div id="actions" class="dropdown" style="position: absolute;right: 4px;top: 4px;width:18px;height:18px;color:grey;font-size:12px;">
                     <span class="fa fa-ellipsis-h" role="button" data-id="<%= col.id%>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                     <ul class="dropdown-menu" aria-labelledby="dLabel">
-                      <li><a class="add-card" @click="showNewCard(<%=col.id%>)">Add card</a></li>
                       <li><a class="delete-column-link">Delete This Column..</a></li>
                     </ul>
                   </div>
@@ -94,8 +97,6 @@
                         <%= render "_opportunity.html", opportunity: card %>
                       <%=end%>
                   <%end%>
-
-                  <new-card v-show="false" v-on:save-new-card="data => {addContact(<%=assigns[:current_user].id%>, <%= @company.id %>, <%=col.id%>, data)}" v-on:hide-new-card="hideNewCard(<%=col.id%>)"></new-card>
                 </div>
               </div>
               <%=end%>
@@ -111,9 +112,21 @@
         </div>
       </div><!-- /.content -->
 
+      <modal small :show.sync="newContact" class="new-contact-modal" :backdrop=false>
+        <div slot="modal-header" class="modal-header">
+          New contact
 
+          <button type="button" class="close" @click="newContact=false">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div slot="modal-body" class="modal-body">
+          <new-contact v-on:hide-new-contact="newContact=false" :board-id="board_id" :columns="<%= Poison.encode!(@board.board_columns) %>" v-on:save-new-contact="data => {createContact(<%= assigns[:current_user].id%>, <%= @company.id %>, data)}"></new-contact>
+        </div>
+        <span slot="modal-footer"></span>
+      </modal>
 
-      <modal large :show.sync="showContact" class="contact-modal">
+      <modal large :show.sync="showContact" class="contact-modal" :backdrop=false>
         <span slot="modal-header"></span>
         <div slot="modal-body" class="modal-body">
           <button type="button" class="close" @click="showContact=false">
