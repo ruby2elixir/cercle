@@ -9,26 +9,4 @@ defmodule CercleApi.ContactChannel do
     {:ok, socket}
   end
 
-  def handle_in("load_state", _params, socket) do
-    contact = Contact
-    |> Contact.preload_data
-    |> Repo.get(socket.assigns[:contact_id])
-
-    Logger.debug "> LOAD STATE"
-
-    data = %{
-      contact: contact,
-      company: contact.company,
-      company_users: contact.company.users,
-      tags: contact.tags,
-      organization: contact.organization,
-      opportunities: CercleApi.Contact.involved_in_opportunities(contact),
-      boards: contact.company.boards
-    }
-
-    push socket, "state", data
-
-    {:noreply, socket}
-  end
-
 end

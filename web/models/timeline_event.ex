@@ -31,4 +31,14 @@ defmodule CercleApi.TimelineEvent do
         ])
     |> validate_required([:content, :event_name, :opportunity_id])
   end
+
+  def recent(board, limit \\ 10) do
+    query = from e in __MODULE__,
+      join: c in assoc(e, :company),
+      where: c.id == ^board.company_id,
+      select: e,
+      limit: ^limit
+
+    query |> CercleApi.Repo.all
+  end
 end

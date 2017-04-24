@@ -1,0 +1,9 @@
+<%= if get_flash(@conn, :info) do %>
+<p class="alert alert-info" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :info) %></p>
+<% end %>
+<%= if get_flash(@conn, :success) do %>
+<p class="alert alert-success" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :success) %></p>
+<% end %>
+<%= if get_flash(@conn, :error) do %>
+<p class="alert alert-danger" role="alert" style="border-radius:0px;"><%= get_flash(@conn, :error) %></p>
+<% end %>

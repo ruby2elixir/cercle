@@ -37,7 +37,7 @@ defmodule CercleApi.Activity do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
     to_time = user.time_zone |> Timex.now |> Timex.end_of_day
 
-    query = from p in CercleApi.Activity,
+    query = from p in __MODULE__,
       where: p.is_done == false,
       where: p.user_id == ^user.id,
       where: p.company_id == ^user.company_id,
@@ -54,7 +54,7 @@ defmodule CercleApi.Activity do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
     to_time = user.time_zone |> Timex.now |> Timex.end_of_day
 
-    query = from p in CercleApi.Activity,
+    query = from p in __MODULE__,
       where: p.is_done == false,
       where: p.user_id == ^user.id,
       where: p.company_id == ^user.company_id,
@@ -71,7 +71,7 @@ defmodule CercleApi.Activity do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
     to_time = user.time_zone |> Timex.now |> Timex.end_of_day
 
-    query = from p in CercleApi.Activity,
+    query = from p in __MODULE__,
       where: p.is_done == false,
       where: p.user_id == ^user.id,
       where: p.company_id == ^user.company_id,
