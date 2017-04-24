@@ -35,9 +35,6 @@ export default {
       },
       methods: {
         initConn() {
-          localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
-          Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
-
           this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
           this.socket.connect();
           this.channel = this.socket.channel('board:' + this.board_id, {});
@@ -51,7 +48,6 @@ export default {
 
           this.channel.on('timeline_event:created', payload => {
             this.items.unshift(payload);
-            console.log('event:added', payload);
           });
 
         }

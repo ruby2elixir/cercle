@@ -139,14 +139,6 @@ export default {
       console.log('delete contact');
     },
 
-    setAuthToken(){
-      var vm = this;
-      localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
-      Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
-      if (vm.contact_id) {
-        vm.initConn();
-      }
-    },
     refreshContact(payload) {
       if (payload.contact) {
         this.contact = payload.contact;
@@ -228,9 +220,9 @@ export default {
     }
   },
   mounted(){
-    this.timeZone = document.querySelector('meta[name="time_zone"]').content;
-    this.userImage = document.querySelector('meta[name="user_image"]').content;
-    this.setAuthToken();
+    this.timeZone = Vue.currentUser.timeZone;
+    this.userImage = Vue.currentUser.userImage;
+    if (this.contact_id) { this.initConn(); }
   }
 
 };
