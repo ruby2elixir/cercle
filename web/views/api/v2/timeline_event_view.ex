@@ -39,7 +39,6 @@ defmodule CercleApi.APIV2.TimelineEventView do
       opportunity_id: timeline_event.opportunity_id,
       contact_id: timeline_event.contact_id,
       content: timeline_event.content,
-
       user_name: timeline_event.user && timeline_event.user.user_name,
       created_at: timeline_event.inserted_at
     }

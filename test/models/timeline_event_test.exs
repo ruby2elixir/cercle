@@ -10,6 +10,7 @@ defmodule CercleApi.TimelineEventTest do
       insert(:timeline_event, company: user.company).id,
       insert(:timeline_event, company: user.company).id
     ]
+    |> Enum.reverse
 
     assert Enum.map(TimelineEvent.recent(board), fn(v) -> v.id end) == event_ids
   end

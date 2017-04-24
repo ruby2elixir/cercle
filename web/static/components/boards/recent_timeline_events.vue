@@ -2,20 +2,7 @@
   <div class="tab-pane active" id="control-sidebar-home-tab" >
     <h3 class="control-sidebar-heading">Recent Activity</h3>
     <ul class="control-sidebar-menu">
-      <li  v-for="item in items">
-        <a href="#">
-          <img :src="item.profile_image_url" style="max-width:40px;border-radius:40px;float:left;" />
-          <div class="menu-info" style="margin-left:55px;">
-            <h4 class="control-sidebar-subheading" style="font-size:16px;">
-              <span style="font-weight:600;">{{item.user_name}}</span>
-              <div>
-                {{item.content}}
-              </div>
-              <small>{{item.created_at | moment('MMM DD [at] h:m A') }}</small>
-            </h4>
-          </div>
-        </a>
-      </li>
+      <component v-bind:is="item.event_name" v-for="item in items" :item="item" />
     </ul>
     <!-- /.control-sidebar-menu -->
   </div>
@@ -23,39 +10,42 @@
 <script>
 import {Socket, Presence} from 'phoenix';
 import moment from 'moment';
-export default {
-      props: ['board_id'],
-      data() {
-        return {
-          channel: null,
-          items: [ ]
-        };
-      },
-      components: {
+import CommentMessage from './events/comment_item.vue';
 
-      },
-      methods: {
-        initConn() {
-          this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
-          this.socket.connect();
-          this.channel = this.socket.channel('board:' + this.board_id, {});
-          this.channel.join()
+export default {
+  props: ['board_id'],
+  data() {
+    return {
+      channel: null,
+      items: [ ]
+    };
+  },
+  components: {
+    'comment': CommentMessage
+  },
+  methods: {
+    initConn() {
+      this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
+      this.socket.connect();
+      this.channel = this.socket.channel('board:' + this.board_id, {});
+      this.channel.join()
                 .receive('ok', resp => { this.channel.push('get'); })
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
-          this.channel.on('activities', payload => {
-            this.items = payload.recent;
-          });
+      this.channel.on('activities', payload => {
+        this.items = payload.recent;
+      });
 
-          this.channel.on('timeline_event:created', payload => {
-            this.items.unshift(payload);
-          });
+      this.channel.on('timeline_event:created', payload => {
+        this.items.unshift(payload);
+      });
 
-        }
-      },
-      mounted() {
-        this.initConn();
-      }
+    }
+
+  },
+  mounted() {
+    this.initConn();
+  }
 };
   </script>
 <style lang="sass">
