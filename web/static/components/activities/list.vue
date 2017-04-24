@@ -76,18 +76,14 @@
           return item.id === parseInt(id);
         });
         if (itemIndex >= 0) { collection.splice(itemIndex, 1); }
-      },
-      setAuthToken(){
-        var vm = this;
-        localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
-        Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
-        vm.initConn();
-      }},
+      }
+    },
+
     mounted() {
-      this.timeZone = document.querySelector('meta[name="time_zone"]').content;
-      this.userId = document.querySelector('meta[name="user_id"]').content;
+      this.timeZone = Vue.currentUser.timeZone;
+      this.userId = Vue.currentUser.userId;
       this.$root.$on('esc-keyup', () => { this.showContact = false; });
-      this.setAuthToken();
+      this.initConn();
     }
   };
 </script>

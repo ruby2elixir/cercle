@@ -89,8 +89,6 @@ export default {
     },
     setAuthToken(){
       let vm = this;
-      localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
-      Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
       vm.initConn();
     }
   },
