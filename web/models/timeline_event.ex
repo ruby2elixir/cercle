@@ -34,10 +34,11 @@ defmodule CercleApi.TimelineEvent do
 
   def recent(board, limit \\ 10) do
     query = from e in __MODULE__,
-      join: c in assoc(e, :company),
-      where: c.id == ^board.company_id,
+      join: o in assoc(e, :opportunity),
+      where: o.board_id == ^board.id,
       select: e,
-      limit: ^limit
+      limit: ^limit,
+      order_by: [desc: e.inserted_at]
 
     query |> CercleApi.Repo.all
   end
