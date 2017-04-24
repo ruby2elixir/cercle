@@ -18,6 +18,19 @@ defmodule CercleApi.APIV2.BoardController do
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
+  def index(conn, _params) do
+    current_user = Guardian.Plug.current_resource(conn)
+    company_id  = current_user.company_id
+    query = from p in Board,
+      where: p.company_id == ^company_id,
+      order_by: [desc: p.updated_at]
+
+    boards = query
+    |> Repo.all
+
+    render(conn, "index.json", boards: boards)
+  end
+
   def create(conn, %{"board" => board_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
