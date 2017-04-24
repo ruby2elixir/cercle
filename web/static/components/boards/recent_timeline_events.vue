@@ -7,10 +7,11 @@
           <img :src="item.profile_image_url" style="max-width:40px;border-radius:40px;float:left;" />
           <div class="menu-info" style="margin-left:55px;">
             <h4 class="control-sidebar-subheading" style="font-size:16px;">
-              <span style="font-weight:600;">{{item.event_name}}</span>
+              <span style="font-weight:600;">{{item.user_name}}</span>
               <div>
                 {{item.content}}
               </div>
+              <small>{{item.created_at | moment('MMM DD [at] h:m A') }}</small>
             </h4>
           </div>
         </a>
@@ -20,8 +21,8 @@
   </div>
 </template>
 <script>
-    import {Socket, Presence} from 'phoenix';
-
+import {Socket, Presence} from 'phoenix';
+import moment from 'moment';
 export default {
       props: ['board_id'],
       data() {
@@ -35,9 +36,6 @@ export default {
       },
       methods: {
         initConn() {
-          localStorage.setItem('auth_token', document.querySelector('meta[name="guardian_token"]').content);
-          Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
-
           this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
           this.socket.connect();
           this.channel = this.socket.channel('board:' + this.board_id, {});
@@ -51,7 +49,6 @@ export default {
 
           this.channel.on('timeline_event:created', payload => {
             this.items.unshift(payload);
-            console.log('event:added', payload);
           });
 
         }

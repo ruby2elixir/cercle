@@ -32,11 +32,16 @@ defmodule CercleApi.APIV2.TimelineEventView do
       profile_url = ""
     end
 
-    %{id: timeline_event.id,
+    %{
+      id: timeline_event.id,
       profile_image_url: profile_url,
       event_name: timeline_event.event_name,
       opportunity_id: timeline_event.opportunity_id,
       contact_id: timeline_event.contact_id,
-      content: timeline_event.content}
+      content: timeline_event.content,
+
+      user_name: timeline_event.user && timeline_event.user.user_name,
+      created_at: timeline_event.inserted_at
+    }
   end
 end

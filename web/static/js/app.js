@@ -68,10 +68,30 @@ import ContactAppEdit from '../components/contacts/edit.vue';
 import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
 import Activities from '../components/activities/list.vue';
-import RecentActivities from '../components/activities/recent.vue';
+import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
 
 
 Vue.use(require('vue-autosize'));
+const VueCurrentUser = {
+  install(Vue, options) {
+    localStorage.setItem('auth_token', options['token']);
+    Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
+    Vue.currentUser =  {
+      userId: options['userId'],
+      token: options['token'],
+      timeZone: options['timeZone'],
+      userImage: options['userImage']
+    };
+  }
+};
+if (document.querySelector('meta[name="guardian_token"]').content) {
+  Vue.use(VueCurrentUser, {
+    userId: document.querySelector('meta[name="user_id"]').content,
+    token: document.querySelector('meta[name="guardian_token"]').content,
+    timeZone: document.querySelector('meta[name="time_zone"]').content,
+    userImage: document.querySelector('meta[name="user_image"]').content
+  });
+}
 
 if ($('#contact-app-edit').length > 0){
   new Vue({
@@ -133,7 +153,7 @@ if ($('#recent-activities-app').length > 0) {
   new Vue({
     el: '#recent-activities-app',
     components: {
-      'activities': RecentActivities
+      'activities': BoardRecentActivities
     }
   });
 }
