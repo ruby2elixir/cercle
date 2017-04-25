@@ -13,7 +13,6 @@ defmodule CercleApi.APIV2.UserView do
     %{id: user.id,
       user_name: user.user_name,
       login: user.login,
-      email: user.emails,
       created_at: user.inserted_at,
       name: user.name}
   end

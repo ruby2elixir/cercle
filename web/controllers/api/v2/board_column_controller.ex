@@ -17,6 +17,20 @@ defmodule CercleApi.APIV2.BoardColumnController do
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
+  def index(conn, params) do
+    current_user = Guardian.Plug.current_resource(conn)
+    company_id  = current_user.company_id
+    board_id = Repo.get(Board, params["board_id"]).id
+    query = from p in BoardColumn,
+      where: p.board_id == ^board_id,
+      order_by: [desc: p.updated_at]
+
+    board_columns = query
+    |> Repo.all
+
+    render(conn, "index.json", board_columns: board_columns)
+  end
+
   def create(conn, %{"board_column" => board_column_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
