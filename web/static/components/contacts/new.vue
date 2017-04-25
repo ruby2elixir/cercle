@@ -44,7 +44,7 @@ export default {
       columnId: '',
       columns: [],
       boardId: this.defaultBoardId,
-      addToBoard: false
+      addToBoard: true
     };
   },
   methods: {
@@ -94,7 +94,7 @@ export default {
                   'opportunity[name]': ''
                 },
                 complete: function(xhr, status){
-                  window.location.href='/board/2';
+                  window.location.href='/board/'+boardId;
                 }
               });
             } else {

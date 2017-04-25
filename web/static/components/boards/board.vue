@@ -2,7 +2,7 @@
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../inline-common-edit.vue';
   import ContactForm from '../contacts/edit.vue';
-  import NewContact from './new-contact.vue';
+  import NewContact from '../contacts/new.vue';
 
   export default {
     props: ['board_id'],
