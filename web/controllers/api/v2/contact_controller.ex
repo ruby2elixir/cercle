@@ -15,10 +15,12 @@ defmodule CercleApi.APIV2.ContactController do
     not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, _params) do
+    q = _params["q"]
     current_user = Guardian.Plug.current_resource(conn)
     company_id  = current_user.company_id
     query = from p in Contact,
       where: p.company_id == ^company_id,
+      where: like(p.name, ^("%#{q}%")),
       order_by: [desc: p.updated_at]
 
     contacts = query
