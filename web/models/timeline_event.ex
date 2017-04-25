@@ -40,6 +40,6 @@ defmodule CercleApi.TimelineEvent do
       limit: ^limit,
       order_by: [desc: e.inserted_at]
 
-    query |> CercleApi.Repo.all
+    CercleApi.Repo.all(query)
   end
 end

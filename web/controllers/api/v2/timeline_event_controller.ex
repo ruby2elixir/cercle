@@ -23,7 +23,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
       {:ok, timeline_event} ->
         timeline_event_reload = CercleApi.TimelineEvent
         |> Repo.get!(timeline_event.id)
-        |> Repo.preload [:user, :opportunity]
+        |> Repo.preload([:user, opportunity: :main_contact])
         CercleApi.Endpoint.broadcast!(
           "opportunities:"  <> to_string(timeline_event_reload.opportunity_id),
           "timeline_event:created", %{"event" => timeline_event_reload}
