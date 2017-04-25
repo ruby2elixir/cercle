@@ -20,15 +20,22 @@ defmodule CercleApi.APIV2.BoardColumnController do
   def index(conn, params) do
     current_user = Guardian.Plug.current_resource(conn)
     company_id  = current_user.company_id
-    board_id = Repo.get(Board, params["board_id"]).id
-    query = from p in BoardColumn,
-      where: p.board_id == ^board_id,
-      order_by: [desc: p.updated_at]
-
-    board_columns = query
-    |> Repo.all
-
-    render(conn, "index.json", board_columns: board_columns)
+    
+    
+    if String.strip(params["board_id"]) != "" do 
+      board = Repo.get(Board, params["board_id"])
+      board_id = board.id
+      query = from p in BoardColumn,
+        where: p.board_id == ^board_id,
+        order_by: [desc: p.updated_at]
+  
+      board_columns = query
+      |> Repo.all
+  
+      render(conn, "index.json", board_columns: board_columns)
+    else
+      json conn, %{"data": []}
+    end
   end
 
   def create(conn, %{"board_column" => board_column_params}) do
