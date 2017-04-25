@@ -33,15 +33,19 @@ defmodule CercleApi.APIV2.OpportunityController do
 
   def create(conn, %{"opportunity" => opportunity_params}) do
     current_user = Guardian.Plug.current_resource(conn)
+    company = Repo.get!(Company, current_user.company_id)
+
     contact = Repo.get!(CercleApi.Contact,
       opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
-
+    
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
     
-    changeset = current_user
+    changeset = company
     |> build_assoc(:opportunities)
     |> Opportunity.changeset(opportunity_params)
 
+    changeset = Ecto.Changeset.put_change(changeset, :contact_ids, [contact.id] )
+    
     case Repo.insert(changeset) do
       {:ok, opportunity} ->
         channel = "contacts:"  <> to_string(contact.id)
