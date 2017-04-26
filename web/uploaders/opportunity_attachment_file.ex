@@ -31,9 +31,9 @@ defmodule CercleApi.OpportunityAttachmentFile do
     version
   end
 
-  # Override the storage directory:
+  # # Override the storage directory:
   def storage_dir(version, {file, scope}) do
-    "uploads/user/avatars/#{scope.id}"
+    "uploads/opportunities/attachments/#{scope.id}"
   end
 
   # Provide a default URL if there hasn't been a file uploaded

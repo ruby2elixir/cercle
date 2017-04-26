@@ -32,6 +32,9 @@ config :rollbax,
   environment: "test",
   enabled: :log
 
+config :arc,
+  storage: Arc.Storage.Local
+
 config :excov,
   :reporters, [
     ExCov.Reporter.Console
