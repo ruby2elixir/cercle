@@ -1,5 +1,6 @@
 defmodule CercleApi.OpportunityAttachment do
   use CercleApi.Web, :model
+  use Arc.Ecto.Schema
 
   schema "opportunity_attachments" do
     field :attachment, CercleApi.OpportunityAttachmentFile.Type
@@ -13,7 +14,8 @@ defmodule CercleApi.OpportunityAttachment do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:attachment])
-    |> validate_required([:attachment])
+    |> cast(params, [:opportunity_id])
+    |> cast_attachments(params, [:attachment])
+    |> validate_required([:opportunity_id])
   end
 end
