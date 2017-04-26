@@ -73,10 +73,14 @@
 
   <board board_id="<%= Poison.encode!(@board.id) %>"  inline-template >
     <div>
-      <section class="content-header" style="margin-bottom:20px;margin-left:20px;">
-        <h2>
+      <section class="content-header clearfix" style="margin-bottom:20px;margin-left:20px;">
+        <h2 class="pull-left">
           <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>" style="color:white;font-weight:bold;"><%= @board.name %></span>
         </h2>
+
+        <h2 class='pull-right btn btn-default'>
+          <span @click="newContact=true" style="font-weight:bold; font-size: 16px;">Add contact</span>
+        </a>
 
       </section>
       <!-- Main content -->
@@ -102,9 +106,9 @@
 
                   <%= for card <- @cards do %>
                       <%=if card.board_column_id == col.id do %>
-                      <%= render "_opportunity.html", opportunity: card %>
+                        <%= render "_opportunity.html", opportunity: card %>
                       <%=end%>
-                      <%end%>
+                  <%end%>
                 </div>
               </div>
               <%=end%>
@@ -120,9 +124,21 @@
         </div>
       </div><!-- /.content -->
 
+      <modal small :show.sync="newContact" class="new-contact-modal" :backdrop=false>
+        <div slot="modal-header" class="modal-header">
+          Add a contact into this board
 
+          <button type="button" class="close" @click="newContact=false">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div slot="modal-body" class="modal-body">
+          <new-contact v-on:hide-new-contact="newContact=false" :board-id="board_id" :boards="<%= Poison.encode!([@board]) %>" :default-board-id="<%= @board.id %>" :user-id="<%= assigns[:current_user].id%>" :company-id="<%= @company.id %>"></new-contact>
+        </div>
+        <span slot="modal-footer"></span>
+      </modal>
 
-      <modal large :show.sync="showContact" class="contact-modal">
+      <modal large :show.sync="showContact" class="contact-modal" :backdrop=false>
         <span slot="modal-header"></span>
         <div slot="modal-body" class="modal-body">
           <button type="button" class="close" @click="showContact=false">

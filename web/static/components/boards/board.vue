@@ -2,12 +2,14 @@
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../inline-common-edit.vue';
   import ContactForm from '../contacts/edit.vue';
+  import NewContact from '../contacts/new.vue';
 
   export default {
     props: ['board_id'],
     data() {
       return {
         board: {},
+        newContact: false,
         showContact: false,
         contact: {},
         opportunity: {},
@@ -17,7 +19,8 @@
     components: {
       'inline-edit': InlineEdit,
       'modal': VueStrap.modal,
-      'contact-form': ContactForm
+      'contact-form': ContactForm,
+      'new-contact': NewContact
     },
     methods: {
       contactShow(contactId, opportunityId) {
