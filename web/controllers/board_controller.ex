@@ -41,11 +41,6 @@ defmodule CercleApi.BoardController do
     company_id = conn.assigns[:current_user].company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
-    query = from p in Board,
-      where: p.company_id == ^company_id,
-      order_by: [desc: p.updated_at]
-    boards = Repo.all(query)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
-
     query_cards = from p in Opportunity,
         where: p.company_id == ^company_id,
         where: p.board_id == ^board_id,
@@ -59,7 +54,7 @@ defmodule CercleApi.BoardController do
 
     conn
       |> put_layout("adminlte.html")
-      |> render "show.html",  company: company, boards: boards, cards: cards, board: board, no_container: true
+      |> render "show.html",  company: company, cards: cards, board: board, no_container: true
   end
 
   def new(conn, _params) do

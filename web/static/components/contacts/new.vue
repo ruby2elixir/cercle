@@ -9,14 +9,14 @@
     <div class="form-group">
       <input type="phone" v-model="phone" placeholder="phone" class="form-control" :disabled="existingContactId!=null" />
     </div>
-    <div class="form-group" v-show="existingContactId==null">
+    <div class="form-group" v-show="defaultBoardId==null">
       <label>
         <input type="checkbox" v-model="addToBoard" value="true" :disabled="existingContactId!=null" />
         Add to board
       </label>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" v-show="defaultBoardId==null">
       <select v-model="boardId" class="form-control" :disabled="addToBoard!=true" v-on:change="loadColumns">
         <option v-for="board in boards" :value="board.id">{{ board.name }}</option>
       </select>
