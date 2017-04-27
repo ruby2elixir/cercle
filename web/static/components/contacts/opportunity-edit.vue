@@ -5,6 +5,19 @@
       <button type="button" class="btn btn-primary pull-right browse" v-on:click="browse">BROWSE</button>
       <br />
       <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
+      <br />
+      <div class="upload-btn btn btn-success archive" style="margin-top: 10px; height: 34px;width: 110px;">
+        <file-upload
+          title="Attachment"
+          name="attachment"
+          :post-action="'/api/v2/opportunity/' + opportunity.id + '/attachments'"
+          :headers="uploadHeaders"
+          :events="uploadEvents"
+          ref="attachment">
+        </file-upload>
+
+      </div>
+
     </div>
       <div style="" id="change_status">
         <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
@@ -39,7 +52,7 @@
           <select v-model.number="item.user_id"  v-on:change="updateOpportunity">
             <option v-for="user in company_users" :value.number="user.id">{{user.user_name}}</option>
           </select>
-  
+
         </div>
 
             <div class="mt-1 mb-1">
@@ -51,6 +64,10 @@
               <br />
             </div>
       </div>
+
+
+
+
       <to-do
         :activities="activities"
         :companyUsers="company_users"
@@ -59,6 +76,18 @@
         :company="company"
         :timeZone="time_zone"
       >
+       <div slot="attachments">
+
+         <h3 style="color:rgb(99,99,99);font-weight:bold;"  v-if="attachments.length > 0">
+           <i class="fa fa-fw fa-paperclip" style="color:#d8d8d8;"></i>Attachments
+         </h3>
+
+         <ul v-if="attachments.length > 0">
+           <li v-for="attach in attachments">
+             <img :src="attach.attachment_url" />
+           </li>
+         </ul>
+        </div>
         <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" :user_image="user_image" />
         <timeline_events
           slot="timeline-events"
@@ -90,7 +119,14 @@
       'user_image'
     ],
     data(){
-      return {
+        return {
+            uploadEvents: {
+                add(file, component) {
+                        component.active = true;
+                    }
+                },
+        attachment: {},
+        attachments: [],
         openContactModal: false,
         allowUpdate: true,
         item: this.opportunity,
@@ -104,6 +140,11 @@
         opportunityContacts: []
 
       };
+    },
+      computed: {
+          uploadHeaders(){
+              return { Authorization: 'Bearer ' + Vue.currentUser.token   }
+              }
     },
     methods: {
       browse(){
@@ -166,6 +207,10 @@
         }
         if (payload.opportunity_contacts) {
           this.$data.opportunityContacts = payload.opportunity_contacts;
+        }
+
+        if (payload.attachments) {
+            this.$data.attachments = payload.attachments;
         }
         this.allowUpdate = true;
       },
@@ -282,11 +327,14 @@
       'timeline_events': TimelineEvents,
       'markdown-text-edit': MarkdownTextEdit,
       'v-select': vSelect.VueSelect,
-      'modal': VueStrap.modal
+      'modal': VueStrap.modal,
+      'file-upload': FileUpload
     },
 
 
-    mounted() {
+      mounted() {
+
+      this.attachment = this.$refs.attachment.$data
       this.initChannel();
     }
 

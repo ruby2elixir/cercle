@@ -51,6 +51,7 @@ defmodule CercleApi.Opportunity do
       preload: :user
 
     from q in query, preload: [
+      :attachments,
       activities: [:contact, :user],
       timeline_event: ^comments_query
     ]
