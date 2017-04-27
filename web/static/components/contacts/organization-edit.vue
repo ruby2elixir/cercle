@@ -21,7 +21,7 @@
       </modal>
       <br />
       <br />
-      <a href="#" class="add-organization" v-on:click="buildOrganization($event)">+Add a organization</a>
+      <a href="#" class="add-organization" v-on:click="buildOrganization($event)" style="color: grey;text-decoration:underline;font-size:14px;font-weight:bold;"><i class="fa fa-fw fa-plus"></i> Add an organization...</a>
     </div>
 
     <div class="box-body box-profile" v-if="organization">
