@@ -1,7 +1,14 @@
 <template>
   <div class="new-contact" style="padding: 10px;">
     <div class="form-group">
-      <input type="text" v-model="name" placeholder="Name" class="form-control typeahead" data-provide="typeahead" autocomplete="off" />
+      <v-select v-model="name"
+                :debounce="250"
+                :on-change="selectContact"
+                :on-search="searchContacts"
+                :options="contacts"
+                :taggable="true"
+                placeholder="Name..."
+                label="name"></v-select>
     </div>
     <div class="form-group">
       <input type="email" v-model="email" placeholder="Email" class="form-control" :disabled="existingContactId!=null" />
@@ -34,7 +41,6 @@
 </template>
 
 <script>
-import vSelect from 'vue-select';
 export default {
   props: ['userId', 'companyId', 'boards', 'defaultBoardId'],
   data: function() {
@@ -46,8 +52,12 @@ export default {
       columns: [],
       boardId: this.defaultBoardId,
       addToBoard: true,
-      existingContactId: null
+      existingContactId: null,
+      contacts: []
     };
+  },
+  components: {
+    'v-select': vSelect.VueSelect
   },
   methods: {
     loadColumns: function() {
@@ -61,11 +71,11 @@ export default {
       if(this.columns.length)
         this.columnId = this.columns[0].id;
     },
+
     addContactToBoard: function(userId, companyId, contactId, boardId, columnId) {
-      var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
       $.ajax( '/api/v2/opportunity/' , {
         method: 'POST',
-        headers: {'Authorization': 'Bearer '+jwtToken},
+        headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
         data: {
           'opportunity[main_contact_id]': contactId ,
           'opportunity[contact_ids]': [contactId],
@@ -80,6 +90,7 @@ export default {
         }
       });
     },
+
     saveContact: function(){
       var _vue = this;
       var userId = this.userId;
@@ -90,9 +101,8 @@ export default {
       if(this.existingContactId) {
         this.addContactToBoard(userId, companyId, this.existingContactId, boardId, columnId);
       } else {
-        if(this.name !== ''){
+        if(this.name){
           var addToBoard = this.addToBoard;
-          var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
 
           $.ajax('/api/v2/contact', {
             method: 'POST',
@@ -103,7 +113,7 @@ export default {
               'contact[email]': this.email,
               'contact[phone]': this.phone
             },
-            headers: {'Authorization': 'Bearer '+jwtToken},
+            headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
             success: function(result){
               if(addToBoard) {
                 _vue.addContactToBoard(userId, companyId, result.data.id, boardId, columnId);
@@ -117,40 +127,37 @@ export default {
         }
       }
     },
+
     cancel: function() {
       this.$emit('hide-new-contact');
+    },
+
+    selectContact(con) {
+      if(con && con.id) {
+        this.existingContactId = con.id;
+        this.email = con.email;
+        this.phone = con.phone;
+        this.addToBoard = true;
+      } else {
+        this.existingContactId = null;
+        this.name = con;
+        this.email = null;
+        this.phone = null;
+      }
+    },
+
+    searchContacts(search, loading) {
+      loading(true);
+      this.$http.get('/api/v2/contact?q='+search, {
+        headers: {'Authorization': 'Bearer '+Vue.currentUser.token}
+      }).then(resp => {
+        this.contacts = resp.data.data;
+        loading(false);
+      });
     }
   },
   mounted: function() {
     this.loadColumns();
-
-    var _vue = this;
-    $('.typeahead', this.$el).typeahead({
-      source: function(query, process) {
-        var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
-        var url = '/api/v2/contact?q='+query;
-        _vue.$http.get(url,  {headers: {'Authorization': 'Bearer '+jwtToken}}).then(resp => {
-          process(resp.data.data);
-          _vue.existingContactId = null;
-          _vue.email = null;
-          _vue.phone = null;
-        });
-      },
-      displayText: function(item) {
-        if(item.email)
-          return item.name + ' (' + item.email + ')';
-        else
-          return item.name;
-      },
-      afterSelect: function(item) {
-        _vue.existingContactId = item.id;
-        _vue.name = item.name;
-        _vue.email = item.email;
-        _vue.phone = item.phone;
-        _vue.addToBoard = true;
-      },
-      autoSelect: true
-    });
   }
 };
 </script>
