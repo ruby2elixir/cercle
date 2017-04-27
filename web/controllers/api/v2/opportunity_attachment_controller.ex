@@ -20,7 +20,6 @@ defmodule CercleApi.APIV2.OpportunityAttachmentController do
   end
 
   def create(conn, %{"opportunity_id" => opportunity_id, "attachment" => attachment}) do
-    # user = Guardian.Plug.current_resource(conn)
     opportunity = Repo.get!(Opportunity, opportunity_id)
     changeset = OpportunityAttachment.changeset(
       %OpportunityAttachment{},
@@ -28,6 +27,11 @@ defmodule CercleApi.APIV2.OpportunityAttachmentController do
     )
     case Repo.insert(changeset) do
       {:ok, opportunity_attachment} ->
+        CercleApi.Endpoint.broadcast!(
+          "opportunities:#{opportunity.id}", "opportunity:added_attachment", %{
+            "opportunity" => opportunity,
+            "attachment" => opportunity_attachment
+          })
         render(conn, "show.json", opportunity_attachment: opportunity_attachment)
       {:error, changeset} ->
         conn
@@ -38,8 +42,13 @@ defmodule CercleApi.APIV2.OpportunityAttachmentController do
 
   def delete(conn, %{"opportunity_id" => opportunity_id, "id" => id}) do
     opportunity = Repo.get!(Opportunity, opportunity_id)
-    attach = Repo.get!(OpportunityAttachment, id)
-    Repo.delete!(attach)
+    attachment = Repo.get!(OpportunityAttachment, id)
+    Repo.delete!(attachment)
+
+    CercleApi.Endpoint.broadcast!(
+      "opportunities:#{opportunity.id}", "opportunity:deleted_attachment", %{
+        "opportunity" => opportunity, "attachment_id" => id
+      })
     json conn, %{status: 200}
   end
 end

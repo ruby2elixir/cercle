@@ -1,7 +1,7 @@
 defmodule CercleApi.APIV2.OpportunityAttachmentControllerTest do
   use CercleApi.ConnCase
   import CercleApi.Factory
-  alias CercleApi.{Contact, Opportunity, OpportunityAttachment, OpportunityAttachmentFile}
+  alias CercleApi.{OpportunityAttachment}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -29,6 +29,8 @@ defmodule CercleApi.APIV2.OpportunityAttachmentControllerTest do
 
   describe "POST create/2" do
     test "create attachment of opportunity", %{conn: conn, opportunity: opportunity} do
+      CercleApi.Endpoint.subscribe("opportunities:#{opportunity.id}")
+
       response = conn
       |> post(opportunity_opportunity_attachment_path(conn, :create, opportunity.id),
       attachment: %Plug.Upload{ path: "test/fixtures/logo.png", filename: "logo.png" }
@@ -36,6 +38,13 @@ defmodule CercleApi.APIV2.OpportunityAttachmentControllerTest do
       |> json_response(200)
 
       [attach|_] = Repo.all(OpportunityAttachment)
+
+      assert_receive %Phoenix.Socket.Broadcast{
+        event: "opportunity:added_attachment",
+        payload: %{"opportunity" => opportunity, "attachment" => attach}
+      }
+
+      CercleApi.Endpoint.unsubscribe("opportunities:#{opportunity.id}")
 
       assert response == render_json(
         CercleApi.APIV2.OpportunityAttachmentView,
@@ -56,15 +65,23 @@ defmodule CercleApi.APIV2.OpportunityAttachmentControllerTest do
 
   describe "DELETE delete/2" do
     test "should delete attachment", %{conn: conn, opportunity: opportunity} do
+      CercleApi.Endpoint.subscribe("opportunities:#{opportunity.id}")
       attachment =  OpportunityAttachment
       |> attach_file(insert(:opportunity_attachment, opportunity: opportunity),
       :attachment, "test/fixtures/logo.png")
 
+      attachment_id = attachment.id
+
       response = conn
-      |> delete(opportunity_opportunity_attachment_path(
-            conn, :delete, opportunity.id, attachment.id))
+      |> delete(opportunity_opportunity_attachment_path(conn, :delete, opportunity.id, attachment.id))
       |> json_response(200)
-      assert Repo.get(OpportunityAttachment, attachment.id) == nil
+
+      assert_receive %Phoenix.Socket.Broadcast{
+        event: "opportunity:deleted_attachment",
+        payload: %{"opportunity" => opportunity, "attachment_id" => attachment_id}
+      }
+      CercleApi.Endpoint.unsubscribe("opportunities:#{opportunity.id}")
+      assert Repo.get(OpportunityAttachment, attachment_id) == nil
       assert response == %{"status" => 200}
     end
   end
