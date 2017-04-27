@@ -21,7 +21,8 @@
     "vue-resource": "^1.2.1",
     "vue-resource-case-converter": "^2.0.1",
     "vue-select": "github:sagalbot/vue-select",
-    "vue-strap": "^1.1.36"
+    "vue-strap": "^1.1.36",
+    "vue-upload-component": "^2.3.0-beta.2"
   },
   "devDependencies": {
     "babel-brunch": "~6.0.0",

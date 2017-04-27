@@ -19,3 +19,12 @@ defmodule CercleApi.OpportunityAttachment do
     |> validate_required([:opportunity_id, :attachment])
   end
 end
+
+defimpl Poison.Encoder, for: CercleApi.OpportunityAttachment do
+  def encode(model, options) do
+    model
+    |> Map.take([:id])
+    |> Map.put(:attachment_url, CercleApi.OpportunityAttachmentFile.url({ model.attachment, model }))
+    |> Poison.Encoder.encode(options)
+  end
+end
