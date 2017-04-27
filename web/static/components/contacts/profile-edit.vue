@@ -3,7 +3,8 @@
       <div class="">
         <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;font-weight:bold;color:rgb(99,99,99);">
           <i class="fa fa-user" style="color:#d8d8d8;"></i>
-          <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name" style="width:300px;"></inline-edit>
+          <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name" style="width:270px;"></inline-edit>
+          <i class="fa fa-trash" style="color:#d8d8d8;" @click="deleteContact"></i>
         </h3>
             <div>
               <inline-edit v-model="contact.job_title" v-on:input="updateContact"  placeholder="Job Title" style="width:300px;" ></inline-edit>
@@ -121,6 +122,11 @@ export default {
     updateContact: function(){
       var url = '/api/v2/contact/' + this.contact.id;
       this.$http.put(url, { contact: this.contact } );
+    },
+    deleteContact: function(){
+      if(confirm('Are you sure to delete this contact?')) {
+        this.$emit('remove');
+      }
     }
   },
   components: {

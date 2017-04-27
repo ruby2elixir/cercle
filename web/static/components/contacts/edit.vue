@@ -137,7 +137,12 @@ export default {
     },
 
     deleteContact: function(){
-      console.log('delete contact');
+      var url = '/api/v2/contact/'+this.contact.id;
+      this.$http.delete(url, {
+        headers: {'Authorization': 'Bearer '+Vue.currentUser.token}
+      }).then(resp => {
+        window.location.reload();
+      });
     },
 
     refreshContact(payload) {
