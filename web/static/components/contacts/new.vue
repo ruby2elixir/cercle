@@ -22,7 +22,6 @@
         Add to board
       </label>
     </div>
-
     <div class="form-group" v-show="defaultBoardId==null">
       <select v-model="boardId" class="form-control" :disabled="addToBoard!=true" v-on:change="loadColumns">
         <option v-for="board in boards" :value="board.id">{{ board.name }}</option>
@@ -100,31 +99,28 @@ export default {
 
       if(this.existingContactId) {
         this.addContactToBoard(userId, companyId, this.existingContactId, boardId, columnId);
-      } else {
-        if(this.name){
-          var addToBoard = this.addToBoard;
-
-          $.ajax('/api/v2/contact', {
-            method: 'POST',
-            data: {
-              'contact[user_id]': userId,
-              'contact[company_id]': companyId,
-              'contact[name]': this.name,
-              'contact[email]': this.email,
-              'contact[phone]': this.phone
-            },
-            headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
-            success: function(result){
-              if(addToBoard) {
-                _vue.addContactToBoard(userId, companyId, result.data.id, boardId, columnId);
-              } else {
-                window.location.href='/contact';
-              }
+      } else if(this.name){
+        var addToBoard = this.addToBoard;
+        $.ajax('/api/v2/contact', {
+          method: 'POST',
+          data: {
+            'contact[user_id]': userId,
+            'contact[company_id]': companyId,
+            'contact[name]': this.name,
+            'contact[email]': this.email,
+            'contact[phone]': this.phone
+          },
+          headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
+          success: function(result){
+            if(addToBoard) {
+              _vue.addContactToBoard(userId, companyId, result.data.id, boardId, columnId);
+            } else {
+              window.location.href='/contact';
             }
-          });
-        }else{
-          alert('Name can\'t be blank');
-        }
+          }
+        });
+      }else{
+        alert('Name can\'t be blank');
       }
     },
 
@@ -133,7 +129,7 @@ export default {
     },
 
     selectContact(con) {
-      if(con && con.id) {
+      if(typeof con!=='string') {
         this.existingContactId = con.id;
         this.email = con.email;
         this.phone = con.phone;
