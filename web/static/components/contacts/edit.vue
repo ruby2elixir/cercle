@@ -127,6 +127,7 @@ export default {
           mainContactId: this.contact.id,
           contactIds: [this.contact.id],
           companyId: this.company.id,
+          userId: Vue.currentUser.userId,
           name: '',
           boardId: this.newBoard.id,
           boardColumnId: this.newBoard.board_columns[0].id
