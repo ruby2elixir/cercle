@@ -13,11 +13,9 @@ defmodule CercleApi.APIV2.OpportunityAttachmentControllerTest do
   end
 
   test "GET index/2 should return attachments of opportunity", %{conn: conn, opportunity: opportunity} do
-    attachment_attrs = %{ attachment: %Plug.Upload{ path: "test/fixtures/logo.png", filename: "logo.png" } }
-
-    attachment = insert(:opportunity_attachment, opportunity: opportunity)
-    |> OpportunityAttachment.changeset(attachment_attrs)
-    |> Repo.update!
+    attachment = OpportunityAttachment
+    |> attach_file(insert(:opportunity_attachment, opportunity: opportunity),
+    :attachment, "test/fixtures/logo.png")
 
     response = conn
     |> get(opportunity_opportunity_attachment_path(conn, :index, opportunity.id))
@@ -25,18 +23,49 @@ defmodule CercleApi.APIV2.OpportunityAttachmentControllerTest do
 
     assert response == render_json(
       CercleApi.APIV2.OpportunityAttachmentView,
-      "index.json", attachments: [attachment]
+      "index.json", opportunity_attachments: [attachment]
     )
   end
 
-  test "POST create/2 create attachment of opportunity", %{conn: conn, opportunity: opportunity} do
-    post conn,
-      opportunity_opportunity_attachment_path(conn, :create, opportunity.id),
+  describe "POST create/2" do
+    test "create attachment of opportunity", %{conn: conn, opportunity: opportunity} do
+      response = conn
+      |> post(opportunity_opportunity_attachment_path(conn, :create, opportunity.id),
       attachment: %Plug.Upload{ path: "test/fixtures/logo.png", filename: "logo.png" }
+      )
+      |> json_response(200)
 
+      [attach|_] = Repo.all(OpportunityAttachment)
+
+      assert response == render_json(
+        CercleApi.APIV2.OpportunityAttachmentView,
+        "show.json", opportunity_attachment: attach
+      )
+    end
+
+    test "return error if attachment empty", %{conn: conn, opportunity: opportunity} do
+      response = conn
+      |> post(opportunity_opportunity_attachment_path(conn, :create, opportunity.id),
+      attachment: ""
+      )
+      |> json_response(422)
+
+      assert response == %{"errors" => %{"attachment" => ["can't be blank"]}}
+    end
   end
 
-  test "DELETE delete/2 create attachment of opportunity", state do
+  describe "DELETE delete/2" do
+    test "should delete attachment", %{conn: conn, opportunity: opportunity} do
+      attachment =  OpportunityAttachment
+      |> attach_file(insert(:opportunity_attachment, opportunity: opportunity),
+      :attachment, "test/fixtures/logo.png")
 
+      response = conn
+      |> delete(opportunity_opportunity_attachment_path(
+            conn, :delete, opportunity.id, attachment.id))
+      |> json_response(200)
+      assert Repo.get(OpportunityAttachment, attachment.id) == nil
+      assert response == %{"status" => 200}
+    end
   end
 end

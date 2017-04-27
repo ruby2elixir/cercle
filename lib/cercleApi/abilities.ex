@@ -18,9 +18,9 @@ defimpl Canada.Can, for: CercleApi.User do
     if user.company_id == opportunity.company_id, do: true, else: false
   end
 
-  def can?(user, action, opportunity_attac = %OpportunityAttachment{}) when action in [:create, :delete] do
-    if user.id == opportunity_attachment.user_id, do: true, else: false
-  end
+  # def can?(user, action, opportunity_attachment = %OpportunityAttachment{}) when action in [:create, :delete] do
+  #   if user.id == opportunity_attachment.user_id, do: true, else: false
+  # end
 
   def can?(user, action, board_col = %BoardColumn{}) when action in [:delete, :update] do
     board = CercleApi.Repo.get!(Board, board_col.board_id)
