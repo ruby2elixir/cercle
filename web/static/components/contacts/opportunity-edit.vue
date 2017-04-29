@@ -16,9 +16,8 @@
       </div>
       <br />
       <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
-    
-     
-
+      <br />
+      <delete-contact :contact="contact"></delete-contact>
     </div>
       <div style="" id="change_status">
         <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
@@ -119,6 +118,7 @@
   import CommentForm from './comment-form.vue';
   import TimelineEvents from './timeline-events.vue';
   import MarkdownTextEdit from '../markdown-textedit.vue';
+  import DeleteContact from './delete.vue';
 
   export default {
     props: [
@@ -383,7 +383,8 @@
       'markdown-text-edit': MarkdownTextEdit,
       'v-select': vSelect.VueSelect,
       'modal': VueStrap.modal,
-      'file-upload': FileUpload
+      'file-upload': FileUpload,
+      'delete-contact': DeleteContact
     },
 
 

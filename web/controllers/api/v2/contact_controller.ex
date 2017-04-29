@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent}
+  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Opportunity}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -162,8 +162,27 @@ defmodule CercleApi.APIV2.ContactController do
   def delete(conn, %{"id" => id}) do
     contact = Repo.get!(Contact, id)
 
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
+    {contact_id, _} = Integer.parse(id)
+    query = from o in Opportunity,
+      where: fragment("? = ANY (?)", ^contact_id, o.contact_ids)
+    opportunities = Repo.all(query)
+
+    for op <- opportunities do
+      contact_ids = List.delete(op.contact_ids, contact_id)
+      case length(contact_ids) do
+        0 ->
+          Repo.delete!(op)
+
+        _ ->
+          if op.main_contact_id == contact_id do
+            changeset = Opportunity.changeset(op, %{contact_ids: contact_ids, main_contact_id: Enum.at(contact_ids, 0)})
+          else
+            changeset = Opportunity.changeset(op, %{contact_ids: contact_ids})
+          end
+          Repo.update(changeset)
+      end
+    end
+
     Repo.delete!(contact)
 
     # send_resp(conn, :no_content, "")
