@@ -2,7 +2,7 @@
   <div class="col-md-12 opportunity-block">
     <div class="post" v-if="item">
     <div class="pull-right">
-      <button type="button" class="btn btn-primary pull-right browse" v-on:click="browse">BROWSE</button>
+      <button type="button" class="btn btn-primary pull-right browse" v-on:click="browse">See all Cards</button>
       <br />
        <div class="upload-btn btn btn-default archive" style="margin-top: 10px; height: 34px;width: 130px;font-weight:normal;">
         <file-upload
