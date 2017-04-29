@@ -21,13 +21,6 @@
         </span>
         <br />
         <br />
-        <div class="managers">
-          Managed by:
-          <select v-model.number="item.user_id"  v-on:change="updateOpportunity">
-            <option v-for="user in company_users" :value.number="user.id">{{user.user_name}}</option>
-          </select>
-  
-        </div>
         Contacts Involved:
         <a v-for="o_contact in opportunityContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
         <modal title="What is his name?" large :show.sync="openContactModal">
@@ -41,6 +34,13 @@
         <button type="button" class="btn btn-link add_o_contact" v-on:click="openContactModal = true" >
           <i class="fa fa-fw fa-plus"></i>Add ...
         </button>
+        <div class="managers">
+          Managed by:
+          <select v-model.number="item.user_id"  v-on:change="updateOpportunity">
+            <option v-for="user in company_users" :value.number="user.id">{{user.user_name}}</option>
+          </select>
+  
+        </div>
 
             <div class="mt-1 mb-1">
               Description
