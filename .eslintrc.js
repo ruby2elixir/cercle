@@ -20,7 +20,8 @@ module.exports = {
     'VueResourceCaseConverter': true,
     'Moment': true,
     'ElementUi': true,
-    'MarkdownIt': true
+    'MarkdownIt': true,
+    'FileUpload': true
   },
   'ecmaFeatures': {
     'modules': true

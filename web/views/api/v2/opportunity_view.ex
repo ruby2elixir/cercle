@@ -17,15 +17,15 @@ defmodule CercleApi.APIV2.OpportunityView do
   def render("full_opportunity.json",
     %{opportunity: opportunity,
       opportunity_contacts: opportunity_contacts,
-      board: board }) do
+      board: board, attachments: attachments}) do
     %{
       opportunity: opportunity,
       activities:  opportunity.activities,
       events: opportunity.timeline_event,
       opportunity_contacts: opportunity_contacts,
       board: board,
-      board_columns: board.board_columns
-
+      board_columns: board.board_columns,
+      attachments: attachments
       }
   end
 end

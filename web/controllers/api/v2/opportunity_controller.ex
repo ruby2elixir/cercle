@@ -27,7 +27,8 @@ defmodule CercleApi.APIV2.OpportunityController do
     render(conn, "full_opportunity.json",
       opportunity: opportunity,
       opportunity_contacts: opportunity_contacts,
-      board: board
+      board: board,
+      attachments: opportunity.attachments
     )
   end
 
@@ -37,15 +38,15 @@ defmodule CercleApi.APIV2.OpportunityController do
 
     contact = Repo.get!(CercleApi.Contact,
       opportunity_params["main_contact_id"]) |> Repo.preload [:organization]
-    
+
     board = Repo.get!(CercleApi.Board, opportunity_params["board_id"])
-    
+
     changeset = company
     |> build_assoc(:opportunities)
     |> Opportunity.changeset(opportunity_params)
 
     changeset = Ecto.Changeset.put_change(changeset, :contact_ids, [contact.id] )
-    
+
     case Repo.insert(changeset) do
       {:ok, opportunity} ->
         channel = "contacts:"  <> to_string(contact.id)

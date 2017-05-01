@@ -24,7 +24,7 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
       user: state[:user], company: state[:company],
       due_date: Timex.shift(DateTime.utc_now(), days: -10)
     )
-    conn = get state[:conn], "/api/v2/activity"
+    conn = get state[:conn], "/api/v2/activity", user_id: state[:user].id
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.ActivityView, "list.json",
       %{
