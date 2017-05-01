@@ -134,6 +134,15 @@
         uploadEvents: {
           add(file, component) {
             component.active = true;
+          },
+          progress(file, component) {
+            this.$notification.$emit('alert', {'msg': 'Uploading ' + file.progress});
+          },
+          after(file, component) {
+            this.$notification.$emit('alert', {'msg': 'Finished!'});
+          },
+          before(file, component) {
+            this.$notification.$emit('alert', {'msg': 'Start upload'});
           }
         },
         attachment: {},
@@ -377,7 +386,6 @@
 
 
     mounted() {
-
       this.attachment = this.$refs.attachment.$data;
       this.initChannel();
     }
