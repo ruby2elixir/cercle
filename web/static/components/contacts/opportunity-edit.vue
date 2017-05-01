@@ -64,16 +64,7 @@
               <br />
             </div>
       </div>
-
-      <to-do
-        :activities="activities"
-        :companyUsers="company_users"
-        :contact="contact"
-        :opportunity="opportunity"
-        :company="company"
-        :timeZone="time_zone"
-      >
-       <div slot="attachments">
+<div class="attachments">
 
          <h3 style="color:rgb(99,99,99);font-weight:bold;"  v-if="attachments.length > 0">
            <i class="fa fa-fw fa-paperclip" style="color:#d8d8d8;"></i>Attachments
@@ -99,6 +90,15 @@
            </div>
          </div>
         </div>
+      <to-do
+        :activities="activities"
+        :companyUsers="company_users"
+        :contact="contact"
+        :opportunity="opportunity"
+        :company="company"
+        :timeZone="time_zone"
+      >
+
         <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" :user_image="user_image" />
         <timeline_events
           slot="timeline-events"
@@ -385,13 +385,20 @@
   };
 </script>
 <style lang="sass">
+  .attachments {
+  margin-bottom: 20px;
   .attach-item {
   position: relative;
   border-bottom: 0.1em solid #e4e4e4;
 
 
   .thumb {
-  height: 75px; width: 75px;
+  height: 75px;
+  width: 75px;
+  img {
+  max-height: 75px;
+  max-width: 75px;
+  }
   &.file {
   font-size: 55px;
   &:before {
@@ -407,5 +414,6 @@
   top: 0px;
   }
 
+  }
   }
 </style>

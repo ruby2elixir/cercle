@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.OpportunityAttachmentController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.{Opportunity, OpportunityAttachment, User}
+  alias CercleApi.{Opportunity, OpportunityAttachment, OpportunityAttachmentFile, User}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -22,17 +22,22 @@ defmodule CercleApi.APIV2.OpportunityAttachmentController do
   def create(conn, %{"opportunity_id" => opportunity_id, "attachment" => attachment}) do
     opportunity = Repo.get!(Opportunity, opportunity_id)
     changeset = OpportunityAttachment.changeset(
-      %OpportunityAttachment{},
-      %{"attachment" => attachment, "opportunity_id" => opportunity_id}
+      %OpportunityAttachment{}, %{"opportunity_id" => opportunity_id}
     )
     case Repo.insert(changeset) do
       {:ok, opportunity_attachment} ->
+        {_, filename} = OpportunityAttachmentFile.store({attachment, opportunity_attachment})
+
+        changeset = opportunity_attachment
+        |> Ecto.Changeset.change(attachment: %{file_name: filename, updated_at: Ecto.DateTime.utc})
+
+        Repo.update(changeset)
+        attachment = Repo.get(OpportunityAttachment, opportunity_attachment.id)
         CercleApi.Endpoint.broadcast!(
           "opportunities:#{opportunity.id}", "opportunity:added_attachment", %{
-            "opportunity" => opportunity,
-            "attachment" => opportunity_attachment
+            "opportunity" => opportunity, "attachment" => attachment
           })
-        render(conn, "show.json", opportunity_attachment: opportunity_attachment)
+        render(conn, "show.json", opportunity_attachment: attachment)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
