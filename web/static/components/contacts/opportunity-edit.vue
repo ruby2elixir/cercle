@@ -4,19 +4,20 @@
     <div class="pull-right">
       <button type="button" class="btn btn-primary pull-right browse" v-on:click="browse">BROWSE</button>
       <br />
-      <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
-      <br />
-      <div class="upload-btn btn btn-success archive" style="margin-top: 10px; height: 34px;width: 110px;">
+       <div class="upload-btn btn btn-default archive" style="margin-top: 10px; height: 34px;width: 130px;font-weight:normal;">
         <file-upload
-          title="Attachment"
+          title="UPLOAD FILE"
           name="attachment"
           :post-action="'/api/v2/opportunity/' + opportunity.id + '/attachments'"
           :headers="uploadHeaders"
           :events="uploadEvents"
           ref="attachment">
         </file-upload>
-
       </div>
+      <br />
+      <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
+    
+     
 
     </div>
       <div style="" id="change_status">
