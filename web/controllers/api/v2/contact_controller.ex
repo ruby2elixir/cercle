@@ -14,8 +14,8 @@ defmodule CercleApi.APIV2.ContactController do
     unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
     not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
-  def index(conn, _params) do
-    q = _params["q"]
+  def index(conn, params) do
+    q = params["q"]
     current_user = Guardian.Plug.current_resource(conn)
     company_id  = current_user.company_id
     query = from p in Contact,
