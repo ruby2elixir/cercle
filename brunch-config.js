@@ -86,7 +86,8 @@ exports.config = {
       Moment: 'moment',
       ElementUi: 'element-ui',
       MarkdownIt: 'markdown-it',
-      VueAutosize: 'vue-autosize'
+      VueAutosize: 'vue-autosize',
+      FileUpload: 'vue-upload-component'
     },
     // Whitelist the npm deps to be pulled in as front-end assets.
     // All other deps in package.json will be excluded from the bundle.

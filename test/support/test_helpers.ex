@@ -22,4 +22,14 @@ defmodule CercleApi.TestHelpers do
   defp format_json(data) do
     data |> Poison.encode! |> Poison.decode!
   end
+
+  def attach_file(model, rec, attr, file) do
+    attachment_attrs = %{
+      attr => %Plug.Upload{ path: file, filename: Path.basename(file) }
+    }
+
+    rec
+    |> model.changeset(attachment_attrs)
+    |> Repo.update!
+  end
 end

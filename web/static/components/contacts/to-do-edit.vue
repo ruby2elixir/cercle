@@ -40,6 +40,7 @@
         <button  class="btn btn-link" v-on:click="addTask">Schedule a  Task...</button>
       </div>
       <br />
+      <slot name="attachments"></slot>
       <br />
       <slot name="comment-form"></slot>
     </div>

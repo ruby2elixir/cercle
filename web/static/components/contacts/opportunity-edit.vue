@@ -5,6 +5,19 @@
       <button type="button" class="btn btn-primary pull-right browse" v-on:click="browse">BROWSE</button>
       <br />
       <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
+      <br />
+      <div class="upload-btn btn btn-success archive" style="margin-top: 10px; height: 34px;width: 110px;">
+        <file-upload
+          title="Attachment"
+          name="attachment"
+          :post-action="'/api/v2/opportunity/' + opportunity.id + '/attachments'"
+          :headers="uploadHeaders"
+          :events="uploadEvents"
+          ref="attachment">
+        </file-upload>
+
+      </div>
+
     </div>
       <div style="" id="change_status">
         <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
@@ -39,7 +52,7 @@
           <select v-model.number="item.user_id"  v-on:change="updateOpportunity">
             <option v-for="user in company_users" :value.number="user.id">{{user.user_name}}</option>
           </select>
-  
+
         </div>
 
             <div class="mt-1 mb-1">
@@ -51,6 +64,32 @@
               <br />
             </div>
       </div>
+<div class="attachments">
+
+         <h3 style="color:rgb(99,99,99);font-weight:bold;"  v-if="attachments.length > 0">
+           <i class="fa fa-fw fa-paperclip" style="color:#d8d8d8;"></i>Attachments
+         </h3>
+
+         <div v-if="attachments.length > 0">
+           <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
+             <div :class="['thumb', fileTypeClass(attach)]" >
+               <img :src="attach.thumb_url" v-if="attach.image" />
+             </div>
+             <div class="info">
+             <div>{{attach.file_name}}</div>
+             <div>Added {{attach.inserted_at | moment('MMM DD [at] h:m A')}}</div>
+             <div class="attach-action">
+              <a :href="attach.attachment_url" target="_blank">
+               <i class="fa fa-download" aria-hidden="true"></i>
+               Download</a>
+              <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
+              <i class="fa fa-times" aria-hidden="true"></i>
+               Delete</button>
+             </div>
+             </div>
+           </div>
+         </div>
+        </div>
       <to-do
         :activities="activities"
         :companyUsers="company_users"
@@ -59,6 +98,7 @@
         :company="company"
         :timeZone="time_zone"
       >
+
         <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" :user_image="user_image" />
         <timeline_events
           slot="timeline-events"
@@ -91,6 +131,23 @@
     ],
     data(){
       return {
+        uploadEvents: {
+          add(file, component) {
+            component.active = true;
+          },
+          progress(file, component) {
+            let msg = 'Uploading ' + Math.ceil(file.progress) + '%';
+            this.$notification.$emit('alert', {'msg': msg});
+          },
+          after(file, component) {
+            this.$notification.$emit('alert', {'msg': 'Finished!'});
+          },
+          before(file, component) {
+            this.$notification.$emit('alert', {'msg': 'Start upload'});
+          }
+        },
+        attachment: {},
+        attachments: [],
         openContactModal: false,
         allowUpdate: true,
         item: this.opportunity,
@@ -105,7 +162,28 @@
 
       };
     },
+    computed: {
+
+      uploadHeaders(){
+        return { Authorization: 'Bearer ' + Vue.currentUser.token   };
+      }
+    },
     methods: {
+      fileTypeClass(attach) {
+        const klasses = {
+          '.pdf': 'fa fa-file-pdf-o'
+        };
+
+        let cssClass = '';
+        if (!attach.image) {
+          cssClass = 'file ' + (klasses[attach.ext_file] || 'fa fa-file-o');
+        }
+        return cssClass;
+      },
+      deleteAttachment(attachId) {
+        let url = '/api/v2/opportunity/'+this.item.id+'/attachments/' + attachId;
+        this.$http.delete(url, {  });
+      },
       browse(){
         this.leaveChannel();
         this.$emit('browse');
@@ -167,6 +245,10 @@
         if (payload.opportunity_contacts) {
           this.$data.opportunityContacts = payload.opportunity_contacts;
         }
+
+        if (payload.attachments) {
+          this.$data.attachments = payload.attachments;
+        }
         this.allowUpdate = true;
       },
 
@@ -201,6 +283,23 @@
           if (payload.board) {
             this.$data.board = payload.board;
             this.$data.boardColumns = payload.board_columns;
+          }
+        });
+
+        this.opportunityChannel.on('opportunity:added_attachment', payload => {
+          if (payload.opportunity) {
+            this.$data.attachments.unshift(payload.attachment);
+          }
+        });
+
+        this.opportunityChannel.on('opportunity:deleted_attachment', payload => {
+          if (payload.opportunity) {
+
+            let itemIndex = this.attachments.findIndex(function(item){
+              return item.id === parseInt(payload.attachment_id);
+            });
+
+            this.$data.attachments.splice(itemIndex, 1);
           }
         });
 
@@ -282,13 +381,48 @@
       'timeline_events': TimelineEvents,
       'markdown-text-edit': MarkdownTextEdit,
       'v-select': vSelect.VueSelect,
-      'modal': VueStrap.modal
+      'modal': VueStrap.modal,
+      'file-upload': FileUpload
     },
 
 
     mounted() {
+      this.attachment = this.$refs.attachment.$data;
       this.initChannel();
     }
 
   };
 </script>
+<style lang="sass">
+  .attachments {
+  margin-bottom: 20px;
+  .attach-item {
+  position: relative;
+  border-bottom: 0.1em solid #e4e4e4;
+
+
+  .thumb {
+  height: 75px;
+  width: 75px;
+  img {
+  max-height: 75px;
+  max-width: 75px;
+  }
+  &.file {
+  font-size: 55px;
+  &:before {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  }
+  }
+  }
+  .info {
+  position:absolute;
+  left: 105px;
+  top: 0px;
+  }
+
+  }
+  }
+</style>
