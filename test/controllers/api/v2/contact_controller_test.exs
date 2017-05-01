@@ -91,33 +91,46 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     assert json_response(conn, 200)
   end
 
-  test "deleting contact should update or delete opportunity", state do
+  test "deleting contact should delete opportunity if it is the only contact", state do
     changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
     contact = Repo.insert!(changeset)
-
-    changeset = Contact.changeset(%Contact{}, %{name: "Contact2", user_id: state[:user].id, company_id: state[:company].id})
-    contact2 = Repo.insert!(changeset)
 
     changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
     opportunity = Repo.insert!(changeset)
 
-    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
-    opportunity2 = Repo.insert!(changeset)
-
-    # Test no or opportunities after delete
     old_count = Repo.one(from p in Opportunity, select: count("*"))
+
     conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
     assert json_response(conn, 200)
+
+    # Test no of opportunities after delete
     new_count = Repo.one(from p in Opportunity, select: count("*"))
     assert old_count-1 == new_count
 
     # Ensure opportunity is deleted, as it had only one contact which is deleted
     opportunity = Repo.get(Opportunity, opportunity.id)
     assert opportunity == nil
+  end
+
+  test "deleting contact should update opportunity if it has other contacts", state do
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
+    contact = Repo.insert!(changeset)
+
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact2", user_id: state[:user].id, company_id: state[:company].id})
+    contact2 = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    assert opportunity.contact_ids == [contact.id, contact2.id]
+
+    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
 
     # Check for the new main_contact_id for opportunity2
-    opportunity2 = Repo.get(Opportunity, opportunity2.id)
-    assert opportunity2.main_contact_id == contact2.id
+    opportunity = Repo.get(Opportunity, opportunity.id)
+    assert opportunity.main_contact_id == contact2.id
+    assert opportunity.contact_ids == [contact2.id]
   end
 
 end
