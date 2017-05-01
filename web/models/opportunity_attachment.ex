@@ -1,4 +1,8 @@
 defmodule CercleApi.OpportunityAttachment do
+  @moduledoc """
+  Opportunity attachments
+  """
+
   use CercleApi.Web, :model
   use Arc.Ecto.Schema
 
@@ -22,9 +26,24 @@ end
 
 defimpl Poison.Encoder, for: CercleApi.OpportunityAttachment do
   def encode(model, options) do
-    model
-    |> Map.take([:id])
-    |> Map.put(:attachment_url, CercleApi.OpportunityAttachmentFile.url({ model.attachment, model }))
-    |> Poison.Encoder.encode(options)
+    image = ~w(.jpg .jpeg .gif .png)
+    |> Enum.member?(Path.extname(model.attachment.file_name))
+
+    attachment_url = CercleApi.OpportunityAttachmentFile.url({model.attachment, model})
+
+    data = model
+    |> Map.take([:id, :opportunity_id, :inserted_at])
+    |> Map.put(:attachment_url, attachment_url)
+    |> Map.put(:file_name, model.attachment.file_name)
+    |> Map.put(:ext_file, Path.extname(model.attachment.file_name))
+
+    if image do
+      thumb_url = CercleApi.OpportunityAttachmentFile.url({model.attachment, model}, :thumb)
+      data = Map.merge(data, %{image: true, thumb_url: thumb_url})
+    else
+      data = Map.put(data, :image, false)
+    end
+
+    Poison.Encoder.encode(data, options)
   end
 end

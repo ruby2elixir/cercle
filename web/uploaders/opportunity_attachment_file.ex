@@ -1,16 +1,14 @@
 defmodule CercleApi.OpportunityAttachmentFile do
+  @moduledoc """
+  Upload Opportunity Attachments
+  """
+
   use Arc.Definition
   use Arc.Ecto.Definition
 
   @acl :public_read
 
-  # Include ecto support (requires package arc_ecto installed):
-  # use Arc.Ecto.Definition
-
-  @versions [:original]
-
-  # To add a thumbnail version:
-  # @versions [:original, :thumb]
+  @versions [:original, :thumb]
 
   # Whitelist file extensions:
   # def validate({file, _}) do
@@ -18,9 +16,13 @@ defmodule CercleApi.OpportunityAttachmentFile do
   # end
 
   # Define a thumbnail transformation:
-  # def transform(:thumb, _) do
-  #   {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
-  # end
+  def transform(:thumb, {file, _}) do
+    if Enum.member?(~w(.jpg .jpeg .gif .png), Path.extname(file.file_name)) do
+      {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
+    else
+      :noaction
+    end
+  end
 
   # Override the persisted filenames:
   def filename(version, {file, scope}) do

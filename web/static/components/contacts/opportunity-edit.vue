@@ -65,9 +65,6 @@
             </div>
       </div>
 
-
-
-
       <to-do
         :activities="activities"
         :companyUsers="company_users"
@@ -82,11 +79,25 @@
            <i class="fa fa-fw fa-paperclip" style="color:#d8d8d8;"></i>Attachments
          </h3>
 
-         <ul v-if="attachments.length > 0">
-           <li v-for="attach in attachments">
-             <img :src="attach.attachment_url" />
-           </li>
-         </ul>
+         <div v-if="attachments.length > 0">
+           <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
+             <div :class="['thumb', fileTypeClass(attach)]" >
+               <img :src="attach.thumb_url" v-if="attach.image" />
+             </div>
+             <div class="info">
+             <div>{{attach.file_name}}</div>
+             <div>Added {{attach.inserted_at | moment('MMM DD [at] h:m A')}}</div>
+             <div class="attach-action">
+              <a :href="attach.attachment_url" target="_blank">
+               <i class="fa fa-download" aria-hidden="true"></i>
+               Download</a>
+              <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
+              <i class="fa fa-times" aria-hidden="true"></i>
+               Delete</button>
+             </div>
+             </div>
+           </div>
+         </div>
         </div>
         <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" :user_image="user_image" />
         <timeline_events
@@ -119,12 +130,12 @@
       'user_image'
     ],
     data(){
-        return {
-            uploadEvents: {
-                add(file, component) {
-                        component.active = true;
-                    }
-                },
+      return {
+        uploadEvents: {
+          add(file, component) {
+            component.active = true;
+          }
+        },
         attachment: {},
         attachments: [],
         openContactModal: false,
@@ -141,12 +152,28 @@
 
       };
     },
-      computed: {
-          uploadHeaders(){
-              return { Authorization: 'Bearer ' + Vue.currentUser.token   }
-              }
+    computed: {
+
+      uploadHeaders(){
+        return { Authorization: 'Bearer ' + Vue.currentUser.token   };
+      }
     },
     methods: {
+      fileTypeClass(attach) {
+        const klasses = {
+          '.pdf': 'fa fa-file-pdf-o'
+        };
+
+        let cssClass = '';
+        if (!attach.image) {
+          cssClass = 'file ' + (klasses[attach.ext_file] || 'fa fa-file-o');
+        }
+        return cssClass;
+      },
+      deleteAttachment(attachId) {
+        let url = '/api/v2/opportunity/'+this.item.id+'/attachments/' + attachId;
+        this.$http.delete(url, {  });
+      },
       browse(){
         this.leaveChannel();
         this.$emit('browse');
@@ -210,7 +237,7 @@
         }
 
         if (payload.attachments) {
-            this.$data.attachments = payload.attachments;
+          this.$data.attachments = payload.attachments;
         }
         this.allowUpdate = true;
       },
@@ -246,6 +273,23 @@
           if (payload.board) {
             this.$data.board = payload.board;
             this.$data.boardColumns = payload.board_columns;
+          }
+        });
+
+        this.opportunityChannel.on('opportunity:added_attachment', payload => {
+          if (payload.opportunity) {
+            this.$data.attachments.unshift(payload.attachment);
+          }
+        });
+
+        this.opportunityChannel.on('opportunity:deleted_attachment', payload => {
+          if (payload.opportunity) {
+
+            let itemIndex = this.attachments.findIndex(function(item){
+              return item.id === parseInt(payload.attachment_id);
+            });
+
+            this.$data.attachments.splice(itemIndex, 1);
           }
         });
 
@@ -332,11 +376,36 @@
     },
 
 
-      mounted() {
+    mounted() {
 
-      this.attachment = this.$refs.attachment.$data
+      this.attachment = this.$refs.attachment.$data;
       this.initChannel();
     }
 
   };
 </script>
+<style lang="sass">
+  .attach-item {
+  position: relative;
+  border-bottom: 0.1em solid #e4e4e4;
+
+
+  .thumb {
+  height: 75px; width: 75px;
+  &.file {
+  font-size: 55px;
+  &:before {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  }
+  }
+  }
+  .info {
+  position:absolute;
+  left: 105px;
+  top: 0px;
+  }
+
+  }
+</style>
