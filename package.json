@@ -15,14 +15,15 @@
     "moment": "^2.17.1",
     "phoenix": "file:deps/phoenix",
     "phoenix_html": "file:deps/phoenix_html",
-    "vue": "2.2.6",
+    "vue": "2.3.0",
+    "vue-template-compiler": "2.3.0",
     "vue-autosize": "^1.0.0",
     "vue-moment-jalaali": "^2.0.0",
     "vue-resource": "^1.2.1",
     "vue-resource-case-converter": "^2.0.1",
     "vue-select": "github:sagalbot/vue-select",
     "vue-strap": "^1.1.36",
-    "vue-upload-component": "^2.3.0-beta.2"
+    "vue-upload-component": "git+https://github.com/parallel588/vue-upload-component#a3f76af604af2f3374fe4bd667678e00e231f81c"
   },
   "devDependencies": {
     "babel-brunch": "~6.0.0",
