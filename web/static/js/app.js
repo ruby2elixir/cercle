@@ -69,9 +69,16 @@ import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
-
+import NotificationApp from '../components/notification.vue';
 
 Vue.use(require('vue-autosize'));
+const NotificationBus = new Vue();
+Object.defineProperty(Vue.prototype, '$notification', {
+  get() {
+    return NotificationBus;
+  }
+});
+
 const VueCurrentUser = {
   install(Vue, options) {
     localStorage.setItem('auth_token', options['token']);
@@ -157,6 +164,17 @@ if ($('#recent-activities-app').length > 0) {
     }
   });
 }
+
+
+if ($('#notification-app').length > 0) {
+  new Vue({
+    el: '#notification-app',
+    components: {
+      'notification': NotificationApp
+    }
+  });
+}
+
 
 
 if (

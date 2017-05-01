@@ -28,9 +28,11 @@
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav">
+    <notification id="notification-app"></notification>
     <div class="wrapper">
 
       <header class="main-header">
+
         <nav class="navbar navbar-static-top" style="background-color:black;">
           <div class="container">
             <div class="navbar-header">
