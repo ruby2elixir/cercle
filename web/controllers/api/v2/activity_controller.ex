@@ -9,8 +9,7 @@ defmodule CercleApi.APIV2.ActivityController do
 
   plug :scrub_params, "activity" when action in [:create, :update]
 
-  def index(conn, params) do
-    user_id = params["user_id"]
+  def index(conn, %{"user_id" => user_id}) do
     current_user = Repo.get!(User, user_id)
 
     activities_overdue = Activity.overdue(current_user)
