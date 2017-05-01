@@ -3,14 +3,15 @@ defmodule CercleApi.APIV2.ActivityController do
   require Logger
   use CercleApi.Web, :controller
   use Timex
-  alias CercleApi.{Activity, Repo}
+  alias CercleApi.{User, Activity, Repo}
 
   plug Guardian.Plug.EnsureAuthenticated
 
   plug :scrub_params, "activity" when action in [:create, :update]
 
-  def index(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
+  def index(conn, params) do
+    user_id = params["user_id"]
+    current_user = Repo.get!(User, user_id)
 
     activities_overdue = Activity.overdue(current_user)
     activities_today = Activity.today(current_user)

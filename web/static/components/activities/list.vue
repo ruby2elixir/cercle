@@ -35,7 +35,7 @@
         this.showContact = true;
       },
       initConn() {
-        this.$http.get('/api/v2/activity').then(resp => {
+        this.$http.get('/api/v2/activity?user_id='+Vue.currentUser.userId).then(resp => {
           this.activitiesOverdue = resp.data.activities.overdue;
           this.activitiesToday = resp.data.activities.today;
           this.activitiesLater = resp.data.activities.later;
