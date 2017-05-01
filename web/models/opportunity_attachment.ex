@@ -20,7 +20,7 @@ defmodule CercleApi.OpportunityAttachment do
     struct
     |> cast(params, [:opportunity_id])
     |> cast_attachments(params, [:attachment])
-    |> validate_required([:opportunity_id, :attachment])
+    |> validate_required([:opportunity_id])
   end
 end
 

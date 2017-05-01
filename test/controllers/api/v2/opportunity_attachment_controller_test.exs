@@ -52,15 +52,6 @@ defmodule CercleApi.APIV2.OpportunityAttachmentControllerTest do
       )
     end
 
-    test "return error if attachment empty", %{conn: conn, opportunity: opportunity} do
-      response = conn
-      |> post(opportunity_opportunity_attachment_path(conn, :create, opportunity.id),
-      attachment: ""
-      )
-      |> json_response(422)
-
-      assert response == %{"errors" => %{"attachment" => ["can't be blank"]}}
-    end
   end
 
   describe "DELETE delete/2" do
