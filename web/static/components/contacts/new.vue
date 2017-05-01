@@ -62,7 +62,7 @@ export default {
     loadColumns: function() {
       this.columns = [];
       for(var i=0; i<this.boards.length; i++) {
-        if(this.boardId == this.boards[i].id) {
+        if(this.boardId === this.boards[i].id) {
           this.columns = this.boards[i].board_columns;
           break;
         }
