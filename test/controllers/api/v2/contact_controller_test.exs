@@ -4,7 +4,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
   @valid_attrs %{name: "John Doe"}
   @invalid_attrs %{}
-  alias CercleApi.{Contact, TimelineEvent}
+  alias CercleApi.{Contact, TimelineEvent, Opportunity}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -89,6 +89,35 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     contact = Repo.insert!(changeset)
     conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
     assert json_response(conn, 200)
+  end
+
+  test "deleting contact should update or delete opportunity", state do
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
+    contact = Repo.insert!(changeset)
+
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact2", user_id: state[:user].id, company_id: state[:company].id})
+    contact2 = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity2 = Repo.insert!(changeset)
+
+    # Test no or opportunities after delete
+    old_count = Repo.one(from p in Opportunity, select: count("*"))
+    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
+    new_count = Repo.one(from p in Opportunity, select: count("*"))
+    assert old_count-1 == new_count
+
+    # Ensure opportunity is deleted, as it had only one contact which is deleted
+    opportunity = Repo.get(Opportunity, opportunity.id)
+    assert opportunity == nil
+
+    # Check for the new main_contact_id for opportunity2
+    opportunity2 = Repo.get(Opportunity, opportunity2.id)
+    assert opportunity2.main_contact_id == contact2.id
   end
 
 end
