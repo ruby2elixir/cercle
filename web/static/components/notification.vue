@@ -1,5 +1,5 @@
 <template>
-  <alert class="tip-notification" :show.sync="show" :placement="placement" :duration.number="300000" type="success" width="300px" dismissable>
+  <alert class="tip-notification" :show.sync="show" :placement="placement" :duration.number="2500" type="success" width="300px" dismissable>
   <span class="icon-ok-circled alert-icon-float-left"></span>
   {{msg}}
   </alert>
