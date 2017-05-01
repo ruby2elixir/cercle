@@ -136,7 +136,8 @@
             component.active = true;
           },
           progress(file, component) {
-            this.$notification.$emit('alert', {'msg': 'Uploading ' + file.progress});
+            let msg = 'Uploading ' + Math.ceil(file.progress) + '%';
+            this.$notification.$emit('alert', {'msg': msg});
           },
           after(file, component) {
             this.$notification.$emit('alert', {'msg': 'Finished!'});
