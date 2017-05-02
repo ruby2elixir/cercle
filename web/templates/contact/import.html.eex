@@ -66,7 +66,7 @@
 </div>
 <div id="action-btns-step1">
 	<%=link "Next", to: "" , class: "btn btn-success pull-right disabled", id: "move-to-step2", style: "margin-left:5px"%>
-	<%=link "Cancel Import", to: "#", class: "cancel-import btn btn-danger pull-right"%>
+	<%=link "Cancel Import", to: "/contact", class: "cancel-import btn btn-danger pull-right"%>
 </div>
 <div class="upload-outer-box hidden" id="sec-2">
 	<div class="mapping-info">
