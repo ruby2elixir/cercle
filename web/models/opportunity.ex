@@ -20,7 +20,7 @@ defmodule CercleApi.Opportunity do
     has_many :timeline_event, CercleApi.TimelineEvent,
       foreign_key: :opportunity_id
     has_many :attachments, CercleApi.OpportunityAttachment,
-      foreign_key: :opportunity_id
+      foreign_key: :opportunity_id, on_delete: :delete_all
     timestamps
   end
 

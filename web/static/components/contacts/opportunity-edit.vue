@@ -17,7 +17,13 @@
       <br />
       <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
       <br />
-      <delete-contact :contact="contact"></delete-contact>
+      <div class="text-center" style="border-top: 1px solid #aaa;margin-top: 20px;">
+        <a class="show-more" v-show="!showMoreOptions" @click="showMoreOptions=true">Show more options</a>
+        <a class="hide-more" v-show="showMoreOptions" @click="showMoreOptions=false">Hide more options</a>
+      </div>
+      <div v-show="showMoreOptions">
+        <delete-contact :contact="contact"></delete-contact>
+      </div>
     </div>
       <div style="" id="change_status">
         <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
@@ -159,7 +165,8 @@
         opportunityChannel: null,
         activities: [],
         events: [],
-        opportunityContacts: []
+        opportunityContacts: [],
+        showMoreOptions: false
 
       };
     },
@@ -426,5 +433,14 @@
   }
 
   }
+  }
+
+  .show-more, .hide-more,
+  .show-more:hover, .hide-more:hover {
+    color: #333;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 10px;
+    display: block;
   }
 </style>

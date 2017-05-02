@@ -1,7 +1,7 @@
 defmodule CercleApi.APIV2.OpportunityControllerTest do
   use CercleApi.ConnCase
   import CercleApi.Factory
-  alias CercleApi.{Contact,Opportunity}
+  alias CercleApi.{Contact,Opportunity, OpportunityAttachment}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -57,6 +57,24 @@ defmodule CercleApi.APIV2.OpportunityControllerTest do
     opportunity = Repo.insert!(changeset)
     conn = delete state[:conn], "/api/v2/opportunity/#{opportunity.id}", opportunity: %{name: "Modified Opportunity"}
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
+  end
+
+  test "deleting opportunity should delete attachments", state do
+    contact = Repo.get!(Contact, state[:contact].id)
+    |> Repo.preload([:organization])
+    changeset = Opportunity.changeset(%Opportunity{}, %{name: contact.organization.name <> " / " <> state[:board].name, board_column_id: state[:board_column].id, board_id: state[:board].id, contact_ids: [state[:contact].id], main_contact_id: state[:contact].id, user_id: state[:user].id , company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    attachment =  OpportunityAttachment
+    |> attach_file(insert(:opportunity_attachment, opportunity: opportunity),
+    :attachment, "test/fixtures/logo.png")
+
+    conn = delete state[:conn], "/api/v2/opportunity/#{opportunity.id}"
+    assert json_response(conn, 200)
+
+    # Ensure attachment is deleted
+    attachment = Repo.get(OpportunityAttachment, attachment.id)
+    assert attachment == nil
   end
 
 end
