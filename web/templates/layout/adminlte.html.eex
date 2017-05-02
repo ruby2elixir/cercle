@@ -25,6 +25,18 @@
     <meta name="user_id", content="<%= @conn.assigns[:current_user].id %>" >
     <% end %>
 
+    <%= if Mix.env == :prod do %>
+      <script type="text/javascript">
+        if(window.location.hostname == "www.cercle.co") {
+          window.smartlook||(function(d) {
+          var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
+          var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
+          c.charset='utf-8';c.src='//rec.smartlook.com/recorder.js';h.appendChild(c);
+          })(document);
+            smartlook('init', '<%= Application.get_env(:smartlook, :key) %>');
+        }
+      </script>
+    <% end %>
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav">

@@ -26,6 +26,19 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <%= if Mix.env == :prod do %>
+      <script type="text/javascript">
+        if(window.location.hostname == "www.cercle.co") {
+          window.smartlook||(function(d) {
+          var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
+          var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
+          c.charset='utf-8';c.src='//rec.smartlook.com/recorder.js';h.appendChild(c);
+          })(document);
+            smartlook('init', '<%= Application.get_env(:smartlook, :key) %>');
+        }
+      </script>
+    <% end %>
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav" style="background-color:black;">
