@@ -11,26 +11,14 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
   end
 
   test "index/2 responds with all Activities", state do
-    today_activity = insert(:activity,
+    activity = insert(:activity,
       user: state[:user], company: state[:company], due_date: Timex.now()
-    )
-
-    later_activity = insert(:activity,
-      user: state[:user], company: state[:company],
-      due_date: Timex.shift(DateTime.utc_now(), days: 2)
-    )
-
-    overdue_activity = insert(:activity,
-      user: state[:user], company: state[:company],
-      due_date: Timex.shift(DateTime.utc_now(), days: -10)
     )
     conn = get state[:conn], "/api/v2/activity", user_id: state[:user].id
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.ActivityView, "list.json",
       %{
-        activities_today: [today_activity],
-        activities_overdue: [overdue_activity],
-        activities_later: [later_activity],
+        activities: [activity]
       }
     )
   end

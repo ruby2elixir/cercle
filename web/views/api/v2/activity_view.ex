@@ -1,20 +1,8 @@
 defmodule CercleApi.APIV2.ActivityView do
   use CercleApi.Web, :view
 
-  def render("list.json", %{activities_today: activities_today,
-                             activities_overdue: activities_overtdue,
-                             activities_later: activities_later
-                            }) do
-    %{
-      activities: %{
-        today: Enum.map(activities_today, &activity_json/1),
-        overdue: Enum.reject(
-          Enum.map(activities_overtdue, &activity_json/1),
-          fn(v) -> is_nil(v.contact) end
-        ),
-        later: Enum.map(activities_later, &activity_json/1),
-      }
-    }
+  def render("list.json", %{activities: activities}) do
+    %{activities: Enum.map(activities, &activity_json/1)}
   end
 
   def render("index.json", %{activities: activities}) do

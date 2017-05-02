@@ -12,6 +12,7 @@
         contact: {},
         opportunity: {},
         contactView: null,
+        activities: [],
         activitiesOverdue: [],
         activitiesLater: [],
         activitiesToday: [],
@@ -27,6 +28,13 @@
       'activity-item': ActivityItem
     },
     methods: {
+      itemClass(item) {
+        if (Moment(item.due_date).isSame(new Date(), 'day')) {
+          return 'today';
+        } else {
+          return 'other';
+        }
+      },
       contactShow(contactId, opportunityId) {
         this.showContact = null;
         this.contact = {id: contactId};
@@ -36,9 +44,7 @@
       },
       initConn() {
         this.$http.get('/api/v2/activity?user_id='+Vue.currentUser.userId).then(resp => {
-          this.activitiesOverdue = resp.data.activities.overdue;
-          this.activitiesToday = resp.data.activities.today;
-          this.activitiesLater = resp.data.activities.later;
+          this.activities = resp.data.activities;
         });
 
         this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
@@ -50,19 +56,15 @@
               .receive('error', resp => { console.log('Unable to join', resp); });
 
         this.channel.on('activity:deleted', payload => {
-          this.deleteItem(this.activitiesOverdue, payload.activity_id);
-          this.deleteItem(this.activitiesToday, payload.activity_id);
-          this.deleteItem(this.activitiesLater, payload.activity_id);
+          this.deleteItem(this.activities, payload.activity_id);
         });
 
         this.channel.on('activity:created', payload => {
-          this.$data.activitiesToday.unshift(payload.activity);
+          this.$data.activities.unshift(payload.activity);
         });
 
         this.channel.on('activity:updated', payload => {
-          this.updateItem(this.activitiesOverdue, payload.activity);
-          this.updateItem(this.activitiesToday, payload.activity);
-          this.updateItem(this.activitiesLater, payload.activity);
+          this.updateItem(this.activities, payload.activity);
         });
       },
       updateItem(collection, data) {

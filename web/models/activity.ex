@@ -33,6 +33,34 @@ defmodule CercleApi.Activity do
     |> validate_required([:user_id, :contact_id, :company_id])
   end
 
+  def order_by_date(query \\ __MODULE__) do
+     from p in query,
+      order_by: [asc: p.due_date]
+  end
+
+  def in_progress(query) do
+    from p in query,
+      where: p.is_done == false
+  end
+
+  def by_user(query, user_id) do
+    from p in query,
+      where: p.user_id == ^user_id
+  end
+
+  def by_company(query, company_id) do
+    from p in query,
+      where: p.company_id == ^company_id
+  end
+
+  def list(user) do
+    __MODULE__
+    |> in_progress
+    |> by_user(user.id)
+    |> by_company(user.company_id)
+    |> order_by_date
+  end
+
   def today(user) do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
     to_time = user.time_zone |> Timex.now |> Timex.end_of_day
