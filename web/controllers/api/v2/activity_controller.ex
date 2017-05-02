@@ -9,17 +9,23 @@ defmodule CercleApi.APIV2.ActivityController do
 
   plug :scrub_params, "activity" when action in [:create, :update]
 
-  def index(conn, %{"user_id" => user_id}) do
-    current_user = Repo.get!(User, user_id)
+  def index(conn, params) do
+    current_user = Repo.get(User, Map.get(params, "user_id"))
+    if current_user do
+      query = Activity.list(current_user)
+    else
+      query = Activity.order_by_date
+    end
 
-    activities_overdue = Activity.overdue(current_user)
-    activities_today = Activity.today(current_user)
-    activities_later = Activity.later(current_user)
-    render(conn, "list.json",
-      activities_today: activities_today,
-      activities_overdue: activities_overdue,
-      activities_later: activities_later
-    )
+    paginate_params = %{
+      "paginate" => %{"per_page" => Map.get(params, "per_page", "50"), "page" => Map.get(params, "page", "1")}
+    }
+    {queryable, _} = query |> Rummage.Ecto.rummage(paginate_params)
+
+    activities = queryable
+    |> Repo.all
+    |> Repo.preload([:contact, :user])
+    render(conn, "list.json", activities: activities)
   end
 
   def create(conn, %{"activity" => activity_params}) do
