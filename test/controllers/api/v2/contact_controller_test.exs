@@ -4,7 +4,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
   @valid_attrs %{name: "John Doe"}
   @invalid_attrs %{}
-  alias CercleApi.{Contact, TimelineEvent}
+  alias CercleApi.{Contact, TimelineEvent, Opportunity, Activity, OpportunityAttachment}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -89,6 +89,125 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     contact = Repo.insert!(changeset)
     conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
     assert json_response(conn, 200)
+  end
+
+  test "deleting contact should delete opportunity if it is the only contact", state do
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
+    contact = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    old_count = Repo.one(from p in Opportunity, select: count("*"))
+
+    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
+
+    # Test no of opportunities after delete
+    new_count = Repo.one(from p in Opportunity, select: count("*"))
+    assert old_count-1 == new_count
+
+    # Ensure opportunity is deleted, as it had only one contact which is deleted
+    opportunity = Repo.get(Opportunity, opportunity.id)
+    assert opportunity == nil
+  end
+
+  test "deleting contact should delete opportunity and its attachments", state do
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
+    contact = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    attachment =  OpportunityAttachment
+    |> attach_file(insert(:opportunity_attachment, opportunity: opportunity),
+    :attachment, "test/fixtures/logo.png")
+
+    old_count = Repo.one(from p in Opportunity, select: count("*"))
+
+    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
+
+    # Test no of opportunities after delete
+    new_count = Repo.one(from p in Opportunity, select: count("*"))
+    assert old_count-1 == new_count
+
+    # Ensure opportunity is deleted, as it had only one contact which is deleted
+    opportunity = Repo.get(Opportunity, opportunity.id)
+    assert opportunity == nil
+
+    # Ensure attachment is deleted
+    attachment = Repo.get(OpportunityAttachment, attachment.id)
+    assert attachment == nil
+  end
+
+  test "deleting contact should update opportunity if it has other contacts", state do
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
+    contact = Repo.insert!(changeset)
+
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact2", user_id: state[:user].id, company_id: state[:company].id})
+    contact2 = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    assert opportunity.contact_ids == [contact.id, contact2.id]
+
+    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
+
+    # Check for the new main_contact_id for opportunity2
+    opportunity = Repo.get(Opportunity, opportunity.id)
+    assert opportunity.main_contact_id == contact2.id
+    assert opportunity.contact_ids == [contact2.id]
+  end
+
+  test "deleting contact should delete associated timeline events", state do
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
+    contact = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    changeset = TimelineEvent.changeset(%TimelineEvent{}, %{opportunity_id: opportunity.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, event_name: "test", content: "test"})
+    timeline_event = Repo.insert!(changeset)
+
+    old_count = Repo.one(from p in TimelineEvent, select: count("*"))
+
+    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
+
+    # Test no of timeline events after delete
+    new_count = Repo.one(from p in TimelineEvent, select: count("*"))
+    assert old_count-1 == new_count
+
+    # timeline_event should be nil after deleting contact
+    timeline_event = Repo.get(TimelineEvent, timeline_event.id)
+    assert timeline_event == nil
+  end
+
+  test "deleting contact should delete associated activities", state do
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
+    contact = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    opportunity = Repo.insert!(changeset)
+
+    changeset = Activity.changeset(%Activity{}, %{opportunity_id: opportunity.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, title: "test"})
+    activity = Repo.insert!(changeset)
+
+    old_count = Repo.one(from p in Activity, select: count("*"))
+
+    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
+
+    # Test no of activities after delete
+    new_count = Repo.one(from p in Activity, select: count("*"))
+    assert old_count-1 == new_count
+
+    # Ensure activity is deleted
+    activity = Repo.get(Activity, activity.id)
+    assert activity == nil
   end
 
 end

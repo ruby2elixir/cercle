@@ -10,8 +10,8 @@
                 <td style="width:50%;padding:20px;vertical-align: top;padding-right:0px;">
                   <profile-edit
                     :contact="contact"
-                    :tags="tags"
-                    v-on:remove="deleteContact" />
+                    :tags="tags" />
+                  <delete-contact :contact="contact" v-if="!(opportunity && !browseOpportunities)"></delete-contact>
                 </td>
 
                 <td style="width:50%;padding:20px;vertical-align: top;">
@@ -48,7 +48,6 @@
         </div>
 
         <div class="row" v-if="opportunity && !browseOpportunities">
-
           <opportunity-edit
             ref="opportunityEdit"
             :time_zone="timeZone"
@@ -62,7 +61,6 @@
             v-on:browse="browseOpportunities = true"
             :socket="socket"
             />
-
         </div>
       </section>
     </div>
@@ -75,6 +73,7 @@ import InlineEdit from '../inline-common-edit.vue';
 import ProfileEdit from './profile-edit.vue';
 import OrganizationEdit from './organization-edit.vue';
 import OpportunityEdit from './opportunity-edit.vue';
+import DeleteContact from './delete.vue';
 
 export default {
 
@@ -111,8 +110,8 @@ export default {
     'inline-edit': InlineEdit,
     'profile-edit': ProfileEdit,
     'organization-edit': OrganizationEdit,
-    'opportunity-edit': OpportunityEdit
-
+    'opportunity-edit': OpportunityEdit,
+    'delete-contact': DeleteContact
   },
   methods: {
     changeOpportunity(opp) {
@@ -134,10 +133,6 @@ export default {
         } });
       this.newBoard = null;
       this.showAddCard = false;
-    },
-
-    deleteContact: function(){
-      console.log('delete contact');
     },
 
     refreshContact(payload) {
