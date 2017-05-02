@@ -17,9 +17,8 @@
       <br />
       <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
       <br />
-      <div class="text-center" style="border-top: 1px solid #aaa;margin-top: 20px;">
-        <a class="show-more" v-show="!showMoreOptions" @click="showMoreOptions=true">Show more options</a>
-        <a class="hide-more" v-show="showMoreOptions" @click="showMoreOptions=false">Hide more options</a>
+      <div class="text-center" style="margin-top:10px;color:grey;">
+        <a class="show-more" v-show="!showMoreOptions" @click="showMoreOptions=true" style="text-decoration:none;">+More options</a>
       </div>
       <div v-show="showMoreOptions">
         <delete-contact :contact="contact"></delete-contact>

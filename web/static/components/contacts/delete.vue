@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="btn btn-default archive delete" v-on:click="deleteContact">Delete Contact</button>
+  <button type="button" class="btn btn-default archive delete" v-on:click="deleteContact">DELETE CONTACT</button>
 </template>
 
 <script>
