@@ -111,3 +111,7 @@ config :logger,
 # We configure the Rollbax.Logger backend.
 config :logger, Rollbax.Logger,
   level: :error
+
+# Smartlook configs.
+config :smartlook,
+  key: System.get_env("SMARTLOOK_KEY")
