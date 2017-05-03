@@ -9,6 +9,7 @@ defmodule CercleApi.Board do
     field :name, :string
     belongs_to :company, CercleApi.Company
     has_many :board_columns, CercleApi.BoardColumn
+    field :archived, :boolean
     timestamps
   end
 
@@ -20,7 +21,7 @@ defmodule CercleApi.Board do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, [:company_id, :name])
+    |> cast(params, [:company_id, :name, :archived])
     |> validate_required([:company_id])
   end
 

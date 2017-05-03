@@ -69,6 +69,8 @@ import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
+import ArchiveBoard from '../components/boards/archive.vue';
+import UnArchiveBoard from '../components/boards/unarchive.vue';
 import NotificationApp from '../components/notification.vue';
 
 Vue.use(require('vue-autosize'));
@@ -156,6 +158,24 @@ if ($('#activities-app').length > 0) {
   });
 }
 
+if ($('#archive-board').length > 0) {
+  new Vue({
+    el: '#archive-board',
+    components: {
+      'archive-board': ArchiveBoard
+    }
+  });
+}
+
+if ($('#unarchive-board').length > 0) {
+  new Vue({
+    el: '#unarchive-board',
+    components: {
+      'unarchive-board': UnArchiveBoard
+    }
+  });
+}
+
 if ($('#recent-activities-app').length > 0) {
   new Vue({
     el: '#recent-activities-app',
@@ -192,4 +212,18 @@ $('#toggle-activity-panel').on('click', function(){
 $('#close-sidebar').on('click', function(){
   $('.control-sidebar-light').toggleClass('open');
   $('#toggle-activity-panel').show();
+});
+
+$('.show-archived-boards').on('click', function(e){
+  e.preventDefault();
+  $('.board-archived-true').show();
+  $(this).hide();
+  $('.hide-archived-boards').show();
+});
+
+$('.hide-archived-boards').on('click', function(e){
+  e.preventDefault();
+  $('.board-archived-true').hide();
+  $(this).hide();
+  $('.show-archived-boards').show();
 });

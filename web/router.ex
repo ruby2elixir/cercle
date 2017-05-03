@@ -108,7 +108,10 @@ defmodule CercleApi.Router do
         only: [:index, :create, :delete]
     end
     resources "/api/v2/tag", APIV2.TagController
-    resources "/api/v2/board", APIV2.BoardController
+    resources "/api/v2/board", APIV2.BoardController do
+      put "/archive", APIV2.BoardController, :archive, as: :archive
+      put "/unarchive", APIV2.BoardController, :unarchive, as: :unarchive
+    end
     resources "/api/v2/board_column", APIV2.BoardColumnController
     
 

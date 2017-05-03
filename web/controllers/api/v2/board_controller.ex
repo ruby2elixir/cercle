@@ -74,4 +74,30 @@ defmodule CercleApi.APIV2.BoardController do
   def delete(conn, %{"id" => id}) do
   end
 
+  def archive(conn, %{"board_id" => id}) do
+    board = Repo.get!(Board, id)
+    changeset = Board.changeset(board, %{archived: true})
+    case Repo.update(changeset) do
+      {:ok, board} ->
+        json conn, %{status: 200}
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+    end
+  end
+
+  def unarchive(conn, %{"board_id" => id}) do
+    board = Repo.get!(Board, id)
+    changeset = Board.changeset(board, %{archived: false})
+    case Repo.update(changeset) do
+      {:ok, board} ->
+        json conn, %{status: 200}
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+    end
+  end
+
 end
