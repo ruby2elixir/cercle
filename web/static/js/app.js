@@ -213,3 +213,17 @@ $('#close-sidebar').on('click', function(){
   $('.control-sidebar-light').toggleClass('open');
   $('#toggle-activity-panel').show();
 });
+
+$('.show-archived-boards').on('click', function(e){
+  e.preventDefault();
+  $('.board-archived-true').show();
+  $(this).hide();
+  $('.hide-archived-boards').show();
+});
+
+$('.hide-archived-boards').on('click', function(e){
+  e.preventDefault();
+  $('.board-archived-true').hide();
+  $(this).hide();
+  $('.show-archived-boards').show();
+});

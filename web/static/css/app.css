@@ -124,3 +124,12 @@ body, form, ul, table {
   z-index: 99;
   right: 0px;
 }
+
+.hide-archived-boards {
+  display: none;
+}
+
+.board-archived-true {
+  display: none;
+  opacity: 0.5;
+}

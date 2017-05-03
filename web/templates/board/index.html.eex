@@ -1,12 +1,13 @@
 <div style="margin-top:50px;" class="row">
   <%= for b <- @boards do %>
-  <div onclick="location='/board/<%=b.id%>';" class="col-md-3 col-sm-6 col-xs-12 bg-primary" style="height:100px;font-size:23px;font-weight:bold;padding:10px;padding-left:10px;margin:20px;cursor:pointer;">
-     <%=b.name%>
-    <!-- /.info-box -->
-  </div>
+    <div onclick="location='/board/<%=b.id%>';" class="col-md-3 col-sm-6 col-xs-12 bg-primary board-archived-<%= b.archived %>" style="height:100px;font-size:23px;font-weight:bold;padding:10px;padding-left:10px;margin:20px;cursor:pointer;">
+       <%=b.name%>
+      <!-- /.info-box -->
+    </div>
   <% end %>
    <div onclick="location='/board/new';" class="col-md-3 col-sm-6 col-xs-12 bg-black" style="height:100px;font-size:23px;font-weight:bold;padding:10px;padding-left:10px;margin:20px;cursor:pointer;">+ Add a board
   </div>
 </div>
 
-<a href="/board/archived" style="color: #333;">See archived boards</a>
+<a class='show-archived-boards' href="#" style="color: #333;">See archived boards</a>
+<a class='hide-archived-boards' href="#" style="color: #333;">hide archived boards</a>
