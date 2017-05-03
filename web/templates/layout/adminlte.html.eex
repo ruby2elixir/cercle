@@ -158,6 +158,10 @@
             <button type="button" class="close" aria-label="Close" id="close-sidebar" ><span aria-hidden="true">&times;</span></button>
           </h3>
 
+          <%= if archive_board?(@conn) do %>
+            <archive-board id="archive-board" board-id="<%= assigns[:board].id %>" />
+          <% end %>
+
           <!-- Home tab content -->
           <%= if show_recent_activities?(@conn) do %>
             <activities id="recent-activities-app" board_id="<%= assigns[:board].id %>"/>

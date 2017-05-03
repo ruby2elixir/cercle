@@ -69,6 +69,7 @@ import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
+import ArchiveBoard from '../components/boards/archive.vue';
 import NotificationApp from '../components/notification.vue';
 
 Vue.use(require('vue-autosize'));
@@ -152,6 +153,15 @@ if ($('#activities-app').length > 0) {
       window.addEventListener('keyup', (event) => {
         if (event.keyCode === 27) { this.$emit('esc-keyup'); }
       });
+    }
+  });
+}
+
+if ($('#archive-board').length > 0) {
+  new Vue({
+    el: '#archive-board',
+    components: {
+      'archive-board': ArchiveBoard
     }
   });
 }

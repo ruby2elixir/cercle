@@ -77,6 +77,7 @@ defmodule CercleApi.Router do
     get "/contact/:id", ContactController, :show
     get "/contact/:id/opportunity/:opportunity_id", ContactController, :show
 
+    get "/board/archived", BoardController, :archived
     resources "/board", BoardController
     get "/activity", ActivityController, :index
     get "/import", ContactController, :import
@@ -108,7 +109,9 @@ defmodule CercleApi.Router do
         only: [:index, :create, :delete]
     end
     resources "/api/v2/tag", APIV2.TagController
-    resources "/api/v2/board", APIV2.BoardController
+    resources "/api/v2/board", APIV2.BoardController do
+      put "/archive", APIV2.BoardController, :archive, as: :archive
+    end
     resources "/api/v2/board_column", APIV2.BoardColumnController
     
 

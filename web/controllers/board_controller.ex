@@ -15,6 +15,7 @@ defmodule CercleApi.BoardController do
 
     query = from p in Board,
       where: p.company_id == ^company_id,
+      where: p.archived == false,
       order_by: [desc: p.updated_at]
 
     boards = Repo.all(query)
@@ -22,6 +23,22 @@ defmodule CercleApi.BoardController do
     conn
       |> put_layout("adminlte.html")
       |> render "index.html", boards: boards
+  end
+
+  def archived(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+    company_id = Repo.get!(Company, user.company_id).id
+
+    query = from p in Board,
+      where: p.company_id == ^company_id,
+      where: p.archived == true,
+      order_by: [desc: p.updated_at]
+
+    boards = Repo.all(query)
+
+    conn
+      |> put_layout("adminlte.html")
+      |> render "archived.html", boards: boards
   end
 
   def new(conn, _params) do
