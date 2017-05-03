@@ -70,6 +70,7 @@ import Board from '../components/boards/board.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
 import ArchiveBoard from '../components/boards/archive.vue';
+import UnArchiveBoard from '../components/boards/unarchive.vue';
 import NotificationApp from '../components/notification.vue';
 
 Vue.use(require('vue-autosize'));
@@ -162,6 +163,15 @@ if ($('#archive-board').length > 0) {
     el: '#archive-board',
     components: {
       'archive-board': ArchiveBoard
+    }
+  });
+}
+
+if ($('#unarchive-board').length > 0) {
+  new Vue({
+    el: '#unarchive-board',
+    components: {
+      'unarchive-board': UnArchiveBoard
     }
   });
 }

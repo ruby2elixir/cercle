@@ -27,4 +27,8 @@ defmodule CercleApi.LayoutView do
   def archive_board?(conn) do
     conn.assigns[:board] && !conn.assigns[:board].archived
   end
+
+  def unarchive_board?(conn) do
+    conn.assigns[:board] && conn.assigns[:board].archived
+  end
 end
