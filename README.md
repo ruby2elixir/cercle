@@ -52,4 +52,9 @@ docker-compose up -d web
 ## Contribution
 Feel free to send your PR with proposals, improvements or corrections!
 
+## License
+
+Copyright © 2016-2017 AK Cercle Inc.
+Licence LGPL v3.
+
 
