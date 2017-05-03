@@ -53,6 +53,12 @@ defmodule CercleApi.Activity do
       where: p.company_id == ^company_id
   end
 
+  def start_in(query, minutes) do
+    start_date = Timex.shift(Timex.now(), minutes: minutes)
+    from p in query,
+      where: p.due_date <= ^start_date
+  end
+
   def list(user) do
     __MODULE__
     |> in_progress

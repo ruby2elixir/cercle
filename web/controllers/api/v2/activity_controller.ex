@@ -20,6 +20,11 @@ defmodule CercleApi.APIV2.ActivityController do
       query = Activity.order_by_date
     end
 
+    if params["start_in"] do
+      query = query
+      |> Activity.start_in(params["start_in"])
+    end
+
     query_params = %{
       "search" => %{"is_done" => %{"assoc" => [], "search_term" => Map.get(params, "is_done", false)}},
       "paginate" => %{"per_page" => Map.get(params, "per_page", "50"),
