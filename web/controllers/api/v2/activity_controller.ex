@@ -12,15 +12,20 @@ defmodule CercleApi.APIV2.ActivityController do
   def index(conn, params) do
     current_user = Repo.get(User, Map.get(params, "user_id"))
     if current_user do
-      query = Activity.list(current_user)
+      query = Activity
+      |> Activity.by_user(current_user.id)
+      |> Activity.by_company(current_user.company_id)
+      |> Activity.order_by_date
     else
       query = Activity.order_by_date
     end
 
-    paginate_params = %{
-      "paginate" => %{"per_page" => Map.get(params, "per_page", "50"), "page" => Map.get(params, "page", "1")}
+    query_params = %{
+      "search" => %{"is_done" => %{"assoc" => [], "search_term" => Map.get(params, "is_done", false)}},
+      "paginate" => %{"per_page" => Map.get(params, "per_page", "50"),
+                      "page" => Map.get(params, "page", "1")}
     }
-    {queryable, _} = query |> Rummage.Ecto.rummage(paginate_params)
+    {queryable, _} = query |> Rummage.Ecto.rummage(query_params)
 
     activities = queryable
     |> Repo.all
