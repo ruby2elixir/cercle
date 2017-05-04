@@ -62,9 +62,11 @@ defmodule CercleApi.Activity do
   end
 
   def start_in(query, minutes) when is_integer(minutes) do
-    start_date = Timex.shift(Timex.now(), minutes: minutes)
+    start_date = Timex.now()
+    end_date = Timex.shift(Timex.now(), minutes: minutes)
     from p in query,
-      where: p.due_date <= ^start_date
+      where: p.due_date > ^start_date,
+      where: p.due_date <= ^end_date
   end
 
   def list(user) do
