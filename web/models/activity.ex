@@ -33,14 +33,18 @@ defmodule CercleApi.Activity do
     |> validate_required([:user_id, :contact_id, :company_id])
   end
 
+  def by_status(query, status \\ false) do
+    from p in query,
+      where: p.is_done == ^status
+  end
+
   def order_by_date(query \\ __MODULE__) do
      from p in query,
       order_by: [asc: p.due_date]
   end
 
   def in_progress(query) do
-    from p in query,
-      where: p.is_done == false
+    by_status(query, true)
   end
 
   def by_user(query, user_id) do
