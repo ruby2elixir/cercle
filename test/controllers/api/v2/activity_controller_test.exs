@@ -22,6 +22,44 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
       }
     )
   end
+  test "index/2 responds with start_in 15 minutes activities", state do
+    activity = insert(:activity, is_done: false, due_date: Timex.shift(Timex.now(), minutes: 10))
+    activity1 = insert(:activity, is_done: false, due_date: Timex.shift(Timex.now(), minutes: 120))
+
+    conn = get state[:conn], "/api/v2/activity", start_in: 15
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.ActivityView, "list.json",
+      %{
+        activities: [activity]
+      }
+    )
+  end
+
+  test "index/2 responds with all done activities", state do
+    activity = insert(:activity, is_done: true)
+    activity1 = insert(:activity, is_done: false)
+
+    conn = get state[:conn], "/api/v2/activity", is_done: true
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.ActivityView, "list.json",
+      %{
+        activities: [activity]
+      }
+    )
+  end
+
+  test "index/2 responds without all done activities", state do
+    activity = insert(:activity, is_done: true)
+    activity1 = insert(:activity, is_done: false)
+
+    conn = get state[:conn], "/api/v2/activity", is_done: false
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.ActivityView, "list.json",
+      %{
+        activities: [activity1]
+      }
+    )
+  end
 
   test "create/2 create activity with valid data", state do
     CercleApi.Endpoint.subscribe("users:#{state[:user].id}")

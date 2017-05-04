@@ -10,15 +10,18 @@ defmodule CercleApi.APIV2.ActivityController do
   plug :scrub_params, "activity" when action in [:create, :update]
 
   def index(conn, params) do
-    current_user = Repo.get(User, Map.get(params, "user_id"))
+    current_user = params["user_id"] && Repo.get(User, params["user_id"])
     if current_user do
       query = Activity
       |> Activity.by_user(current_user.id)
       |> Activity.by_company(current_user.company_id)
-      |> Activity.order_by_date
     else
-      query = Activity.order_by_date
+      query = Activity
     end
+
+    query = query
+    |> Activity.order_by_date
+    |> Activity.by_status(params["is_done"] || false)
 
     if params["start_in"] do
       query = query
@@ -26,10 +29,10 @@ defmodule CercleApi.APIV2.ActivityController do
     end
 
     query_params = %{
-      "search" => %{"is_done" => %{"assoc" => [], "search_term" => Map.get(params, "is_done", false)}},
       "paginate" => %{"per_page" => Map.get(params, "per_page", "50"),
                       "page" => Map.get(params, "page", "1")}
     }
+
     {queryable, _} = query |> Rummage.Ecto.rummage(query_params)
 
     activities = queryable
