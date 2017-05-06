@@ -48,7 +48,9 @@ defmodule CercleApi.BoardController do
 
     #order_by: [desc: p.rating]
     #from(CercleApi.TimelineEvent], order_by: [desc: :inserted_at])
-    query = (from a in CercleApi.Activity, where: a.is_done == false)
+    query = from a in CercleApi.Activity, 
+              where: a.is_done == false,
+              preload: :user
     cards = Repo.all(query_cards)  |> Repo.preload([:user, main_contact: [:organization], activities: query, timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])])
 
     conn
