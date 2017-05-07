@@ -40,7 +40,7 @@ defmodule CercleApi.Activity do
 
   def order_by_date(query \\ __MODULE__) do
      from p in query,
-      order_by: [asc: p.due_date]
+      order_by: [desc: p.due_date]
   end
 
   def in_progress(query) do
