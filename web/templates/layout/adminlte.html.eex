@@ -126,7 +126,7 @@
       <div class="content-wrapper <%= wrapper_css_class @conn %>">
         <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
 
-        <%= if show_menu?(@conn) do %>
+        <%= if show_board_menu?(@conn) do %>
         <a href="#" id="toggle-activity-panel" class="btn pull-right">
           <i class="fa fa-fw fa-ellipsis-h"></i>
           Show Menu
@@ -158,19 +158,15 @@
             <button type="button" class="close" aria-label="Close" id="close-sidebar" ><span aria-hidden="true">&times;</span></button>
           </h3>
 
-          <%= if archive_board?(@conn) do %>
-            <archive-board id="archive-board" board-id="<%= assigns[:board].id %>" />
-          <% end %>
+          <%= if show_board_menu?(@conn) do %>
+            <div id="archive-board">
+              <archive-board board-id="<%= assigns[:board].id %>" archived="<%= assigns[:board].archived %>" />
+            </div>
 
-          <%= if unarchive_board?(@conn) do %>
-            <unarchive-board id="unarchive-board" board-id="<%= assigns[:board].id %>" />
+            <div id="recent-activities-app">
+              <activities board_id="<%= assigns[:board].id %>"/>
+            </div>
           <% end %>
-
-          <!-- Home tab content -->
-          <%= if show_recent_activities?(@conn) do %>
-            <activities id="recent-activities-app" board_id="<%= assigns[:board].id %>"/>
-          <% end %>
-          <!-- /.tab-pane -->
 
           <!-- Settings tab content -->
           <div class="tab-pane" id="control-sidebar-settings-tab">

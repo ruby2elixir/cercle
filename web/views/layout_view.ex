@@ -12,23 +12,11 @@ defmodule CercleApi.LayoutView do
     end
   end
 
-  def show_menu?(conn) do
+  def show_board_menu?(conn) do
     if conn.assigns[:board] do
       true
     else
       false
     end
-  end
-
-  def show_recent_activities?(conn) do
-    conn.assigns[:board]
-  end
-
-  def archive_board?(conn) do
-    conn.assigns[:board] && !conn.assigns[:board].archived
-  end
-
-  def unarchive_board?(conn) do
-    conn.assigns[:board] && conn.assigns[:board].archived
   end
 end
