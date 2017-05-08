@@ -1,5 +1,5 @@
 <style>
-  a.archive {
+  a.archive, a.unarchive {
     display: block;
     text-align: center;
     background: lightgray;
@@ -9,7 +9,7 @@
     cursor: pointer;
   }
 
-  a.archive:hover {
+  a.archive:hover, a.unarchive:hover {
     text-decoration: underline;
   }
 </style>
