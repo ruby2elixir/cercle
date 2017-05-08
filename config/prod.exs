@@ -95,6 +95,7 @@ config :mailman,
 
 # Configure guardian
 config :guardian, Guardian,
+  ttl: { 90, :days },
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
 
 config :cercleApi,
