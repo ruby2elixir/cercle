@@ -33,14 +33,18 @@ defmodule CercleApi.Activity do
     |> validate_required([:user_id, :contact_id, :company_id])
   end
 
+  def by_status(query, status \\ false) do
+    from p in query,
+      where: p.is_done == ^status
+  end
+
   def order_by_date(query \\ __MODULE__) do
      from p in query,
-      order_by: [asc: p.due_date]
+      order_by: [desc: p.due_date]
   end
 
   def in_progress(query) do
-    from p in query,
-      where: p.is_done == false
+    by_status(query, true)
   end
 
   def by_user(query, user_id) do
@@ -51,6 +55,18 @@ defmodule CercleApi.Activity do
   def by_company(query, company_id) do
     from p in query,
       where: p.company_id == ^company_id
+  end
+
+  def start_in(query, minutes) when is_binary(minutes) do
+    start_in(query, String.to_integer(minutes))
+  end
+
+  def start_in(query, minutes) when is_integer(minutes) do
+    start_date = Timex.now()
+    end_date = Timex.shift(Timex.now(), minutes: minutes)
+    from p in query,
+      where: p.due_date > ^start_date,
+      where: p.due_date <= ^end_date
   end
 
   def list(user) do

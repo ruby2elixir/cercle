@@ -12,18 +12,19 @@
       </div>
       <div style="font-size:12px;">
       </div>
-      <div style="font-size:11px;margin-top:5px;color:grey;float:right;">
+      <div style="font-size:13px;margin-top:5px;color:grey;">
         <%=if(length(@opportunity.activities) == 0) do %>
-        <a href="/contact/<%=@opportunity.main_contact.id%>/opportunity/<%=@opportunity.id%>"><i class="fa fa-circle" aria-hidden="true" style="color:yellow;"></i></a>
+        <a href="/contact/<%=@opportunity.main_contact.id%>/opportunity/<%=@opportunity.id%>"><i class="fa fa-circle" aria-hidden="true" style="color:red;"></i></a>
         <% else %>
-          <i class="fa fa-check-square-o" aria-hidden="true"></i>
+           <%= if Enum.at(@opportunity.activities, 0).user do %>
+            <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({Enum.at(@opportunity.activities, 0).user.profile_image, Enum.at(@opportunity.activities, 0).user}, :small) %>" alt="user image" style="width:25px;position:relative;top:-2px;">
+          <% else %>
+            <img class="img-circle" src="/images/pp_2.png" alt="user image" style="width:25px;">
+          <% end %>
         0/<%=length(@opportunity.activities)%>
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
         <% end %>
       </div>
-      <%= if @opportunity.user do %>
-      <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({@opportunity.user.profile_image, @opportunity.user}, :small) %>" alt="user image" style="width:25px;">
-      <% else %>
-      <img class="img-circle" src="/images/pp_2.png" alt="user image" style="width:25px;">
-      <% end %>
+     
     </div>
   </div>
