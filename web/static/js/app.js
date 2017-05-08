@@ -167,15 +167,6 @@ if ($('#archive-board').length > 0) {
   });
 }
 
-if ($('#unarchive-board').length > 0) {
-  new Vue({
-    el: '#unarchive-board',
-    components: {
-      'unarchive-board': UnArchiveBoard
-    }
-  });
-}
-
 if ($('#recent-activities-app').length > 0) {
   new Vue({
     el: '#recent-activities-app',
