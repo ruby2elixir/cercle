@@ -38,8 +38,9 @@ export default {
 </script>
 
 <style lang="sass">
-  .opportunity-description-rendering{
-    color:rgb(51, 51, 51);
+.opportunity-description-rendering{
+  color:rgb(51, 51, 51);
+  word-wrap: break-word;
   }
   .opportunity-textarea {
     background-color:white;
