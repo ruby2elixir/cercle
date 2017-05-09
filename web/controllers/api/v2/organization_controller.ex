@@ -1,6 +1,6 @@
 defmodule CercleApi.APIV2.OrganizationController do
   use CercleApi.Web, :controller
-  alias CercleApi.{Organization, Contact, Company}
+  alias CercleApi.{Organization, Contact, Company, User}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -10,6 +10,17 @@ defmodule CercleApi.APIV2.OrganizationController do
   plug :authorize_resource, model: Organization, only: [:update, :delete, :show],
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
+
+  def index(conn, %{"user_id" => user_id}) do
+    user = Repo.get(User, user_id)
+
+    organizations = Organization
+    |> Organization.by_company(user.company_id)
+    |> Organization.order_by_date
+    |> Repo.all
+
+    render(conn, "index.json", organizations: organizations)
+  end
 
   def index(conn, _params) do
     organizations = Repo.all(Organization)

@@ -16,8 +16,4 @@ defmodule CercleApi.APIV2.UserView do
       created_at: user.inserted_at,
       name: user.name}
   end
-
-  def render("organizations.json", %{organizations: organizations}) do
-    organizations
-  end
 end
