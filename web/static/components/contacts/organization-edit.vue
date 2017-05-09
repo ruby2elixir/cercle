@@ -78,7 +78,7 @@
         let url = '/api/v2/organizations';
         this.$http.post(url, { organization: { name: item, companyId: vm.company.id }}).then(resp => {
           this.getOrganizations(function(r){
-            vm.organizations = r.data;
+            vm.organizations = r.data.data;
             vm.chooseOrganization = resp.data.data;
           });
 
@@ -92,13 +92,16 @@
       },
       buildOrganization(event) {
         event.preventDefault();
-        this.$http.get('/api/v2/user/organizations', {}).then(resp => {
-          this.organizations = resp.data;
+        let url = '/api/v2/organizations';
+        this.$http.get(url, { params: { userId: Vue.currentUser.userId }}).then(resp => {
+          this.organizations = resp.data.data;
           this.openModal = true;
         });
       },
       getOrganizations(callback) {
-        this.$http.get('/api/v2/user/organizations', {}).then(resp => {
+        let url = '/api/v2/organizations';
+
+        this.$http.get(url, { params: { userId: Vue.currentUser.userId }}).then(resp => {
           callback(resp);
         });
       },

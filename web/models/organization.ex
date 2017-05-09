@@ -39,4 +39,14 @@ defmodule CercleApi.Organization do
     |> validate_required([:company_id, :name])
   end
 
+  def by_company(query, company_id) do
+    from p in query,
+      where: p.company_id == ^company_id
+  end
+
+  def order_by_date(query \\ __MODULE__) do
+    from p in query,
+      order_by: [desc: p.inserted_at]
+  end
+
 end
