@@ -53,5 +53,9 @@ export var Pipeline = {
       .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
       .find( ".portlet-header" )
         .addClass( "ui-widget-header ui-corner-all" );
+  },
+
+  stop: function() {
+    $( ".column" ).sortable('destroy');
   }
 };
