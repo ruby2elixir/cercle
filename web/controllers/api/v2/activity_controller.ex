@@ -24,8 +24,11 @@ defmodule CercleApi.APIV2.ActivityController do
     |> Activity.by_status(params["is_done"] || false)
 
     if params["start_in"] do
-      query = query
-      |> Activity.start_in(params["start_in"])
+      query = Activity.start_in(query, params["start_in"])
+    end
+
+    if params["overdue"] do
+      query = Activity.by_date(query, :overdue)
     end
 
     query_params = %{
