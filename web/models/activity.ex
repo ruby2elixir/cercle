@@ -69,6 +69,12 @@ defmodule CercleApi.Activity do
       where: p.due_date <= ^end_date
   end
 
+  def by_date(query, :overdue) do
+    from_time = Timex.now |> Timex.beginning_of_day
+    from p in query,
+      where: p.due_date <= ^from_time
+  end
+
   def list(user) do
     __MODULE__
     |> in_progress
@@ -96,7 +102,6 @@ defmodule CercleApi.Activity do
 
   def overdue(user) do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
-    to_time = user.time_zone |> Timex.now |> Timex.end_of_day
 
     query = from p in __MODULE__,
       where: p.is_done == false,

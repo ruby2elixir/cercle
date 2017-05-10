@@ -35,6 +35,19 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
     )
   end
 
+  test "index/2 responds with overdue", state do
+    activity = insert(:activity, is_done: false, due_date: Timex.shift(Timex.now(), days: -2))
+    activity1 = insert(:activity, is_done: false, due_date: Timex.shift(Timex.now(), days: -12))
+
+    conn = get state[:conn], "/api/v2/activity", overdue: true
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.ActivityView, "list.json",
+      %{
+        activities: [activity, activity1]
+      }
+    )
+  end
+
   test "index/2 responds with all done activities", state do
     activity = insert(:activity, is_done: true)
     activity1 = insert(:activity, is_done: false)
