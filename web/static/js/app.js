@@ -20,10 +20,6 @@ import moment from 'moment';
 // Local files can be imported directly using relative
 // paths './socket' or full ones 'web/static/js/socket'.
 import 'bootstrap-datepicker';
-import icheck from './adminlte/plugins/iCheck/icheck.min';
-import slimscroll from './adminlte/plugins/slimScroll/jquery.slimscroll.min';
-import fastclick from './adminlte/plugins/fastclick/fastclick';
-import adminlte from './adminlte/dist/js/app.min';
 
 import socket from './socket';
 import { Activity } from './activity';
