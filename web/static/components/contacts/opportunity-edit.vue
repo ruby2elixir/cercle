@@ -312,7 +312,7 @@
 
 
         this.opportunityChannel.on('activity:created', payload => {
-          this.$data.activities.unshift(payload.activity);
+          this.$data.activities.push(payload.activity);
         });
 
         this.opportunityChannel.on('activity:deleted', payload => {

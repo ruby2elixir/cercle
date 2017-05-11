@@ -81,7 +81,7 @@
     },
     methods: {
       addTask() {
-        var url = '/api/v2/activity/';
+        let url = '/api/v2/activity/';
         this.$http.post(url, {
           activity: {
             contactId: this.contact.id,
@@ -94,12 +94,12 @@
           } });
       },
       removeTask(task) {
-        var url = '/api/v2/activity/' + task.id;
+        let url = '/api/v2/activity/' + task.id;
         this.$http.delete(url);
         false;
       },
       updateTask(task) {
-        var url = '/api/v2/activity/' + task.id;
+        let url = '/api/v2/activity/' + task.id;
 
         this.$http.put(url, {
           activity: {
