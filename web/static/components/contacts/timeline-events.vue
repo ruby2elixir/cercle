@@ -11,6 +11,10 @@
             {{ event.user && event.user.user_name }}
           </span>
           <span class="description"> {{event.event_name}} </span>
+          <span class="actions" v-if="canManage(event)">
+            <button @click="deleteEvent(event)" class="timeline_event_delete btn btn-danger btn-xs"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>
+            <button @click="editEvent(event)" class="timeline_event_edit btn btn-primary btn-xs"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</button>
+          </span>
         </div>
         <div class="well">
           {{event.content}}
@@ -18,6 +22,7 @@
         <div  class="description" style="color:grey;">
           {{timestamp(event.inserted_at)}}
         </div>
+
       </div>
     </div>
   </div>
@@ -30,10 +35,35 @@
     methods: {
       timestamp(time) {
         return Moment.utc(time).fromNow();
+      },
+      canManage(event) {
+          return Vue.currentUser.eq(event.user_id);
+      },
+      deleteEvent(event) {
+          let url = '/api/v2/timeline_events/' + event.id
+          this.$http.delete(url, {  });
+      },
+      editEvent(event) {
+          console.log('edit Event', event)
+      },
+        updateEvent(event) {
+            //let url = '/api/v2/timeline_events/' + event.id
+            //this.$http.put(url, { timeline_event: event });
+
       }
     },
-    computed: {
-    },
+    computed: { },
     components: {  }
   };
-</script>
+  </script>
+<style lang="sass">
+  .timeline_event_delete {
+  float: right;
+  margin-right: 14px;
+  }
+
+  .timeline_event_edit {
+  float: right;
+  margin-right: 14px;
+  }
+</style>

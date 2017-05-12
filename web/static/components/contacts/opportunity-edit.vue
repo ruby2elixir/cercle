@@ -332,6 +332,13 @@
         this.opportunityChannel.on('timeline_event:created', payload => {
           this.$data.events.unshift(payload.event);
         });
+
+        this.opportunityChannel.on('timeline_event:deleted', payload => {
+          let itemIndex = this.$data.events.findIndex(function(item){
+            return item.id === parseInt(payload.id);
+          });
+          this.$data.events.splice(itemIndex, 1);
+        });
       },
       leaveChannel() {
         if (this.$data.opportunityChannel) {

@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
   alias CercleApi.{TimelineEvent, User, Contact, Board, Repo}
 
   plug Guardian.Plug.EnsureAuthenticated
-  plug :scrub_params, "timeline_event" when action in [:create]
+  plug :scrub_params, "timeline_event" when action in [:create, :update]
 
   def index(conn, params) do
     current_user = Guardian.Plug.current_resource(conn)
@@ -75,4 +75,52 @@ defmodule CercleApi.APIV2.TimelineEventController do
         }
   end
 
+  def update(conn, %{"id" => id, "timeline_event" => timeline_event_params}) do
+    current_user = Guardian.Plug.current_resource(conn)
+    timeline_event = Repo.get!(TimelineEvent, id)
+
+    changeset = TimelineEvent.changeset(timeline_event, timeline_event)
+
+    case Repo.update(changeset) do
+      {:ok, timeline_event} ->
+        timeline_event = CercleApi.TimelineEvent
+        |> Repo.get!(timeline_event.id)
+        |> Repo.preload([:user, opportunity: :main_contact])
+        CercleApi.Endpoint.broadcast!(
+          "opportunities:"  <> to_string(timeline_event.opportunity_id),
+          "timeline_event:updated", %{"event" => timeline_event}
+        )
+        CercleApi.Endpoint.broadcast!(
+          "board:" <> to_string(timeline_event.opportunity.board_id),
+          "timeline_event:updated",
+          CercleApi.APIV2.TimelineEventView.render(
+            "recent_item.json", timeline_event: timeline_event)
+        )
+
+        render(conn, "show.json", timeline_event: timeline_event)
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    current_user = Guardian.Plug.current_resource(conn)
+    timeline_event = TimelineEvent
+    |> Repo.get!(id)
+    |> Repo.preload([:opportunity])
+
+    CercleApi.Endpoint.broadcast!(
+      "opportunities:"  <> to_string(timeline_event.opportunity_id),
+      "timeline_event:deleted", %{"id" => id}
+    )
+    CercleApi.Endpoint.broadcast!(
+      "board:" <> to_string(timeline_event.opportunity.board_id),
+      "timeline_event:deleted", %{"id" => id}
+    )
+
+    Repo.delete!(timeline_event)
+    send_resp(conn, :no_content, "")
+  end
 end
