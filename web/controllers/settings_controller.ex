@@ -130,4 +130,15 @@ defmodule CercleApi.SettingsController do
       html: Phoenix.View.render_to_string(CercleApi.EmailView, "team_invitation.html", sender: sender, receiver_email: receiver_email, company_name: company_name, encoded_values: encoded_values)
       }
   end
+
+  def webhooks(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+    if user.company_id do
+      company = Repo.get(Company, user.company_id)
+    end
+
+    conn
+    |> put_layout("adminlte.html")
+    |> render("webhooks.html", company: company, user: user)
+  end
 end

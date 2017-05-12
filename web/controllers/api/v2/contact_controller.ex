@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Opportunity}
+  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Opportunity, OpportunityService, ContactService}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -49,6 +49,7 @@ defmodule CercleApi.APIV2.ContactController do
           [:organization, :tags, :opportunities,
            company: [:users, boards: [:board_columns]]]
         )
+        ContactService.insert(contact)
         conn
         |> put_status(:created)
         |> render("show.json", contact: contact)
@@ -94,6 +95,7 @@ defmodule CercleApi.APIV2.ContactController do
               contact: contact,
               organization: (contact.organization || %{})})
 
+        ContactService.update(contact)
         render(conn, "show.json", contact: contact)
       {:error, changeset} ->
         conn
@@ -172,6 +174,7 @@ defmodule CercleApi.APIV2.ContactController do
       case length(contact_ids) do
         0 ->
           Repo.delete!(op)
+          OpportunityService.delete(op)
 
         _ ->
           if op.main_contact_id == contact_id do
@@ -184,6 +187,7 @@ defmodule CercleApi.APIV2.ContactController do
     end
 
     Repo.delete!(contact)
+    ContactService.delete(contact)
 
     # send_resp(conn, :no_content, "")
     json conn, %{status: 200}

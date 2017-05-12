@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.OpportunityController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.{Opportunity, Contact, Company, Organization, User, Board}
+  alias CercleApi.{Opportunity, Contact, Company, Organization, User, Board, OpportunityService}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -55,6 +55,7 @@ defmodule CercleApi.APIV2.OpportunityController do
             "opportunity" => opportunity
           }
         )
+        OpportunityService.insert(opportunity)
         conn
         |> put_status(:created)
         |> render("show.json", opportunity: opportunity)
@@ -89,6 +90,7 @@ defmodule CercleApi.APIV2.OpportunityController do
             channel, "opportunity:closed", %{"opportunity" => opportunity }
           )
         end
+        OpportunityService.update(opportunity)
         render(conn, "show.json", opportunity: opportunity)
       {:error, changeset} ->
         conn
@@ -103,6 +105,7 @@ defmodule CercleApi.APIV2.OpportunityController do
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
     Repo.delete!(opportunity)
+    OpportunityService.delete(opportunity)
 
     json conn, %{status: 200}
   end
