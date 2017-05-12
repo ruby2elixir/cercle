@@ -67,12 +67,16 @@
   #columns-container {
     display: block;
     width: 100vw;
-    height: 80vh;
+    height: 90vh;
     overflow: scroll;
     white-space:nowrap;
+    overflow-y: hidden;
   }
   #board_columns {
+    overflow-x: auto;
+    height: calc(100vh - 148px);
     .column_master {
+      max-height: calc(100vh - 162px);
       width: 250px;
       display:inline-block;
       vertical-align:top;
@@ -81,8 +85,9 @@
       border-radius:5px;
       white-space:normal;
       .column {
-        max-height: 80vh;
         overflow-x: auto;
+        padding-bottom: 0px;
+        max-height: calc(100vh - 244px);
       }
       .textarea-inline-editable {
         font-weight:800;

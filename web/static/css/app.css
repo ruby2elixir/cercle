@@ -55,6 +55,12 @@ html,body{min-height:100%}.layout-boxed html,.layout-boxed body{height:100%}body
 html{
 	height:100%;
 }
+body {
+  overflow-y: hidden;
+}
+.wrapper {
+  height: 100vh;
+}
 body, form, ul, table {
   margin-top: 0px;
   margin-bottom: 0px;
