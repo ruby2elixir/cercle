@@ -24,15 +24,14 @@ defmodule CercleApi.APIV2.WebhookSubscriptionController do
     current_user = Guardian.Plug.current_resource(conn)
     webhook_subscription = Repo.get_by(WebhookSubscription, event: webhook_subscription_params["event"], user_id: current_user.id)
 
-    if !webhook_subscription do
+    if webhook_subscription do
+      changeset = WebhookSubscription.changeset(webhook_subscription, webhook_subscription_params)
+      op = Repo.update(changeset)
+    else
       changeset = current_user
         |> Ecto.build_assoc(:webhook_subscriptions)
         |> WebhookSubscription.changeset(webhook_subscription_params)
-
       op = Repo.insert(changeset)
-    else
-      changeset = WebhookSubscription.changeset(webhook_subscription, webhook_subscription_params)
-      op = Repo.update(changeset)
     end
 
     case op do

@@ -1,4 +1,8 @@
 defmodule CercleApi.ContactService do
+  @moduledoc """
+  Service to handle contact events
+  """
+
   use CercleApi.Web, :model
   alias CercleApi.{Repo, Contact, WebhookSubscription}
 

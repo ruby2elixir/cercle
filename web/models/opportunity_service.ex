@@ -1,4 +1,8 @@
 defmodule CercleApi.OpportunityService do
+  @moduledoc """
+  Service to handle opportunity events
+  """
+
   use CercleApi.Web, :model
   alias CercleApi.{Repo, Opportunity, Board, Contact, WebhookSubscription}
 

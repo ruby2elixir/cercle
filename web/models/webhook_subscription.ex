@@ -1,4 +1,8 @@
 defmodule CercleApi.WebhookSubscription do
+  @moduledoc """
+  Model to manage webhook subscriptions
+  """
+
   use CercleApi.Web, :model
 
   schema "webhook_subscriptions" do
