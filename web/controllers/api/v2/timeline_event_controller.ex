@@ -3,6 +3,11 @@ defmodule CercleApi.APIV2.TimelineEventController do
   alias CercleApi.{TimelineEvent, User, Contact, Board, Repo}
 
   plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plugs.CurrentUser
+  plug :authorize_resource, model: TimelineEvent, only: [:delete, :update],
+    unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
+    not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
+
   plug :scrub_params, "timeline_event" when action in [:create, :update]
 
   def index(conn, params) do
@@ -76,7 +81,6 @@ defmodule CercleApi.APIV2.TimelineEventController do
   end
 
   def update(conn, %{"id" => id, "timeline_event" => timeline_event_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
     timeline_event = Repo.get!(TimelineEvent, id)
     changeset = TimelineEvent.changeset(timeline_event, timeline_event_params)
 
@@ -105,7 +109,6 @@ defmodule CercleApi.APIV2.TimelineEventController do
   end
 
   def delete(conn, %{"id" => id}) do
-    current_user = Guardian.Plug.current_resource(conn)
     timeline_event = TimelineEvent
     |> Repo.get!(id)
     |> Repo.preload([:opportunity])
@@ -120,6 +123,6 @@ defmodule CercleApi.APIV2.TimelineEventController do
     )
 
     Repo.delete!(timeline_event)
-    send_resp(conn, :no_content, "")
+    json conn, %{status: 200}
   end
 end
