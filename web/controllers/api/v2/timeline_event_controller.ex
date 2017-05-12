@@ -78,8 +78,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
   def update(conn, %{"id" => id, "timeline_event" => timeline_event_params}) do
     current_user = Guardian.Plug.current_resource(conn)
     timeline_event = Repo.get!(TimelineEvent, id)
-
-    changeset = TimelineEvent.changeset(timeline_event, timeline_event)
+    changeset = TimelineEvent.changeset(timeline_event, timeline_event_params)
 
     case Repo.update(changeset) do
       {:ok, timeline_event} ->

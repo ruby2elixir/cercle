@@ -39,11 +39,18 @@ export default {
       this.channel.on('timeline_event:created', payload => {
         this.items.unshift(payload);
       });
+      this.channel.on('timeline_event:updated', payload => {
+
+        let itemIndex = this.$data.items.findIndex(function(item){
+          return item.id === parseInt(payload.event.id);
+        });
+        this.$data.items.splice(itemIndex, 1, payload.event);
+      });
       this.channel.on('timeline_event:deleted', payload => {
-            let itemIndex = this.$data.items.findIndex(function(item){
-                return item.id === parseInt(payload.id);
-            });
-            this.$data.items.splice(itemIndex, 1);
+        let itemIndex = this.$data.items.findIndex(function(item){
+          return item.id === parseInt(payload.id);
+        });
+        this.$data.items.splice(itemIndex, 1);
       });
 
     }
