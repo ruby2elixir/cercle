@@ -1,7 +1,7 @@
 defmodule CercleApi.APIV2.TimelineEventTest do
   use CercleApi.ConnCase
   import CercleApi.Factory
-  alias CercleApi.{Contact,TimelineEvent,Opportunity}
+  alias CercleApi.{TimelineEvent}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -11,26 +11,64 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   end
 
   test "timeline_event index with valid params", state do
-
-
-    changeset = Contact.changeset(%Contact{}, %{
-          name: "Contact1", company_id: state[:company].id})
-    contact = Repo.insert!(changeset)
-
-    changeset = Opportunity.changeset(%Opportunity{}, %{
-          name: "Project #1", main_contact_id: contact.id,
-          company_id: state[:company].id, user_id: state[:user].id})
-    opportunity = Repo.insert!(changeset)
-
-    changeset = TimelineEvent.changeset(%TimelineEvent{}, %{
-          event_name: "Comment", content: "Good", contact_id: contact.id,
-          opportunity_id: opportunity.id , company_id: state[:company].id,
-          user_id: state[:user].id})
-    te = Repo.insert!(changeset)
+    te = insert(:timeline_event)
     conn = get state[:conn], "/api/v2/timeline_events"
 
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.TimelineEventView, "index.json", timeline_events: [te]
     )
+  end
+
+  test "POST create/2", state do
+    opportunity = insert(:opportunity, user: state[:user])
+    contact = insert(:contact, user: state[:user])
+    response = state[:conn]
+    |> post(
+      timeline_event_path(state[:conn], :create),
+    timeline_event: %{"content" => "Test Content",
+                      "event_name" => "comment",
+                      "contact_id" => contact.id,
+                      "opportunity_id" => opportunity.id}
+    )
+    |> json_response(201)
+
+    [event|_] = Repo.all(TimelineEvent)
+
+    assert response == render_json(
+      CercleApi.APIV2.TimelineEventView,
+      "show.json", timeline_event: event
+    )
+  end
+
+  test "PUT update/2", state do
+    te = Repo.preload(insert(:timeline_event, user: state[:user]), [:opportunity])
+    response = state[:conn]
+    |> put(timeline_event_path(state[:conn], :update, te),
+    timeline_event: %{"content" => "Test Content1" }
+    )
+    |> json_response(200)
+
+    assert response == render_json(
+      CercleApi.APIV2.TimelineEventView,
+      "show.json", timeline_event: %CercleApi.TimelineEvent{te|content: "Test Content1"}
+    )
+  end
+
+  test "delete event", state do
+    te = Repo.preload(insert(:timeline_event, user: state[:user]), [:opportunity])
+    event_id = te.id
+    opportunity_channel = "opportunities:#{te.opportunity_id}"
+    CercleApi.Endpoint.subscribe(opportunity_channel)
+    response = state[:conn]
+    |> delete(timeline_event_path(state[:conn], :delete, te))
+    |> json_response(200)
+
+    assert_receive %Phoenix.Socket.Broadcast{
+      event: "timeline_event:deleted", payload: %{"id" => event_id}
+     }
+    CercleApi.Endpoint.unsubscribe(opportunity_channel)
+
+    assert Repo.get(TimelineEvent, event_id) == nil
+    assert response == %{"status" => 200}
   end
 end

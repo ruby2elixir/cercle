@@ -84,7 +84,10 @@ const VueCurrentUser = {
       userId: options['userId'],
       token: options['token'],
       timeZone: options['timeZone'],
-      userImage: options['userImage']
+      userImage: options['userImage'],
+      eq: function(id) {
+        return this.userId === id.toString();
+      }
     };
   }
 };
