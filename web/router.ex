@@ -71,6 +71,7 @@ defmodule CercleApi.Router do
     post "/settings/team_invitation", SettingsController, :team_invitation
     get "/settings/tags_edit", SettingsController, :tags_edit
     get "/settings/api_key", SettingsController, :api_key
+    get "/settings/webhooks", SettingsController, :webhooks
 
     get "/contact", ContactController, :index
     get "/contact/new", ContactController, :new
@@ -112,7 +113,8 @@ defmodule CercleApi.Router do
     end
     resources "/api/v2/board_column", APIV2.BoardColumnController
 
-    post "/api/v2/webhook", APIV2.WebhookController, :create
+    resources "/api/v2/webhooks", APIV2.WebhookSubscriptionController
+    #post "/api/v2/webhook", APIV2.WebhookController, :create
     post "/api/v2/bulk_contact_create", APIV2.BulkController, :bulk_contact_create
     post "/api/v2/bulk_tag_or_untag_contacts", APIV2.BulkController, :bulk_tag_or_untag_contacts
 

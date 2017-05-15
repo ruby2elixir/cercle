@@ -16,6 +16,7 @@
               <li><a href="/import"><i class="fa fa-edit"></i>Import CSV</a></li>
               <li><a href="/settings/tags_edit"><i class="fa fa-edit"></i>Edit Tags</a></li>
               <li><a href="/settings/api_key"><i class="fa fa-edit"></i>Third Party</a></li>
+              <li><a href="/settings/webhooks"><i class="fa fa-edit"></i>Webhooks</a></li>
              </ul>
            </div><!-- /.box-body -->
          </div><!-- /. box -->

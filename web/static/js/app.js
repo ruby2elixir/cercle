@@ -67,6 +67,7 @@ import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
 import ArchiveBoard from '../components/boards/archive.vue';
 import NotificationApp from '../components/notification.vue';
+import WebhooksApp from '../components/webhooks.vue';
 
 Vue.use(require('vue-autosize'));
 const NotificationBus = new Vue();
@@ -174,12 +175,20 @@ if ($('#recent-activities-app').length > 0) {
   });
 }
 
-
 if ($('#notification-app').length > 0) {
   new Vue({
     el: '#notification-app',
     components: {
       'notification': NotificationApp
+    }
+  });
+}
+
+if ($('#webhooks-app').length > 0) {
+  new Vue({
+    el: '#webhooks-app',
+    components: {
+      'webhooks': WebhooksApp
     }
   });
 }
