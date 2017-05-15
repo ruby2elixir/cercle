@@ -10,5 +10,7 @@ defmodule CercleApi.Repo.Migrations.CreateWebhookSubscription do
       timestamps()
     end
 
+    create index(:webhook_subscriptions, [:user_id])
+
   end
 end
