@@ -57,3 +57,13 @@ defmodule CercleApi.Opportunity do
     ]
   end
 end
+
+defimpl Poison.Encoder, for: CercleApi.Opportunity do
+  def encode(model, options) do
+    model
+    |> Map.take(
+      [:id, :name, :description, :status, :contact_ids, :user_id, :board_id, :board_column_id]
+    )
+    |> Poison.Encoder.encode(options)
+  end
+end

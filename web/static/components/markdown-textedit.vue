@@ -33,6 +33,11 @@ export default {
       this.rawText = this.value;
       this.editMode=false;
     }
+  },
+  watch: {
+    value: function(val) {
+      this.rawText = val;
+    }
   }
 };
 </script>

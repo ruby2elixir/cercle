@@ -90,9 +90,6 @@ defmodule CercleApi.Router do
   scope "/", CercleApi do
     pipe_through [:api, :api_auth]
 
-    get "/api/v2/timeline_events", APIV2.TimelineEventController, :index
-    post "/api/v2/timeline_events", APIV2.TimelineEventController, :create
-
     post "/api/v2/register", APIV2.UserController, :create
     post "/api/v2/login", APIV2.SessionController, :create
 
@@ -104,6 +101,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/companies", APIV2.CompanyController
     resources "/api/v2/organizations", APIV2.OrganizationController
     resources "/api/v2/activity", APIV2.ActivityController
+    resources "/api/v2/timeline_events", APIV2.TimelineEventController
     resources "/api/v2/opportunity", APIV2.OpportunityController do
       resources "/attachments", APIV2.OpportunityAttachmentController,
         only: [:index, :create, :delete]

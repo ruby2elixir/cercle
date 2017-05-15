@@ -69,7 +69,7 @@
               <br />
             </div>
       </div>
-<div class="attachments">
+      <div class="attachments">
 
          <h3 style="color:rgb(99,99,99);font-weight:bold;"  v-if="attachments.length > 0">
            <i class="fa fa-fw fa-paperclip" style="color:#d8d8d8;"></i>Attachments
@@ -331,6 +331,21 @@
 
         this.opportunityChannel.on('timeline_event:created', payload => {
           this.$data.events.unshift(payload.event);
+        });
+
+        this.opportunityChannel.on('timeline_event:updated', payload => {
+
+          let itemIndex = this.$data.events.findIndex(function(item){
+            return item.id === parseInt(payload.event.id);
+          });
+          this.$data.events.splice(itemIndex, 1, payload.event);
+        });
+
+        this.opportunityChannel.on('timeline_event:deleted', payload => {
+          let itemIndex = this.$data.events.findIndex(function(item){
+            return item.id === parseInt(payload.id);
+          });
+          this.$data.events.splice(itemIndex, 1);
         });
       },
       leaveChannel() {
