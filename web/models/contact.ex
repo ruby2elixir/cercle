@@ -57,7 +57,8 @@ defmodule CercleApi.Contact do
     query = from opportunity in CercleApi.Opportunity,
       where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
       where: opportunity.status == 0,
-      order_by: [desc: opportunity.inserted_at]
+      order_by: [desc: opportunity.inserted_at],
+      preload: [:board_column, board: [:board_columns]]
     CercleApi.Repo.all(query)
   end
 
