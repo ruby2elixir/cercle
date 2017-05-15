@@ -53,7 +53,6 @@ defmodule CercleApi.OpportunityService do
       data: payload_data(opportunity)
     }
 
-    IO.puts event
     ws = get_subscriptions(opportunity.user_id, event)
     for webhook <- get_subscriptions(opportunity.user_id, event) do
       HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])

@@ -4,7 +4,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
   @valid_attrs %{name: "John Doe"}
   @invalid_attrs %{}
-  alias CercleApi.{Contact, TimelineEvent, Opportunity, Activity, OpportunityAttachment}
+  alias CercleApi.{Board, Contact, TimelineEvent, Opportunity, Activity, OpportunityAttachment}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -50,7 +50,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   end
 
   test "try to update authorized contact with valid params", state do
-    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", company_id: state[:company].id})
+    changeset = Contact.changeset(%Contact{}, %{name: "Contact1", company_id: state[:company].id, user_id: state[:user].id})
     contact = Repo.insert!(changeset)
     conn = put state[:conn], "/api/v2/contact/#{contact.id}", contact: %{name: "Modified Contact"}
     assert json_response(conn, 200)["data"]["id"]
@@ -92,10 +92,13 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   end
 
   test "deleting contact should delete opportunity if it is the only contact", state do
+    changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
+    board = Repo.insert!(changeset)
+
     changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
     contact = Repo.insert!(changeset)
 
-    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     opportunity = Repo.insert!(changeset)
 
     old_count = Repo.one(from p in Opportunity, select: count("*"))
@@ -116,7 +119,10 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
     contact = Repo.insert!(changeset)
 
-    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
+    board = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     opportunity = Repo.insert!(changeset)
 
     attachment =  OpportunityAttachment
@@ -166,7 +172,10 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
     contact = Repo.insert!(changeset)
 
-    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
+    board = Repo.insert!(changeset)
+
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     opportunity = Repo.insert!(changeset)
 
     changeset = TimelineEvent.changeset(%TimelineEvent{}, %{opportunity_id: opportunity.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, event_name: "test", content: "test"})
@@ -187,10 +196,13 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   end
 
   test "deleting contact should delete associated activities", state do
+    changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
+    board = Repo.insert!(changeset)
+
     changeset = Contact.changeset(%Contact{}, %{name: "Contact1", user_id: state[:user].id, company_id: state[:company].id})
     contact = Repo.insert!(changeset)
 
-    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id})
+    changeset = Opportunity.changeset(%Opportunity{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     opportunity = Repo.insert!(changeset)
 
     changeset = Activity.changeset(%Activity{}, %{opportunity_id: opportunity.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, title: "test"})
