@@ -16,11 +16,15 @@ defmodule CercleApi.APIV2.ContactView do
       company_users: contact.company.users,
       tags: contact.tags,
       organization: contact.organization,
-      opportunities: CercleApi.Contact.involved_in_opportunities(contact),
+      opportunities: Enum.map(
+        CercleApi.Contact.involved_in_opportunities(contact),
+        &opportunity_json(&1)
+      ),
       boards: contact.company.boards
     }
   end
 
+  #Enum.each(contacts_data, &Repo.insert!(&1))
   def render("contact.json", %{contact: contact}) do
     %{
       id: contact.id,
@@ -36,4 +40,16 @@ defmodule CercleApi.APIV2.ContactView do
     }
   end
 
+  def opportunity_json(opportunity) do
+    %{
+      id: opportunity.id,
+      name: opportunity.name,
+      description: opportunity.description,
+      status: opportunity.status,
+      contact_ids: opportunity.contact_ids,
+      user_id: opportunity.user_id,
+      board: opportunity.board,
+      board_column: opportunity.board_column
+    }
+  end
 end

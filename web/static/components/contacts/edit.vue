@@ -27,10 +27,11 @@
           </div>
         </div>
         <div class="row" v-if="browseOpportunities">
+
           <div class="col-md-12">
           <div style="padding:15px;background-color:#EDF0F5;">
               <div v-for="opp in opportunities" v-on:click="changeOpportunity(opp)" class="opportunity-tags">
-                {{opp.name}}
+                {{opp.board.name}} - {{opp.board_column.name}}
               </div>
               <button v-show="!showAddCard" v-on:click="showAddCard=true" type="button" class="btn btn-link show-add-card-form">
                <i class="fa fa-fw fa-plus"></i>Insert this contact into a board
