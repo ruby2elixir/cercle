@@ -56,4 +56,28 @@ defmodule CercleApi.Opportunity do
       timeline_event: ^comments_query
     ]
   end
+
+  def get_name(model)  do
+    if is_nil(model.name) || (String.strip(model.name) == "") do
+      if Ecto.assoc_loaded?(model.board) && Ecto.assoc_loaded?(model.board_column) do
+        opportunity = model
+      else
+        opportunity = CercleApi.Repo.preload(model, [:board, :board_column])
+      end
+      "#{opportunity.board.name} - #{opportunity.board_column.name}"
+    else
+      model.name
+    end
+  end
+end
+
+defimpl Poison.Encoder, for: CercleApi.Opportunity do
+  def encode(model, options) do
+    model
+    |> Map.take(
+      [:id, :name, :description, :status, :contact_ids, :user_id, :board_id, :board_column_id]
+    )
+    |> Map.put(:name, CercleApi.Opportunity.get_name(model))
+    |> Poison.Encoder.encode(options)
+  end
 end
