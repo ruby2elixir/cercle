@@ -1,11 +1,11 @@
 <template>
   <div>
     <div v-show="editMode">
-      <textarea v-model="rawText" v-autosize="rawText" class="opportunity-textarea"  />
+      <textarea v-model="rawText" v-autosize="rawText" class="card-textarea"  />
       <button class="btn btn-success" v-on:click="updateValue">Save</button>
       <a @click="cancelEdit">Cancel</a>
     </div>
-    <div v-html="compiledMarkdown" v-show="!editMode" @click="editMode=true" class="opportunity-description-rendering"></div>
+    <div v-html="compiledMarkdown" v-show="!editMode" @click="editMode=true" class="card-description-rendering"></div>
   </div>
 </template>
 
@@ -43,11 +43,11 @@ export default {
 </script>
 
 <style lang="sass">
-.opportunity-description-rendering{
+.card-description-rendering{
   color:rgb(51, 51, 51);
   word-wrap: break-word;
   }
-  .opportunity-textarea {
+  .card-textarea {
     background-color:white;
     border:1px solid #eeeeee;
     width:100%;

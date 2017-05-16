@@ -13,7 +13,7 @@ defmodule CercleApi.Company do
     has_many :users, CercleApi.User
     has_many :contacts, CercleApi.Contact
     has_many :organizations, CercleApi.Organization
-    has_many :opportunities, CercleApi.Opportunity
+    has_many :cards, CercleApi.Card
     has_many :boards, CercleApi.Board
     field :data_fields, :map
     timestamps

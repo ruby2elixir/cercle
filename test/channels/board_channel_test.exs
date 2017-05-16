@@ -19,7 +19,7 @@ defmodule CercleApi.BoardChannelTest do
 
     timeline_events = TimelineEvent
     |> Repo.all
-    |> Repo.preload([:user, opportunity: :main_contact])
+    |> Repo.preload([:user, card: :main_contact])
     events = CercleApi.APIV2.TimelineEventView.render("recent_list.json",
       timeline_events: timeline_events
     )

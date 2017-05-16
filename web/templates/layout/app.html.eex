@@ -12,11 +12,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/plugins/iCheck/square/blue.css") %>">
     <!-- Theme style -->
-    <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/dist/css/AdminLTE.min.css") %>">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/adminlte/dist/css/skins/_all-skins.min.css") %>">
     <link href="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
      <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">

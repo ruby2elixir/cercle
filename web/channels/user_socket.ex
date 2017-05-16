@@ -8,7 +8,7 @@ defmodule CercleApi.UserSocket do
 
   channel "contacts:*", CercleApi.ContactChannel
   channel "timeline_events:*", CercleApi.TimelineEventChannel
-  channel "opportunities:*", CercleApi.OpportunityChannel
+  channel "cards:*", CercleApi.CardChannel
   channel "users:*", CercleApi.UserChannel
   channel "board:*", CercleApi.BoardChannel
 

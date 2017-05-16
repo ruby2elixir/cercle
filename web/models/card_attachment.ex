@@ -1,14 +1,14 @@
-defmodule CercleApi.OpportunityAttachment do
+defmodule CercleApi.CardAttachment do
   @moduledoc """
-  Opportunity attachments
+  Card attachments
   """
 
   use CercleApi.Web, :model
   use Arc.Ecto.Schema
 
-  schema "opportunity_attachments" do
-    field :attachment, CercleApi.OpportunityAttachmentFile.Type
-    belongs_to :opportunity, CercleApi.Opportunity
+  schema "card_attachments" do
+    field :attachment, CercleApi.CardAttachmentFile.Type
+    belongs_to :card, CercleApi.Card
 
     timestamps()
   end
@@ -18,27 +18,27 @@ defmodule CercleApi.OpportunityAttachment do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:opportunity_id])
+    |> cast(params, [:card_id])
     |> cast_attachments(params, [:attachment])
-    |> validate_required([:opportunity_id])
+    |> validate_required([:card_id])
   end
 end
 
-defimpl Poison.Encoder, for: CercleApi.OpportunityAttachment do
+defimpl Poison.Encoder, for: CercleApi.CardAttachment do
   def encode(model, options) do
     image = ~w(.jpg .jpeg .gif .png)
     |> Enum.member?(Path.extname(model.attachment.file_name))
 
-    attachment_url = CercleApi.OpportunityAttachmentFile.url({model.attachment, model})
+    attachment_url = CercleApi.CardAttachmentFile.url({model.attachment, model})
 
     data = model
-    |> Map.take([:id, :opportunity_id, :inserted_at])
+    |> Map.take([:id, :card_id, :inserted_at])
     |> Map.put(:attachment_url, attachment_url)
     |> Map.put(:file_name, model.attachment.file_name)
     |> Map.put(:ext_file, Path.extname(model.attachment.file_name))
 
     if image do
-      thumb_url = CercleApi.OpportunityAttachmentFile.url({model.attachment, model}, :thumb)
+      thumb_url = CercleApi.CardAttachmentFile.url({model.attachment, model}, :thumb)
       data = Map.merge(data, %{image: true, thumb_url: thumb_url})
     else
       data = Map.put(data, :image, false)
@@ -48,11 +48,11 @@ defimpl Poison.Encoder, for: CercleApi.OpportunityAttachment do
   end
 end
 
-defimpl Poison.Encoder, for: CercleApi.OpportunityAttachment do
+defimpl Poison.Encoder, for: CercleApi.CardAttachment do
   def encode(model, options) do
     model
     |> Map.take([:id])
-    |> Map.put(:attachment_url, CercleApi.OpportunityAttachmentFile.url({ model.attachment, model }))
+    |> Map.put(:attachment_url, CercleApi.CardAttachmentFile.url({model.attachment, model}))
     |> Poison.Encoder.encode(options)
   end
 end

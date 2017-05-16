@@ -2,7 +2,7 @@ defmodule CercleApi.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Contact, Organization, TimelineEvent, Activity, Company, ContactTag, Tag, Board, BoardColumn, Opportunity}
+  alias CercleApi.{Contact, Organization, TimelineEvent, Activity, Company, ContactTag, Tag, Board, BoardColumn, Card}
 
   require Logger
 
@@ -74,30 +74,32 @@ defmodule CercleApi.ContactController do
       order_by: [desc: activity.inserted_at]
     activities = Repo.all(query1) |> Repo.preload([:user])
 
-    query2 = from opportunity in Opportunity,
-      where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
-      order_by: [desc: opportunity.inserted_at]
-    opportunities = Repo.all(query2)
+    query2 = from card in Card,
+      where: fragment("? = ANY (?)", ^contact.id, card.contact_ids),
+      order_by: [desc: card.inserted_at]
+    cards = Repo.all(query2)
 
-    if params["opportunity_id"] do
-      opportunity = Repo.get!(Opportunity, params["opportunity_id"])
+    if params["card_id"] do
+      card = Repo.get!(Card, params["card_id"])
     else
-      opportunities = Repo.all(query2)
-      opportunity = nil
+      cards = Repo.all(query2)
+      card = nil
     end
 
     events = []
 
-    if opportunity do
-      contact_ids = opportunity.contact_ids
+    if card do
+      contact_ids = card.contact_ids
       query = from contact in Contact,
         where: contact.id in ^contact_ids
-      opportunity_contacts = Repo.all(query)
+      card_contacts = Repo.all(query)
 
-      board = Repo.get!(Board, opportunity.board_id)  |> Repo.preload(board_columns: from(BoardColumn, order_by: [asc: :order]))
+      board = Board
+      |> Repo.get!(card.board_id)
+      |> Repo.preload(board_columns: from(BoardColumn, order_by: [asc: :order]))
 
       query1 = from event in TimelineEvent,
-      where: event.opportunity_id == ^opportunity.id,
+      where: event.card_id == ^card.id,
       order_by: [desc: event.inserted_at]
       events = Repo.all(query1) |> Repo.preload([:user])
     end
@@ -117,7 +119,7 @@ defmodule CercleApi.ContactController do
     changeset = Contact.changeset(contact)
     conn
     |> put_layout("adminlte.html")
-    |> render("show.html", opportunities: opportunities, activities: activities, opportunity: opportunity, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, opportunity_contacts: opportunity_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
+    |> render("show.html", cards: cards, activities: activities, card: card, contact: contact, changeset: changeset, company: company, events: events, organizations: organizations, card_contacts: card_contacts, tags: tags, tag_ids: tag_ids, board: board, boards: boards)
   end
 
   def import(conn, _params) do

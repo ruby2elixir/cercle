@@ -28,7 +28,7 @@
         </div>
         <br />
          <div class='referral-form-title'>
-           <input checked="checked"  id="add_to_opportunity" name="add_to_opportunity" type="checkbox" value="1"> Add into a board
+           <input checked="checked"  id="add_to_card" name="add_to_card" type="checkbox" value="1"> Add into a board
            <Br />
            <select name="select" id="add_to_board" style="margin-top:10px;">
               <%= for board <- @boards do %>

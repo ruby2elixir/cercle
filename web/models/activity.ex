@@ -4,11 +4,11 @@ defmodule CercleApi.Activity do
 
   @derive {Poison.Encoder, only: [
               :id, :title, :is_done, :due_date,
-              :company_id, :contact_id, :user_id, :opportunity_id, :user, :contact
+              :company_id, :contact_id, :user_id, :card_id, :user, :contact
             ]}
 
   schema "activities" do
-    belongs_to :opportunity, CercleApi.Opportunity
+    belongs_to :card, CercleApi.Card
     belongs_to :user, CercleApi.User
     belongs_to :contact, CercleApi.Contact
     belongs_to :company, CercleApi.Company
@@ -29,7 +29,7 @@ defmodule CercleApi.Activity do
     model
     |> cast(params, [
           :user_id, :contact_id, :company_id, :due_date, :is_done,
-          :title, :opportunity_id])
+          :title, :card_id])
     |> validate_required([:user_id, :contact_id, :company_id])
   end
 

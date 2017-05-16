@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Opportunity, OpportunityService, ContactService}
+  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card, CardService, ContactService}
 
   plug Guardian.Plug.EnsureAuthenticated
   plug CercleApi.Plugs.CurrentUser
@@ -47,7 +47,7 @@ defmodule CercleApi.APIV2.ContactController do
       {:ok, contact} ->
         contact = contact
         |> Repo.preload(
-          [:organization, :tags, :opportunities,
+          [:organization, :tags, :cards,
            company: [:users, boards: [:board_columns]]]
         )
         ContactService.insert(contact)
@@ -166,22 +166,22 @@ defmodule CercleApi.APIV2.ContactController do
     contact = Repo.get!(Contact, id)
 
     {contact_id, _} = Integer.parse(id)
-    query = from o in Opportunity,
+    query = from o in Card,
       where: fragment("? = ANY (?)", ^contact_id, o.contact_ids)
-    opportunities = Repo.all(query)
+    cards = Repo.all(query)
 
-    for op <- opportunities do
+    for op <- cards do
       contact_ids = List.delete(op.contact_ids, contact_id)
       case length(contact_ids) do
         0 ->
           Repo.delete!(op)
-          OpportunityService.delete(op)
+          CardService.delete(op)
 
         _ ->
           if op.main_contact_id == contact_id do
-            changeset = Opportunity.changeset(op, %{contact_ids: contact_ids, main_contact_id: Enum.at(contact_ids, 0)})
+            changeset = Card.changeset(op, %{contact_ids: contact_ids, main_contact_id: Enum.at(contact_ids, 0)})
           else
-            changeset = Opportunity.changeset(op, %{contact_ids: contact_ids})
+            changeset = Card.changeset(op, %{contact_ids: contact_ids})
           end
           Repo.update(changeset)
       end

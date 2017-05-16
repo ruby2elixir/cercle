@@ -1,6 +1,6 @@
 defimpl Canada.Can, for: CercleApi.User do
   alias CercleApi.{Contact, Board, Organization,
-                   Opportunity, OpportunityAttachment,
+                   Card, CardAttachment,
                    BoardColumn, TimelineEvent}
 
   def can?(user, action, contact = %Contact{}) when action in [:show, :delete, :update] do
@@ -15,8 +15,8 @@ defimpl Canada.Can, for: CercleApi.User do
     if user.company_id == organization.company_id, do: true, else: false
   end
 
-  def can?(user, action, opportunity = %Opportunity{}) when action in [:delete, :update, :show] do
-    if user.company_id == opportunity.company_id, do: true, else: false
+  def can?(user, action, card = %Card{}) when action in [:delete, :update, :show] do
+    if user.company_id == card.company_id, do: true, else: false
   end
 
   def can?(user, action, timeline_event = %TimelineEvent{}) when action in [:delete, :update] do
