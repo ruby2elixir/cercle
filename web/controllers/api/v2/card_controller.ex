@@ -14,7 +14,8 @@ defmodule CercleApi.APIV2.CardController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, %{"contact_id" => contact_id, "archived" => archived}) do
-    contact = Repo.get!(Contact, contact_id)
+    current_user = Guardian.Plug.current_resource(conn)
+    contact = Repo.get_by!(Contact, id: contact_id, user_id: current_user.id)
 
     if archived == "true" do
       cards = Contact.all_cards(contact)
@@ -23,9 +24,7 @@ defmodule CercleApi.APIV2.CardController do
     end
 
     render(conn, "index.json", cards: cards)
-    json conn, %{status: 200}
   end
-
 
   def show(conn, %{"id" => id}) do
     card = Card

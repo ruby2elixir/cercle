@@ -23,48 +23,66 @@ defmodule CercleApi.APIV2.CardControllerTest do
     }
   end
 
+  test "index/2 all cards", state do
+    card_open = insert(:card, status: 0, user: state[:user],
+      contact_ids: [state[:contact].id], company: state[:company]
+    )
+    |> Repo.preload([:board_column, board: [:board_columns]])
+    card_closed = insert(:card, status: 1, user: state[:user],
+      contact_ids: [state[:contact].id], company: state[:company]
+    )
+    |> Repo.preload([:board_column, board: [:board_columns]])
+
+    conn = get state[:conn], "/api/v2/card", contact_id: state[:contact].id, archived: "true"
+
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.CardView, "index.json", %{cards: [card_closed, card_open]}
+    )
+  end
+
+  test "index/2 open cards", state do
+    card_open = insert(:card, status: 0, user: state[:user],
+      contact_ids: [state[:contact].id], company: state[:company]
+    )
+    |> Repo.preload([:board_column, board: [:board_columns]])
+    card_closed = insert(:card, status: 1, user: state[:user],
+      contact_ids: [state[:contact].id], company: state[:company]
+    )
+    |> Repo.preload([:board_column, board: [:board_columns]])
+
+    conn = get state[:conn], "/api/v2/card", contact_id: state[:contact].id, archived: "false"
+
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.CardView, "index.json", %{ cards: [card_open] }
+    )
+  end
+
   test "try to delete authorized Card", state do
-    contact = Repo.get!(Contact, state[:contact].id)
-    |> Repo.preload([:organization])
-    changeset = Card.changeset(%Card{}, %{name: contact.organization.name <> " / " <> state[:board].name, board_column_id: state[:board_column].id, board_id: state[:board].id, contact_ids: [state[:contact].id], main_contact_id: state[:contact].id, user_id: state[:user].id , company_id: state[:company].id})
-    card = Repo.insert!(changeset)
+    card = insert(:card, user: state[:user], company: state[:company])
     conn = delete state[:conn], "/api/v2/card/#{card.id}"
     assert json_response(conn, 200)
   end
 
   test "try to delete unauthorized Card", state do
-    contact = Repo.get!(Contact, state[:contact].id)
-    |> Repo.preload([:organization])
-    changeset = Card.changeset(%Card{}, %{name: contact.organization.name <> " / " <> state[:board].name, board_column_id: state[:board_column].id, board_id: state[:board].id, contact_ids: [state[:contact].id], main_contact_id: state[:contact].id, user_id: state[:user].id , company_id: state[:company].id + 1})
-    card = Repo.insert!(changeset)
+    card = insert(:card, user: state[:user])
     conn = delete state[:conn], "/api/v2/card/#{card.id}"
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to update authorized Card", state do
-    contact = Repo.get!(Contact, state[:contact].id)
-    |> Repo.preload([:organization])
-    changeset = Card.changeset(%Card{}, %{name: contact.organization.name <> " / " <> state[:board].name, board_column_id: state[:board_column].id, board_id: state[:board].id, contact_ids: [state[:contact].id], main_contact_id: state[:contact].id, user_id: state[:user].id , company_id: state[:company].id})
-    card = Repo.insert!(changeset)
+    card = insert(:card, user: state[:user], company: state[:company])
     conn = put state[:conn], "/api/v2/card/#{card.id}", card: %{name: "Modified Card"}
     assert json_response(conn, 200)["data"]["id"]
   end
 
   test "try to update unauthorized Card", state do
-    contact = Repo.get!(Contact, state[:contact].id)
-    |> Repo.preload([:organization])
-    changeset = Card.changeset(%Card{}, %{name: contact.organization.name <> " / " <> state[:board].name, board_column_id: state[:board_column].id, board_id: state[:board].id, contact_ids: [state[:contact].id], main_contact_id: state[:contact].id, user_id: state[:user].id , company_id: state[:company].id + 1})
-    card = Repo.insert!(changeset)
+    card = insert(:card, user: state[:user])
     conn = delete state[:conn], "/api/v2/card/#{card.id}", card: %{name: "Modified Card"}
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "deleting card should delete attachments", state do
-    contact = Repo.get!(Contact, state[:contact].id)
-    |> Repo.preload([:organization])
-    changeset = Card.changeset(%Card{}, %{name: contact.organization.name <> " / " <> state[:board].name, board_column_id: state[:board_column].id, board_id: state[:board].id, contact_ids: [state[:contact].id], main_contact_id: state[:contact].id, user_id: state[:user].id , company_id: state[:company].id})
-    card = Repo.insert!(changeset)
-
+    card = insert(:card, user: state[:user], company: state[:company])
     attachment =  CardAttachment
     |> attach_file(insert(:card_attachment, card: card),
     :attachment, "test/fixtures/logo.png")
