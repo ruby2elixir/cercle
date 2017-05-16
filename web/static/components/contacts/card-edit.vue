@@ -15,7 +15,7 @@
         </file-upload>
       </div>
       <br />
-      <button type="button" class="btn btn-default archive " v-on:click="archiveCard">ARCHIVE</button>
+      <button type="button" v-show="item.status === 0" class="btn btn-default archive " v-on:click="archiveCard">ARCHIVE</button>
       <br />
       <div class="text-center" style="margin-top:10px;color:grey;">
         <a class="show-more" v-show="!showMoreOptions" @click="showMoreOptions=true" style="text-decoration:none;">+More options</a>
@@ -261,21 +261,6 @@
 
       subscribe() {
 
-        this.cardChannel.on('card:closed', payload => {
-          if (payload.card) {
-            let itemIndex = this.cards.findIndex(function(item){
-              return item.id === parseInt(payload.card.id);
-            });
-            this.$data.items.splice(itemIndex,1);
-
-            if (this.$data.items.length === 0) {
-              this.clearCard();
-            } else if (this.$data.item.id === parseInt(payload.card.id)) {
-              this.setCard(this.$data.items[0]);
-            }
-            this.$emit('browse');
-          }
-        });
         this.cardChannel.on('card:updated', payload => {
           if (payload.card) {
             this.$data.item = payload.card;
@@ -290,6 +275,10 @@
           if (payload.board) {
             this.$data.board = payload.board;
             this.$data.boardColumns = payload.board_columns;
+          }
+
+          if (payload.card.status.toString() === '1') {
+            this.$emit('browse');
           }
         });
 

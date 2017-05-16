@@ -31,11 +31,18 @@
           <div class="col-md-12">
           <div style="padding:15px;background-color:#EDF0F5;">
               <div v-for="card in cards" v-on:click="changeCard(card)" class="card-tags">
-                {{card.board.name}} - {{card.board_column.name}}
+                {{cardName(card)}}
               </div>
               <button v-show="!showAddCard" v-on:click="showAddCard=true" type="button" class="btn btn-link show-add-card-form">
                <i class="fa fa-fw fa-plus"></i>Insert this contact into a board
               </button>
+
+              <button type="button" class="btn btn-link" v-on:click="showArchivedCard=!showArchivedCard">
+               <i class="fa fa-fw fa-eye"></i>
+               <span v-if="!showArchivedCard">Show Archived card</span>
+               <span v-if="showArchivedCard">Hide Archived card</span>
+              </button>
+
               <div v-show="showAddCard">
                 Insert the contact into the board:
                 <select v-model="newBoard">
@@ -82,6 +89,7 @@ export default {
   data() {
     return {
       showAddCard: false,
+      showArchivedCard: false,
       socket: null,
       channel: null,
       contact: { },
@@ -105,6 +113,11 @@ export default {
   watch: {
     'contact_id': function() {
       this.initConn(true);
+    },
+    'showArchivedCard': function(){
+      this.$http.get('/api/v2/card/', { params: { contactId: this.contact.id, archived: this.showArchivedCard }}).then(resp => {
+        this.cards = resp.data.data;
+      });
     }
   },
   components: {
@@ -115,6 +128,9 @@ export default {
     'delete-contact': DeleteContact
   },
   methods: {
+    cardName(card) {
+      return card.board.name + ' - ' + card.board_column.name;
+    },
     changeCard(card) {
       this.browseCards = false;
       this.card = card;
