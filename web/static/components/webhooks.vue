@@ -26,7 +26,7 @@
       }
     },
     mounted() {
-      var events = ['opportunity.created', 'opportunity.updated', 'opportunity.deleted', 'contact.created', 'contact.updated', 'contact.deleted'];
+      var events = ['card.created', 'card.updated', 'card.deleted', 'contact.created', 'contact.updated', 'contact.deleted'];
 
       this.$http.get('/api/v2/webhooks').then(resp => {
         for(var i=0; i<events.length; i++) {

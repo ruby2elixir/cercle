@@ -55,7 +55,7 @@ defmodule CercleApi.APIV2.ActivityController do
         activity = activity
         |> Repo.preload([:contact, :user])
         CercleApi.Endpoint.broadcast!(
-          "opportunities:" <> to_string(activity.opportunity_id),
+          "cards:" <> to_string(activity.card_id),
           "activity:created", %{"activity" => activity}
         )
 
@@ -84,7 +84,7 @@ defmodule CercleApi.APIV2.ActivityController do
         activity = activity
         |> Repo.preload([:contact, :user])
         CercleApi.Endpoint.broadcast!(
-          "opportunities:" <> to_string(activity.opportunity_id),
+          "cards:" <> to_string(activity.card_id),
           "activity:updated", %{"activity" => activity}
         )
 
@@ -103,7 +103,7 @@ defmodule CercleApi.APIV2.ActivityController do
   def delete(conn, %{"id" => id}) do
     current_user = Guardian.Plug.current_resource(conn)
     activity = Repo.get!(Activity, id)
-    channel = "opportunities:" <> to_string(activity.opportunity_id)
+    channel = "cards:" <> to_string(activity.card_id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).

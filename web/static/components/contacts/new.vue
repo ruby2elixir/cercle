@@ -72,17 +72,17 @@ export default {
     },
 
     addContactToBoard: function(userId, companyId, contactId, boardId, columnId) {
-      $.ajax( '/api/v2/opportunity/' , {
+      $.ajax( '/api/v2/card/' , {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
         data: {
-          'opportunity[main_contact_id]': contactId ,
-          'opportunity[contact_ids]': [contactId],
-          'opportunity[user_id]': userId,
-          'opportunity[company_id]': companyId,
-          'opportunity[board_id]': boardId,
-          'opportunity[board_column_id]': columnId,
-          'opportunity[name]': ''
+          'card[main_contact_id]': contactId ,
+          'card[contact_ids]': [contactId],
+          'card[user_id]': userId,
+          'card[company_id]': companyId,
+          'card[board_id]': boardId,
+          'card[board_column_id]': columnId,
+          'card[name]': ''
         },
         complete: function(xhr, status){
           window.location.href='/board/'+boardId;

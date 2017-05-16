@@ -62,7 +62,7 @@
       activities: { type: Array, default: [] },
       companyUsers: { type: Array, default: [] },
       contact: Object,
-      opportunity: Object,
+      card: Object,
       company: Object
     },
     computed: {
@@ -85,7 +85,7 @@
         this.$http.post(url, {
           activity: {
             contactId: this.contact.id,
-            opportunityId: this.opportunity.id,
+            cardId: this.card.id,
             userId: this.currentUserId,
             dueDate: new Date().toISOString(),
             companyId: this.company.id,
@@ -106,7 +106,7 @@
             title: task.title,
             dueDate: task.due_date,
             contactId: this.contact.id,
-            opportunityId: this.opportunity.id,
+            cardId: this.card.id,
             userId: task.user_id,
             companyId: this.company.id,
             isDone: task.is_done

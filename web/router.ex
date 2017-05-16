@@ -76,7 +76,7 @@ defmodule CercleApi.Router do
     get "/contact", ContactController, :index
     get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
-    get "/contact/:id/opportunity/:opportunity_id", ContactController, :show
+    get "/contact/:id/card/:card_id", ContactController, :show
 
     resources "/board", BoardController
     get "/activity", ActivityController, :index
@@ -102,8 +102,8 @@ defmodule CercleApi.Router do
     resources "/api/v2/organizations", APIV2.OrganizationController
     resources "/api/v2/activity", APIV2.ActivityController
     resources "/api/v2/timeline_events", APIV2.TimelineEventController
-    resources "/api/v2/opportunity", APIV2.OpportunityController do
-      resources "/attachments", APIV2.OpportunityAttachmentController,
+    resources "/api/v2/card", APIV2.CardController do
+      resources "/attachments", APIV2.CardAttachmentController,
         only: [:index, :create, :delete]
     end
     resources "/api/v2/tag", APIV2.TagController

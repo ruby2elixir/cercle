@@ -11,7 +11,7 @@
                   <profile-edit
                     :contact="contact"
                     :tags="tags" />
-                  <delete-contact :contact="contact" v-if="!(opportunity && !browseOpportunities)"></delete-contact>
+                  <delete-contact :contact="contact" v-if="!(card && !browseCards)"></delete-contact>
                 </td>
 
                 <td style="width:50%;padding:20px;vertical-align: top;">
@@ -26,12 +26,12 @@
             </table>
           </div>
         </div>
-        <div class="row" v-if="browseOpportunities">
+        <div class="row" v-if="browseCards">
 
           <div class="col-md-12">
           <div style="padding:15px;background-color:#EDF0F5;">
-              <div v-for="opp in opportunities" v-on:click="changeOpportunity(opp)" class="opportunity-tags">
-                {{opp.board.name}} - {{opp.board_column.name}}
+              <div v-for="card in cards" v-on:click="changeCard(card)" class="card-tags">
+                {{card.board.name}} - {{card.board_column.name}}
               </div>
               <button v-show="!showAddCard" v-on:click="showAddCard=true" type="button" class="btn btn-link show-add-card-form">
                <i class="fa fa-fw fa-plus"></i>Insert this contact into a board
@@ -48,18 +48,18 @@
           </div>
         </div>
 
-        <div class="row" v-if="opportunity && !browseOpportunities">
-          <opportunity-edit
-            ref="opportunityEdit"
+        <div class="row" v-if="card && !browseCards">
+          <card-edit
+            ref="cardEdit"
             :time_zone="timeZone"
             :organization="organization"
             :contact="contact"
             :company="company"
             :company_users="companyUsers"
-            :opportunity="opportunity"
-            :opportunities="opportunities"
+            :card="card"
+            :cards="cards"
             :user_image="userImage"
-            v-on:browse="browseOpportunities = true"
+            v-on:browse="browseCards = true"
             :socket="socket"
             />
         </div>
@@ -73,12 +73,12 @@ import {Socket, Presence} from 'phoenix';
 import InlineEdit from '../inline-common-edit.vue';
 import ProfileEdit from './profile-edit.vue';
 import OrganizationEdit from './organization-edit.vue';
-import OpportunityEdit from './opportunity-edit.vue';
+import CardEdit from './card-edit.vue';
 import DeleteContact from './delete.vue';
 
 export default {
 
-  props: ['contact_id', 'opportunity_id'],
+  props: ['contact_id', 'card_id'],
   data() {
     return {
       showAddCard: false,
@@ -88,8 +88,8 @@ export default {
       company: {},
       companyUsers: [],
       organization: null,
-      opportunity: null,
-      opportunities: [],
+      card: null,
+      cards: [],
       tags: [],
       activities: [],
       events: [],
@@ -97,7 +97,7 @@ export default {
       boards: [],
       boardColumns: [],
       newBoard: null,
-      browseOpportunities: true,
+      browseCards: true,
       timeZone: null,
       userImage: null
     };
@@ -111,19 +111,19 @@ export default {
     'inline-edit': InlineEdit,
     'profile-edit': ProfileEdit,
     'organization-edit': OrganizationEdit,
-    'opportunity-edit': OpportunityEdit,
+    'card-edit': CardEdit,
     'delete-contact': DeleteContact
   },
   methods: {
-    changeOpportunity(opp) {
-      this.browseOpportunities = false;
-      this.opportunity = opp;
+    changeCard(card) {
+      this.browseCards = false;
+      this.card = card;
       return false;
     },
     addNewCard() {
-      var url = '/api/v2/opportunity/';
+      var url = '/api/v2/card/';
       this.$http.post(url,
-        { opportunity: {
+        { card: {
           mainContactId: this.contact.id,
           contactIds: [this.contact.id],
           companyId: this.company.id,
@@ -145,15 +145,15 @@ export default {
         this.boards = payload.boards;
       }
 
-      if (payload.opportunities) {
-        this.opportunities = payload.opportunities;
-        if (this.opportunity_id) {
-          let opp = payload.opportunities.find((item) => {
-            return item.id === this.opportunity_id;
+      if (payload.cards) {
+        this.cards = payload.cards;
+        if (this.card_id) {
+          let opp = payload.cards.find((item) => {
+            return item.id === this.card_id;
           });
-          if (opp) { this.changeOpportunity(opp); }
-        } else if (this.opportunities.length === 1) {
-          this.changeOpportunity(this.opportunities[0]);
+          if (opp) { this.changeCard(opp); }
+        } else if (this.cards.length === 1) {
+          this.changeCard(this.cards[0]);
         }
       }
 
@@ -194,22 +194,22 @@ export default {
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
       if (reset) {
-        this.opportunities = [];
-        this.opportunity = null;
+        this.cards = [];
+        this.card = null;
         this.company = null;
         this.tags = [];
         this.organization = null;
-        this.browseOpportunities = true;
+        this.browseCards = true;
       }
 
       this.channel.on('update', payload => {
         this.refreshContact(payload);
       });
 
-      this.channel.on('opportunity:created', payload => {
-        if (payload.opportunity) {
-          this.opportunities.push(payload.opportunity);
-          this.opportunity || (this.opportunity = payload.opportunity);
+      this.channel.on('card:created', payload => {
+        if (payload.card) {
+          this.cards.push(payload.card);
+          this.card || (this.card = payload.card);
         }
       });
 

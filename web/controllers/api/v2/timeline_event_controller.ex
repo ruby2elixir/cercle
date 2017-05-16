@@ -28,13 +28,13 @@ defmodule CercleApi.APIV2.TimelineEventController do
       {:ok, timeline_event} ->
         timeline_event_reload = CercleApi.TimelineEvent
         |> Repo.get!(timeline_event.id)
-        |> Repo.preload([:user, opportunity: :main_contact])
+        |> Repo.preload([:user, card: :main_contact])
         CercleApi.Endpoint.broadcast!(
-          "opportunities:"  <> to_string(timeline_event_reload.opportunity_id),
+          "cards:"  <> to_string(timeline_event_reload.card_id),
           "timeline_event:created", %{"event" => timeline_event_reload}
         )
         CercleApi.Endpoint.broadcast!(
-          "board:" <> to_string(timeline_event_reload.opportunity.board_id),
+          "board:" <> to_string(timeline_event_reload.card.board_id),
           "timeline_event:created",
           CercleApi.APIV2.TimelineEventView.render(
             "recent_item.json", timeline_event: timeline_event_reload)
@@ -88,13 +88,13 @@ defmodule CercleApi.APIV2.TimelineEventController do
       {:ok, timeline_event} ->
         timeline_event = CercleApi.TimelineEvent
         |> Repo.get!(timeline_event.id)
-        |> Repo.preload([:user, opportunity: :main_contact])
+        |> Repo.preload([:user, card: :main_contact])
         CercleApi.Endpoint.broadcast!(
-          "opportunities:"  <> to_string(timeline_event.opportunity_id),
+          "cards:"  <> to_string(timeline_event.card_id),
           "timeline_event:updated", %{"event" => timeline_event}
         )
         CercleApi.Endpoint.broadcast!(
-          "board:" <> to_string(timeline_event.opportunity.board_id),
+          "board:" <> to_string(timeline_event.card.board_id),
           "timeline_event:updated",
           CercleApi.APIV2.TimelineEventView.render(
             "recent_item.json", timeline_event: timeline_event)
@@ -111,14 +111,14 @@ defmodule CercleApi.APIV2.TimelineEventController do
   def delete(conn, %{"id" => id}) do
     timeline_event = TimelineEvent
     |> Repo.get!(id)
-    |> Repo.preload([:opportunity])
+    |> Repo.preload([:card])
 
     CercleApi.Endpoint.broadcast!(
-      "opportunities:"  <> to_string(timeline_event.opportunity_id),
+      "cards:"  <> to_string(timeline_event.card_id),
       "timeline_event:deleted", %{"id" => id}
     )
     CercleApi.Endpoint.broadcast!(
-      "board:" <> to_string(timeline_event.opportunity.board_id),
+      "board:" <> to_string(timeline_event.card.board_id),
       "timeline_event:deleted", %{"id" => id}
     )
 

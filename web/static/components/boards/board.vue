@@ -12,7 +12,7 @@
         newContact: false,
         showContact: false,
         contact: {},
-        opportunity: {},
+        card: {},
         contactView: null
       };
     },
@@ -23,10 +23,10 @@
       'new-contact': NewContact
     },
     methods: {
-      contactShow(contactId, opportunityId) {
+      contactShow(contactId, cardId) {
         this.showContact = null;
         this.contact = {id: contactId};
-        this.opportunity = { id: opportunityId };
+        this.card = { id: cardId };
         this.contactView = 'contact-form';
         this.showContact = true;
       }

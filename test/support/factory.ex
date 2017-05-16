@@ -2,7 +2,7 @@ defmodule CercleApi.Factory do
   use ExMachina.Ecto, repo: CercleApi.Repo
 
   alias CercleApi.{User, Company, Activity, Organization, Contact,
-                   Board, BoardColumn, Opportunity, OpportunityAttachment,
+                   Board, BoardColumn, Card, CardAttachment,
                    TimelineEvent}
 
   def company_factory do
@@ -58,13 +58,13 @@ defmodule CercleApi.Factory do
       title: "Test Activity",
       user: build(:user),
       company: build(:company),
-      opportunity: build(:opportunity),
+      card: build(:card),
       contact: build(:contact)
     }
   end
 
-  def opportunity_factory do
-    %Opportunity{
+  def card_factory do
+    %Card{
       name: "Test",
       description: "Test Desc",
       status: 0,
@@ -75,9 +75,9 @@ defmodule CercleApi.Factory do
     }
   end
 
-  def opportunity_attachment_factory do
-    %OpportunityAttachment{
-      opportunity: build(:opportunity)
+  def card_attachment_factory do
+    %CardAttachment{
+      card: build(:card)
     }
   end
 
@@ -87,7 +87,7 @@ defmodule CercleApi.Factory do
       content: "Test Content",
       user: build(:user),
       company: build(:company),
-      opportunity: build(:opportunity),
+      card: build(:card),
       contact: build(:contact)
     }
   end

@@ -24,7 +24,7 @@ defmodule CercleApi.Contact do
 
     has_many :activities, CercleApi.Activity, foreign_key: :contact_id, on_delete: :delete_all
     has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :contact_id, on_delete: :delete_all
-    has_many :opportunities, CercleApi.Opportunity, foreign_key: :main_contact_id, on_delete: :delete_all
+    has_many :cards, CercleApi.Card, foreign_key: :main_contact_id, on_delete: :delete_all
     timestamps
   end
 
@@ -43,21 +43,21 @@ defmodule CercleApi.Contact do
     |> validate_required([:company_id, :name])
   end
 
-  def opportunity(contact) do
-    open_opportunity = from opp in CercleApi.Opportunity,
+  def card(contact) do
+    open_card = from opp in CercleApi.Card,
       limit: 1,
       where: fragment("? = ANY (?)", ^contact.id, opp.contact_ids),
       where: opp.status == 0,
       order_by: [desc: opp.inserted_at],
       preload: [:board, :board_column]
-    CercleApi.Repo.one(open_opportunity)
+    CercleApi.Repo.one(open_card)
   end
 
-  def involved_in_opportunities(contact) do
-    query = from opportunity in CercleApi.Opportunity,
-      where: fragment("? = ANY (?)", ^contact.id, opportunity.contact_ids),
-      where: opportunity.status == 0,
-      order_by: [desc: opportunity.inserted_at],
+  def involved_in_cards(contact) do
+    query = from card in CercleApi.Card,
+      where: fragment("? = ANY (?)", ^contact.id, card.contact_ids),
+      where: card.status == 0,
+      order_by: [desc: card.inserted_at],
       preload: [:board_column, board: [:board_columns]]
     CercleApi.Repo.all(query)
   end
@@ -74,7 +74,7 @@ defmodule CercleApi.Contact do
     comments_query = from c in CercleApi.TimelineEvent, order_by: [desc: c.inserted_at], preload: :user
 
     from q in query, preload: [
-      :organization, :tags, :opportunities,
+      :organization, :tags, :cards,
       activities: [:user],
       company: [:users, boards: [:board_columns]],
       timeline_event: ^comments_query

@@ -15,7 +15,7 @@
 
 <script>
   export default {
-    props: ['contact', 'opportunity', 'user_image'],
+    props: ['contact', 'card', 'user_image'],
     data(){
       return {
         message: '',
@@ -34,7 +34,7 @@
             contactId: this.contact.id,
             content: this.message,
             eventName: 'comment',
-            opportunityId: this.opportunity.id
+            cardId: this.card.id
           }
           }
                        );

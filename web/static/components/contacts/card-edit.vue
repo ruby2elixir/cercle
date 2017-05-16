@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-12 opportunity-block">
+  <div class="col-md-12 card-block">
     <div class="post" v-if="item">
     <div class="pull-right">
       <button type="button" class="btn btn-primary pull-right browse" v-on:click="browse">See all Cards</button>
@@ -8,14 +8,14 @@
         <file-upload
           title="UPLOAD FILE"
           name="attachment"
-          :post-action="'/api/v2/opportunity/' + opportunity.id + '/attachments'"
+          :post-action="'/api/v2/card/' + card.id + '/attachments'"
           :headers="uploadHeaders"
           :events="uploadEvents"
           ref="attachment">
         </file-upload>
       </div>
       <br />
-      <button type="button" class="btn btn-default archive " v-on:click="archiveOpportunity">ARCHIVE</button>
+      <button type="button" class="btn btn-default archive " v-on:click="archiveCard">ARCHIVE</button>
       <br />
       <div class="text-center" style="margin-top:10px;color:grey;">
         <a class="show-more" v-show="!showMoreOptions" @click="showMoreOptions=true" style="text-decoration:none;">+More options</a>
@@ -29,18 +29,18 @@
           <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;">
             In {{board.name}}
             -
-          <select v-model="item.board_column_id" v-on:change="updateOpportunity">
+          <select v-model="item.board_column_id" v-on:change="updateCard">
              <option v-for="board_column in boardColumns" :value.number="board_column.id">{{board_column.name}}</option>
           </select>
             <div v-if="item.name">
-            <inline-edit v-model="item.name" v-on:input="updateOpportunity" placeholder="Card Name" style="width:500px;margin-left:25px;color:grey;"></inline-edit>
+            <inline-edit v-model="item.name" v-on:input="updateCard" placeholder="Card Name" style="width:500px;margin-left:25px;color:grey;"></inline-edit>
             </div>
           </span>
         </span>
         <br />
         <br />
         Contacts Involved:
-        <a v-for="o_contact in opportunityContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
+        <a v-for="o_contact in cardContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
         <modal title="What is his name?" large :show.sync="openContactModal">
             <div slot="modal-body" class="modal-body">
             <input class="form-control" v-model="NewContactName" type="text" placeholder="Name of the Contact">
@@ -54,7 +54,7 @@
         </button>
         <div class="managers">
           Managed by:
-          <select v-model.number="item.user_id"  v-on:change="updateOpportunity">
+          <select v-model.number="item.user_id"  v-on:change="updateCard">
             <option v-for="user in company_users" :value.number="user.id">{{user.user_name}}</option>
           </select>
 
@@ -64,7 +64,7 @@
               Description
               <br />
               <div class="mt-1" data-placeholder="Write a description...">
-               <markdown-text-edit v-model="item.description" v-on:input="updateOpportunity" placeholder="Write a description" ></markdown-text-edit>
+               <markdown-text-edit v-model="item.description" v-on:input="updateCard" placeholder="Write a description" ></markdown-text-edit>
               </div>
               <br />
             </div>
@@ -99,12 +99,12 @@
         :activities="activities"
         :companyUsers="company_users"
         :contact="contact"
-        :opportunity="opportunity"
+        :card="card"
         :company="company"
         :timeZone="time_zone"
       >
 
-        <comment_form slot="comment-form" :contact="contact" :opportunity="opportunity" :user_image="user_image" />
+        <comment_form slot="comment-form" :contact="contact" :card="card" :user_image="user_image" />
         <timeline_events
           slot="timeline-events"
           :events="events"
@@ -129,8 +129,8 @@
     props: [
       'socket',
       'contact', 'time_zone', 'current_user_id',
-      'opportunity', 'company',
-      'opportunities',
+      'card', 'company',
+      'cards',
       'company_users',
       'organization',
       'user_image'
@@ -156,15 +156,15 @@
         attachments: [],
         openContactModal: false,
         allowUpdate: true,
-        item: this.opportunity,
-        items: this.opportunities,
-        contacts: this.opportunityContacts,
+        item: this.card,
+        items: this.cards,
+        contacts: this.cardContacts,
         boardColumns: [],
         board: {},
-        opportunityChannel: null,
+        cardChannel: null,
         activities: [],
         events: [],
-        opportunityContacts: [],
+        cardContacts: [],
         showMoreOptions: false
 
       };
@@ -188,7 +188,7 @@
         return cssClass;
       },
       deleteAttachment(attachId) {
-        let url = '/api/v2/opportunity/'+this.item.id+'/attachments/' + attachId;
+        let url = '/api/v2/card/'+this.item.id+'/attachments/' + attachId;
         this.$http.delete(url, {  });
       },
       browse(){
@@ -199,7 +199,7 @@
         let url = '/api/v2/contact';
         let data = {
           name: this.NewContactName,
-          userId: this.opportunity.user_id
+          userId: this.card.user_id
         };
         if (this.company) {
           data['company_id'] = this.company.id;
@@ -208,32 +208,32 @@
           data['organization_id'] = this.organization.id;
         }
         this.$http.post(url, { contact: data }).then(resp => {
-          let urlOpp = '/api/v2/opportunity/'+ this.opportunity.id;
+          let urlOpp = '/api/v2/card/'+ this.card.id;
           let contactIds = [];
-          this.opportunityContacts.forEach(function(item) {
+          this.cardContacts.forEach(function(item) {
             contactIds.push(item.id);
           });
           contactIds.push(resp.data.data.id);
-          this.$http.put(urlOpp,{ opportunity: { contactIds: contactIds } });
+          this.$http.put(urlOpp,{ card: { contactIds: contactIds } });
         });
 
         this.NewContactName = '';
         this.openContactModal = false;
       },
 
-      archiveOpportunity() {
-        let url = '/api/v2/opportunity/' + this.item.id;
-        this.$http.put(url, { opportunity: { status: '1'} });
+      archiveCard() {
+        let url = '/api/v2/card/' + this.item.id;
+        this.$http.put(url, { card: { status: '1'} });
       },
 
-      updateOpportunity(){
+      updateCard(){
         if (this.allowUpdate) {
-          let url = '/api/v2/opportunity/' + this.item.id;
-          this.$http.put(url, { opportunity: this.item });
+          let url = '/api/v2/card/' + this.item.id;
+          this.$http.put(url, { card: this.item });
         }
       },
 
-      refreshOpportunity(payload){
+      refreshCard(payload){
         if (payload.activities) {
           this.$data.activities = payload.activities;
         }
@@ -246,11 +246,11 @@
           this.$data.events = payload.events;
         }
 
-        if (payload.opportunity) {
-          this.$data.item = payload.opportunity;
+        if (payload.card) {
+          this.$data.item = payload.card;
         }
-        if (payload.opportunity_contacts) {
-          this.$data.opportunityContacts = payload.opportunity_contacts;
+        if (payload.card_contacts) {
+          this.$data.cardContacts = payload.card_contacts;
         }
 
         if (payload.attachments) {
@@ -261,31 +261,31 @@
 
       subscribe() {
 
-        this.opportunityChannel.on('opportunity:closed', payload => {
-          if (payload.opportunity) {
-            let itemIndex = this.opportunities.findIndex(function(item){
-              return item.id === parseInt(payload.opportunity.id);
+        this.cardChannel.on('card:closed', payload => {
+          if (payload.card) {
+            let itemIndex = this.cards.findIndex(function(item){
+              return item.id === parseInt(payload.card.id);
             });
             this.$data.items.splice(itemIndex,1);
 
             if (this.$data.items.length === 0) {
-              this.clearOpportunity();
-            } else if (this.$data.item.id === parseInt(payload.opportunity.id)) {
-              this.setOpportunity(this.$data.items[0]);
+              this.clearCard();
+            } else if (this.$data.item.id === parseInt(payload.card.id)) {
+              this.setCard(this.$data.items[0]);
             }
             this.$emit('browse');
           }
         });
-        this.opportunityChannel.on('opportunity:updated', payload => {
-          if (payload.opportunity) {
-            this.$data.item = payload.opportunity;
-            this.$data.opportunityContacts = payload.opportunity_contacts;
+        this.cardChannel.on('card:updated', payload => {
+          if (payload.card) {
+            this.$data.item = payload.card;
+            this.$data.cardContacts = payload.card_contacts;
 
-            let itemIndex = this.opportunities.findIndex(function(item){
-              return item.id === parseInt(payload.opportunity.id);
+            let itemIndex = this.cards.findIndex(function(item){
+              return item.id === parseInt(payload.card.id);
             });
 
-            this.$data.items.splice(itemIndex, 1, payload.opportunity);
+            this.$data.items.splice(itemIndex, 1, payload.card);
           }
           if (payload.board) {
             this.$data.board = payload.board;
@@ -293,14 +293,14 @@
           }
         });
 
-        this.opportunityChannel.on('opportunity:added_attachment', payload => {
-          if (payload.opportunity) {
+        this.cardChannel.on('card:added_attachment', payload => {
+          if (payload.card) {
             this.$data.attachments.unshift(payload.attachment);
           }
         });
 
-        this.opportunityChannel.on('opportunity:deleted_attachment', payload => {
-          if (payload.opportunity) {
+        this.cardChannel.on('card:deleted_attachment', payload => {
+          if (payload.card) {
 
             let itemIndex = this.attachments.findIndex(function(item){
               return item.id === parseInt(payload.attachment_id);
@@ -311,29 +311,29 @@
         });
 
 
-        this.opportunityChannel.on('activity:created', payload => {
+        this.cardChannel.on('activity:created', payload => {
           this.$data.activities.push(payload.activity);
         });
 
-        this.opportunityChannel.on('activity:deleted', payload => {
+        this.cardChannel.on('activity:deleted', payload => {
           let itemIndex = this.$data.activities.findIndex(function(item){
             return item.id === parseInt(payload.activity_id);
           });
           this.$data.activities.splice(itemIndex, 1);
         });
 
-        this.opportunityChannel.on('activity:updated', payload => {
+        this.cardChannel.on('activity:updated', payload => {
           let itemIndex = this.$data.activities.findIndex(function(item){
             return item.id === parseInt(payload.activity.id);
           });
           this.$data.activities.splice(itemIndex, 1, payload.activity);
         });
 
-        this.opportunityChannel.on('timeline_event:created', payload => {
+        this.cardChannel.on('timeline_event:created', payload => {
           this.$data.events.unshift(payload.event);
         });
 
-        this.opportunityChannel.on('timeline_event:updated', payload => {
+        this.cardChannel.on('timeline_event:updated', payload => {
 
           let itemIndex = this.$data.events.findIndex(function(item){
             return item.id === parseInt(payload.event.id);
@@ -341,7 +341,7 @@
           this.$data.events.splice(itemIndex, 1, payload.event);
         });
 
-        this.opportunityChannel.on('timeline_event:deleted', payload => {
+        this.cardChannel.on('timeline_event:deleted', payload => {
           let itemIndex = this.$data.events.findIndex(function(item){
             return item.id === parseInt(payload.id);
           });
@@ -349,49 +349,49 @@
         });
       },
       leaveChannel() {
-        if (this.$data.opportunityChannel) {
-          this.$data.opportunityChannel.leave();
+        if (this.$data.cardChannel) {
+          this.$data.cardChannel.leave();
         }
       },
       initChannel(){
-        let channelTopic = 'opportunities:' + this.opportunity.id;
-        if (this.opportunity.id) {
-          this.$http.get('/api/v2/opportunity/' + this.opportunity.id).then(resp => {
-            this.refreshOpportunity(resp.data);
+        let channelTopic = 'cards:' + this.card.id;
+        if (this.card.id) {
+          this.$http.get('/api/v2/card/' + this.card.id).then(resp => {
+            this.refreshCard(resp.data);
           });
         }
-        this.opportunityChannel = this.socket.channels.find(function(item){
+        this.cardChannel = this.socket.channels.find(function(item){
           return channelTopic === item.topic;
         });
 
-        if (this.opportunityChannel) {
+        if (this.cardChannel) {
           this.subscribe();
         } else {
-          this.opportunityChannel = this.socket.channel(channelTopic, {});
+          this.cardChannel = this.socket.channel(channelTopic, {});
           this.subscribe();
-          this.opportunityChannel.join()
+          this.cardChannel.join()
                 .receive('ok', resp => { })
                 .receive('error', resp => {  });
         }
       },
 
-      clearOpportunity() {
+      clearCard() {
         this.allowUpdate = false;
         this.$data.item = null;
         this.leaveChannel();
       },
-      setOpportunity(opp) {
+      setCard(opp) {
         this.allowUpdate = false;
         this.$data.item = opp;
         this.initChannel();
       }
     },
     watch: {
-      opportunity() {
+      card() {
         this.allowUpdate = false;
-        this.$data.item = this.opportunity;
+        this.$data.item = this.card;
 
-        if (this.opportunity){
+        if (this.card){
           this.initChannel();
         } else { this.leaveChannel(); }
       }

@@ -1,0 +1,30 @@
+<div class="portlet" data-id="<%=@card.id%>">
+    <div class="portlet-content">
+      <div style="font-size:14px;font-weight:800;padding-bottom:10px;cursor:pointer;" v-on:click.stop="contactShow(<%=@card.main_contact.id%>, <%=@card.id%>)">
+          <span style="color:#222222;">
+          <%=@card.main_contact.name %>
+          <%=if @card.main_contact.organization do %>
+          <span style="color:rgb(119, 119, 119);">
+          - <%=@card.main_contact.organization.name %>
+          </span>
+          <%end%>
+          </span>
+      </div>
+      <div style="font-size:12px;">
+      </div>
+      <div style="font-size:13px;margin-top:5px;color:grey;">
+        <%=if(length(@card.activities) == 0) do %>
+        <a href="/contact/<%=@card.main_contact.id%>/card/<%=@card.id%>"><i class="fa fa-circle" aria-hidden="true" style="color:red;"></i></a>
+        <% else %>
+           <%= if Enum.at(@card.activities, 0).user do %>
+            <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({Enum.at(@card.activities, 0).user.profile_image, Enum.at(@card.activities, 0).user}, :small) %>" alt="user image" style="width:25px;position:relative;top:-2px;">
+          <% else %>
+            <img class="img-circle" src="/images/pp_2.png" alt="user image" style="width:25px;">
+          <% end %>
+        0/<%=length(@card.activities)%>
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+        <% end %>
+      </div>
+
+    </div>
+  </div>

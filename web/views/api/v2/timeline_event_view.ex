@@ -12,7 +12,7 @@ defmodule CercleApi.APIV2.TimelineEventView do
   def render("timeline_event.json", %{timeline_event: timeline_event}) do
     %{id: timeline_event.id,
       event_name: timeline_event.event_name,
-      opportunity_id: timeline_event.opportunity_id,
+      card_id: timeline_event.card_id,
       contact_id: timeline_event.contact_id,
       content: timeline_event.content}
   end
@@ -38,7 +38,7 @@ defmodule CercleApi.APIV2.TimelineEventView do
       id: timeline_event.id,
       profile_image_url: profile_url,
       event_name: timeline_event.event_name,
-      opportunity_id: timeline_event.opportunity_id,
+      card_id: timeline_event.card_id,
       contact_id: timeline_event.contact_id,
       content: timeline_event.content,
       user_name: user_name,
@@ -48,8 +48,8 @@ defmodule CercleApi.APIV2.TimelineEventView do
   end
 
   defp main_contact_name(event) do
-    (event && event.opportunity &&
-      event.opportunity.main_contact &&
-      event.opportunity.main_contact.name) || ""
+    (event && event.card &&
+      event.card.main_contact &&
+      event.card.main_contact.name) || ""
   end
 end

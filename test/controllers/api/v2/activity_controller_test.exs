@@ -24,14 +24,12 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
   end
   test "index/2 responds with start_in 15 minutes activities", state do
     activity = insert(:activity, is_done: false, due_date: Timex.shift(Timex.now(), minutes: 10))
-    activity1 = insert(:activity, is_done: false, due_date: Timex.shift(Timex.now(), minutes: 120))
+    insert(:activity, is_done: false, due_date: Timex.shift(Timex.now(), minutes: 120))
 
     conn = get state[:conn], "/api/v2/activity", start_in: 15
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.ActivityView, "list.json",
-      %{
-        activities: [activity]
-      }
+      %{ activities: [activity] }
     )
   end
 
@@ -50,27 +48,23 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
 
   test "index/2 responds with all done activities", state do
     activity = insert(:activity, is_done: true)
-    activity1 = insert(:activity, is_done: false)
+    insert(:activity, is_done: false)
 
     conn = get state[:conn], "/api/v2/activity", is_done: true
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.ActivityView, "list.json",
-      %{
-        activities: [activity]
-      }
+      %{ activities: [activity] }
     )
   end
 
   test "index/2 responds without all done activities", state do
-    activity = insert(:activity, is_done: true)
+    insert(:activity, is_done: true)
     activity1 = insert(:activity, is_done: false)
 
     conn = get state[:conn], "/api/v2/activity", is_done: false
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.ActivityView, "list.json",
-      %{
-        activities: [activity1]
-      }
+      %{ activities: [activity1] }
     )
   end
 
@@ -81,7 +75,7 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
       activity: %{ "company_id" => 1, "contact_id" => 7,
                    "current_user_time_zone" => "Europe",
                    "due_date" => "2017-04-19T10:45:14.609Z",
-                   "opportunity_id" => 59,
+                   "card_id" => 59,
                    "title" => "Call"}
 
     assert_receive %Phoenix.Socket.Broadcast{

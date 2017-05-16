@@ -1,7 +1,7 @@
 defmodule CercleApi.BoardController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User, Contact, Organization, Opportunity, TimelineEvent, Board, Company}
+  alias CercleApi.{User, Contact, Organization, Card, TimelineEvent, Board, Company}
 
   require Logger
 
@@ -40,7 +40,7 @@ defmodule CercleApi.BoardController do
     company_id = conn.assigns[:current_user].company_id
     company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
 
-    query_cards = from p in Opportunity,
+    query_cards = from p in Card,
         where: p.company_id == ^company_id,
         where: p.board_id == ^board_id,
         where: p.status == 0,

@@ -3,11 +3,10 @@ defmodule CercleApi.TimelineEvent do
 
   @derive {Poison.Encoder, only: [
               :id, :event_name, :content, :metadata,
-              :company_id, :contact_id, :user_id, :opportunity_id, :inserted_at,
-              :user
+              :company_id, :contact_id, :user_id, :card_id, :inserted_at, :user
             ]}
   schema "timeline_events" do
-    belongs_to :opportunity, CercleApi.Opportunity
+    belongs_to :card, CercleApi.Card
     belongs_to :contact, CercleApi.Contact
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
@@ -26,15 +25,15 @@ defmodule CercleApi.TimelineEvent do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, [
-          :content, :event_name, :opportunity_id, :user_id,
+          :content, :event_name, :card_id, :user_id,
           :company_id, :metadata, :contact_id
         ])
-    |> validate_required([:content, :event_name, :opportunity_id])
+    |> validate_required([:content, :event_name, :card_id])
   end
 
   def recent(board, limit \\ 10) do
     query = from e in __MODULE__,
-      join: o in assoc(e, :opportunity),
+      join: o in assoc(e, :card),
       where: o.board_id == ^board.id,
       select: e,
       limit: ^limit,

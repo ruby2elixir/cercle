@@ -36,7 +36,7 @@
 
                   <%= for card <- @cards do %>
                       <%=if card.board_column_id == col.id do %>
-                        <%= render "_opportunity.html", opportunity: card %>
+                        <%= render "_card.html", card: card %>
                       <%=end%>
                   <%end%>
                 </div>
@@ -78,7 +78,7 @@
             keep-alive
             v-bind:is="contactView"
             :contact_id.sync="contact.id"
-            :opportunity_id.sync="opportunity.id"
+            :card_id.sync="card.id"
             >
 
           </component>

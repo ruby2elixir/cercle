@@ -20,7 +20,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   end
 
   test "POST create/2", state do
-    opportunity = insert(:opportunity, user: state[:user])
+    card = insert(:card, user: state[:user])
     contact = insert(:contact, user: state[:user])
     response = state[:conn]
     |> post(
@@ -28,12 +28,11 @@ defmodule CercleApi.APIV2.TimelineEventTest do
     timeline_event: %{"content" => "Test Content",
                       "event_name" => "comment",
                       "contact_id" => contact.id,
-                      "opportunity_id" => opportunity.id}
+                      "card_id" => card.id}
     )
     |> json_response(201)
 
-    [event|_] = Repo.all(TimelineEvent)
-
+    event = Repo.one(from x in TimelineEvent, order_by: [asc: x.id], limit: 1)
     assert response == render_json(
       CercleApi.APIV2.TimelineEventView,
       "show.json", timeline_event: event
@@ -41,7 +40,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   end
 
   test "PUT update/2", state do
-    te = Repo.preload(insert(:timeline_event, user: state[:user]), [:opportunity])
+    te = Repo.preload(insert(:timeline_event, user: state[:user]), [:card])
     response = state[:conn]
     |> put(timeline_event_path(state[:conn], :update, te),
     timeline_event: %{"content" => "Test Content1" }
@@ -55,18 +54,18 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   end
 
   test "delete event", state do
-    te = Repo.preload(insert(:timeline_event, user: state[:user]), [:opportunity])
+    te = Repo.preload(insert(:timeline_event, user: state[:user]), [:card])
     event_id = te.id
-    opportunity_channel = "opportunities:#{te.opportunity_id}"
-    CercleApi.Endpoint.subscribe(opportunity_channel)
+    card_channel = "cards:#{te.card_id}"
+    CercleApi.Endpoint.subscribe(card_channel)
     response = state[:conn]
-    |> delete(timeline_event_path(state[:conn], :delete, te))
+    |> delete(timeline_event_path(state[:conn], :delete, event_id))
     |> json_response(200)
 
     assert_receive %Phoenix.Socket.Broadcast{
       event: "timeline_event:deleted", payload: %{"id" => event_id}
      }
-    CercleApi.Endpoint.unsubscribe(opportunity_channel)
+    CercleApi.Endpoint.unsubscribe(card_channel)
 
     assert Repo.get(TimelineEvent, event_id) == nil
     assert response == %{"status" => 200}

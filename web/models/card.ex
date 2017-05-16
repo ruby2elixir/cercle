@@ -1,4 +1,7 @@
-defmodule CercleApi.Opportunity do
+defmodule CercleApi.Card do
+  @moduledoc """
+  Card model.
+  """
   use CercleApi.Web, :model
 
   @derive {Poison.Encoder, only: [
@@ -6,7 +9,7 @@ defmodule CercleApi.Opportunity do
               :board_id, :board_column_id
             ]}
 
-  schema "opportunities" do
+  schema "cards" do
     field :name, :string
     field :description, :string
     field :status, :integer, default: 0 #### 0 OPEN, 1 CLOSED
@@ -18,9 +21,9 @@ defmodule CercleApi.Opportunity do
     belongs_to :board_column, CercleApi.BoardColumn
     has_many :activities, CercleApi.Activity
     has_many :timeline_event, CercleApi.TimelineEvent,
-      foreign_key: :opportunity_id
-    has_many :attachments, CercleApi.OpportunityAttachment,
-      foreign_key: :opportunity_id, on_delete: :delete_all
+      foreign_key: :card_id
+    has_many :attachments, CercleApi.CardAttachment,
+      foreign_key: :card_id, on_delete: :delete_all
     timestamps
   end
 
@@ -39,13 +42,13 @@ defmodule CercleApi.Opportunity do
     |> validate_required([:main_contact_id, :user_id, :company_id])
   end
 
-  def contacts(opportunity) do
-    opportunity_contacts = from contact in CercleApi.Contact,
-      where: contact.id in ^opportunity.contact_ids
-    CercleApi.Repo.all(opportunity_contacts)
+  def contacts(card) do
+    card_contacts = from contact in CercleApi.Contact,
+      where: contact.id in ^card.contact_ids
+    CercleApi.Repo.all(card_contacts)
   end
 
-  def preload_data(query \\ %CercleApi.Opportunity{}) do
+  def preload_data(query \\ %CercleApi.Card{}) do
     comments_query = from c in CercleApi.TimelineEvent,
       order_by: [desc: c.inserted_at],
       preload: :user
@@ -58,7 +61,7 @@ defmodule CercleApi.Opportunity do
   end
 end
 
-defimpl Poison.Encoder, for: CercleApi.Opportunity do
+defimpl Poison.Encoder, for: CercleApi.Card do
   def encode(model, options) do
     model
     |> Map.take(

@@ -1,6 +1,6 @@
-defmodule CercleApi.OpportunityAttachmentFile do
+defmodule CercleApi.CardAttachmentFile do
   @moduledoc """
-  Upload Opportunity Attachments
+  Upload Card Attachments
   """
 
   use Arc.Definition
@@ -35,7 +35,7 @@ defmodule CercleApi.OpportunityAttachmentFile do
 
   # # Override the storage directory:
   def storage_dir(version, {file, scope}) do
-    "uploads/opportunities/#{scope.opportunity_id}/attachments/#{scope.id}"
+    "uploads/opportunities/#{scope.card_id}/attachments/#{scope.id}"
   end
 
   # Provide a default URL if there hasn't been a file uploaded
