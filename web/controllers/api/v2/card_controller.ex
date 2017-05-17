@@ -13,6 +13,19 @@ defmodule CercleApi.APIV2.CardController do
   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
+  def index(conn, %{"contact_id" => contact_id, "archived" => archived}) do
+    current_user = Guardian.Plug.current_resource(conn)
+    contact = Repo.get_by!(Contact, id: contact_id, user_id: current_user.id)
+
+    if archived == "true" do
+      cards = Contact.all_cards(contact)
+    else
+      cards = Contact.involved_in_cards(contact)
+    end
+
+    render(conn, "index.json", cards: cards)
+  end
+
   def show(conn, %{"id" => id}) do
     card = Card
     |> Card.preload_data
@@ -49,11 +62,13 @@ defmodule CercleApi.APIV2.CardController do
     case Repo.insert(changeset) do
       {:ok, card} ->
         channel = "contacts:"  <> to_string(contact.id)
+        card = Repo.preload(card, [:board_column, board: [:board_columns]])
         CercleApi.Endpoint.broadcast!(
           channel, "card:created", %{
-            "card" => card
+            "card" => CercleApi.APIV2.ContactView.card_json(card)
           }
         )
+
         CardService.insert(card)
         conn
         |> put_status(:created)
@@ -75,21 +90,16 @@ defmodule CercleApi.APIV2.CardController do
         board = CercleApi.Board
         |> Repo.get!(card.board_id)
         |> Repo.preload(:board_columns)
-
+        card = Repo.preload(card, [:board_column, board: [:board_columns]])
         channel = "cards:"  <> to_string(card.id)
         CercleApi.Endpoint.broadcast!(
           channel, "card:updated", %{
-            "card" => card,
+            "card" => CercleApi.APIV2.ContactView.card_json(card),
             "card_contacts" => card_contacts,
             "board" => board,
             "board_columns" => board.board_columns
           }
         )
-        if card.status == 1 do
-          CercleApi.Endpoint.broadcast!(
-            channel, "card:closed", %{"card" => card}
-          )
-        end
         CardService.update(card)
         render(conn, "show.json", card: card)
       {:error, changeset} ->

@@ -10,8 +10,7 @@ defmodule CercleApi.APIV2.CardView do
   end
 
   def render("card.json", %{card: card}) do
-    %{id: card.id,
-      company_id: card.company_id}
+    card_json(card)
   end
 
   def render("full_card.json",
@@ -27,5 +26,19 @@ defmodule CercleApi.APIV2.CardView do
       board_columns: board.board_columns,
       attachments: attachments
       }
+  end
+
+  def card_json(card) do
+    %{
+      id: card.id,
+      company_id: card.company_id,
+      name: card.name,
+      description: card.description,
+      status: card.status,
+      contact_ids: card.contact_ids,
+      user_id: card.user_id,
+      board: card.board,
+      board_column: card.board_column
+    }
   end
 end

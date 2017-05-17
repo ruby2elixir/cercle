@@ -62,6 +62,14 @@ defmodule CercleApi.Contact do
     CercleApi.Repo.all(query)
   end
 
+  def all_cards(contact) do
+    query = from card in CercleApi.Card,
+      where: fragment("? = ANY (?)", ^contact.id, card.contact_ids),
+      order_by: [desc: card.inserted_at],
+      preload: [:board_column, board: [:board_columns]]
+    CercleApi.Repo.all(query)
+  end
+
   def activities_in_progress(contact) do
     query = from activity in CercleApi.Activity,
       where: activity.contact_id == ^contact.id,
