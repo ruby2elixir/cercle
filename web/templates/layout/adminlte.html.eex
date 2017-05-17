@@ -41,7 +41,7 @@
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav">
     <notification id="notification-app"></notification>
-    <div class="wrapper">
+    <div class="wrapper wrapper_<%= wrapper_css_class @conn %>">
 
       <header class="main-header">
 

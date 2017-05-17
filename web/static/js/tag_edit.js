@@ -8,7 +8,7 @@ $(function() {
 
   $('#tag-edit-table a.delete-link').click(function(e){
     e.preventDefault();
-    var result = confirm("Want to delete?");
+    var result = confirm('Want to delete?');
     if (result) {
       var element = $(this);
       var url = '/api/v2/tag/' + $(this).data('id');
