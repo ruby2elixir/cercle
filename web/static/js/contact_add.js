@@ -1,6 +1,6 @@
 $(function() {
   var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
-  $('#referral-form').submit(function(e){
+  $('.referral-form').submit(function(e){
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
     if($('#contact_name').val() !== ''){
@@ -15,19 +15,19 @@ $(function() {
         processData: false,
         success: function(result){
           var contact_id = result.data.id;
-          if ($('#add_to_opportunity')[0].checked){
-            var url = '/api/v2/opportunity/';
+          if ($('#add_to_card')[0].checked){
+            var url = '/api/v2/card/';
             $.ajax( url , {
               method: 'POST',
               headers: {'Authorization': 'Bearer '+jwtToken},
-              data: { 
-                'opportunity[main_contact_id]': contact_id ,
-                'opportunity[contact_ids]': [contact_id],
-                'opportunity[user_id]': user_id, 
-                'opportunity[company_id]': company_id, 
-                'opportunity[board_id]': board_column.split('--')[0],
-                'opportunity[board_column_id]': board_column.split('--')[1],
-                'opportunity[name]': ''
+              data: {
+                'card[main_contact_id]': contact_id ,
+                'card[contact_ids]': [contact_id],
+                'card[user_id]': user_id,
+                'card[company_id]': company_id,
+                'card[board_id]': board_column.split('--')[0],
+                'card[board_column_id]': board_column.split('--')[1],
+                'card[name]': ''
               },
               complete: function(xhr, status){
                 window.location = '/contact/' + contact_id;
@@ -39,12 +39,8 @@ $(function() {
         }
       });
     }else{
-      $(this).find('input[type=submit]').removeAttr('disabled');  
+      $(this).find('input[type=submit]').removeAttr('disabled');
       alert('Name can\'t be blank');
     }
   });
 });
-
-
-
-

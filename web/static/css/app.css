@@ -60,7 +60,12 @@ body {
 }
 .wrapper {
   height: 100vh;
+  overflow: auto !important;
 }
+.wrapper_board {
+    overflow: hidden !important;
+}
+
 body, form, ul, table {
   margin-top: 0px;
   margin-bottom: 0px;
