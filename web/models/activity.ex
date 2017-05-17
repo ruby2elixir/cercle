@@ -30,7 +30,7 @@ defmodule CercleApi.Activity do
     |> cast(params, [
           :user_id, :contact_id, :company_id, :due_date, :is_done,
           :title, :card_id])
-    |> validate_required([:user_id, :contact_id, :company_id])
+    |> validate_required([:user_id, :contact_id, :card_id, :company_id])
   end
 
   def by_status(query, status \\ false) do
