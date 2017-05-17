@@ -11,17 +11,18 @@
             {{ event.user && event.user.user_name }}
           </span>
           <span class="description"> {{event.event_name}} </span>
-          <span class="actions" v-if="canManage(event)">
-            <button @click="deleteEvent(event)" class="timeline_event_delete btn btn-danger btn-xs">
-              <i class="fa fa-trash-o" aria-hidden="true"></i>
-            </button>
-          </span>
         </div>
         <div class="well">
           <markdown-text-edit v-model="event.content" v-on:input="updateEvent(event)" ></markdown-text-edit>
         </div>
         <div  class="description" style="color:grey;">
           {{timestamp(event.inserted_at)}}
+          <span class="" v-if="canManage(event)">
+            - 
+            <span @click="deleteEvent(event)" class="timeline_event_delete">
+              Delete
+            </span>
+          </span>
         </div>
 
       </div>
@@ -58,8 +59,9 @@
   </script>
 <style lang="sass">
   .timeline_event_delete {
-  float: right;
-  margin-right: 14px;
+  margin-left: 0px;
+  text-decoration: underline;
+  cursor: pointer;
   }
 
   .timeline_event_edit {
