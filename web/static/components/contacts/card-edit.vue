@@ -16,6 +16,8 @@
       </div>
       <br />
       <button type="button" v-show="item.status === 0" class="btn btn-default archive " v-on:click="archiveCard">ARCHIVE</button>
+      <button type="button" v-show="item.status === 1" class="btn btn-default archive " v-on:click="unarchiveCard">UNARCHIVE</button>
+      <br />
       <br />
       <div class="text-center" style="margin-top:10px;color:grey;">
         <a class="show-more" v-show="!showMoreOptions" @click="showMoreOptions=true" style="text-decoration:none;">+More options</a>
@@ -225,7 +227,10 @@
         let url = '/api/v2/card/' + this.item.id;
         this.$http.put(url, { card: { status: '1'} });
       },
-
+      unarchiveCard() {
+        let url = '/api/v2/card/' + this.item.id;
+        this.$http.put(url, { card: { status: '0'} });
+      },
       updateCard(){
         if (this.allowUpdate) {
           let url = '/api/v2/card/' + this.item.id;

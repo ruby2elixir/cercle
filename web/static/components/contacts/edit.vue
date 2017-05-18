@@ -38,9 +38,8 @@
               </button>
 
               <button type="button" class="btn btn-link" v-on:click="showArchivedCard=!showArchivedCard">
-               <i class="fa fa-fw fa-eye"></i>
-               <span v-if="!showArchivedCard">Show Archived card</span>
-               <span v-if="showArchivedCard">Hide Archived card</span>
+              <i class="fa fa-fw " :class="[showArchivedCard ? 'fa-eye-slash' : 'fa-eye']"></i>
+               <span>{{showArchivedCard ? 'Hide' : 'Show'}} Archived card</span>
               </button>
 
               <div v-show="showAddCard">
@@ -129,7 +128,10 @@ export default {
   },
   methods: {
     cardName(card) {
-      return card.board.name + ' - ' + card.board_column.name;
+      let name = [];
+      if (card.board) { name.push(card.board.name); }
+      if (card.board_column) { name.push(card.board_column.name); }
+      return name.join(' - ');
     },
     changeCard(card) {
       this.browseCards = false;
