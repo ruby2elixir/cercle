@@ -15,7 +15,7 @@ defmodule CercleApi.APIV2.CardController do
 
   def index(conn, %{"contact_id" => contact_id, "archived" => archived}) do
     current_user = Guardian.Plug.current_resource(conn)
-    contact = Repo.get_by!(Contact, id: contact_id, user_id: current_user.id)
+    contact = Repo.get_by!(Contact, id: contact_id, company_id: current_user.company_id)
 
     if archived == "true" do
       cards = Contact.all_cards(contact)
