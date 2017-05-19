@@ -6,13 +6,13 @@
           <name-input-modal :first-name="contact.first_name" :last-name="contact.last_name" v-on:input="nameInput"/>
         </h3>
             <div>
-              <input-modal v-model="contact.job_title" v-on:input="updateContact" placeholder="Job Title" />
+              <input-modal v-model="contact.job_title" v-on:input="updateContact" placeholder="Job Title" label="Job Title" />
             </div>
             <div>
-            <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Email" />
+            <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Email" label="Email" />
             </div>
             <div>
-            <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone" style="width:300px;"></inline-edit>
+            <input-modal v-model="contact.phone" v-on:input="updateContact" placeholder="Phone" label="Phone" />
             </div>
           <div class="" style="padding-bottom:4px;">
            <div class="contact-tags-box">

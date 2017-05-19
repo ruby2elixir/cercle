@@ -5,12 +5,19 @@
     </span>
 
     <div v-show="editMode" class='input-modal'>
-      <a class='close' v-on:click='cancel'>X</a>
-      <div class="form-group">
-        <input type='text' v-model='v' class='form-control' :placeholder='placeholder' />
+      <div class='modal-header clearfix'>
+        <span v-if="label">Change {{label}}</span>
+        <a class='close pull-right' v-on:click='cancel'>×</a>
       </div>
-      <div>
-        <button class='btn btn-primary btn-block' @click='save'>Save</button>
+
+      <div class='modal-body'>
+        <div class="form-group">
+          <label v-if="label">{{label}}</label>
+          <input type='text' v-model='v' class='form-control' :placeholder='placeholder' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" />
+        </div>
+        <div>
+          <button class='btn btn-primary btn-block' @click='save'>Save</button>
+        </div>
       </div>
     </div>
   </span>
@@ -18,7 +25,7 @@
 
 <script>
 export default {
-  props: ['value', 'placeholder'],
+  props: ['value', 'placeholder', 'label'],
   data() {
     return {
       editMode: false,

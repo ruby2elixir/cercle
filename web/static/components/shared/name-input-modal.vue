@@ -5,19 +5,23 @@
     </span>
 
     <div v-show="editMode" class='input-modal'>
-      <a class='close' v-on:click='cancel'>X</a>
-      <div class="form-group">
-        <div class="row">
-          <div class='col-sm-6'>
-            <input type='text' v-model='fname' class='form-control' placeholder='First name' />
-          </div>
-          <div class='col-sm-6'>
-            <input type='text' v-model='lname' class='form-control' placeholder='Last name' />
-          </div>
-        </div>
+      <div class='modal-header clearfix'>
+        Change Name
+        <a class='close pull-right' v-on:click='cancel'>×</a>
       </div>
-      <div>
-        <button class='btn btn-primary btn-block' @click='save'>Save</button>
+
+      <div class='modal-body'>
+        <div class="form-group">
+          <label>First name</label>
+          <input type='text' v-model='fname' class='form-control' placeholder='First name' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" />
+        </div>
+        <div class="form-group">
+          <label>Last name</label>
+          <input type='text' v-model='lname' class='form-control' placeholder='Last name' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" />
+        </div>
+        <div>
+          <button class='btn btn-primary btn-block' @click='save'>Save</button>
+        </div>
       </div>
     </div>
   </span>
