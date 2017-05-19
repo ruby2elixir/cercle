@@ -29,7 +29,8 @@ defmodule CercleApi.Factory do
 
   def contact_factory do
     %Contact{
-      name: "TestContact1",
+      first_name: "TestContact",
+      last_name: "1",
       company: build(:company),
       user: build(:user),
       organization: build(:organization)
