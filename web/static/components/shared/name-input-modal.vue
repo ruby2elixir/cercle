@@ -13,7 +13,7 @@
       <div class='modal-body'>
         <div class="form-group">
           <label>First name</label>
-          <input type='text' v-model='fname' class='form-control' placeholder='First name' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" />
+          <input type='text' v-model='fname' class='form-control' placeholder='First name' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" ref='fname' />
         </div>
         <div class="form-group">
           <label>Last name</label>
@@ -48,6 +48,10 @@ export default {
   methods: {
     showModal: function() {
       this.editMode = true;
+      var vue = this;
+      Vue.nextTick(function () {
+        vue.$refs.fname.focus();
+      });
     },
     save: function() {
       this.$emit('input', {firstName: this.fname, lastName: this.lname});

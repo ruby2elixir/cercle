@@ -13,7 +13,7 @@
       <div class='modal-body'>
         <div class="form-group">
           <label v-if="label">{{label}}</label>
-          <input type='text' v-model='v' class='form-control' :placeholder='placeholder' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" />
+          <input type='text' v-model='v' class='form-control' :placeholder='placeholder' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" ref='input' />
         </div>
         <div>
           <button class='btn btn-primary btn-block' @click='save'>Save</button>
@@ -40,6 +40,10 @@ export default {
   methods: {
     showModal: function() {
       this.editMode = true;
+      var vue = this;
+      Vue.nextTick(function () {
+        vue.$refs.input.focus();
+      });
     },
     save: function() {
       this.$emit('input', this.v);
