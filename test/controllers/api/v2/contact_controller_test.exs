@@ -44,6 +44,13 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     assert json_response(conn, 201)["data"]["id"]
   end
 
+  test "create contact with name instead of fist_name and last_name", %{conn: conn} do
+    conn = post conn, "/api/v2/contact", contact: %{name: "John Doe"}
+    assert json_response(conn, 201)["data"]["id"]
+    assert json_response(conn, 201)["data"]["first_name"]
+    assert json_response(conn, 201)["data"]["last_name"]
+  end
+
   test "create contact with invalid params", %{conn: conn} do
     conn = post conn, "/api/v2/contact", contact: @invalid_attrs
     assert json_response(conn, 422)["errors"]["first_name"] == ["can't be blank"]
