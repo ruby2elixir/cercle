@@ -88,6 +88,7 @@
         overflow-x: auto;
         padding-bottom: 0px;
         max-height: calc(100vh - 244px);
+        min-height: 15px;
       }
       .textarea-inline-editable {
         font-weight:800;
