@@ -64,13 +64,13 @@ defmodule CercleApi.APIV2.CardControllerTest do
   end
 
   test "try to delete unauthorized Card", state do
-    card = insert(:card, user: state[:user])
+    card = insert(:card, user: state[:user], contact_ids: [state[:contact].id])
     conn = delete state[:conn], "/api/v2/card/#{card.id}"
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to update authorized Card", state do
-    card = insert(:card, user: state[:user], company: state[:company])
+    card = insert(:card, user: state[:user], contact_ids: [state[:contact].id], company: state[:company])
     conn = put state[:conn], "/api/v2/card/#{card.id}", card: %{name: "Modified Card"}
     assert json_response(conn, 200)["data"]["id"]
   end

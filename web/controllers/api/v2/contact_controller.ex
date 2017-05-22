@@ -55,9 +55,9 @@ defmodule CercleApi.APIV2.ContactController do
       {:ok, contact} ->
         contact = contact
         |> Repo.preload(
-          [:organization, :tags, :cards,
-           company: [:users, boards: [:board_columns]]]
+          [:organization, :tags, company: [:users, boards: [:board_columns]]]
         )
+        |> Contact.preload_cards
         ContactService.insert(contact)
         conn
         |> put_status(:created)
@@ -76,6 +76,7 @@ defmodule CercleApi.APIV2.ContactController do
     contacts = query
     |> Contact.preload_data
     |> Repo.all
+    |> Contact.preload_cards
     render(conn, "index.json", contacts: contacts)
   end
 
@@ -83,6 +84,7 @@ defmodule CercleApi.APIV2.ContactController do
     contact = Contact
     |> Contact.preload_data
     |> Repo.get(id)
+    |> Contact.preload_cards
 
     render(conn, "full_contact.json", contact: contact)
   end
@@ -194,11 +196,7 @@ defmodule CercleApi.APIV2.ContactController do
           CardService.delete(op)
 
         _ ->
-          if op.main_contact_id == contact_id do
-            changeset = Card.changeset(op, %{contact_ids: contact_ids, main_contact_id: Enum.at(contact_ids, 0)})
-          else
-            changeset = Card.changeset(op, %{contact_ids: contact_ids})
-          end
+          changeset = Card.changeset(op, %{contact_ids: contact_ids})
           Repo.update(changeset)
       end
     end

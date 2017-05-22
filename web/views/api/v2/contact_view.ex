@@ -24,7 +24,6 @@ defmodule CercleApi.APIV2.ContactView do
     }
   end
 
-  #Enum.each(contacts_data, &Repo.insert!(&1))
   def render("contact.json", %{contact: contact}) do
     %{
       id: contact.id,

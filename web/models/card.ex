@@ -13,7 +13,8 @@ defmodule CercleApi.Card do
     field :name, :string
     field :description, :string
     field :status, :integer, default: 0 #### 0 OPEN, 1 CLOSED
-    belongs_to :main_contact, CercleApi.Contact
+    field :contacts, {:array, :map}, virtual: true
+    field :main_contact, {:map, CercleApi.Contact}, virtual: true
     field :contact_ids, {:array, :integer}
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
@@ -35,17 +36,29 @@ defmodule CercleApi.Card do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, [
-          :main_contact_id, :user_id, :company_id, :name, :status,
-          :contact_ids, :board_id, :board_column_id, :description
-        ])
-    |> validate_required([:main_contact_id, :user_id, :company_id])
+    |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids, :board_id, :board_column_id, :description])
+    |> put_change(:contact_ids, Enum.uniq(
+          Enum.filter(
+          ([params[:main_contact_id]] ++ (params[:contact_ids] || [])),
+            fn(x) -> !is_nil(x) end)
+        ))
+    |> validate_required([:contact_ids, :user_id, :company_id])
   end
 
   def contacts(card) do
     card_contacts = from contact in CercleApi.Contact,
       where: contact.id in ^card.contact_ids
     CercleApi.Repo.all(card_contacts)
+  end
+
+  def get_main_contact(card) do
+    case List.first(card.contact_ids || []) do
+        nil -> nil
+      contact_id ->
+        CercleApi.Contact
+        |> CercleApi.Repo.get(contact_id)
+        |> CercleApi.Repo.preload([:organization])
+    end
   end
 
   def preload_data(query \\ %CercleApi.Card{}) do
@@ -58,6 +71,22 @@ defmodule CercleApi.Card do
       activities: [:contact, :user],
       timeline_event: ^comments_query
     ]
+  end
+
+  def preload_main_contact(cards) when is_list(cards) do
+    Enum.map(cards, &preload_main_contact(&1))
+  end
+
+  def preload_main_contact(card \\ %CercleApi.Card{}) do
+    Map.merge(card, %{main_contact: __MODULE__.get_main_contact(card)})
+  end
+
+  def preload_contacts(cards) when is_list(cards) do
+    Enum.map(cards, &preload_contacts(&1))
+  end
+
+  def preload_contacts(card \\ %CercleApi.Card{}) do
+    Map.merge(card, %{contacts: __MODULE__.contacts(card)})
   end
 end
 

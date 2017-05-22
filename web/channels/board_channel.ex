@@ -21,7 +21,7 @@ defmodule CercleApi.BoardChannel do
 
     recent_activities = board
     |> TimelineEvent.recent
-    |> Repo.preload([:user, card: :main_contact])
+    |> Repo.preload([:user, :card])
 
     push socket, "activities", %{
       recent: CercleApi.APIV2.TimelineEventView.render(
