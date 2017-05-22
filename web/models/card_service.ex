@@ -19,7 +19,8 @@ defmodule CercleApi.CardService do
       contacts: Enum.map(Card.contacts(card), fn(c) ->
         %{
           id: c.id,
-          name: c.name
+          first_name: c.first_name,
+          last_name: c.last_name
       }end)
     }
   end

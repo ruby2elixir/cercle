@@ -50,6 +50,6 @@ defmodule CercleApi.APIV2.TimelineEventView do
   defp main_contact_name(event) do
     (event && event.card &&
       event.card.main_contact &&
-      event.card.main_contact.name) || ""
+      Enum.join([event.card.main_contact.first_name, event.card.main_contact.last_name], " ")) || ""
   end
 end

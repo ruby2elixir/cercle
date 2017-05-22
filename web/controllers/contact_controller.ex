@@ -22,7 +22,7 @@ defmodule CercleApi.ContactController do
         preload: [:tags],
         left_join: ac in ContactTag, on: a.id == ac.contact_id,
         left_join: c in Tag, on: c.id == ac.tag_id,
-        where: like(c.name, ^tag_name)
+        where: like(c.first_name, ^tag_name) or like(c.last_name, ^tag_name)
         )
       leads_pending = contacts  |> Repo.preload([:organization, :tags, timeline_event: from(TimelineEvent, order_by: [desc: :inserted_at])])
     else
@@ -150,7 +150,7 @@ defmodule CercleApi.ContactController do
       headers = table.headings
       first_row = Enum.at(table.body, 0)
       top_five_rows = Enum.take(table.body, 5)
-      contact_fields = ["name", "email", "description", "phone", "job_title"]
+      contact_fields = ["first_name", "last_name", "email", "description", "phone", "job_title"]
       organization_fields = ["name", "website", "description"]
       json conn, %{headers: headers, first_row: first_row, top_five_rows: top_five_rows, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file}
     end
@@ -191,7 +191,8 @@ defmodule CercleApi.ContactController do
       items = for i <- lower..upper do
         row_data = %{}
         selected_row = Enum.at(table, i)
-        contact_data = %{"name" => selected_row[mapping["contact"]["name"]],
+        contact_data = %{"first_name" => selected_row[mapping["contact"]["first_name"]],
+                         "last_name" => selected_row[mapping["contact"]["last_name"]],
                          "email" => selected_row[mapping["contact"]["email"]],
                          "phone" => selected_row[mapping["contact"]["phone"]],
                          "description" => selected_row[mapping["contact"]["description"]],

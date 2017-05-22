@@ -12,7 +12,7 @@
         <th>Last Updated</th>
       </tr>
       <tr v-for="contact in contacts" v-on:click="contactShow(contact)">
-        <td>{{contact.name}}</td>
+        <td>{{contact.first_name}} {{contact.last_name}}</td>
         <td>{{contact.job_title}}</td>
         <td>{{contact.organization && contact.organization.name}}</td>
         <td>{{contact.email}}</td>

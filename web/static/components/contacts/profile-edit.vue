@@ -3,19 +3,18 @@
       <div class="">
         <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;font-weight:bold;color:rgb(99,99,99);">
           <i class="fa fa-user" style="color:#d8d8d8;"></i>
-          <inline-edit v-model.lazy="contact.name" v-on:input="updateContact" placeholder="Name" style="width:300px;"></inline-edit>
+          <name-input-modal :first-name="contact.first_name" :last-name="contact.last_name" v-on:input="nameInput"/>
         </h3>
             <div>
-              <inline-edit v-model="contact.job_title" v-on:input="updateContact"  placeholder="Job Title" style="width:300px;" ></inline-edit>
+              <input-modal v-model="contact.job_title" v-on:input="updateContact" placeholder="Job Title" label="Job Title" />
             </div>
             <div>
-            <inline-edit v-model="contact.email" v-on:input="updateContact"  placeholder="Email" style="width:300px;" ></inline-edit>
+            <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Email" label="Email" />
             </div>
             <div>
-            <inline-edit v-model="contact.phone" v-on:input="updateContact" placeholder="Phone" style="width:300px;"></inline-edit>
+            <input-modal v-model="contact.phone" v-on:input="updateContact" placeholder="Phone" label="Phone" />
             </div>
           <div class="" style="padding-bottom:4px;">
-
            <div class="contact-tags-box">
              <button type="button" class="btn btn-box-tool btn-default btn-sm" v-for="(tag, index) in tags" style="margin: 2px;" v-on:click="removeTag(index);">
                {{tag.name}}
@@ -56,6 +55,8 @@ import {Socket, Presence} from 'phoenix';
 
 import InlineEdit from '../inline-common-edit.vue';
 import InlineTextEdit from '../inline-textedit.vue';
+import nameInputModal from '../shared/name-input-modal.vue';
+import inputModal from '../shared/input-modal.vue';
 
 export default {
   props: [
@@ -121,14 +122,20 @@ export default {
     updateContact: function(){
       var url = '/api/v2/contact/' + this.contact.id;
       this.$http.put(url, { contact: this.contact } );
+    },
+    nameInput: function(data) {
+      this.contact.first_name = data.firstName;
+      this.contact.last_name = data.lastName;
+      this.updateContact();
     }
   },
   components: {
     'inline-edit': InlineEdit,
     'inline-text-edit': InlineTextEdit,
     'v-select': vSelect.VueSelect,
-    'modal': VueStrap.modal
-
+    'modal': VueStrap.modal,
+    'name-input-modal': nameInputModal,
+    'input-modal': inputModal
   }
 };
 </script>

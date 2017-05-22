@@ -6,7 +6,7 @@ defmodule CercleApi.Contact do
   alias CercleApi.Contact
 
    @derive {Poison.Encoder, only: [
-               :id, :name, :email, :phone, :job_title, :description,
+               :id, :first_name, :last_name, :email, :phone, :job_title, :description,
                :company_id, :updated_at
              ]}
 
@@ -14,7 +14,8 @@ defmodule CercleApi.Contact do
     belongs_to :user, CercleApi.User
     belongs_to :organization, CercleApi.Organization
     belongs_to :company, CercleApi.Company
-    field :name, :string
+    field :first_name, :string
+    field :last_name, :string
     field :email, :string
     field :phone, :string
     field :description, :string
@@ -37,10 +38,10 @@ defmodule CercleApi.Contact do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, [
-          :company_id, :name, :data, :organization_id, :user_id,
+          :company_id, :first_name, :last_name, :data, :organization_id, :user_id,
           :email, :phone, :description, :job_title
         ])
-    |> validate_required([:company_id, :name])
+    |> validate_required([:company_id, :first_name, :last_name])
   end
 
   def card(contact) do

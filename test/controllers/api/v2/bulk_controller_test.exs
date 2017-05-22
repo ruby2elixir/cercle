@@ -19,7 +19,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
   end
 
   test "create bulk contact with contacts less than 100", %{conn: conn} do
-    items = [%{"contact" => %{"name" => "C1", "email" => "c1@test.com", "phone" => "123", "description" => "", "job_title" => ""}, "organization" => %{"name" => "org1", "website" => "test.com","description" => ""}}]
+    items = [%{"contact" => %{"first_name" => "C", "last_name" => "1", "email" => "c1@test.com", "phone" => "123", "description" => "", "job_title" => ""}, "organization" => %{"name" => "org1", "website" => "test.com","description" => ""}}]
     conn = post conn, "/api/v2/bulk_contact_create", items: items, return: false
     assert json_response(conn, 200)["contacts"]
   end
@@ -63,7 +63,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
     company = Repo.get!(Company, company_id)
     changeset = company
       |> Ecto.build_assoc(:contacts)
-      |> Contact.changeset(%{"name" => "Contact1"})
+      |> Contact.changeset(%{"first_name" => "Contact", "last_name" => "1"})
     contact_id = Repo.insert!(changeset).id
     contacts = [Integer.to_string(contact_id)]
     tag_id = Repo.insert!(%Tag{name: "Test Tag", company_id: company_id}).id
