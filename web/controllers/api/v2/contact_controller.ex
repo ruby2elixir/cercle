@@ -20,8 +20,7 @@ defmodule CercleApi.APIV2.ContactController do
     company_id  = current_user.company_id
     query = from p in Contact,
       where: p.company_id == ^company_id,
-      where: ilike(p.first_name, ^("%#{q}%")),
-      where: ilike(p.last_name, ^("%#{q}%")),
+      where: ilike(p.first_name, ^("%#{q}%")) or ilike(p.last_name, ^("%#{q}%")),
       order_by: [desc: p.updated_at]
 
     contacts = query

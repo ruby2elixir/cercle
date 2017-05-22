@@ -32,6 +32,7 @@ defmodule CercleApi.APIV2.ContactView do
       data: contact.data,
       first_name: contact.first_name,
       last_name: contact.last_name,
+      name: String.trim(Enum.join([contact.first_name, contact.last_name], " ")),
       email: contact.email,
       job_title: contact.job_title,
       phone: contact.phone,
