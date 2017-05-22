@@ -35,7 +35,7 @@
                 <div class="column" data-id="<%=col.id%>">
 
                   <%= for card <- @cards do %>
-                      <%=if card.board_column_id == col.id do %>
+                      <%=if (card.board_column_id == col.id) && card.main_contact do %>
                         <%= render "_card.html", card: card %>
                       <%=end%>
                   <%end%>
