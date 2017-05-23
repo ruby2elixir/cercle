@@ -182,19 +182,14 @@ defmodule CercleApi.APIV2.ContactController do
 
   def delete(conn, %{"id" => id}) do
     contact = Repo.get!(Contact, id)
-
-    {contact_id, _} = Integer.parse(id)
-    query = from o in Card,
-      where: fragment("? = ANY (?)", ^contact_id, o.contact_ids)
-    cards = Repo.all(query)
+    cards = Contact.cards(contact)
 
     for op <- cards do
-      contact_ids = List.delete(op.contact_ids, contact_id)
+      contact_ids = List.delete(op.contact_ids, contact.id)
       case length(contact_ids) do
         0 ->
           Repo.delete!(op)
           CardService.delete(op)
-
         _ ->
           changeset = Card.changeset(op, %{contact_ids: contact_ids})
           Repo.update(changeset)

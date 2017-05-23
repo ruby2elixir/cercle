@@ -108,6 +108,17 @@ defmodule CercleApi.Contact do
   end
 
   def full_name(contact) do
-    Enum.join([contact.first_name, contact.last_name], " ")
+    String.trim(Enum.join([contact.first_name, contact.last_name], " "))
+  end
+end
+
+defimpl Poison.Encoder, for: CercleApi.Contact do
+  def encode(model, options) do
+    model
+    |> Map.take([
+      :id, :first_name, :last_name, :email, :phone, :job_title,
+      :description, :company_id, :updated_at])
+    |> Map.put(:name, CercleApi.Contact.full_name(model))
+    |> Poison.Encoder.encode(options)
   end
 end
