@@ -37,14 +37,7 @@ defmodule CercleApi.Card do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids, :board_id, :board_column_id, :description])
-    |> put_change(:contact_ids, __MODULE__.build_contact_ids(params))
     |> validate_required([:contact_ids, :user_id, :company_id])
-  end
-
-  def build_contact_ids(params) do
-    (params[:contact_ids] || params["contact_ids"] || [])
-    |> Enum.filter(fn(x) -> !is_nil(x) end)
-    |> Enum.uniq
   end
 
   def contacts(card) do

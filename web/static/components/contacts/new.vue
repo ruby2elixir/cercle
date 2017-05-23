@@ -76,7 +76,6 @@ export default {
         method: 'POST',
         headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
         data: {
-          'card[main_contact_id]': contactId ,
           'card[contact_ids]': [contactId],
           'card[user_id]': userId,
           'card[company_id]': companyId,

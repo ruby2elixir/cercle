@@ -48,10 +48,6 @@ defmodule CercleApi.APIV2.CardController do
   def create(conn, %{"card" => card_params}) do
     current_user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, current_user.company_id)
-    contact = CercleApi.Contact
-    |> Repo.get!(card_params["main_contact_id"])
-    |> Repo.preload([:organization])
-
     board = Repo.get!(CercleApi.Board, card_params["board_id"])
 
     changeset = company
@@ -60,7 +56,7 @@ defmodule CercleApi.APIV2.CardController do
 
     case Repo.insert(changeset) do
       {:ok, card} ->
-        channel = "contacts:"  <> to_string(contact.id)
+        channel = "contacts:"  <> to_string(List.first(card.contact_ids))
         card = Repo.preload(card, [:board_column, board: [:board_columns]])
         CercleApi.Endpoint.broadcast!(
           channel, "card:created", %{

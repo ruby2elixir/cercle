@@ -106,7 +106,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
     contact = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
+    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     card = Repo.insert!(changeset)
 
     old_count = Repo.one(from p in Card, select: count("*"))
@@ -130,7 +130,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
+    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     card = Repo.insert!(changeset)
 
     attachment =  CardAttachment
@@ -162,7 +162,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "2", user_id: state[:user].id, company_id: state[:company].id})
     contact2 = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{main_contact_id: contact.id, contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
+    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
     card = Repo.insert!(changeset)
 
     assert card.contact_ids == [contact.id, contact2.id]
@@ -170,7 +170,6 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
     assert json_response(conn, 200)
 
-    # Check for the new main_contact_id for card2
     card = Repo.get(Card, card.id)
     assert card.contact_ids == [contact2.id]
   end
@@ -182,7 +181,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
+    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     card = Repo.insert!(changeset)
 
     changeset = TimelineEvent.changeset(%TimelineEvent{}, %{card_id: card.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, event_name: "test", content: "test"})
@@ -209,7 +208,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
     contact = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{main_contact_id: contact.id, contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
+    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     card = Repo.insert!(changeset)
 
     changeset = Activity.changeset(%Activity{}, %{card_id: card.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, title: "test"})
