@@ -23,6 +23,7 @@
                       :time_zone="timeZone"
                       :key="item.id"
                       :class="itemClass(item)"
+                      v-on:done="doneTask(item)"
                       v-on:contact-show="contactShow(item.contact_id)"
                       ></tr>
                   </tbody>

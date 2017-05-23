@@ -24,7 +24,6 @@ defmodule CercleApi.APIV2.ContactView do
     }
   end
 
-  #Enum.each(contacts_data, &Repo.insert!(&1))
   def render("contact.json", %{contact: contact}) do
     %{
       id: contact.id,
@@ -52,8 +51,8 @@ defmodule CercleApi.APIV2.ContactView do
       user_id: card.user_id,
       board: card.board,
       board_column: card.board_column,
-      board_id: card.board.id,
-      board_column_id: card.board_column.id
+      board_id: card.board_id,
+      board_column_id: card.board_column_id
     }
   end
 end

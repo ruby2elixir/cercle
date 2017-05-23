@@ -28,6 +28,9 @@
       'activity-item': ActivityItem
     },
     methods: {
+      doneTask(task) {
+        this.deleteItem(this.activities, task.id)
+      },
       itemClass(item) {
         if (Moment(item.due_date).isSame(new Date(), 'day')) {
           return 'today';

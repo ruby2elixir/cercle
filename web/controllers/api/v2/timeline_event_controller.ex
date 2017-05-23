@@ -28,7 +28,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
       {:ok, timeline_event} ->
         timeline_event_reload = CercleApi.TimelineEvent
         |> Repo.get!(timeline_event.id)
-        |> Repo.preload([:user, card: :main_contact])
+        |> Repo.preload([:user, :card])
         CercleApi.Endpoint.broadcast!(
           "cards:"  <> to_string(timeline_event_reload.card_id),
           "timeline_event:created", %{"event" => timeline_event_reload}
@@ -88,7 +88,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
       {:ok, timeline_event} ->
         timeline_event = CercleApi.TimelineEvent
         |> Repo.get!(timeline_event.id)
-        |> Repo.preload([:user, card: :main_contact])
+        |> Repo.preload([:user, :card])
         CercleApi.Endpoint.broadcast!(
           "cards:"  <> to_string(timeline_event.card_id),
           "timeline_event:updated", %{"event" => timeline_event}

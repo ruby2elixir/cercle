@@ -57,7 +57,6 @@ defmodule CercleApi.APIV2.CardController do
     changeset = company
     |> build_assoc(:cards)
     |> Card.changeset(card_params)
-    |> Ecto.Changeset.put_change(:contact_ids, [contact.id])
 
     case Repo.insert(changeset) do
       {:ok, card} ->

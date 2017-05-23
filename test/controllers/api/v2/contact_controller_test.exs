@@ -172,7 +172,6 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
     # Check for the new main_contact_id for card2
     card = Repo.get(Card, card.id)
-    assert card.main_contact_id == contact2.id
     assert card.contact_ids == [contact2.id]
   end
 

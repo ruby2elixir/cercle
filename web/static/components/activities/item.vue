@@ -1,7 +1,7 @@
 <template>
- <tr v-if="!item.is_done">
+ <tr>
   <td style="width:30px;">
-    <img :src="'/images/letters/' + item.contact.name.slice(0,1).toLowerCase() + '.png'" style="border-radius:14px;" />
+    <img :src="letterUrl" style="border-radius:14px;" />
   </td>
   <td style="width:150px;">
     <a v-on:click.stop="$emit('contact-show')" href='#' style="color: #565656;"> {{item.contact && item.contact.name}} </a>
@@ -27,13 +27,22 @@
           default: function() { return {}; }
         }
       },
+      computed: {
+        letterUrl: function() {
+          let letter = 'n';
+          if (this.item.contact.first_name) {
+            letter = this.item.contact.first_name.slice(0,1).toLowerCase();
+          }
+          return  '/images/letters/' + letter + '.png';
+        }
+      },
       methods: {
         updateTask(task) {
           let url = '/api/v2/activity/' + task.id;
 
           this.$http.put(url, {
             activity: { isDone: task.is_done }
-          });
+          }).then(_ => { this.$emit('done', task) } );
 
         }
       },

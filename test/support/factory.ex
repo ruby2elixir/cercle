@@ -72,8 +72,7 @@ defmodule CercleApi.Factory do
       user: build(:user),
       company: build(:company),
       board: build(:board),
-      board_column: build(:board_column),
-      main_contact: build(:contact)
+      board_column: build(:board_column)
     }
   end
 
