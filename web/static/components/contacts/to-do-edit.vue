@@ -37,7 +37,7 @@
 
       </div>
       <div class="add-to-do">
-        <button  class="btn btn-link" v-on:click="addTask"><i class="fa fa-fw fa-plus"></i> Add a Task...</button>
+        <button  class="btn btn-link" v-on:click="addTask"><i class="fa fa-fw fa-plus"></i> Add a task...</button>
       </div>
       <br />
       <slot name="attachments"></slot>
