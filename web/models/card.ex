@@ -42,10 +42,7 @@ defmodule CercleApi.Card do
   end
 
   def build_contact_ids(params) do
-    (
-      [params[:main_contact_id] || params["main_contact_id"]] ++
-      (params[:contact_ids] || params["contact_ids"] || [])
-    )
+    (params[:contact_ids] || params["contact_ids"] || [])
     |> Enum.filter(fn(x) -> !is_nil(x) end)
     |> Enum.uniq
   end

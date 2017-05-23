@@ -1,5 +1,5 @@
 <template>
- <tr v-if="!item.is_done">
+ <tr>
   <td style="width:30px;">
     <img :src="letterUrl" style="border-radius:14px;" />
   </td>
@@ -42,7 +42,7 @@
 
           this.$http.put(url, {
             activity: { isDone: task.is_done }
-          });
+          }).then(_ => { this.$emit('done', task) } );
 
         }
       },
