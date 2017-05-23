@@ -127,7 +127,7 @@
         <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
 
         <%= if show_board_menu?(@conn) do %>
-        <a href="#" id="toggle-activity-panel" class="btn pull-right">
+        <a href="#" id="toggle-activity-panel" class="btn pull-right" style="margin-top:20px;">
           <i class="fa fa-fw fa-ellipsis-h"></i>
           Show Menu
         </a>
