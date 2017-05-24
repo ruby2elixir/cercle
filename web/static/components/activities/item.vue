@@ -42,7 +42,7 @@
 
           this.$http.put(url, {
             activity: { isDone: task.is_done }
-          }).then(_ => { this.$emit('done', task) } );
+          }).then(_ => { this.$emit('done', task); } );
 
         }
       },

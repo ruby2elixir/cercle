@@ -7,7 +7,8 @@
                 :on-search="searchContacts"
                 :options="contacts"
                 :taggable="true"
-                placeholder="Name..."
+                placeholder="Name...*"
+
                 label="name"></v-select>
     </div>
     <div class="form-group">
@@ -72,54 +73,46 @@ export default {
     },
 
     addContactToBoard: function(userId, companyId, contactId, boardId, columnId) {
-      $.ajax( '/api/v2/card/' , {
-        method: 'POST',
-        headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
-        data: {
-          'card[contact_ids]': [contactId],
-          'card[user_id]': userId,
-          'card[company_id]': companyId,
-          'card[board_id]': boardId,
-          'card[board_column_id]': columnId,
-          'card[name]': ''
-        },
-        complete: function(xhr, status){
-          window.location.href='/board/'+boardId;
+      let url = '/api/v2/card/';
+      this.$http.post(url,{
+        card: {
+          contactIds: [contactId],
+          userId: userId,
+          companyId: companyId,
+          boardId: boardId,
+          boardColumnId: columnId,
+          name: ''
         }
-      });
+      }).then ( _ => { window.location.href='/board/'+boardId; });
     },
 
     saveContact: function(){
-      var _vue = this;
-      var userId = this.userId;
-      var companyId = this.companyId;
-      var boardId = this.boardId;
-      var columnId = this.columnId;
+      let vu = this;
+      let userId = this.userId;
+      let companyId = this.companyId;
+      let boardId = this.boardId;
+      let columnId = this.columnId;
 
       if(this.existingContactId) {
         this.addContactToBoard(userId, companyId, this.existingContactId, boardId, columnId);
-      } else if(this.name){
+      } else if(this.name) {
         var addToBoard = this.addToBoard;
-        $.ajax('/api/v2/contact', {
-          method: 'POST',
-          data: {
-            'contact[user_id]': userId,
-            'contact[company_id]': companyId,
-            'contact[name]': this.name,
-            'contact[email]': this.email,
-            'contact[phone]': this.phone
-          },
-          headers: {'Authorization': 'Bearer '+Vue.currentUser.token},
-          success: function(result){
-            if(addToBoard) {
-              _vue.addContactToBoard(userId, companyId, result.data.id, boardId, columnId);
-            } else {
-              window.location.href='/contact';
-            }
+        let url = '/api/v2/contact';
+        this.$http.post(url,{
+          contact: {
+            userId: userId,
+            companyId: companyId,
+            name: this.name,
+            email: this.email,
+            phone: this.phone
+          }
+        }).then( resp => {
+          if(addToBoard) {
+            vu.addContactToBoard(userId, companyId, resp.data.data.id, boardId, columnId);
+          } else {
+            window.location.href='/contact';
           }
         });
-      }else{
-        alert('Name can\'t be blank');
       }
     },
 
@@ -143,9 +136,7 @@ export default {
 
     searchContacts(search, loading) {
       loading(true);
-      this.$http.get('/api/v2/contact?q='+search, {
-        headers: {'Authorization': 'Bearer '+Vue.currentUser.token}
-      }).then(resp => {
+      this.$http.get('/api/v2/contact', { params: { q: search }}).then(resp => {
         this.contacts = resp.data.data;
         loading(false);
       });
