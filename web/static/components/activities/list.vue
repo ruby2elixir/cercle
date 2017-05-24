@@ -29,7 +29,7 @@
     },
     methods: {
       doneTask(task) {
-        this.deleteItem(this.activities, task.id)
+        this.deleteItem(this.activities, task.id);
       },
       itemClass(item) {
         if (Moment(item.due_date).isSame(new Date(), 'day')) {

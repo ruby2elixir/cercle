@@ -27,7 +27,7 @@
     methods: {
 
       sendMessage(){
-        var url = '/api/v2/timeline_events';
+        let url = '/api/v2/timeline_events';
         this.$http.post(url,
           { timelineEvent: {
             companyId: this.contact.company_id,

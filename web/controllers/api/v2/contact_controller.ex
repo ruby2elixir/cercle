@@ -37,14 +37,7 @@ defmodule CercleApi.APIV2.ContactController do
   def create(conn, %{"contact" => contact_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = Repo.get!(Company, user.company_id)
-
-    if contact_params["name"] do
-      name_splits = String.split(contact_params["name"], ~r/\s+/)
-      [first_name|name_splits] = name_splits
-      last_name = Enum.join(name_splits, " ")
-      contact_params = Map.put(contact_params, "first_name", first_name)
-      contact_params = Map.put(contact_params, "last_name", last_name)
-    end
+    contact_params = Map.merge(contact_params, split_name(contact_params))
     contact_params = Map.put(contact_params, "user_id", user.id)
 
     changeset = company
@@ -91,18 +84,13 @@ defmodule CercleApi.APIV2.ContactController do
 
   def update(conn, %{"id" => id, "contact" => contact_params}) do
     contact = Repo.get!(Contact, id)
+
     if contact_params["data"] do
       new_data = Map.merge(contact.data , contact_params["data"])
       contact_params = %{contact_params | "data" => new_data}
     end
-    if contact_params["name"] do
-      name_splits = String.split(contact_params["name"], ~r/\s+/)
-      [first_name|name_splits] = name_splits
-      last_name = Enum.join(name_splits, " ")
-      contact_params = Map.put(contact_params, "first_name", first_name)
-      contact_params = Map.put(contact_params, "last_name", last_name)
-    end
 
+    contact_params = Map.merge(contact_params, split_name(contact_params))
     changeset = Contact.changeset(contact, contact_params)
 
     case Repo.update(changeset) do
@@ -203,4 +191,14 @@ defmodule CercleApi.APIV2.ContactController do
     json conn, %{status: 200}
   end
 
+  defp split_name(contact_params) do
+    if contact_params["name"] && String.trim(to_string(contact_params["last_name"])) == "" do
+      name_splits = String.split(contact_params["name"], ~r/\s+/)
+      [first_name|name_splits] = name_splits
+      last_name = Enum.join(name_splits, " ")
+      %{"first_name" => first_name, "last_name" => last_name}
+    else
+      %{}
+    end
+  end
 end

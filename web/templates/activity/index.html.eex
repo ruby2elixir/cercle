@@ -33,6 +33,12 @@
           </div>
         </div>
 
+        <div class="row" v-if="activities.length == 0">
+          <div class="col-xs-12">
+            <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
+          </div>
+        </div>
+
         <modal large :show.sync="showContact" class="contact-modal">
           <span slot="modal-header"></span>
           <div slot="modal-body" class="modal-body">

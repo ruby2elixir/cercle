@@ -62,7 +62,14 @@
           </button>
         </div>
         <div slot="modal-body" class="modal-body">
-          <new-contact v-on:hide-new-contact="newContact=false" :board-id="board_id" :boards="<%= Poison.encode!([@board]) %>" :default-board-id="<%= @board.id %>" :user-id="<%= assigns[:current_user].id%>" :company-id="<%= @company.id %>"></new-contact>
+          <new-contact
+            v-on:hide-new-contact="newContact=false"
+            :board-id="board_id"
+            :boards="<%= Poison.encode!([@board]) %>"
+            :default-board-id="<%= @board.id %>"
+            :user-id="<%= assigns[:current_user].id%>"
+            :company-id="<%= @company.id %>"
+            ></new-contact>
         </div>
         <span slot="modal-footer"></span>
       </modal>
