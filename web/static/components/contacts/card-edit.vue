@@ -43,7 +43,11 @@
         <br />
         Contacts Involved:
         <a v-for="o_contact in cardContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
-        <modal title="What is his name?" large :show.sync="openContactModal">
+        <modal large :show.sync="openContactModal">
+          <div slot="modal-header" class="modal-header">
+           <button type="button" class="close" @click="openContactModal=false"><span>&times;</span></button>
+           <h4 class="modal-title">What is his name?</h4>
+          </div>
             <div slot="modal-body" class="modal-body">
             <input class="form-control" v-model="NewContactName" type="text" placeholder="Name of the Contact">
             </div>
@@ -51,6 +55,7 @@
              <button type="button" class="btn btn-success" v-on:click="addContact">Add Contact</button>
             </div>
         </modal>
+
         <button type="button" class="btn btn-link add_o_contact" v-on:click="openContactModal = true" >
           <i class="fa fa-fw fa-plus"></i>Add ...
         </button>
@@ -401,7 +406,6 @@
       'file-upload': FileUpload,
       'delete-contact': DeleteContact
     },
-
 
     mounted() {
       this.attachment = this.$refs.attachment.$data;
