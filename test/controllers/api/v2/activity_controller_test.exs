@@ -41,7 +41,7 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.ActivityView, "list.json",
       %{
-        activities: [activity, activity1]
+        activities: [activity1, activity]
       }
     )
   end

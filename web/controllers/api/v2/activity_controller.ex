@@ -20,7 +20,7 @@ defmodule CercleApi.APIV2.ActivityController do
     end
 
     query = query
-    |> Activity.order_by_date
+    |> Activity.order_by_date(:asc)
     |> Activity.by_status(params["is_done"] || false)
 
     if params["start_in"] do

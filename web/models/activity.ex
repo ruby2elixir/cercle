@@ -38,9 +38,12 @@ defmodule CercleApi.Activity do
       where: p.is_done == ^status
   end
 
-  def order_by_date(query \\ __MODULE__) do
-     from p in query,
-      order_by: [desc: p.due_date]
+  def order_by_date(query \\ __MODULE__, direction \\ :desc) do
+    values = case direction do
+               :asc -> [asc: :due_date]
+               _ -> [desc: :due_date]
+             end
+    from(p in query, order_by: ^values)
   end
 
   def in_progress(query) do
