@@ -19,33 +19,33 @@ export var Pipeline = {
         {
           $(ui.item).remove();
           $.ajax({
-            data: {opportunity : {status: 2}},
+            data: {card : {status: 2}},
             type: 'PUT',
-            url: '/api/v2/opportunity/'+ id
+            url: '/api/v2/card/'+ id
           });
         } else if (stage === 'delete'){
           $(ui.item).remove();
           $.ajax({
             type: 'DELETE',
             headers: {'Authorization': 'Bearer '+jwtToken},
-            url: '/api/v2/opportunity/'+ id
+            url: '/api/v2/card/'+ id
           });
         } else if (stage === 'win'){
           $(ui.item).remove();
           $.ajax({
-            data: {opportunity : {status: 1}},
+            data: {card : {status: 1}},
             type: 'PUT',
             headers: {'Authorization': 'Bearer '+jwtToken},
-            url: '/api/v2/opportunity/'+ id
+            url: '/api/v2/card/'+ id
           });
         }else{
           $.ajax({
-            data: {opportunity : {board_column_id: stage}},
+            data: {card : {board_column_id: stage}},
             type: 'PUT',
             headers: {'Authorization': 'Bearer '+jwtToken},
-            url: '/api/v2/opportunity/'+ id
+            url: '/api/v2/card/'+ id
           });
-        }        
+        }
       }
     });
 
