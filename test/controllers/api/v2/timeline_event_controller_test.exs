@@ -11,7 +11,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   end
 
   test "timeline_event index with valid params", state do
-    te = insert(:timeline_event)
+    te = insert(:timeline_event) |> Repo.preload([:card, :user])
     conn = get state[:conn], "/api/v2/timeline_events"
 
     assert json_response(conn, 200) == render_json(
@@ -40,7 +40,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   end
 
   test "PUT update/2", state do
-    te = Repo.preload(insert(:timeline_event, user: state[:user]), [:card])
+    te = Repo.preload(insert(:timeline_event, metadata: %{}, user: state[:user]), [:card, :user])
     response = state[:conn]
     |> put(timeline_event_path(state[:conn], :update, te),
     timeline_event: %{"content" => "Test Content1" }

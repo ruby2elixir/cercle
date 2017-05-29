@@ -10,11 +10,16 @@ defmodule CercleApi.APIV2.TimelineEventView do
   end
 
   def render("timeline_event.json", %{timeline_event: timeline_event}) do
-    %{id: timeline_event.id,
+    %{
+      id: timeline_event.id,
       event_name: timeline_event.event_name,
       card_id: timeline_event.card_id,
       contact_id: timeline_event.contact_id,
-      content: timeline_event.content}
+      content: timeline_event.content,
+      company_id: timeline_event.company_id,
+      user_id: timeline_event.user_id,
+      inserted_at: timeline_event.inserted_at
+    }
   end
 
   def render("recent_list.json",  %{timeline_events: timeline_events}) do

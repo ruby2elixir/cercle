@@ -83,7 +83,11 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
       payload: %{"activity" => _}
     }
 
+    activity = Repo.one(from x in CercleApi.Activity, order_by: [asc: x.id], limit: 1, preload: [:user, :contact])
     CercleApi.Endpoint.unsubscribe("users:#{state[:user].id}")
-    assert json_response(conn, 200) == "{OK: true}"
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.ActivityView,
+      "show.json", activity: activity
+    )
   end
 end
