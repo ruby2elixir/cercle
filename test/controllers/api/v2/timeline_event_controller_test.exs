@@ -32,7 +32,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
     )
     |> json_response(201)
 
-    event = Repo.one(from x in TimelineEvent, order_by: [asc: x.id], limit: 1)
+    event = Repo.one(from x in TimelineEvent, order_by: [asc: x.id], limit: 1, preload: [:user])
     assert response == render_json(
       CercleApi.APIV2.TimelineEventView,
       "show.json", timeline_event: event

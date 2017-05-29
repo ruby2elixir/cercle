@@ -12,7 +12,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
   def index(conn, params) do
     current_user = Guardian.Plug.current_resource(conn)
-    te = Repo.all(TimelineEvent)
+    te = Repo.preload(Repo.all(TimelineEvent), [:user])
 
     render(conn, "index.json", timeline_events: te)
   end
