@@ -109,13 +109,21 @@
         :card="card"
         :company="company"
         :timeZone="time_zone"
+        v-on:taskAddOrUpdate="taskAddOrUpdate"
+        v-on:taskDelete="taskDelete"
       >
 
-        <comment_form slot="comment-form" :contact="contact" :card="card" :user_image="user_image" />
+        <comment_form slot="comment-form"
+          :contact="contact"
+          :card="card"
+          :user_image="user_image"
+          v-on:eventAddOrUpdate="eventAddOrUpdate"
+
+         />
         <timeline_events
           slot="timeline-events"
           :events="events"
-
+          v-on:eventDelete="eventDelete"
           />
       </to-do>
 
@@ -183,6 +191,38 @@
       }
     },
     methods: {
+      eventAddOrUpdate(event) {
+        let itemIndex = this.$data.events.findIndex(function(item){
+          return item.id === parseInt(event.id);
+        });
+        if (itemIndex === -1){
+          this.$data.events.unshift(event);
+        } else {
+          this.$data.events.splice(itemIndex, 1, event);
+        }
+      },
+      eventDelete(eventId) {
+        let itemIndex = this.$data.events.findIndex(function(item){
+          return item.id === parseInt(eventId);
+        });
+        if (itemIndex !== -1){ this.$data.events.splice(itemIndex, 1); }
+      },
+      taskAddOrUpdate(task) {
+        let itemIndex = this.$data.activities.findIndex(function(item){
+          return item.id === parseInt(task.id);
+        });
+        if (itemIndex === -1){
+          this.$data.activities.push(task);
+        } else {
+          this.$data.activities.splice(itemIndex, 1, task);
+        }
+      },
+      taskDelete(taskId) {
+        let itemIndex = this.$data.activities.findIndex(function(item){
+          return item.id === parseInt(taskId);
+        });
+        if (itemIndex !== -1){ this.$data.activities.splice(itemIndex, 1); }
+      },
       fileTypeClass(attach) {
         const klasses = {
           '.pdf': 'fa fa-file-pdf-o'
@@ -309,42 +349,28 @@
           }
         });
 
-
         this.cardChannel.on('activity:created', payload => {
-          this.$data.activities.push(payload.activity);
+          this.taskAddOrUpdate(payload.activity);
         });
 
         this.cardChannel.on('activity:deleted', payload => {
-          let itemIndex = this.$data.activities.findIndex(function(item){
-            return item.id === parseInt(payload.activity_id);
-          });
-          this.$data.activities.splice(itemIndex, 1);
+          this.taskDelete(payload.activity_id);
         });
 
         this.cardChannel.on('activity:updated', payload => {
-          let itemIndex = this.$data.activities.findIndex(function(item){
-            return item.id === parseInt(payload.activity.id);
-          });
-          this.$data.activities.splice(itemIndex, 1, payload.activity);
+          this.taskAddOrUpdate(payload.activity);
         });
 
         this.cardChannel.on('timeline_event:created', payload => {
-          this.$data.events.unshift(payload.event);
+          this.eventAddOrUpdate(payload.event);
         });
 
         this.cardChannel.on('timeline_event:updated', payload => {
-
-          let itemIndex = this.$data.events.findIndex(function(item){
-            return item.id === parseInt(payload.event.id);
-          });
-          this.$data.events.splice(itemIndex, 1, payload.event);
+          this.eventAddOrUpdate(payload.event);
         });
 
         this.cardChannel.on('timeline_event:deleted', payload => {
-          let itemIndex = this.$data.events.findIndex(function(item){
-            return item.id === parseInt(payload.id);
-          });
-          this.$data.events.splice(itemIndex, 1);
+          this.eventDelete(payload.id);
         });
       },
       leaveChannel() {

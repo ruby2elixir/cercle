@@ -36,8 +36,7 @@
             eventName: 'comment',
             cardId: this.card.id
           }
-          }
-                       );
+          }).then(resp => { this.$emit('eventAddOrUpdate', resp.data.data); });
 
         this.message = '';
       }

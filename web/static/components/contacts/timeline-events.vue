@@ -18,7 +18,7 @@
         <div  class="description" style="color:grey;">
           {{timestamp(event.inserted_at)}}
           <span class="" v-if="canManage(event)">
-            - 
+            -
             <span @click="deleteEvent(event)" class="timeline_event_delete">
               Delete
             </span>
@@ -44,7 +44,7 @@
       },
       deleteEvent(event) {
         let url = '/api/v2/timeline_events/' + event.id;
-        this.$http.delete(url, {  });
+        this.$http.delete(url).then(resp => { this.$emit('eventDelete', event.id);});
       },
       updateEvent(event) {
         let url = '/api/v2/timeline_events/' + event.id;

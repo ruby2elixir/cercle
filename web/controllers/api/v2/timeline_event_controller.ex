@@ -62,7 +62,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
         conn
         |> put_status(:created)
-        |> render("show.json", timeline_event: timeline_event)
+        |> render("show.json", timeline_event: timeline_event_reload)
 
       {:error, changeset} ->
         conn

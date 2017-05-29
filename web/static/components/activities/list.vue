@@ -45,9 +45,9 @@
         this.contactView = 'contact-form';
         this.showContact = true;
       },
-        initConn() {
-          let url = '/api/v2/activity'
-          this.$http.get(url, { params: { user_id: Vue.currentUser.userId }}).then(resp => {
+      initConn() {
+        let url = '/api/v2/activity';
+        this.$http.get(url, { params: { user_id: Vue.currentUser.userId }}).then(resp => {
           this.activities = resp.data.activities;
         });
 

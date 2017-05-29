@@ -63,7 +63,7 @@ defmodule CercleApi.APIV2.ActivityController do
           "users:" <> to_string(current_user.id),
           "activity:created", %{"activity" => activity}
         )
-        json conn, "{OK: true}"
+        render(conn, "show.json", activity: activity)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

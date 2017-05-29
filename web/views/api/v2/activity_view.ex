@@ -14,9 +14,7 @@ defmodule CercleApi.APIV2.ActivityView do
   end
 
   def render("activity.json", %{activity: activity}) do
-    %{id: activity.id,
-      user_id: activity.user_id,
-      title: activity.title}
+    activity_json(activity)
   end
 
   def activity_json(activity) do
