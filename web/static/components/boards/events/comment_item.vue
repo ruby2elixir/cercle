@@ -13,7 +13,7 @@
            {{ item.content }}
          </div>
          <br />
-         <small>{{item.created_at | moment('MMM DD [at] h:m A') }}</small>
+         <small>{{timestamp}}</small>
        </h4>
      </div>
     </a>
@@ -24,6 +24,11 @@ import moment from 'moment';
 export default {
   props: ['item'],
   methods: { },
+  computed: {
+    timestamp: function() {
+      return Moment.utc(this.item.created_at).fromNow();
+    }
+  },
   mounted() { }
 };
   </script>

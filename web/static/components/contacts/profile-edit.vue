@@ -120,7 +120,7 @@ export default {
       }
     },
     updateContact: function(){
-      var url = '/api/v2/contact/' + this.contact.id;
+      let url = '/api/v2/contact/' + this.contact.id;
       this.$http.put(url, { contact: this.contact } );
     },
     nameInput: function(data) {
