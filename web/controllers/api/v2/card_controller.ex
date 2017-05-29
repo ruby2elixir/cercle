@@ -95,7 +95,7 @@ defmodule CercleApi.APIV2.CardController do
             "board_columns" => board.board_columns
           }
         )
-        CardService.update(card)
+        CardService.update(card, changeset.changes)
         render(conn, "show.json", card: card)
       {:error, changeset} ->
         conn

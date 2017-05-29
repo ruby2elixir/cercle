@@ -11,6 +11,8 @@
 import {Socket, Presence} from 'phoenix';
 import moment from 'moment';
 import CommentMessage from './events/comment_item.vue';
+import CardCreatedMessage from './events/card_created.vue';
+import CardUpdatedMessage from './events/card_updated.vue';
 
 export default {
   props: ['board_id'],
@@ -21,7 +23,9 @@ export default {
     };
   },
   components: {
-    'comment': CommentMessage
+      'comment': CommentMessage,
+      'card.created': CardCreatedMessage,
+      'card.updated': CardUpdatedMessage
   },
   methods: {
     initConn() {
