@@ -74,6 +74,15 @@ defmodule CercleApi.Web do
     end
   end
 
+  def service do
+    quote do
+      alias CercleApi.Repo
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query, only: [from: 1, from: 2]
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """

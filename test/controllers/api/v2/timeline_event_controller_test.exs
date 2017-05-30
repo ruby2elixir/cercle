@@ -28,7 +28,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
     timeline_event: %{"content" => "Test Content",
                       "event_name" => "comment",
                       "contact_id" => contact.id,
-                      "card_id" => card.id}
+                      "card_id" => card.id, "metadata" => %{}}
     )
     |> json_response(201)
 

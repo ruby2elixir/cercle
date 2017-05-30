@@ -19,7 +19,8 @@ defmodule CercleApi.APIV2.TimelineEventView do
       company_id: timeline_event.company_id,
       user_id: timeline_event.user_id,
       inserted_at: timeline_event.inserted_at,
-      user: timeline_event.user
+      user: timeline_event.user,
+      metadata: timeline_event.metadata
     }
   end
 
@@ -49,7 +50,8 @@ defmodule CercleApi.APIV2.TimelineEventView do
       content: timeline_event.content,
       user_name: user_name,
       main_contact_name: main_contact_name(timeline_event),
-      created_at: timeline_event.inserted_at
+      created_at: timeline_event.inserted_at,
+      metadata: timeline_event.metadata
     }
   end
 

@@ -26,19 +26,9 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
     case Repo.insert(changeset) do
       {:ok, timeline_event} ->
-        timeline_event_reload = CercleApi.TimelineEvent
-        |> Repo.get!(timeline_event.id)
+        timeline_event_reload = timeline_event
         |> Repo.preload([:user, :card])
-        CercleApi.Endpoint.broadcast!(
-          "cards:"  <> to_string(timeline_event_reload.card_id),
-          "timeline_event:created", %{"event" => timeline_event_reload}
-        )
-        CercleApi.Endpoint.broadcast!(
-          "board:" <> to_string(timeline_event_reload.card.board_id),
-          "timeline_event:created",
-          CercleApi.APIV2.TimelineEventView.render(
-            "recent_item.json", timeline_event: timeline_event_reload)
-        )
+        CercleApi.TimelineEventService.create(timeline_event_reload)
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
         user = current_user
@@ -88,19 +78,9 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
     case Repo.update(changeset) do
       {:ok, timeline_event} ->
-        timeline_event = CercleApi.TimelineEvent
-        |> Repo.get!(timeline_event.id)
+        timeline_event = timeline_event
         |> Repo.preload([:user, :card])
-        CercleApi.Endpoint.broadcast!(
-          "cards:"  <> to_string(timeline_event.card_id),
-          "timeline_event:updated", %{"event" => timeline_event}
-        )
-        CercleApi.Endpoint.broadcast!(
-          "board:" <> to_string(timeline_event.card.board_id),
-          "timeline_event:updated",
-          CercleApi.APIV2.TimelineEventView.render(
-            "recent_item.json", timeline_event: timeline_event)
-        )
+        CercleApi.TimelineEventService.update(timeline_event)
 
         render(conn, "show.json", timeline_event: timeline_event)
       {:error, changeset} ->
@@ -114,16 +94,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
     timeline_event = TimelineEvent
     |> Repo.get!(id)
     |> Repo.preload([:card])
-
-    CercleApi.Endpoint.broadcast!(
-      "cards:"  <> to_string(timeline_event.card_id),
-      "timeline_event:deleted", %{"id" => id}
-    )
-    CercleApi.Endpoint.broadcast!(
-      "board:" <> to_string(timeline_event.card.board_id),
-      "timeline_event:deleted", %{"id" => id}
-    )
-
+    CercleApi.TimelineEventService.delete(timeline_event)
     Repo.delete!(timeline_event)
     json conn, %{status: 200}
   end
