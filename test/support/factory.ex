@@ -89,7 +89,8 @@ defmodule CercleApi.Factory do
       user: build(:user),
       company: build(:company),
       card: build(:card),
-      contact: build(:contact)
+      contact: build(:contact),
+      metadata: %{}
     }
   end
 end

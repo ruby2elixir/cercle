@@ -7,9 +7,13 @@
          <span style="font-weight:600;">
            {{item.user_name}}
          </span>
-         Moved card from to
+         <span v-if="isMovedCard">
+         moved <a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.first_name}} {{contact.last_name}}</a>
+         from {{boardName(meta.previous) }} to {{boardName(meta)}}
+         </span>
+         <span v-else>{{content}}</span>
+
          <br />
-{{item}}
          <small>{{timestamp}}</small>
        </h4>
      </div>
@@ -20,7 +24,21 @@
 import moment from 'moment';
 export default {
   props: ['item'],
-  methods: { },
+    methods: {
+        updatedCardMsg(meta) {
+            return "updated " + this.boardName(meta);
+        },
+        boardName(boardMeta) {
+            let names = []
+            if (boardMeta && boardMeta.board) {
+                names.push(boardMeta.board.name)
+            }
+            if (boardMeta && boardMeta.board_column) {
+              names.push(boardMeta.board_column.name)
+            }
+            return names.join(' - ')
+            }
+  },
   computed: {
         timestamp: function() {
             return Moment.utc(this.item.created_at).fromNow();
@@ -28,15 +46,12 @@ export default {
       meta: function() {
           return this.item.metadata
       },
-      toName: function() {
-          let bName = []
-          if (this.meta && this.meta.board) {
-              bName.push(this.meta.board.name)
-          }
-          if (this.meta && this.meta.board_column) {
-              bName.push(this.meta.board_column.name)
-              }
-          return bName.join(' - ')
+      isMovedCard: function() {
+        return (this.meta && (parseInt(this.meta.board_column.id) !== parseInt(this.meta.previous.board_column.id)))
+      },
+      content: function() {
+              return this.updatedCardMsg(this.meta);
+
       }
 
     },

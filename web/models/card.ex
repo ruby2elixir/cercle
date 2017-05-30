@@ -58,6 +58,7 @@ defmodule CercleApi.Card do
 
   def preload_data(query \\ %CercleApi.Card{}) do
     comments_query = from c in CercleApi.TimelineEvent,
+      where: c.event_name == "comment",
       order_by: [desc: c.inserted_at],
       preload: :user
 

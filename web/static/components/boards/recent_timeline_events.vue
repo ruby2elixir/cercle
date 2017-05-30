@@ -27,8 +27,18 @@ export default {
       'card.created': CardCreatedMessage,
       'card.updated': CardUpdatedMessage
   },
-  methods: {
-    initConn() {
+    methods: {
+        eventAddOrUpdate(event) {
+            let itemIndex = this.$data.items.findIndex(function(item){
+                return item.id === parseInt(event.id);
+            });
+            if (itemIndex === -1){
+                this.items.unshift(event);
+            } else {
+                this.$data.items.splice(itemIndex, 1, event);
+            }
+        },
+      initConn() {
       this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
       this.socket.connect();
       this.channel = this.socket.channel('board:' + this.board_id, {});
@@ -41,14 +51,10 @@ export default {
       });
 
       this.channel.on('timeline_event:created', payload => {
-        this.items.unshift(payload);
+          this.eventAddOrUpdate(payload);
       });
       this.channel.on('timeline_event:updated', payload => {
-
-        let itemIndex = this.$data.items.findIndex(function(item){
-          return item.id === parseInt(payload.event.id);
-        });
-        this.$data.items.splice(itemIndex, 1, payload.event);
+         this.eventAddOrUpdate(payload);
       });
       this.channel.on('timeline_event:deleted', payload => {
         let itemIndex = this.$data.items.findIndex(function(item){

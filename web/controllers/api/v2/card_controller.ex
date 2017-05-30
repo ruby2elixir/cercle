@@ -76,8 +76,8 @@ defmodule CercleApi.APIV2.CardController do
   end
 
   def update(conn, %{"id" => id, "card" => card_params}) do
-    card = Repo.get!(Card, id)
-    changeset = Card.changeset(card, card_params)
+    origin_card = Repo.get!(Card, id)
+    changeset = Card.changeset(origin_card, card_params)
 
     case Repo.update(changeset) do
       {:ok, card} ->
@@ -95,7 +95,7 @@ defmodule CercleApi.APIV2.CardController do
             "board_columns" => board.board_columns
           }
         )
-        CardService.update(card, changeset.changes)
+        CardService.update(card, origin_card)
         render(conn, "show.json", card: card)
       {:error, changeset} ->
         conn
