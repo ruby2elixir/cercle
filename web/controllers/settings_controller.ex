@@ -56,7 +56,7 @@ defmodule CercleApi.SettingsController do
           |> put_flash(:success, "Team member removed successfully")
         {:error, changeset} ->
           conn
-          |> put_flash(:success, "Unable to remove team member")
+          |> put_flash(:error, "Unable to remove team member")
       end
     end
 
