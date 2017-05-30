@@ -49,11 +49,18 @@ defmodule CercleApi.SettingsController do
 
     if user.id != String.to_integer(user_id) do
       team_member = Repo.get_by(User, id: user_id, company_id: user.company_id)
-      Repo.delete!(team_member)
+      changeset = User.changeset(team_member, %{company_id: nil})
+      case Repo.update(changeset) do
+        {:ok, team_member} ->
+          conn
+          |> put_flash(:success, "Team member removed successfully")
+        {:error, changeset} ->
+          conn
+          |> put_flash(:success, "Unable to remove team member")
+      end
     end
 
     conn
-    |> put_layout("adminlte.html")
     |> redirect(to: "/settings/team_edit")
   end
 
