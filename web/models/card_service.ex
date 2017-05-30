@@ -50,7 +50,7 @@ defmodule CercleApi.CardService do
     |> Repo.all
   end
 
-  def insert(card) do
+  def insert(user, card) do
     event = "card.created"
 
     payload = %{
@@ -58,11 +58,18 @@ defmodule CercleApi.CardService do
       data: payload_data(card)
     }
 
+    with channel <- "contacts:"  <> to_string(List.first(card.contact_ids)),
+      do: CercleApi.Endpoint.broadcast!(
+            channel, "card:created", %{
+              "card" => CercleApi.APIV2.ContactView.card_json(card)
+            }
+          )
+
     event_changeset = %TimelineEvent{}
     |> TimelineEvent.changeset(
       %{
         event_name: event, card_id: card.id, content: event,
-        user_id: card.user_id, company_id: card.company_id,
+        user_id: user.id, company_id: card.company_id,
         metadata: event_payload(card, %{action: :create_card})
       }
     )
@@ -76,20 +83,30 @@ defmodule CercleApi.CardService do
     end
   end
 
-  def update(card, previous_card \\ %{}) do
+  def update(user, card, previous_card \\ %{}) do
     event = "card.updated"
 
     payload = %{
       event: event,
       data: payload_data(card)
     }
+    with channel <- "cards:" <> to_string(card.id),
+         card_contacts <- CercleApi.Card.contacts(card),
+      do: CercleApi.Endpoint.broadcast!(
+            channel, "card:updated", %{
+              "card" => CercleApi.APIV2.ContactView.card_json(card),
+              "card_contacts" => card_contacts,
+              "board" => card.board,
+              "board_columns" => card.board.board_columns
+            }
+          )
 
     event_dataset = %{action: :update_card, previous: event_payload(previous_card)}
     event_changeset = %TimelineEvent{}
     |> TimelineEvent.changeset(
       %{
         event_name: event, card_id: card.id, content: event,
-        user_id: card.user_id, company_id: card.company_id,
+        user_id: user.id, company_id: card.company_id,
         metadata: event_payload(card, event_dataset)
       }
     )

@@ -56,15 +56,8 @@ defmodule CercleApi.APIV2.CardController do
 
     case Repo.insert(changeset) do
       {:ok, card} ->
-        channel = "contacts:"  <> to_string(List.first(card.contact_ids))
         card = Repo.preload(card, [:board_column, board: [:board_columns]])
-        CercleApi.Endpoint.broadcast!(
-          channel, "card:created", %{
-            "card" => CercleApi.APIV2.ContactView.card_json(card)
-          }
-        )
-
-        CardService.insert(card)
+        CardService.insert(current_user, card)
         conn
         |> put_status(:created)
         |> render("show.json", card: card)
@@ -76,26 +69,14 @@ defmodule CercleApi.APIV2.CardController do
   end
 
   def update(conn, %{"id" => id, "card" => card_params}) do
+    current_user = Guardian.Plug.current_resource(conn)
     origin_card = Repo.get!(Card, id)
     changeset = Card.changeset(origin_card, card_params)
 
     case Repo.update(changeset) do
       {:ok, card} ->
-        card_contacts = CercleApi.Card.contacts(card)
-        board = CercleApi.Board
-        |> Repo.get!(card.board_id)
-        |> Repo.preload(:board_columns)
         card = Repo.preload(card, [:board_column, board: [:board_columns]])
-        channel = "cards:"  <> to_string(card.id)
-        CercleApi.Endpoint.broadcast!(
-          channel, "card:updated", %{
-            "card" => CercleApi.APIV2.ContactView.card_json(card),
-            "card_contacts" => card_contacts,
-            "board" => board,
-            "board_columns" => board.board_columns
-          }
-        )
-        CardService.update(card, origin_card)
+        CardService.update(current_user, card, origin_card)
         render(conn, "show.json", card: card)
       {:error, changeset} ->
         conn

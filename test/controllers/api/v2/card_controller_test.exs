@@ -95,4 +95,62 @@ defmodule CercleApi.APIV2.CardControllerTest do
     assert attachment == nil
   end
 
+  test "POST/2 create card", state do
+    CercleApi.Endpoint.subscribe("contacts:1")
+
+    response = state[:conn]
+    |> post(
+      card_path(state[:conn], :create), card: %{
+        board_id: state[:board].id,
+        board_column_id: state[:board_column].id,
+        name: "", status: 0, company: state[:company].id,
+        user_id: state[:user].id,
+        contact_ids: [1]
+      }
+    )
+    |> json_response(201)
+
+    card = from(x in Card,
+      order_by: [asc: x.id], limit: 1,
+      preload: [:user, :board_column, board: [:board_columns]]
+    )
+    |> Repo.one
+
+    assert_receive %Phoenix.Socket.Broadcast{
+      topic: "contacts:1", event: "card:created", payload: %{"card" => _}
+    }
+    CercleApi.Endpoint.unsubscribe("contacts:1")
+    assert response == render_json(
+      CercleApi.APIV2.CardView, "show.json", card: card
+    )
+  end
+
+  test "PUT update card", state do
+    card = insert(:card, status: 0, user: state[:user],
+      contact_ids: [state[:contact].id], company: state[:company]
+    )
+    card_channel = "cards:#{card.id}"
+    CercleApi.Endpoint.subscribe(card_channel)
+    board_column = insert(:board_column, board: state[:board])
+    response = state[:conn]
+    |> put(
+      card_path(state[:conn], :update, card), card: %{
+        board_column_id: board_column.id
+      }
+    )
+    |> json_response(200)
+
+    assert_receive %Phoenix.Socket.Broadcast{
+      topic: card_channel, event: "card:updated",
+      payload: %{"card" => _, "card_contacts" => _, "board" => _, "board_columns" => _}
+    }
+    CercleApi.Endpoint.unsubscribe(card_channel)
+    updated_card = Card
+    |> Repo.get(card.id)
+    |> Repo.preload([:board_column, board: [:board_columns]])
+
+    assert response == render_json(
+      CercleApi.APIV2.CardView, "show.json", card: updated_card
+    )
+  end
 end
