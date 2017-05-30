@@ -53,7 +53,11 @@
                     </<td>
                     <td><%=u.user_name%><br /><%=u.login%></td>
                     <td><%=u.name%></td>
-                    <td><a href="#">Remove</a></td>
+                    <td>
+                      <%= if @conn.assigns[:current_user].id != u.id do %>
+                        <%= link "Remove", to: "/settings/remove_team_member/#{u.id}", method: :delete, "data-confirm": "Are you sure?" %>
+                      <% end %>
+                    </td>
                   </tr>
                 <%end%>   
               </table>
