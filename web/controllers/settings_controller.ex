@@ -44,6 +44,26 @@ defmodule CercleApi.SettingsController do
     |> render "team_edit.html", company: company
   end
 
+  def remove_team_member(conn, %{"user_id" => user_id}) do
+    user = Guardian.Plug.current_resource(conn)
+
+    if user.id != String.to_integer(user_id) do
+      team_member = Repo.get_by(User, id: user_id, company_id: user.company_id)
+      changeset = User.changeset(team_member, %{company_id: nil})
+      case Repo.update(changeset) do
+        {:ok, team_member} ->
+          conn
+          |> put_flash(:success, "Team member removed successfully")
+        {:error, changeset} ->
+          conn
+          |> put_flash(:error, "Unable to remove team member")
+      end
+    end
+
+    conn
+    |> redirect(to: "/settings/team_edit")
+  end
+
   def fields_edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
     company_id = user.company_id
