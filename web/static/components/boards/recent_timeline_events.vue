@@ -4,7 +4,7 @@
     <ul class="control-sidebar-menu">
       <component v-bind:is="item.event_name" v-for="item in items" :item="item" v-on:clickByEvent="clickByEvent(item)" />
     </ul>
-    <modal large :show="openEventModal" style="margin-top: 74px;"  class="contact-modal" :backdrop=false>
+    <modal large :show="openEventModal" style="padding-top: 74px;"  class="contact-modal" :backdrop=false>
       <span slot="modal-header"></span>
       <div slot="modal-body" class="modal-body">
           <button type="button" class="close" @click="openEventModal=false">
@@ -99,7 +99,6 @@ export default {
   mounted() {
     this.$root.$on('esc-keyup', () => { this.openEventModal = false; });
     this.initConn();
-
   }
 };
   </script>
