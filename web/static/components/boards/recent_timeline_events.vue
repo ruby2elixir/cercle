@@ -4,14 +4,22 @@
     <ul class="control-sidebar-menu">
       <component v-bind:is="item.event_name" v-for="item in items" :item="item" v-on:clickByEvent="clickByEvent(item)" />
     </ul>
-    <modal :show="openEventModal" style="margin-top: 74px;">
-      <div slot="modal-header" class="modal-header">
-      </div>
+    <modal large :show="openEventModal" style="margin-top: 74px;"  class="contact-modal" :backdrop=false>
+      <span slot="modal-header"></span>
       <div slot="modal-body" class="modal-body">
-        <ul><component v-bind:is="selectItem.event_name" :item="selectItem" /></ul>
+          <button type="button" class="close" @click="openEventModal=false">
+            <span>&times;</span>
+          </button>
+          <component
+            keep-alive
+            v-bind:is="selectItemView"
+            :contact_id.sync="selectItem.contact_id"
+            :card_id.sync="selectItem.card_id"
+            >
+          </component>
+
       </div>
-      <div slot="modal-footer" class="modal-footer">
-      </div>
+      <span slot="modal-footer"></span>
     </modal>
     <!-- /.control-sidebar-menu -->
   </div>
@@ -22,6 +30,7 @@ import moment from 'moment';
 import CommentMessage from './events/comment_item.vue';
 import CardCreatedMessage from './events/card_created.vue';
 import CardUpdatedMessage from './events/card_updated.vue';
+import ContactForm from '../contacts/edit.vue';
 
 export default {
   props: ['board_id'],
@@ -30,6 +39,7 @@ export default {
       channel: null,
       items: [ ],
       openEventModal: false,
+      selectItemView: null,
       selectItem: {}
     };
   },
@@ -37,12 +47,16 @@ export default {
     'comment': CommentMessage,
     'card.created': CardCreatedMessage,
     'card.updated': CardUpdatedMessage,
-    'modal': VueStrap.modal
+    'modal': VueStrap.modal,
+    'contact-form': ContactForm
   },
   methods: {
     clickByEvent(event) {
-      this.selectItem = event;
-      this.openEventModal = true;
+      if (event.contact_id) {
+        this.selectItem = event;
+        this.selectItemView = 'contact-form';
+        this.openEventModal = true;
+      }
     },
     eventAddOrUpdate(event) {
       let itemIndex = this.$data.items.findIndex(function(item){
@@ -83,7 +97,9 @@ export default {
 
   },
   mounted() {
+    this.$root.$on('esc-keyup', () => { this.openEventModal = false; });
     this.initConn();
+
   }
 };
   </script>
