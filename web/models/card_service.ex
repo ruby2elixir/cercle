@@ -42,6 +42,19 @@ defmodule CercleApi.CardService do
     end)
   end
 
+  def event_changeset(user, event, card, metadata \\ %{}) do
+    with contact_id <- List.first(card.contact_ids || []),
+      do: %TimelineEvent{}
+      |> TimelineEvent.changeset(%{
+            event_name: event, card_id: card.id, content: event,
+            user_id: user.id, company_id: card.company_id,
+            metadata: metadata
+                                 }
+      )
+      |> Ecto.Changeset.put_change(:contact_id, contact_id)
+
+  end
+
   def get_subscriptions(user_id, event) do
     query = from p in WebhookSubscription,
       where: p.user_id == ^user_id,
@@ -65,16 +78,10 @@ defmodule CercleApi.CardService do
             }
           )
 
-    event_changeset = %TimelineEvent{}
-    |> TimelineEvent.changeset(
-      %{
-        event_name: event, card_id: card.id, content: event,
-        user_id: user.id, company_id: card.company_id,
-        metadata: event_payload(card, %{action: :create_card})
-      }
-    )
+    changeset = event_changeset(user, event, card,
+      event_payload(card, %{action: :create_card}))
 
-    with {:ok, tm_event} <- Repo.insert(event_changeset),
+    with {:ok, tm_event} <- Repo.insert(changeset),
          {event} <- Repo.preload(tm_event, [:card, :user]),
       do: CercleApi.TimelineEventService.create(tm_event)
 
@@ -102,16 +109,12 @@ defmodule CercleApi.CardService do
           )
 
     event_dataset = %{action: :update_card, previous: event_payload(previous_card)}
-    event_changeset = %TimelineEvent{}
-    |> TimelineEvent.changeset(
-      %{
-        event_name: event, card_id: card.id, content: event,
-        user_id: user.id, company_id: card.company_id,
-        metadata: event_payload(card, event_dataset)
-      }
+    changeset = event_changeset(
+      user, event, card,
+      event_payload(card, event_dataset)
     )
 
-    with {:ok, tm_event} <- Repo.insert(event_changeset),
+    with {:ok, tm_event} <- Repo.insert(changeset),
          event <- Repo.preload(tm_event, [:card, :user]),
       do: CercleApi.TimelineEventService.update(event)
 

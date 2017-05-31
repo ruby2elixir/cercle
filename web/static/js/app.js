@@ -171,6 +171,11 @@ if ($('#recent-activities-app').length > 0) {
     el: '#recent-activities-app',
     components: {
       'activities': BoardRecentActivities
+    },
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
     }
   });
 }

@@ -86,7 +86,6 @@
             :contact_id.sync="contact.id"
             :card_id.sync="card.id"
             >
-
           </component>
         </div>
         <span slot="modal-footer"></span>
