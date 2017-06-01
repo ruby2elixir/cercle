@@ -7,9 +7,8 @@
                 :on-search="searchContacts"
                 :options="contacts"
                 :taggable="true"
-                placeholder="Name...*"
-
-                label="name"></v-select>
+                placeholder="Full Name"
+                label="name"><span slot="no-options"></span></v-select>
     </div>
     <div class="form-group">
       <input type="email" v-model="email" placeholder="Email" class="form-control" :disabled="existingContactId!=null" />
