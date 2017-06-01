@@ -14,7 +14,7 @@
       <input type="email" v-model="email" placeholder="Email" class="form-control" :disabled="existingContactId!=null" />
     </div>
     <div class="form-group">
-      <input type="phone" v-model="phone" placeholder="phone" class="form-control" :disabled="existingContactId!=null" />
+      <input type="phone" v-model="phone" placeholder="Phone" class="form-control" :disabled="existingContactId!=null" />
     </div>
     <div class="form-group" v-show="defaultBoardId==null">
       <label>
