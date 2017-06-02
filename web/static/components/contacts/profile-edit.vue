@@ -25,7 +25,13 @@
              </button>
           </div>
           <modal title="Tags" large :show.sync="openTagModal">
+            <div class="modal-header" slot="modal-header">
+              <button type="button" class="close" @click="openTagModal = false"><span>&times;</span></button>
+              <h4 class="modal-title">Tags</h4>
+            </div>
             <div slot="modal-body" class="modal-body">
+
+
             <v-select
               multiple
               label="name"
@@ -66,9 +72,15 @@ export default {
   data(){
     return {
       availableTags: [],
-      openTagModal: false,
+      openTagWindow: false,
       chooseTags: []
     };
+  },
+  computed: {
+    openTagModal: {
+      get() { return this.openTagWindow; },
+      set(v) { this.openTagWindow = v; }
+    }
   },
   mounted(){
 
