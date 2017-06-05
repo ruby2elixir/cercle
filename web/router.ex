@@ -128,6 +128,24 @@ defmodule CercleApi.Router do
 
     resources "/users", UserController
     resources "/companies", CompanyController
+    resources "/oauth_application", OauthApplicationController, except: [:show]
     #resources "/company_services", CompanyServiceController
   end
+
+  scope "/oauth", as: "oauth" do
+    post "/token", CercleApi.Oauth.TokenController, :create
+    post "/revoke", CercleApi.Oauth.TokenController, :revoke
+    post "/refresh", CercleApi.Oauth.TokenController, :create
+  end
+
+  scope "/oauth", as: "oauth" do
+    pipe_through [:browser, :browser_auth, :require_login]
+    scope "/authorize" do
+      get "/", CercleApi.Oauth.AuthorizationController, :new
+      post "/", CercleApi.Oauth.AuthorizationController, :create
+      get "/:code", CercleApi.Oauth.AuthorizationController, :show
+      delete "/", CercleApi.Oauth.AuthorizationController, :delete
+    end
+  end
+
 end

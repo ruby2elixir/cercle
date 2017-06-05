@@ -48,4 +48,6 @@ config :rummage_ecto, Rummage.Ecto,
 
 config :ex_oauth2_provider, ExOauth2Provider,
   repo: Elixir.CercleApi.Repo,
-  resource_owner: CercleApi.User
+  resource_owner: CercleApi.User,
+  application_owner: CercleApi.AdminUser,
+  use_refresh_token: true

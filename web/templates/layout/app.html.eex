@@ -38,7 +38,12 @@
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav" style="background-color:black;">
-    <%= render @view_module, @view_template, assigns %>
+    <div class="container">
+      <div class="row">
+        <%= render @view_module, @view_template, assigns %>
+      </div>
+    </div>
+
      <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   </body>
