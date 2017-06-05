@@ -34,7 +34,7 @@ config :guardian, Guardian,
   verify_issuer: true,
   serializer: CercleApi.GuardianSerializer
 
-config :canary, 
+config :canary,
   repo: CercleApi.Repo
 
 config :cercleApi, ecto_repos: [CercleApi.Repo]
@@ -45,3 +45,7 @@ config :cipher, keyphrase: "testiekeyphraseforcipher",
 config :rummage_ecto, Rummage.Ecto,
   default_repo: CercleApi.Repo,
   default_per_page: 100
+
+config :ex_oauth2_provider, ExOauth2Provider,
+  repo: Elixir.CercleApi.Repo,
+  resource_owner: CercleApi.User
