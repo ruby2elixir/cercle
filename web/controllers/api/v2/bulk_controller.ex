@@ -16,11 +16,12 @@ defmodule CercleApi.APIV2.BulkController do
         contact_params = Map.put(item["contact"], "user_id", user.id) |> Map.put("company_id", company_id)
 
         if contact_params["full_name"] do
-          splits = String.split(contact_params["full_name"], ~r/\s+/)
-          [first_name|splits] = splits
+          [first_name|splits] = String.split(contact_params["full_name"], ~r/\s+/)
           last_name = Enum.join(splits, " ")
 
-          contact_params = Map.put(contact_params, "first_name", first_name) |> Map.put("last_name", last_name)
+          contact_params = contact_params
+          |> Map.put("first_name", first_name)
+          |> Map.put("last_name", last_name)
         end
 
         organization_params = Map.put(item["organization"], "company_id", company_id)
