@@ -14,6 +14,15 @@ defmodule CercleApi.APIV2.BulkController do
       company_id = user.company_id
       contacts = for item <- items do
         contact_params = Map.put(item["contact"], "user_id", user.id) |> Map.put("company_id", company_id)
+
+        if contact_params["full_name"] do
+          splits = String.split(contact_params["full_name"], ~r/\s+/)
+          [first_name|splits] = splits
+          last_name = Enum.join(splits, " ")
+
+          contact_params = Map.put(contact_params, "first_name", first_name) |> Map.put("last_name", last_name)
+        end
+
         organization_params = Map.put(item["organization"], "company_id", company_id)
 
         if organization_params["id"] do

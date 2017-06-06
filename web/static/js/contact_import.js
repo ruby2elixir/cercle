@@ -118,7 +118,7 @@ $(function() {
 
   $('#move-to-step3').on('click', function (e) {
     e.preventDefault();
-    if (jsonData['contact']['name'] && jsonData['organization']['name']){
+    if ((jsonData['contact']['full_name'] || jsonData['contact']['first_name'] && jsonData['contact']['last_name']) && jsonData['organization']['name']){
       $(this).text('Processing..').addClass('disabled');
       $.ajax({
         url: '/view_uploaded_data',
