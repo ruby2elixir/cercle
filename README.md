@@ -17,7 +17,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 - free if you install it by yourself
 - $1.99 per month with unlimited number of users if we do the hosting for you.
 
-## Current Features
+## Current features
 - Import CSV
 - Contact Tags
 - Contact Organization
