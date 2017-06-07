@@ -8,13 +8,13 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 [To test it, You can go here: http://www.cercle.co/register](http://www.cercle.co/register)
 
-Cercle is:
+## Why Cercle?
 - realtime
 - visual
 - simple
 - API ready
-- Open source
-- Free if you install it by yourself
+- open source
+- free if you install it by yourself
 - $1.99 per month with unlimited number of users if we do the hosting for you.
 
 ## Current Features
