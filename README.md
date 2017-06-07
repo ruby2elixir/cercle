@@ -13,11 +13,23 @@ Cercle is:
 - visual
 - simple
 - API ready
-- and Free!
+- and free!
 
-## Current Release
+## Current Features
+- Import CSV
+- Contact Tags
+- Contact Organization
+- Each people can be linked to visual Card into a Board
+- Card Attachements
+- Card Tasks
+- Card Comment
+- Oauth for API in Zapier
 
-Cercle is still in beta test. We are planning to release version 1.0 in May, 2017.
+
+## Changelog
+
+June 7 2017, V1.0 Release Candidate
+- Oauth Integration with Zapier
 
 
 ## To install Cercle on Local
