@@ -31,8 +31,10 @@ Cercle is:
 
 ## Changelog
 
-June 7 2017, V1.0 Release Candidate
-+ New Feature
+### June 7 2017, V1.0 Release Candidate
+
+#### New Feature
+
 - Oauth Integration with Zapier
 - Add Full name option during CSV Import
 
