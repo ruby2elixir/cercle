@@ -1,6 +1,6 @@
 # Cercle CRM for smart people & Trello lovers - Phoenix & Vuejs 
 
-Cercle is a CRM for smart people who needs more clients.
+Cercle is a CRM for smart people who need more clients.
 
 Easy to keep track of your sales, partnerships, support tickets, onboarding clients. 
 
