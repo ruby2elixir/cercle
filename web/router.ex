@@ -18,6 +18,7 @@ defmodule CercleApi.Router do
   end
 
   pipeline :api_auth do
+    plug ExOauth2Provider.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
   end
@@ -33,7 +34,7 @@ defmodule CercleApi.Router do
 
   pipeline :require_login do
     plug Guardian.Plug.EnsureAuthenticated, handler: CercleApi.GuardianErrorHandler
-    plug CercleApi.Plugs.CurrentUser
+    plug CercleApi.Plug.CurrentUser
   end
 
   pipeline :already_authenticated do

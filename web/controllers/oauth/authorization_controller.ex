@@ -1,7 +1,7 @@
 defmodule CercleApi.Oauth.AuthorizationController do
   use CercleApi.Web, :controller
   plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.CurrentUser
   plug :put_layout, "oauth.html"
 
   alias ExOauth2Provider.Authorization

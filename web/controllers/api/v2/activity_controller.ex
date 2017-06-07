@@ -5,7 +5,7 @@ defmodule CercleApi.APIV2.ActivityController do
   use Timex
   alias CercleApi.{User, Activity, Repo}
 
-  plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.EnsureAuthenticated
 
   plug :scrub_params, "activity" when action in [:create, :update]
 
@@ -45,7 +45,7 @@ defmodule CercleApi.APIV2.ActivityController do
   end
 
   def create(conn, %{"activity" => activity_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     changeset = current_user
     |> build_assoc(:activities)
     |> Activity.changeset(activity_params)
@@ -72,7 +72,7 @@ defmodule CercleApi.APIV2.ActivityController do
   end
 
   def update(conn, %{"id" => id, "activity" => activity_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     activity = Activity
     |> Repo.get!(id)
     |> Repo.preload(:user)
@@ -101,7 +101,7 @@ defmodule CercleApi.APIV2.ActivityController do
   end
 
   def delete(conn, %{"id" => id}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     activity = Repo.get!(Activity, id)
     channel = "cards:" <> to_string(activity.card_id)
 

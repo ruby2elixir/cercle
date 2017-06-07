@@ -1,8 +1,8 @@
-defmodule CercleApi.Plugs.CurrentUser do
+defmodule CercleApi.Plug.CurrentUser do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     Plug.Conn.assign(conn, :current_user, current_user)
   end
 end

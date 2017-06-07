@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.CompanyController do
 
   alias CercleApi.Company
 
-  plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.EnsureAuthenticated
 
   plug :scrub_params, "company" when action in [:create, :update]
 

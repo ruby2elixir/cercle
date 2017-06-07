@@ -9,8 +9,8 @@ defmodule CercleApi.APIV2.BoardController do
   alias CercleApi.Organization
   alias CercleApi.User
 
-  plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.CurrentUser
 
   plug :scrub_params, "board" when action in [:create, :update]
 
@@ -19,7 +19,7 @@ defmodule CercleApi.APIV2.BoardController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     company_id  = current_user.company_id
     query = from p in Board,
       where: p.company_id == ^company_id,
@@ -32,7 +32,7 @@ defmodule CercleApi.APIV2.BoardController do
   end
 
   def create(conn, %{"board" => board_params}) do
-    user = Guardian.Plug.current_resource(conn)
+    user = CercleApi.Plug.current_user(conn)
     company = Repo.get!(Company, user.company_id)
 
     changeset = company

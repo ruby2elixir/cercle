@@ -4,8 +4,8 @@ defmodule CercleApi.APIV2.CardAttachmentController do
 
   alias CercleApi.{Card, CardAttachment, CardAttachmentFile, User}
 
-  plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.CurrentUser
 
   # plug :authorize_resource, model: CardAttachment, only: [:create, :delete],
   #   unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},

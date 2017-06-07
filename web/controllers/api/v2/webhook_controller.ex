@@ -5,7 +5,7 @@ defmodule CercleApi.APIV2.WebhookController do
   alias CercleApi.User
   alias CercleApi.Contact
 
-  plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.EnsureAuthenticated
 
   require Logger
 

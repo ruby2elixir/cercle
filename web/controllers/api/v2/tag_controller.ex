@@ -5,10 +5,10 @@ defmodule CercleApi.APIV2.TagController do
 
   alias CercleApi.Tag
 
-  plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.EnsureAuthenticated
 
   def index(conn, params) do
-  	user = Guardian.Plug.current_resource(conn)
+    user = CercleApi.Plug.current_user(conn)
     company_id = user.company_id
 
     q = Map.get(params, "q")
@@ -25,7 +25,7 @@ defmodule CercleApi.APIV2.TagController do
   end
 
   def create(conn, %{"id" => id, "name" => tag_name}) do
-  	user = Guardian.Plug.current_resource(conn)
+  	user = CercleApi.Plug.current_user(conn)
     company_id = user.company_id
 
     tag = Repo.get_by(Tag, name: tag_name, company_id: company_id) ||
