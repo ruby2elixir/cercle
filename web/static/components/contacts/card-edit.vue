@@ -42,7 +42,11 @@
         <br />
         <br />
         Contacts Involved:
-        <a v-for="o_contact in cardContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
+        <span v-for="o_contact in cardContacts" class="o_contact">
+          <a :href="'/contact/'+o_contact.id">{{o_contact.name}}</a>
+          <a class="remove" @click="removeContact(o_contact.id)">×</a>
+        </span>
+
         <modal large :show.sync="openContactModal">
           <div slot="modal-header" class="modal-header">
            <button type="button" class="close" @click="openContactModal=false"><span>&times;</span></button>
@@ -267,7 +271,27 @@
         this.NewContactName = '';
         this.openContactModal = false;
       },
-
+      removeContact(contactId) {
+        if(confirm('Are you sure?')) {
+          let url = '/api/v2/card/'+ this.card.id + '/remove_contact/' + contactId;
+          this.$http.delete(url).then(resp => {
+            if(resp.data.error_message) {
+              alert(resp.data.error_message);
+            } else {
+              var index = -1;
+              for(var i=0; i < this.cardContacts.length; i++) {
+                if(this.cardContacts[i].id == contactId) {
+                  index = i;
+                  break;
+                }
+              }
+              if(index != -1) {
+                this.cardContacts.splice(index, 1);
+              }
+            }
+          });
+        }
+      },
       archiveCard() {
         let url = '/api/v2/card/' + this.item.id;
         this.$http.put(url, { card: { status: '1'} });

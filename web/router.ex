@@ -106,6 +106,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/card", APIV2.CardController do
       resources "/attachments", APIV2.CardAttachmentController,
         only: [:index, :create, :delete]
+      delete "/remove_contact/:id", APIV2.CardController, :remove_contact
     end
     resources "/api/v2/tag", APIV2.TagController
     resources "/api/v2/board", APIV2.BoardController do

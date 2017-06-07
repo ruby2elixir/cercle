@@ -98,14 +98,29 @@
       margin-right:20px;
       margin-top:10px;
     }
-    a.o_contact  {
+    .o_contact {
+      margin-right:7px;
+      background: lightgray;
+      border-radius: 5px;
+      display:inline-block;
+      padding: 3px;
+    }
+    .o_contact a  {
       font-weight:bold;
       display:inline-block;
       padding:3px;
       border-radius:5px;
-      margin-right:7px;
       color:grey;
       text-decoration:underline;
+    }
+    .o_contact a.remove {
+      cursor: pointer;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .o_contact a.remove:hover {
+      background: gray;
+      color: lightgray;
     }
     .add_o_contact {
       font-size: small;
