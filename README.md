@@ -4,7 +4,7 @@ Cercle is a CRM for smart people who need more clients.
 
 Easy to keep track of your sales, partnerships, support tickets, onboarding clients. 
 
-[Try Cercle Today, Click here: http://www.cercle.co/register](http://www.cercle.co/register)
+[Try Cercle Today. Click here: http://www.cercle.co/register](http://www.cercle.co/register)
 
 ## Why Cercle?
 - realtime
