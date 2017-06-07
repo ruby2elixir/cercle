@@ -150,7 +150,7 @@ defmodule CercleApi.ContactController do
       headers = table.headings
       first_row = Enum.at(table.body, 0)
       top_five_rows = Enum.take(table.body, 5)
-      contact_fields = ["first_name", "last_name", "email", "description", "phone", "job_title"]
+      contact_fields = ["first_name", "last_name", "full_name", "email", "description", "phone", "job_title"]
       organization_fields = ["name", "website", "description"]
       json conn, %{headers: headers, first_row: first_row, top_five_rows: top_five_rows, contact_fields: contact_fields, organization_fields: organization_fields, temp_file: temp_file}
     end
@@ -193,6 +193,7 @@ defmodule CercleApi.ContactController do
         selected_row = Enum.at(table, i)
         contact_data = %{"first_name" => selected_row[mapping["contact"]["first_name"]],
                          "last_name" => selected_row[mapping["contact"]["last_name"]],
+                         "full_name" => selected_row[mapping["contact"]["full_name"]],
                          "email" => selected_row[mapping["contact"]["email"]],
                          "phone" => selected_row[mapping["contact"]["phone"]],
                          "description" => selected_row[mapping["contact"]["description"]],
