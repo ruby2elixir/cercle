@@ -19,12 +19,12 @@ Cercle is:
 - Import CSV
 - Contact Tags
 - Contact Organization
-- Each people can be linked to visual Card into a Board
+- Each Contact can be linked to visual Card into a Board
 - Board Timeline on a sidebar
 - Board Archive/Unarchive
 - Card Attachements
 - Card Tasks
-- Card Comment
+- Card Comments
 - Card Email Notification System for team member
 - Oauth for API in Zapier
 
