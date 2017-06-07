@@ -13,7 +13,9 @@ Cercle is:
 - visual
 - simple
 - API ready
-- and free!
+- Open source
+- Free if you install it by yourself
+- $1.99 per month with unlimited number of users if we do the hosting for you.
 
 ## Current Features
 - Import CSV
