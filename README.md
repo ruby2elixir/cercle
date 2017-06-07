@@ -20,16 +20,22 @@ Cercle is:
 - Contact Tags
 - Contact Organization
 - Each people can be linked to visual Card into a Board
+- Board Timeline on a sidebar
+- Board Archive/Unarchive
 - Card Attachements
 - Card Tasks
 - Card Comment
+- Card Email Notification System for team member
 - Oauth for API in Zapier
 
 
 ## Changelog
 
 June 7 2017, V1.0 Release Candidate
++ New Feature
 - Oauth Integration with Zapier
+- Add Full name option during CSV Import
+
 
 
 ## To install Cercle on Local
