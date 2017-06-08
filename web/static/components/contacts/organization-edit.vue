@@ -1,8 +1,8 @@
 <template>
   <div class="organization-block">
     <div class="" style="" v-if="!organization">
-      <modal title="Where is the contact working currently?" large :show.sync="openModal">
-        <div slot="modal-body" class="modal-body">
+      <modal title="Where is the contact working currently?" medium :show.sync="openModal">
+        <div slot="modal-body" class="modal-body" style="padding-left: 15px; padding-right: 15px;">
 
           <v-select
             label="name"
@@ -66,10 +66,17 @@
         });
       }
     },
+    watch: {
+      'organization': function() {
+        this.chooseOrganization = this.organization;
+      }
+    },
     methods: {
       saveOrganization(){
         let url = '/api/v2/contact/' + this.contact.id;
-        this.$http.put(url, { contact: { organizationId: this.chooseOrganization.id }});
+        this.$http.put(url, { contact: { organizationId: this.chooseOrganization.id }}).then(resp => {
+          this.$emit('updateOrganization', resp.data.data.organization);
+        });
         this.openModal = false;
       },
 
@@ -88,7 +95,9 @@
       removeOrganization() {
         this.menuModal = false;
         let url = '/api/v2/contact/' + this.contact.id;
-        this.$http.put(url, { contact: {organizationId: '' }});
+        this.$http.put(url, { contact: {organizationId: '' }}).then(resp => {
+          this.$emit('updateOrganization', null);
+        });
       },
       buildOrganization(event) {
         event.preventDefault();

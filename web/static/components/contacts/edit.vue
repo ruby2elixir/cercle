@@ -19,6 +19,7 @@
                     :organization="organization"
                     :contact="contact"
                     :company="company"
+                    v-on:updateOrganization="updateOrganization"
                     >
                    </organization-edit>
                 </td>
@@ -127,6 +128,15 @@ export default {
     'delete-contact': DeleteContact
   },
   methods: {
+    updateOrganization(org) {
+      this.organization = org;
+
+      var cardDisplayHtml = this.contact.first_name + ' ' + this.contact.last_name;
+      if(this.organization) {
+        cardDisplayHtml += ' <span style="color:rgb(119, 119, 119);"> - ' +this.organization.name+ '</span>';
+      }
+      $('.portlet[data-id=' +this.card_id+ '] .name-organization').html(cardDisplayHtml);
+    },
     cardName(card) {
       let name = [];
       if (card.board) { name.push(card.board.name); }
