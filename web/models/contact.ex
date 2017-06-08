@@ -42,7 +42,7 @@ defmodule CercleApi.Contact do
           :company_id, :first_name, :last_name, :data, :organization_id, :user_id,
           :email, :phone, :description, :job_title
         ])
-    |> validate_required([:company_id, :first_name, :last_name])
+    |> validate_required([:company_id, :last_name])
   end
 
   def cards(contact, query \\ CercleApi.Card) do

@@ -194,9 +194,14 @@ defmodule CercleApi.APIV2.ContactController do
   defp split_name(contact_params) do
     if contact_params["name"] && String.trim(to_string(contact_params["last_name"])) == "" do
       name_splits = String.split(contact_params["name"], ~r/\s+/)
-      [first_name|name_splits] = name_splits
-      last_name = Enum.join(name_splits, " ")
-      %{"first_name" => first_name, "last_name" => last_name}
+      if length(name_splits) == 0 do
+        [last_name] = name_splits
+        %{"last_name" => last_name}
+      else
+        [first_name|name_splits] = name_splits
+        last_name = Enum.join(name_splits, " ")
+        %{"first_name" => first_name, "last_name" => last_name}
+      end
     else
       %{}
     end
