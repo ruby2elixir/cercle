@@ -42,7 +42,11 @@
         <br />
         <br />
         Contacts Involved:
-        <a v-for="o_contact in cardContacts" :href="'/contact/'+o_contact.id" class="o_contact">{{o_contact.name}}</a>
+        <span v-for="o_contact in cardContacts" class="o_contact">
+          <a :href="'/contact/'+o_contact.id">{{o_contact.name}}</a>
+          <a class="remove" @click="removeContact(o_contact.id)" v-if="cardContacts.length > 1">×</a>
+        </span>
+
         <modal large :show.sync="openContactModal">
           <div slot="modal-header" class="modal-header">
            <button type="button" class="close" @click="openContactModal=false"><span>&times;</span></button>
@@ -257,17 +261,41 @@
         this.$http.post(url, { contact: data }).then(resp => {
           let urlOpp = '/api/v2/card/'+ this.card.id;
           let contactIds = [];
-          this.cardContacts.forEach(function(item) {
-            contactIds.push(item.id);
-          });
-          contactIds.push(resp.data.data.id);
-          this.$http.put(urlOpp,{ card: { contactIds: contactIds } });
+          this.cardContacts.push(resp.data.data);
+          this.item.contact_ids.push(resp.data.data.id);
+          this.$http.put(urlOpp,{ card: { contactIds: this.item.contact_ids  } });
         });
 
         this.NewContactName = '';
         this.openContactModal = false;
       },
+      removeContact(contactId) {
+        if(confirm('Are you sure?')) {
+          this.item.contact_ids.splice(this.item.contact_ids.indexOf(contactId), 1);
 
+          let url = '/api/v2/card/' + this.item.id;
+          this.$http.put(url, {card: {contact_ids: this.item.contact_ids}}).then(resp => {
+            if(resp.data.errors && resp.data.errors.contact_ids) {
+              alert(resp.data.errors.contact_ids);
+            } else {
+              var index = -1;
+              for(var i=0; i < this.cardContacts.length; i++) {
+                if(this.cardContacts[i].id == contactId) {
+                  index = i;
+                  break;
+                }
+              }
+              if(index != -1) {
+                this.cardContacts.splice(index, 1);
+              }
+            }
+          }, resp => {
+            if(resp.data.errors.contact_ids) {
+              alert(resp.data.errors.contact_ids);
+            }
+          });
+        }
+      },
       archiveCard() {
         let url = '/api/v2/card/' + this.item.id;
         this.$http.put(url, { card: { status: '1'} });

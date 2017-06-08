@@ -38,6 +38,7 @@ defmodule CercleApi.Card do
     model
     |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids, :board_id, :board_column_id, :description])
     |> validate_required([:contact_ids, :user_id, :company_id])
+    |> validate_length(:contact_ids, min: 1, message: "Atleast 1 contact is required")
   end
 
   def contacts(card) do
