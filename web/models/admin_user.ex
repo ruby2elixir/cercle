@@ -1,4 +1,7 @@
 defmodule CercleApi.AdminUser do
+  @moduledoc """
+  Users are  use  for admin section of Cercle CRM .
+  """
   use CercleApi.Web, :model
   @system_user_email "admin@cercle.com"
 
@@ -21,7 +24,7 @@ defmodule CercleApi.AdminUser do
   def system_user do
     case CercleApi.Repo.get_by(__MODULE__, email: @system_user_email) do
       nil ->
-        {_, user } = %CercleApi.AdminUser{}
+        {_, user} = %CercleApi.AdminUser{}
         |> changeset(%{"email" => @system_user_email, "name" => "System admin"})
         |> CercleApi.Repo.insert
         user

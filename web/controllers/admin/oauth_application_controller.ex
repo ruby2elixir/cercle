@@ -2,7 +2,8 @@ defmodule CercleApi.Admin.OauthApplicationController do
   use CercleApi.Web, :controller
   alias ExOauth2Provider.OauthApplications
   alias ExOauth2Provider.OauthApplications.OauthApplication
-
+  alias ExOauth2Provider.OauthAccessGrants.OauthAccessGrant
+  alias ExOauth2Provider.OauthAccessTokens.OauthAccessToken
   def index(conn, _params) do
     oauth_applications = Repo.all(OauthApplication)
     render(conn, "index.html", oauth_applications: oauth_applications)
@@ -47,12 +48,15 @@ defmodule CercleApi.Admin.OauthApplicationController do
   end
 
   def delete(conn, %{"id" => id}) do
-    oauth_application = ExOauth2Provider.repo.get_by!(OauthApplication, uid: id)
+    app = ExOauth2Provider.repo.get_by!(OauthApplication, uid: id)
 
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
-    OauthApplications.delete_application(oauth_application)
+    with q <- from(p in OauthAccessGrant, where: p.application_id == ^app.id),
+      do: ExOauth2Provider.repo.delete_all(q)
 
+    with q <- from(p in OauthAccessToken, where: p.application_id == ^app.id),
+      do: ExOauth2Provider.repo.delete_all(q)
+
+    {:ok, _application} = OauthApplications.delete_application(app)
     conn
     |> put_flash(:info, "Oauth application deleted successfully.")
     |> redirect(to: admin_oauth_application_path(conn, :index))

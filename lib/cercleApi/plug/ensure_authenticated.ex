@@ -1,4 +1,8 @@
 defmodule CercleApi.Plug.EnsureAuthenticated do
+  @moduledoc """
+  Guardian.Plug.EnsureAuthenticated + ExOauth2Provider.Plug.EnsureAuthenticated
+  """
+
   def init(opts \\ %{}), do: Enum.into(opts, %{})
   def call(conn, opts) do
     key = Map.get(opts, :key, :default)

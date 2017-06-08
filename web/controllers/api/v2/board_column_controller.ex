@@ -21,7 +21,6 @@ defmodule CercleApi.APIV2.BoardColumnController do
     current_user = CercleApi.Plug.current_user(conn)
     company_id  = current_user.company_id
 
-
     if String.strip(params["board_id"]) != "" do
       board = Repo.get(Board, params["board_id"])
       board_id = board.id
