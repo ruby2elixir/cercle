@@ -261,11 +261,9 @@
         this.$http.post(url, { contact: data }).then(resp => {
           let urlOpp = '/api/v2/card/'+ this.card.id;
           let contactIds = [];
-          this.cardContacts.forEach(function(item) {
-            contactIds.push(item.id);
-          });
-          contactIds.push(resp.data.data.id);
-          this.$http.put(urlOpp,{ card: { contactIds: contactIds } });
+          this.cardContacts.push(resp.data.data);
+          this.item.contact_ids.push(resp.data.data.id);
+          this.$http.put(urlOpp,{ card: { contactIds: this.item.contact_ids  } });
         });
 
         this.NewContactName = '';
