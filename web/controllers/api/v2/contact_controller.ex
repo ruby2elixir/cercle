@@ -194,7 +194,7 @@ defmodule CercleApi.APIV2.ContactController do
   defp split_name(contact_params) do
     if contact_params["name"] && String.trim(to_string(contact_params["last_name"])) == "" do
       name_splits = String.split(contact_params["name"], ~r/\s+/)
-      if length(name_splits) == 0 do
+      if length(name_splits) == 1 do
         [last_name] = name_splits
         %{"last_name" => last_name}
       else
