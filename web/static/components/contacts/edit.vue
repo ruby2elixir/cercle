@@ -131,7 +131,7 @@ export default {
     updateOrganization(org) {
       this.organization = org;
 
-      var cardDisplayHtml = this.contact.first_name + ' ' + this.contact.last_name;
+      let cardDisplayHtml = this.contact.first_name + ' ' + this.contact.last_name;
       if(this.organization) {
         cardDisplayHtml += ' <span style="color:rgb(119, 119, 119);"> - ' +this.organization.name+ '</span>';
       }
@@ -149,7 +149,7 @@ export default {
       return false;
     },
     addNewCard() {
-      var url = '/api/v2/card/';
+      let url = '/api/v2/card/';
       this.$http.post(url,
         { card: {
           mainContactId: this.contact.id,
