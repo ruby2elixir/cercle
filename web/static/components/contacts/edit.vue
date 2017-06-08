@@ -67,6 +67,7 @@
             :cards="cards"
             :user_image="userImage"
             v-on:browse="browseCards = true"
+            v-on:changeContactDisplay="changeContactDisplay"
             :socket="socket"
             />
         </div>
@@ -128,6 +129,9 @@ export default {
     'delete-contact': DeleteContact
   },
   methods: {
+    changeContactDisplay(contactId) {
+      this.$emit('changecontactdisplay', contactId);
+    },
     updateOrganization(org) {
       this.organization = org;
 

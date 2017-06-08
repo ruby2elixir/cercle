@@ -29,6 +29,9 @@
         this.card = { id: cardId };
         this.contactView = 'contact-form';
         this.showContact = true;
+      },
+      changeContactDisplay(contactId) {
+        this.contact = {id: contactId};
       }
     },
     mounted() {

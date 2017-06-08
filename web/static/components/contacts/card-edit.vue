@@ -43,7 +43,7 @@
         <br />
         Contacts Involved:
         <span v-for="o_contact in cardContacts" class="o_contact">
-          <a :href="'/contact/'+o_contact.id">{{o_contact.name}}</a>
+          <a href='#' v-on:click="changeContactDisplay($event, o_contact.id)">{{o_contact.name}}</a>
           <a class="remove" @click="removeContact(o_contact.id)" v-if="cardContacts.length > 1">×</a>
         </span>
 
@@ -195,6 +195,10 @@
       }
     },
     methods: {
+      changeContactDisplay(event, contactId) {
+        event.preventDefault();
+        this.$emit('changeContactDisplay', contactId);
+      },
       eventAddOrUpdate(event) {
         let itemIndex = this.$data.events.findIndex(function(item){
           return item.id === parseInt(event.id);
