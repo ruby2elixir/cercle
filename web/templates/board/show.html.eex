@@ -84,6 +84,7 @@
             keep-alive
             v-bind:is="contactView"
             :contact_id.sync="contact.id"
+            v-on:changecontactdisplay="changeContactDisplay"
             :card_id.sync="card.id"
             >
           </component>
