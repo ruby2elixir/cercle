@@ -44,7 +44,7 @@
         Contacts Involved:
         <span v-for="o_contact in cardContacts" class="o_contact">
           <a :href="'/contact/'+o_contact.id">{{o_contact.name}}</a>
-          <a class="remove" @click="removeContact(o_contact.id)">×</a>
+          <a class="remove" @click="removeContact(o_contact.id)" v-if="cardContacts.length > 1">×</a>
         </span>
 
         <modal large :show.sync="openContactModal">
@@ -273,10 +273,12 @@
       },
       removeContact(contactId) {
         if(confirm('Are you sure?')) {
-          let url = '/api/v2/card/'+ this.card.id + '/remove_contact/' + contactId;
-          this.$http.delete(url).then(resp => {
-            if(resp.data.error_message) {
-              alert(resp.data.error_message);
+          this.item.contact_ids.splice(this.item.contact_ids.indexOf(contactId), 1);
+
+          let url = '/api/v2/card/' + this.item.id;
+          this.$http.put(url, {card: {contact_ids: this.item.contact_ids}}).then(resp => {
+            if(resp.data.errors && resp.data.errors.contact_ids) {
+              alert(resp.data.errors.contact_ids);
             } else {
               var index = -1;
               for(var i=0; i < this.cardContacts.length; i++) {
@@ -288,6 +290,10 @@
               if(index != -1) {
                 this.cardContacts.splice(index, 1);
               }
+            }
+          }, resp => {
+            if(resp.data.errors.contact_ids) {
+              alert(resp.data.errors.contact_ids);
             }
           });
         }

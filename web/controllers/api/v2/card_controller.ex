@@ -95,18 +95,4 @@ defmodule CercleApi.APIV2.CardController do
 
     json conn, %{status: 200}
   end
-
-  def remove_contact(conn, %{"card_id" => card_id, "id" => contact_id}) do
-    card = Repo.get!(Card, card_id)
-    {contact_id, _} = Integer.parse(contact_id)
-    contact_ids = List.delete(card.contact_ids, contact_id)
-    case length(contact_ids) do
-      0 ->
-        json conn, %{status: 422, error_message: "Last contact cannot be deleted"}
-      _ ->
-        changeset = Card.changeset(card, %{contact_ids: contact_ids})
-        Repo.update(changeset)
-        json conn, %{status: 200}
-    end
-  end
 end
