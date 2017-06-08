@@ -1,7 +1,6 @@
 defmodule CercleApi.Oauth.AuthorizationController do
   use CercleApi.Web, :controller
   plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plug.CurrentUser
   plug :put_layout, "oauth.html"
 
   alias ExOauth2Provider.Authorization
@@ -22,7 +21,6 @@ defmodule CercleApi.Oauth.AuthorizationController do
     end
   end
 
-  #params = %{"_csrf_token" => "ICAwNDc9XGRbXQ5uWFhYDGBWKgptAAAAMwdqEm5Qkla40snA1dFgUg==", "_utf8" => "✓", "client_id" => "a63311608bba2a432438edf435351bc6", "redirect_uri" => "https://zapier.com/dashboard/auth/oauth/return/App66849API/", "response_type" => "code", "scope" => "", "state" => "1496733637.2716082"}
   def create(conn, params) do
     current_resource_owner = Guardian.Plug.current_resource(conn)
     current_resource_owner
