@@ -18,6 +18,7 @@ defmodule CercleApi.Router do
   end
 
   pipeline :api_auth do
+    plug ExOauth2Provider.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
   end
@@ -33,7 +34,7 @@ defmodule CercleApi.Router do
 
   pipeline :require_login do
     plug Guardian.Plug.EnsureAuthenticated, handler: CercleApi.GuardianErrorHandler
-    plug CercleApi.Plugs.CurrentUser
+    plug CercleApi.Plug.CurrentUser
   end
 
   pipeline :already_authenticated do
@@ -128,6 +129,24 @@ defmodule CercleApi.Router do
 
     resources "/users", UserController
     resources "/companies", CompanyController
+    resources "/oauth_application", OauthApplicationController, except: [:show]
     #resources "/company_services", CompanyServiceController
   end
+
+  scope "/oauth", as: "oauth" do
+    post "/token", CercleApi.Oauth.TokenController, :create
+    post "/revoke", CercleApi.Oauth.TokenController, :revoke
+    post "/refresh", CercleApi.Oauth.TokenController, :create
+  end
+
+  scope "/oauth", as: "oauth" do
+    pipe_through [:browser, :browser_auth, :require_login]
+    scope "/authorize" do
+      get "/", CercleApi.Oauth.AuthorizationController, :new
+      post "/", CercleApi.Oauth.AuthorizationController, :create
+      get "/:code", CercleApi.Oauth.AuthorizationController, :show
+      delete "/", CercleApi.Oauth.AuthorizationController, :delete
+    end
+  end
+
 end

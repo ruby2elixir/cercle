@@ -74,7 +74,8 @@ defmodule CercleApi.Mixfile do
      {:rollbax, "~> 0.8.2"},
      {:ex_machina, "~> 2.0", only: [:test]},
      {:excov, "~> 0.1", only: :test},
-     {:excov_reporter_console, "~> 0.1", only: :test}
+     {:excov_reporter_console, "~> 0.1", only: :test},
+     {:ex_oauth2_provider, "~> 0.2.0"}
     ]
   end
 

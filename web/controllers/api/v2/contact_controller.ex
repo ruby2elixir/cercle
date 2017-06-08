@@ -5,8 +5,8 @@ defmodule CercleApi.APIV2.ContactController do
 
   alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card, CardService, ContactService}
 
-  plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.CurrentUser
 
   plug :scrub_params, "contact" when action in [:create, :update]
 
@@ -16,7 +16,7 @@ defmodule CercleApi.APIV2.ContactController do
 
   def index(conn, params) do
     q = params["q"]
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     company_id  = current_user.company_id
     query = from p in Contact,
       where: p.company_id == ^company_id,
@@ -35,7 +35,7 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def create(conn, %{"contact" => contact_params}) do
-    user = Guardian.Plug.current_resource(conn)
+    user = CercleApi.Plug.current_user(conn)
     company = Repo.get!(Company, user.company_id)
     contact_params = Map.merge(contact_params, split_name(contact_params))
     contact_params = Map.put(contact_params, "user_id", user.id)

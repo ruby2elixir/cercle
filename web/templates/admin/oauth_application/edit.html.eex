@@ -1,0 +1,8 @@
+<div class="well">
+  <h2>Edit oauth application</h2>
+
+  <%= render "form.html", changeset: @changeset,
+      action: admin_oauth_application_path(@conn, :update, @oauth_application) %>
+
+  <%= link "Back", to: admin_oauth_application_path(@conn, :index) %>
+</div>

@@ -4,8 +4,8 @@ defmodule CercleApi.APIV2.CardController do
 
   alias CercleApi.{Card, Contact, Company, Organization, User, Board, CardService}
 
-  plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.CurrentUser
 
   plug :scrub_params, "card" when action in [:create, :update]
 
@@ -14,7 +14,7 @@ defmodule CercleApi.APIV2.CardController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, %{"contact_id" => contact_id, "archived" => archived}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     contact = Repo.get_by!(Contact, id: contact_id, company_id: current_user.company_id)
 
     if archived == "true" do
@@ -46,7 +46,7 @@ defmodule CercleApi.APIV2.CardController do
   end
 
   def create(conn, %{"card" => card_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     company = Repo.get!(Company, current_user.company_id)
     board = Repo.get!(CercleApi.Board, card_params["board_id"])
 
@@ -69,7 +69,7 @@ defmodule CercleApi.APIV2.CardController do
   end
 
   def update(conn, %{"id" => id, "card" => card_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     origin_card = Repo.get!(Card, id)
     changeset = Card.changeset(origin_card, card_params)
 

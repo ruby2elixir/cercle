@@ -2,8 +2,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
   use CercleApi.Web, :controller
   alias CercleApi.{TimelineEvent, User, Contact, Board, Repo}
 
-  plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.CurrentUser
   plug :authorize_resource, model: TimelineEvent, only: [:delete, :update],
     unauthorized_handler: {CercleApi.Helpers, :handle_json_unauthorized},
     not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
@@ -11,14 +11,14 @@ defmodule CercleApi.APIV2.TimelineEventController do
   plug :scrub_params, "timeline_event" when action in [:create, :update]
 
   def index(conn, params) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     te = Repo.preload(Repo.all(TimelineEvent), [:user])
 
     render(conn, "index.json", timeline_events: te)
   end
 
   def create(conn, %{"timeline_event" => timeline_event_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
 
     changeset = current_user
     |> build_assoc(:timeline_event)

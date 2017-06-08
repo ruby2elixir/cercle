@@ -1,0 +1,23 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <div class="form-group">
+    <%= label f, :name, class: "control-label" %>
+    <%= text_input f, :name, class: "form-control" %>
+    <%= error_tag f, :name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :redirect_uri, class: "control-label" %>
+    <%= text_input f, :redirect_uri, class: "form-control" %>
+    <%= error_tag f, :redirect_uri %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :scopes, class: "control-label" %>
+    <%= text_input f, :scopes, class: "form-control" %>
+    <%= error_tag f, :scopes %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

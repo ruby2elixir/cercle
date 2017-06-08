@@ -9,8 +9,8 @@ defmodule CercleApi.APIV2.BoardColumnController do
   alias CercleApi.Organization
   alias CercleApi.User
 
-  plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.CurrentUser
   plug :scrub_params, "board_column" when action in [:create, :update]
 
   plug :authorize_resource, model: BoardColumn, only: [:update, :delete],
@@ -18,20 +18,19 @@ defmodule CercleApi.APIV2.BoardColumnController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, params) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     company_id  = current_user.company_id
-    
-    
-    if String.strip(params["board_id"]) != "" do 
+
+    if String.strip(params["board_id"]) != "" do
       board = Repo.get(Board, params["board_id"])
       board_id = board.id
       query = from p in BoardColumn,
         where: p.board_id == ^board_id,
         order_by: [desc: p.updated_at]
-  
+
       board_columns = query
       |> Repo.all
-  
+
       render(conn, "index.json", board_columns: board_columns)
     else
       json conn, %{"data": []}
@@ -39,7 +38,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
   end
 
   def create(conn, %{"board_column" => board_column_params}) do
-    user = Guardian.Plug.current_resource(conn)
+    user = CercleApi.Plug.current_user(conn)
     company = Repo.get!(Company, user.company_id)
     board = Repo.get(Board, board_column_params["board_id"])
     if board do

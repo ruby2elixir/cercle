@@ -2,8 +2,8 @@ defmodule CercleApi.APIV2.OrganizationController do
   use CercleApi.Web, :controller
   alias CercleApi.{Organization, Contact, Company, User}
 
-  plug Guardian.Plug.EnsureAuthenticated
-  plug CercleApi.Plugs.CurrentUser
+  plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.CurrentUser
 
   plug :scrub_params, "organization" when action in [:create, :update]
 
@@ -28,7 +28,7 @@ defmodule CercleApi.APIV2.OrganizationController do
   end
 
   def create(conn, %{"organization" => organization_params}) do
-    user = Guardian.Plug.current_resource(conn)
+    user = CercleApi.Plug.current_user(conn)
     company = Repo.get!(Company, user.company_id)
 
     changeset = company

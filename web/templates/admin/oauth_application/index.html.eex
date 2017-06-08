@@ -1,0 +1,35 @@
+<h3>
+  <a href="/admin/users">User</a>
+  <a href="/admin/companies">Companies</a> ·
+  <a href="/admin/contacts">Contacts</a> ·
+  <a href="/admin/organizations">Organizations</a> ·
+  <a href="/admin/oauth_application">Oauth Applications</a> ·
+</h2>
+
+<div class="well">
+  <table class="table table-striped" style="background-color:white;">
+
+    <tbody>
+      <%= for oauth_application <- @oauth_applications do %>
+          <tr>
+            <td><b><%= oauth_application.name %></b></td>
+
+            <td class="text-right">
+              <%= link "Edit", to: admin_oauth_application_path(@conn, :edit, oauth_application), class: "btn btn-default btn-xs" %>
+              <span class=" pull-right">
+                <%= link "Delete", to: admin_oauth_application_path(@conn, :delete, oauth_application), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+              </span>
+            </td>
+          </tr>
+          <tr class="small"><td colspan=2><b class=" col-md-offset-1" >Secret (Client Secret):</b> <%= oauth_application.secret %></td></tr>
+          <tr class="small"><td colspan=2><b class=" col-md-offset-1">UID (Client ID):</b> <%= oauth_application.uid %></td></tr>
+          <tr class="small"><td colspan=2><b class=" col-md-offset-1">Authorization URL:</b> <%= "#{@conn.scheme}://#{@conn.host}/oauth/authorize" %></td></tr>
+          <tr class="small"><td colspan=2><b class=" col-md-offset-1">Access Token URL:</b> <%= "#{@conn.scheme}://#{@conn.host}/oauth/token" %></td></tr>
+          <tr class="small"><td colspan=2><b class=" col-md-offset-1">Redirect Url:</b> <%= oauth_application.redirect_uri %></td></tr>
+          <tr class="small"><td colspan=2><b class=" col-md-offset-1">Scopes:</b> <%= oauth_application.scopes %></td></tr>
+          <% end %>
+    </tbody>
+  </table>
+
+  <%= link "Add Application", to: admin_oauth_application_path(@conn, :new), class: "btn btn-primary" %>
+</div>

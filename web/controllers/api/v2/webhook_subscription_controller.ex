@@ -4,12 +4,12 @@ defmodule CercleApi.APIV2.WebhookSubscriptionController do
   alias CercleApi.WebhookSubscription
   alias CercleApi.User
 
-  plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.EnsureAuthenticated
 
   require Logger
 
   def index(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     query = from p in WebhookSubscription,
       where: p.user_id == ^current_user.id,
       order_by: [desc: p.event]
@@ -21,7 +21,7 @@ defmodule CercleApi.APIV2.WebhookSubscriptionController do
   end
 
   def create(conn, %{"webhook_subscription" => webhook_subscription_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     webhook_subscription = Repo.get_by(WebhookSubscription, event: webhook_subscription_params["event"], user_id: current_user.id)
 
     if webhook_subscription do
@@ -47,7 +47,7 @@ defmodule CercleApi.APIV2.WebhookSubscriptionController do
   end
 
   def delete(conn, %{"id" => event}) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     webhook_subscription = Repo.get_by(WebhookSubscription, event: event, user_id: current_user.id)
     Repo.delete!(webhook_subscription)
     json conn, %{status: 200}

@@ -4,7 +4,8 @@ defmodule CercleApi.Factory do
   alias CercleApi.{User, Company, Activity, Organization, Contact,
                    Board, BoardColumn, Card, CardAttachment,
                    TimelineEvent}
-
+  alias ExOauth2Provider.OauthApplications.OauthApplication
+  alias ExOauth2Provider.OauthAccessTokens.OauthAccessToken
   def company_factory do
     %Company{ title: "Coca-Cola Inc." }
   end
@@ -91,6 +92,25 @@ defmodule CercleApi.Factory do
       card: build(:card),
       contact: build(:contact),
       metadata: %{}
+    }
+  end
+
+  def oauth_application_factory do
+    %OauthApplication{
+      secret: "4e3e0cd73b435260881b3004346bc2b4",
+      uid: "a63311608bba2a432438edf435351bc6",
+      redirect_uri: "https://zapier.com/dashboard/auth/oauth/return/App66908API/",
+      scopes: "read",
+      owner_id: 1,
+      name: "Test App"
+    }
+  end
+
+  def oauth_access_token_factory do
+    %OauthAccessToken{
+      application: build(:oauth_application),
+      token: "77345dc3a5a0e7bb9409b3e7c811c2464dc2107126353360f851924f072b3512",
+      expires_in: 7200
     }
   end
 end

@@ -4,13 +4,13 @@ defmodule CercleApi.APIV2.BulkController do
 
   alias CercleApi.{Contact, Organization, Tag, ContactTag}
 
-  plug Guardian.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.EnsureAuthenticated
 
   def bulk_contact_create(conn, %{"items" => items, "return" => return}) do
     if Enum.count(items) > 100 do
       json conn, %{status: 422, error_message: "Maximum 100 records are permitted per call"}
     else
-      user = Guardian.Plug.current_resource(conn)
+      user = CercleApi.Plug.current_user(conn)
       company_id = user.company_id
       contacts = for item <- items do
         contact_params = Map.put(item["contact"], "user_id", user.id) |> Map.put("company_id", company_id)
@@ -71,7 +71,7 @@ defmodule CercleApi.APIV2.BulkController do
         {tag_id, _rest} = Integer.parse(tag_id)
         tag = Repo.get(Tag, tag_id)
         if tag do
-          user = Guardian.Plug.current_resource(conn)
+          user = CercleApi.Plug.current_user(conn)
           company_id = user.company_id
           responses = for c <- contacts do
             if c do

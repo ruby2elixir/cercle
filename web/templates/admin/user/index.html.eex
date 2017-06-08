@@ -3,6 +3,7 @@
   <a href="/admin/companies">Companies</a> ·
   <a href="/admin/contacts">Contacts</a> ·
   <a href="/admin/organizations">Organizations</a> ·
+  <a href="/admin/oauth_application">Oauth Applications</a> ·
 </h2>
 
 <br />

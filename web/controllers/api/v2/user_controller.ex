@@ -4,12 +4,11 @@ defmodule CercleApi.APIV2.UserController do
   alias CercleApi.User
   alias CercleApi.{Company, Organization}
 
-  plug Guardian.Plug.EnsureAuthenticated
-
+  plug CercleApi.Plug.EnsureAuthenticated
   plug :scrub_params, "user" when action in [:create, :update]
 
   def index(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user = CercleApi.Plug.current_user(conn)
     company_id  = current_user.company_id
     query = from u in User,
       where: u.company_id == ^company_id,

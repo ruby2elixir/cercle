@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cercle</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/components.css") %>">
+    <!-- ICONS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <link href="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="//unpkg.com/element-ui/lib/theme-default/index.css">
+    <%= if Guardian.Plug.current_token(@conn) do %>
+    <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
+    <meta name="user_image", content="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" >
+    <meta name="time_zone", content="<%= @conn.assigns[:current_user].time_zone %>" >
+    <meta name="user_id", content="<%= @conn.assigns[:current_user].id %>" >
+    <% end %>
+
+  </head>
+  <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+  <body class="hold-transition skin-blue layout-top-nav">
+    <notification id="notification-app"></notification>
+    <div class="wrapper wrapper_<%= wrapper_css_class @conn %>">
+
+      <header class="main-header">
+
+        <nav class="navbar navbar-static-top" style="background-color:black;">
+          <div class="container">
+            <div class="navbar-header">
+              <a href="/" class="navbar-brand">
+                <img src="/images/logo_cercle2.png" style="width:56px;position:relative;top:-14px;left:10px;">
+              </a>
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                <i class="fa fa-bars"></i>
+              </button>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+
+            </div><!-- /.navbar-collapse -->
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+              <ul class="nav navbar-nav">
+                <!-- Messages: style can be found in dropdown.less-->
+                <!-- User Account Menu -->
+                <li class="dropdown user user-menu">
+                  <!-- Menu Toggle Button -->
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <!-- The user image in the navbar-->
+                    <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
+                    <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="user-image" alt="User Image">
+                    <%= end %>
+                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                    <span class="hidden-xs"><%= @conn.assigns[:current_user].user_name %></span>
+                  </a>
+
+                  <ul class="dropdown-menu">
+                    <!-- The user image in the menu -->
+                    <li class="user-header" style="background-color:#3C8DBC;">
+                      <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
+                      <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="img-circle" alt="User Image">
+                      <%= end %>
+                      <p style="color:#FFFFFF;">
+                        <%= @conn.assigns[:current_user].user_name %>
+                        <small style="color:#FFFFFF;">
+                          (<%= @conn.assigns[:current_user].name %>)
+                        </small>
+                      </p>
+                    </li>
+                    <li class="user-footer">
+                      <div class="pull-left">
+                        <a href="/settings/profile_edit" class="btn btn-default btn-flat">Settings</a>
+                      </div>
+                      <div class="pull-right">
+                        <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
+                      </div>
+                    </li>
+                  </ul>
+
+                </li>
+
+              </ul>
+            </div><!-- /.navbar-custom-menu -->
+          </div><!-- /.container-fluid -->
+        </nav>
+      </header>
+      <!-- Full Width Column -->
+      <div class="content-wrapper <%= wrapper_css_class @conn %>">
+        <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
+
+        <%= if show_board_menu?(@conn) do %>
+        <a href="#" id="toggle-activity-panel" class="btn pull-right" style="margin-top:20px;">
+          <i class="fa fa-fw fa-ellipsis-h"></i>
+          Show Menu
+        </a>
+        <% end %>
+
+        <%= if assigns[:no_container] do %>
+        <%= render @view_module, @view_template, assigns %>
+        <%= end %>
+
+        <%= if !assigns[:no_container] do %>
+          <div class="container">
+            <%= render @view_module, @view_template, assigns %>
+          </div><!-- /.container -->
+        <%end%>
+
+      </div><!-- /.content-wrapper -->
+
+    </div><!-- ./wrapper -->
+
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+
+  </body>
+</html>
