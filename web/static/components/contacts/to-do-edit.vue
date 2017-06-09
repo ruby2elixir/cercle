@@ -1,9 +1,9 @@
 <template>
   <div class="contact-to-dos">
     <div>
-      <div class="pull-right">
-        <a v-if="!showDoneTasks" @click="showDoneTasks=true;" href='#' style="color: #666;">Show done tasks</a>
-        <a v-if="showDoneTasks" @click="showDoneTasks=false;" href='#' style="color: #666;">Hide done tasks</a>
+      <div class="pull-right toggle-done-tasks" v-if="tasks.length>0">
+        <a v-if="!showDoneTasks" @click="showDoneTasks=true;" href='#'><i class="fa fa-eye"></i> Show done tasks</a>
+        <a v-if="showDoneTasks" @click="showDoneTasks=false;" href='#'><i class="fa fa-eye-slash"></i> Hide done tasks</a>
       </div>
 
       <h3 style="color:rgb(99,99,99);font-weight:bold;">
