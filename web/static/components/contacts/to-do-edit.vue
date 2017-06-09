@@ -1,11 +1,17 @@
 <template>
   <div class="contact-to-dos">
     <div>
+      <div class="pull-right toggle-done-tasks" v-if="tasks.length>0">
+        <a v-if="!showDoneTasks" @click="showDoneTasks=true;" href='#'><i class="fa fa-eye"></i> Show done tasks</a>
+        <a v-if="showDoneTasks" @click="showDoneTasks=false;" href='#'><i class="fa fa-eye-slash"></i> Hide done tasks</a>
+      </div>
+
       <h3 style="color:rgb(99,99,99);font-weight:bold;">
         <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i>Tasks
       </h3>
+
       <div style="padding:15px;">
-        <div  v-for="task in tasks" class="task row" v-if="!task.is_done">
+        <div  v-for="task in tasks" class="task row" v-if="showDoneTasks || !task.is_done">
           <div class="col-md-1 task-is-done">
             <el-checkbox v-model="task.is_done" v-on:change="updateTask(task)"></el-checkbox>
           </div>
@@ -70,7 +76,8 @@
     },
     data() {
       return {
-        tasks: this.activities
+        tasks: this.activities,
+        showDoneTasks: true
       };
     },
 
