@@ -4,8 +4,12 @@
       <h3 style="color:rgb(99,99,99);font-weight:bold;">
         <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i>Tasks
       </h3>
+
+      <a v-if="!showDoneTasks" @click="showDoneTasks=true;" href='#' style="color: #666;">Show done tasks</a>
+      <a v-if="showDoneTasks" @click="showDoneTasks=false;" href='#' style="color: #666;">Hide done tasks</a>
+
       <div style="padding:15px;">
-        <div  v-for="task in tasks" class="task row" v-if="!task.is_done">
+        <div  v-for="task in tasks" class="task row" v-if="showDoneTasks || !task.is_done">
           <div class="col-md-1 task-is-done">
             <el-checkbox v-model="task.is_done" v-on:change="updateTask(task)"></el-checkbox>
           </div>
@@ -70,7 +74,8 @@
     },
     data() {
       return {
-        tasks: this.activities
+        tasks: this.activities,
+        showDoneTasks: false
       };
     },
 
