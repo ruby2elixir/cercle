@@ -1,12 +1,14 @@
 <template>
   <div class="contact-to-dos">
     <div>
+      <div class="pull-right">
+        <a v-if="!showDoneTasks" @click="showDoneTasks=true;" href='#' style="color: #666;">Show done tasks</a>
+        <a v-if="showDoneTasks" @click="showDoneTasks=false;" href='#' style="color: #666;">Hide done tasks</a>
+      </div>
+
       <h3 style="color:rgb(99,99,99);font-weight:bold;">
         <i class="fa fa-fw fa-check-square-o" style="color:#d8d8d8;"></i>Tasks
       </h3>
-
-      <a v-if="!showDoneTasks" @click="showDoneTasks=true;" href='#' style="color: #666;">Show done tasks</a>
-      <a v-if="showDoneTasks" @click="showDoneTasks=false;" href='#' style="color: #666;">Hide done tasks</a>
 
       <div style="padding:15px;">
         <div  v-for="task in tasks" class="task row" v-if="showDoneTasks || !task.is_done">
@@ -75,7 +77,7 @@
     data() {
       return {
         tasks: this.activities,
-        showDoneTasks: false
+        showDoneTasks: true
       };
     },
 
