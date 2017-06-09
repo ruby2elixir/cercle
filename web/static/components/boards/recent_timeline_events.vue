@@ -15,6 +15,7 @@
             v-bind:is="selectItemView"
             :contact_id.sync="selectItem.contact_id"
             :card_id.sync="selectItem.card_id"
+            v-on:changecontactdisplay="changeContactDisplay"
             >
           </component>
 
@@ -93,12 +94,19 @@ export default {
         this.$data.items.splice(itemIndex, 1);
       });
 
+    },
+    changeContactDisplay(contactId) {
+      this.selectItem.contact_id = contactId;
     }
 
   },
   mounted() {
     this.$root.$on('esc-keyup', () => { this.openEventModal = false; });
     this.initConn();
+
+    this.$el.querySelectorAll('.modal').forEach(function(item) {
+      $('body').append(item);
+    });
   }
 };
   </script>
