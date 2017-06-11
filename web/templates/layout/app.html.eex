@@ -37,7 +37,7 @@
     <% end %>
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
-  <body class="hold-transition skin-blue layout-top-nav" style="background-color:black;overflow-y: auto !important; */">
+  <body class="hold-transition skin-blue layout-top-nav" style="background-color:black;overflow-y: auto !important;">
     <div class="container">
       <div class="row">
         <%= render @view_module, @view_template, assigns %>
