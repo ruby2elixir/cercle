@@ -33,6 +33,8 @@ import { BoardColumnPipeline } from './board_column_pipeline';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
+import { directive as onClickOutside } from 'vue-on-click-outside';
+Vue.directive('on-click-outside', onClickOutside);
 
 export var App = {
   activityInit: function(){
