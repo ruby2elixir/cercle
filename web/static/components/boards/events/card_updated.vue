@@ -20,13 +20,10 @@ export default {
     },
     boardName(boardMeta) {
       let names = [];
-      if (boardMeta && boardMeta.board) {
-        names.push(boardMeta.board.name);
-      }
       if (boardMeta && boardMeta.board_column) {
         names.push(boardMeta.board_column.name);
       }
-      return names.join(' - ');
+      return names.join(' ');
     }
   },
   computed: {

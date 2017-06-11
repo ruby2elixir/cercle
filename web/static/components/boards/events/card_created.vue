@@ -20,13 +20,10 @@ export default {
     },
     toName() {
       let bName = [];
-      if (this.meta && this.meta.board) {
-        bName.push(this.meta.board.name);
-      }
       if (this.meta && this.meta.board_column) {
         bName.push(this.meta.board_column.name);
       }
-      return bName.join(' - ');
+      return bName.join(' ');
     }
 
   }
