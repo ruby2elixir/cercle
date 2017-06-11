@@ -31,9 +31,7 @@
           <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;">
             In {{board.name}}
             -
-          <select v-model="item.board_column_id" v-on:change="updateCard">
-             <option v-for="board_column in boardColumns" :value.number="board_column.id">{{board_column.name}}</option>
-          </select>
+            <column-select v-model="item.board_column_id" :columns="boardColumns" label="status" v-on:change="updateCard" />
             <div v-if="item.name">
             <inline-edit v-model="item.name" v-on:input="updateCard" placeholder="Card Name" style="width:500px;margin-left:25px;color:grey;"></inline-edit>
             </div>
@@ -143,6 +141,7 @@
   import TimelineEvents from './timeline-events.vue';
   import MarkdownTextEdit from '../markdown-textedit.vue';
   import DeleteContact from './delete.vue';
+  import ColumnSelect from './column-select.vue';
 
   export default {
     props: [
@@ -462,7 +461,8 @@
       'v-select': vSelect.VueSelect,
       'modal': VueStrap.modal,
       'file-upload': FileUpload,
-      'delete-contact': DeleteContact
+      'delete-contact': DeleteContact,
+      'column-select': ColumnSelect
     },
 
     mounted() {
