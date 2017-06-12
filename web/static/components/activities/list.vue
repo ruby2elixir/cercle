@@ -8,10 +8,8 @@
     data() {
       return {
         timeZone: null,
-        showContact: false,
         contact: {},
         card: {},
-        contactView: null,
         activities: [],
         activitiesOverdue: [],
         activitiesLater: [],
@@ -39,11 +37,13 @@
         }
       },
       contactShow(contactId, cardId) {
-        this.showContact = null;
         this.contact = {id: contactId};
         this.card = { id: cardId };
-        this.contactView = 'contact-form';
-        this.showContact = true;
+        this.$glmodal.$emit(
+         'open', {
+           view: 'contact-form', class: 'contact-modal', data: { card_id: cardId, contact_id: contactId }
+         });
+
       },
       initConn() {
         let url = '/api/v2/activity';
@@ -88,7 +88,6 @@
     mounted() {
       this.timeZone = Vue.currentUser.timeZone;
       this.userId = Vue.currentUser.userId;
-      this.$root.$on('esc-keyup', () => { this.showContact = false; });
       this.initConn();
     }
   };

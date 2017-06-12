@@ -26,23 +26,6 @@
       </tr>
 </tbody>
     </table>
-
-     <modal large :show.sync="showContact" class="contact-modal">
-      <span slot="modal-header"></span>
-      <div slot="modal-body" class="modal-body">
-        <button type="button" class="close" @click="showContact=false">
-          <span>&times;</span>
-        </button>
-        <component
-         keep-alive
-         v-bind:is="contactView"
-         :contact_id.sync="contact.id"
-        >
-
-        </component>
-      </div>
-      <span slot="modal-footer"></span>
-    </modal>
   </div>
 </template>
 
@@ -57,10 +40,7 @@ export default {
       contacts: [],
       socket: null,
       channel: null,
-      showContact: false,
       contact: {},
-      contactView: null
-
     };
   },
   components: {
@@ -69,10 +49,11 @@ export default {
   },
   methods: {
     contactShow(contact) {
-      this.showContact = null;
       this.contact = contact;
-      this.contactView = 'contact-form';
-      this.showContact = true;
+      this.$glmodal.$emit(
+        'open', {
+          view: 'contact-form', class: 'contact-modal', data: { contact_id: contact.id }
+        });
     },
     loadContacts(){
       var url = '/api/v2/contact';
@@ -94,7 +75,6 @@ export default {
   },
   mounted(){
     this.setAuthToken();
-    this.$root.$on('esc-keyup', () => { this.showContact = false; });
   }
 };
 
