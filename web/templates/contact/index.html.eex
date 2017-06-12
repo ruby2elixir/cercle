@@ -1,28 +1,3 @@
-<!-- Content Header (Page header) -->
-<section class="content-header" style="margin-top:20px;margin-bottom:20px;">
-
-
-  <h2>People<br /> <span style="font-size:16px;color:grey;"><%=Enum.count(@leads_pending)%> contacts</span></h2>
-  <a href="/contact/new" class="btn btn-primary">+ Add a Contact</a>
-
-</section>
-
-<!-- Main content -->
-<section class="content">
-   <div class="row">
-      <div class="col-xs-12">
-        <div class="box" style="border:0px solid grey;">
-
-          <!-- /.box-header -->
-          <div class="nav-tabs-custom ">
-            <div id="contacts-app">
-              <contact-list
-                company_id="<%=  @conn.assigns[:current_user].company_id %>"
-                ></contact-list>
-            </div>
-          </div><!-- /.box-body -->
-        </div><!-- /.box -->
-      </div>
-    </div>
-
-</section><!-- /.content -->
+<div id="contacts-app">
+  <contact-list company_id="<%=  @conn.assigns[:current_user].company_id %>" />
+</div>
