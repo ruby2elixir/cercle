@@ -67,6 +67,7 @@ import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
 import ArchiveBoard from '../components/boards/archive.vue';
 import NotificationApp from '../components/notification.vue';
+import GlModalWindow from '../components/glmodal.vue';
 import WebhooksApp from '../components/webhooks.vue';
 
 Vue.use(require('vue-autosize'));
@@ -74,6 +75,13 @@ const NotificationBus = new Vue();
 Object.defineProperty(Vue.prototype, '$notification', {
   get() {
     return NotificationBus;
+  }
+});
+
+const GlobalModalWindow = new Vue();
+Object.defineProperty(Vue.prototype, '$glmodal', {
+  get() {
+    return GlobalModalWindow;
   }
 });
 
@@ -186,6 +194,19 @@ if ($('#notification-app').length > 0) {
     components: {
       'notification': NotificationApp
     }
+  });
+}
+
+if ($('#global-modal-window').length > 0) {
+  new Vue({
+    el: '#global-modal-window',
+    components: { 'glmodal': GlModalWindow },
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
+    }
+
   });
 }
 

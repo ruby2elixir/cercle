@@ -284,12 +284,12 @@
             } else {
               var index = -1;
               for(var i=0; i < this.cardContacts.length; i++) {
-                if(this.cardContacts[i].id == contactId) {
+                if(this.cardContacts[i].id === contactId) {
                   index = i;
                   break;
                 }
               }
-              if(index != -1) {
+              if(index !== -1) {
                 this.cardContacts.splice(index, 1);
               }
             }

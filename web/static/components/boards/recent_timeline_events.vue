@@ -4,24 +4,6 @@
     <ul class="control-sidebar-menu">
       <component v-bind:is="item.event_name" v-for="item in items" :item="item" v-on:clickByEvent="clickByEvent(item)" />
     </ul>
-    <modal large :show="openEventModal" style="padding-top: 74px;"  class="contact-modal" :backdrop=false>
-      <span slot="modal-header"></span>
-      <div slot="modal-body" class="modal-body">
-          <button type="button" class="close" @click="openEventModal=false">
-            <span>&times;</span>
-          </button>
-          <component
-            keep-alive
-            v-bind:is="selectItemView"
-            :contact_id.sync="selectItem.contact_id"
-            :card_id.sync="selectItem.card_id"
-            v-on:changecontactdisplay="changeContactDisplay"
-            >
-          </component>
-
-      </div>
-      <span slot="modal-footer"></span>
-    </modal>
     <!-- /.control-sidebar-menu -->
   </div>
 </template>
@@ -54,9 +36,10 @@ export default {
   methods: {
     clickByEvent(event) {
       if (event.contact_id) {
-        this.selectItem = event;
-        this.selectItemView = 'contact-form';
-        this.openEventModal = true;
+        this.$glmodal.$emit(
+          'open', {
+            view: 'contact-form', class: 'contact-modal', data: { card_id: event.card_id, contact_id: event.contact_id }
+          });
       }
     },
     eventAddOrUpdate(event) {
@@ -101,12 +84,7 @@ export default {
 
   },
   mounted() {
-    this.$root.$on('esc-keyup', () => { this.openEventModal = false; });
     this.initConn();
-
-    this.$el.querySelectorAll('.modal').forEach(function(item) {
-      $('body').append(item);
-    });
   }
 };
   </script>

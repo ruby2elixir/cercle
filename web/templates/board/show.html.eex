@@ -8,9 +8,8 @@
           <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>" style="color:white;font-weight:bold;"><%= @board.name %></span>
         </h2>
         <h2 class=' btn btn-default'>
-          <span @click="newContact=true" style="font-weight:bold; font-size: 16px;">+ Add contact</span>
+          <span @click="newContact(<%= Poison.encode!([@board]) %>, <%= @company.id %>)" style="font-weight:bold; font-size: 16px;">+ Add contact</span>
         </a>
-
       </section>
       <!-- Main content -->
       <div data-pipeline_init=true id="columns-container">
@@ -53,44 +52,6 @@
         </div>
       </div><!-- /.content -->
 
-      <modal small :show.sync="newContact" class="new-contact-modal" :backdrop=false>
-        <div slot="modal-header" class="modal-header">
-          Add a contact into this board
-
-          <button type="button" class="close" @click="newContact=false">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div slot="modal-body" class="modal-body">
-          <new-contact
-            v-on:hide-new-contact="newContact=false"
-            :board-id="board_id"
-            :boards="<%= Poison.encode!([@board]) %>"
-            :default-board-id="<%= @board.id %>"
-            :user-id="<%= assigns[:current_user].id%>"
-            :company-id="<%= @company.id %>"
-            ></new-contact>
-        </div>
-        <span slot="modal-footer"></span>
-      </modal>
-
-      <modal large :show.sync="showContact" class="contact-modal" :backdrop=false>
-        <span slot="modal-header"></span>
-        <div slot="modal-body" class="modal-body">
-          <button type="button" class="close" @click="showContact=false">
-            <span>&times;</span>
-          </button>
-          <component
-            keep-alive
-            v-bind:is="contactView"
-            :contact_id.sync="contact.id"
-            v-on:changecontactdisplay="changeContactDisplay"
-            :card_id.sync="card.id"
-            >
-          </component>
-        </div>
-        <span slot="modal-footer"></span>
-      </modal>
     </div>
   </board>
 </div>
