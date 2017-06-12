@@ -27,13 +27,13 @@
       </div>
     </div>
       <div style="" id="change_status">
-        <span style="font-size:24px;"> <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
+        <span>
+          <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
           <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;">
-            In {{board.name}}
-            -
-            <column-select v-model="item.board_column_id" :columns="boardColumns" label="status" v-on:change="updateCard" />
+            <board-column-select :board-id="item.board_id" :board-column-id="item.board_column_id" @input='boardColumnChange' />
+
             <div v-if="item.name">
-            <inline-edit v-model="item.name" v-on:input="updateCard" placeholder="Card Name" style="width:500px;margin-left:25px;color:grey;"></inline-edit>
+              <inline-edit v-model="item.name" v-on:input="updateCard" placeholder="Card Name" style="width:500px;margin-left:25px;color:grey;"></inline-edit>
             </div>
           </span>
         </span>
@@ -141,7 +141,7 @@
   import TimelineEvents from './timeline-events.vue';
   import MarkdownTextEdit from '../markdown-textedit.vue';
   import DeleteContact from './delete.vue';
-  import ColumnSelect from './column-select.vue';
+  import BoardColumnSelect from '../shared/board-column-select-modal.vue';
 
   export default {
     props: [
@@ -314,6 +314,22 @@
         }
       },
 
+      boardColumnChange(data) {
+        this.item.board_id = data.boardId;
+        this.item.board_column_id = data.boardColumnId;
+        this.updateCard();
+
+        // Update the card in UI
+        let _card = $(".portlet[data-id='" + this.card.id + "']");
+        let _col = $(".column[data-id='" + data.boardColumnId + "']");
+        if(_col.length != 0) {
+          _card.show();
+          _col.append(_card);
+        } else {
+          _card.hide();
+        }
+      },
+
       refreshCard(payload){
         if (payload.activities) {
           this.$data.activities = payload.activities;
@@ -462,7 +478,7 @@
       'modal': VueStrap.modal,
       'file-upload': FileUpload,
       'delete-contact': DeleteContact,
-      'column-select': ColumnSelect
+      'board-column-select': BoardColumnSelect
     },
 
     mounted() {
