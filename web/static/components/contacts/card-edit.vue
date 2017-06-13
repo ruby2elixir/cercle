@@ -28,9 +28,9 @@
     </div>
       <div style="" id="change_status">
         <span>
-          <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
-          <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;">
-            <board-column-select :board-id="item.board_id" :board-column-id="item.board_column_id" @input='boardColumnChange' />
+          <span data-placeholder="Project Name" style="color:rgb(99,99,99);font-weight:bold;font-size: 24px;">
+            <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
+            In <board-column-select :board-id="item.board_id" :board-column-id="item.board_column_id" @input='boardColumnChange' />
 
             <div v-if="item.name">
               <inline-edit v-model="item.name" v-on:input="updateCard" placeholder="Card Name" style="width:500px;margin-left:25px;color:grey;"></inline-edit>
@@ -321,12 +321,18 @@
 
         // Update the card in UI
         let _card = $(".portlet[data-id='" + this.card.id + "']");
-        let _col = $(".column[data-id='" + data.boardColumnId + "']");
-        if(_col.length != 0) {
-          _card.show();
-          _col.append(_card);
+        let _col_selector = ".column[data-id='" + data.boardColumnId + "']";
+        if(_card.closest(_col_selector).length == 0) {
+          // Card is in different column
+          let _col = $(_col_selector);
+          if(_col.length != 0) {
+            _col.append(_card);
+          } else {
+            _card.hide();
+          }
         } else {
-          _card.hide();
+          // Card is in same column
+          _card.show();
         }
       },
 
