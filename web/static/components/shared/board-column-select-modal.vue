@@ -21,7 +21,7 @@
         <div class="form-group">
           <label>Column</label>
           <select v-model="cId" ref="column-input">
-            <option v-for="column in selectedBoard().board_columns" :value.number="column.id">{{column.name}}</option>
+            <option v-for="column in selectedBoard().boardColumns" :value.number="column.id">{{column.name}}</option>
           </select>
         </div>
         <div>
@@ -55,24 +55,24 @@ export default {
   methods: {
     boardById(id) {
       for(var i=0; i<this.boards.length; i++) {
-        if(id == this.boards[i].id)
+        if(id === this.boards[i].id)
           return this.boards[i];
       }
     },
     currentBoard() {
-      return this.boardById(this.boardId) || {name: '--', board_columns: []};
+      return this.boardById(this.boardId) || {name: '--', boardColumns: []};
     },
     currentColumn() {
       let cb = this.currentBoard();
-      for(var i=0; i<cb.board_columns.length; i++) {
-        if(this.boardColumnId == cb.board_columns[i].id)
-          return cb.board_columns[i];
+      for(var i=0; i<cb.boardColumns.length; i++) {
+        if(this.boardColumnId === cb.boardColumns[i].id)
+          return cb.boardColumns[i];
       }
 
       return {name: '--'};
     },
     selectedBoard() {
-      return this.boardById(this.bId) || {board_columns: []};
+      return this.boardById(this.bId) || {boardColumns: []};
     },
     boardChange() {
       this.cId = null;
@@ -92,6 +92,7 @@ export default {
   },
   mounted() {
     this.$http.get('/api/v2/board/').then(resp => {
+      console.log(resp.data.data);
       this.boards = resp.data.data;
     });
   }
