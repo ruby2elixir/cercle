@@ -2,7 +2,6 @@
   <span v-on-click-outside='cancel'>
     <span v-on:click="showModal" class='current-value-display'>
       {{ currentBoard().name }} - {{ currentColumn().name }}
-      <i class="fa fa-caret-down" />
     </span>
 
     <div v-show="editMode" class='input-modal'>
