@@ -26,7 +26,7 @@ defmodule CercleApi.APIV2.BoardController do
       order_by: [desc: p.updated_at]
 
     boards = query
-    |> Repo.all
+    |> Repo.all |> Repo.preload([:board_columns])
 
     render(conn, "index.json", boards: boards)
   end

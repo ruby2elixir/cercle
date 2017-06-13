@@ -33,6 +33,8 @@ import { BoardColumnPipeline } from './board_column_pipeline';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
+import { directive as onClickOutside } from 'vue-on-click-outside';
+Vue.directive('on-click-outside', onClickOutside);
 
 export var App = {
   activityInit: function(){
@@ -55,7 +57,10 @@ Vue.use(require('vue-moment-jalaali'));
 Vue.use(VueResource);
 Vue.use(VueResourceCaseConverter, {
   responseUrlFilter(url) {
-    return false;
+    if(/\/api\/v2\/board\//.test(url))
+      return true;
+    else
+      return false;
   }
 });
 
