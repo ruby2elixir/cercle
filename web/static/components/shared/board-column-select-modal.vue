@@ -1,7 +1,7 @@
 <template>
   <span v-on-click-outside='cancel'>
     <span v-on:click="showModal" class='current-value-display'>
-      In {{ currentBoard().name }} - {{ currentColumn().name }}
+      {{ currentBoard().name }} - {{ currentColumn().name }}
       <i class="fa fa-caret-down" />
     </span>
 
@@ -102,7 +102,10 @@ export default {
   .current-value-display {
     color:rgb(99,99,99);
     font-weight:bold;
-    font-size:24px;
     cursor: pointer;
+  }
+
+  .input-modal {
+    font-size: 14px;
   }
 </style>
