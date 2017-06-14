@@ -3,6 +3,7 @@
 
   <board board_id="<%= Poison.encode!(@board.id) %>"  inline-template >
     <div>
+
       <section class="content-header clearfix" style="margin-bottom:20px;margin-left:20px;">
         <h2 class="">
           <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>" style="color:white;font-weight:bold;"><%= @board.name %></span>
@@ -10,9 +11,10 @@
         <h2 class=' btn btn-default'>
           <span @click="newContact(<%= Poison.encode!([@board]) %>, <%= @company.id %>)" style="font-weight:bold; font-size: 16px;">+ Add contact</span>
         </a>
-      </section>
+</section>
+
       <!-- Main content -->
-      <div data-pipeline_init=true id="columns-container">
+      <div data-pipeline_init=true id="columns-container" class="columns-container">
         <div id="board_columns">
           <%= for col <- @board.board_columns do %>
               <div class="column_master" data-id="<%=col.id%>">
@@ -30,6 +32,7 @@
 
                 </div>
                 <br />
+
                 <div class="column" data-id="<%=col.id%>">
 
                   <%= for card <- @cards do %>
@@ -38,6 +41,7 @@
                       <%=end%>
                   <%end%>
                 </div>
+
               </div>
               <%=end%>
 

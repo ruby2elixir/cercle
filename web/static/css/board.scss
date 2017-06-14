@@ -67,16 +67,17 @@
   #columns-container {
     display: block;
     width: 100vw;
-    height: 90vh;
+    height: calc(100vh - 204px);
     overflow: scroll;
     white-space:nowrap;
     overflow-y: hidden;
   }
+
   #board_columns {
     overflow-x: auto;
-    height: calc(100vh - 148px);
+    height: 100vh;
     .column_master {
-      max-height: calc(100vh - 162px);
+      max-height: calc(100vh - 220px);
       width: 250px;
       display:inline-block;
       vertical-align:top;
@@ -87,7 +88,7 @@
       .column {
         overflow-x: auto;
         padding-bottom: 0px;
-        max-height: calc(100vh - 244px);
+        max-height: calc(100vh - 300px);
         min-height: 15px;
       }
       .textarea-inline-editable {
