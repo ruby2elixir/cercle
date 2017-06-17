@@ -167,7 +167,7 @@
       <% end %>
       <glmodal id="global-modal-window"></glmodal>
     </div><!-- ./wrapper -->
-
+    <script>window.csrfToken = '<%= get_csrf_token() %>';</script>
     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <%= if (@conn.assigns[:current_user].id) do %>

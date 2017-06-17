@@ -40,13 +40,12 @@ defmodule CercleApi.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.2.1"},
+    [{:phoenix, "~> 1.2.4"},
      {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_ecto, ">= 3.0.0"},
      {:db_connection, ">= 0.0.0"},
      {:phoenix_html, "~> 2.9.2"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
      {:mailman, "~> 0.2.2"},
@@ -68,14 +67,20 @@ defmodule CercleApi.Mixfile do
      {:canary, "~> 1.1.0"},
      {:canada, "~> 1.0.1"},
      {:comeonin, "~> 2.5"},
-     {:credo, "~> 0.5", only: [:dev, :test]},
      {:cipher, ">= 1.3.0"},
      {:rummage_ecto, "~> 1.1.0"},
      {:rollbax, "~> 0.8.2"},
+     {:ex_oauth2_provider, "~> 0.2.0"},
+
+     # dev
+     {:phoenix_live_reload, "~> 1.0", only: :dev},
+     {:sobelow, "~> 0.3", only: [:dev]},
+
+     # test
+     {:credo, "~> 0.5", only: [:dev, :test]},
      {:ex_machina, "~> 2.0", only: [:test]},
      {:excov, "~> 0.1", only: :test},
-     {:excov_reporter_console, "~> 0.1", only: :test},
-     {:ex_oauth2_provider, "~> 0.2.0"}
+     {:excov_reporter_console, "~> 0.1", only: :test}
     ]
   end
 

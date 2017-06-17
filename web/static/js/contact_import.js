@@ -1,16 +1,19 @@
 $(function() {
   /*global someFunction jsonData:true*/
   /*global someFunction uploadType:true*/
-  
+
   var tempFile='';
   var fileName='';
   var xhr;
-  
+
   var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
-  $('#fileupload').fileupload({ 
+  $('#fileupload').fileupload({
     dataType: 'json',
-    headers: {'Authorization': 'Bearer '+jwtToken},
-    add: function (e, data) {
+     headers: {
+         'Authorization': 'Bearer '+jwtToken,
+         'x-csrf-token': window.csrfToken
+     },
+     add: function (e, data) {
       fileName = data.files[0].name;
       var fileSize = (data.files[0].size/1000).toFixed(1);
       $('#list-uploaded-file').find('table tbody tr td')[0].innerHTML = fileName;
@@ -49,7 +52,7 @@ $(function() {
         $('.content-wrapper .container').prepend('<p class="alert alert-danger" role="alert" style="border-radius:0px;">'+result.error_message+'</p>');
       }
       else{
-        if (!$('#left-section-table tr').length) prepareFileTable('left-section-table', result.headers,result.first_row, result.top_five_rows); 
+        if (!$('#left-section-table tr').length) prepareFileTable('left-section-table', result.headers,result.first_row, result.top_five_rows);
         if (!$('#contact-field-table tr').length) prepareDbTable('contact-field-table', result.contact_fields);
         if (!$('#organization-field-table tr').length) prepareDbTable('organization-field-table', result.organization_fields);
         if (result) tempFile = result.temp_file;
@@ -71,7 +74,7 @@ $(function() {
       }
       else if(data.result.error_message && data.result.error_message.length) {
         window.location = '/import';
-      } 
+      }
       else{
         $('#progress .progress-bar').toggleClass('hidden');
         $('#sec-1,#sec-2').toggleClass('hidden');
@@ -79,7 +82,7 @@ $(function() {
         $('#step1').addClass('completed').append('<i class="fa fa-check-circle" style="float:right; margin-top:3px;" aria-hidden="true"></i>');
         $('#step2').removeClass('steps-li-inactive').addClass('steps-li-active active');
       }
-    }        
+    }
   });
 
   $('#myTabs a[href="#contact"]').click(function (e) {
@@ -93,7 +96,7 @@ $(function() {
   });
 
   $('.cancel-import').click(function (e) {
-    xhr.abort();        
+    xhr.abort();
   });
 
   $('#back-to-step1').click(function (e) {
@@ -124,7 +127,10 @@ $(function() {
         url: '/view_uploaded_data',
         type: 'POST',
         dataType: 'json',
-        headers: {'Authorization': 'Bearer '+jwtToken},
+        headers: {
+            'Authorization': 'Bearer '+jwtToken,
+            'x-csrf-token': window.csrfToken
+        },
         async: true,
         data: {
           'mapping': jsonData,
@@ -135,7 +141,7 @@ $(function() {
           $('#move-to-step3').text('Next').removeClass('disabled');
           fadeFlash();
         },
-        success: function(data) {                
+        success: function(data) {
           $('#sec-2').toggleClass('hidden');
           $('#action-btns-step2,#action-btns-step3').toggleClass('hidden');
           $('#step2').addClass('completed').append('<i class="fa fa-check-circle" style="float:right; margin-top: 3px;" aria-hidden="true"></i>');
@@ -166,7 +172,10 @@ $(function() {
       $.ajax({
         url: '/create_nested_data',
         method: 'POST',
-        headers: {'Authorization': 'Bearer '+jwtToken},
+        headers: {
+            'Authorization': 'Bearer '+jwtToken,
+            'x-csrf-token': window.csrfToken
+        },
         data: {
           'mapping': jsonData,
           'temp_file': tempFile
@@ -183,7 +192,7 @@ $(function() {
           $('#move-to-final').text('Next').removeClass('disabled');
           fadeFlash();
         }
-      }); 
+      });
     }
   });
 
@@ -197,14 +206,14 @@ $(function() {
     }
     $(this).parent().addClass('info drop-fields').removeClass('active contact-fields');
     $(this).parent().html('Drag and drop field here');
-    
+
   });
 });
 
 function prepareFileTable(tableName,headers,firstRow,topFiveRows) {
   console.log(topFiveRows);
   var tbl = document.getElementById(tableName);
-  for (var i = 0; i < headers.length; i++){ 
+  for (var i = 0; i < headers.length; i++){
     var tooltipValues = [];
     var row = tbl.insertRow(tbl.rows.length);
     for(var r = 0; r < topFiveRows.length; r++) {
@@ -245,7 +254,7 @@ function prepareDbTable(tableName,fields) {
     var id = 'organization-drag';
   }
   var tbl = document.getElementById(tableName);
-  for (var i = 0; i < fields.length; i++){ 
+  for (var i = 0; i < fields.length; i++){
     var row = tbl.insertRow(tbl.rows.length);
     var x = row.insertCell(0);
     x.innerHTML = '<i class="'+iconType +'" aria-hidden="true"></i><span class="db-field">'+ fields[i]+ '</span>';
@@ -268,7 +277,7 @@ function preparePreviewDataTable(tableName,contactHeaders, organizationHeaders,c
   row.className = 'tb-head';
   var finalHeaders = contactHeaders.concat(organizationHeaders);
   var finalValues = contactValues.concat(organizationValues);
-  for (var j = 0; j < finalHeaders.length; j++){ 
+  for (var j = 0; j < finalHeaders.length; j++){
     var headerCell = document.createElement('TH');
     headerCell.innerHTML = finalHeaders[j];
     row.appendChild(headerCell);
@@ -276,7 +285,7 @@ function preparePreviewDataTable(tableName,contactHeaders, organizationHeaders,c
   var tbody = tbl.getElementsByTagName('tbody')[0];
   $('#preview-body').empty();
   var row = tbody.insertRow(tbody.rows.length);
-  for (var j = 0; j < finalValues.length; j++){ 
+  for (var j = 0; j < finalValues.length; j++){
     var x = row.insertCell(j);
     x.innerHTML = finalValues[j];
   }

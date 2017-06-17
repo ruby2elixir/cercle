@@ -4,10 +4,7 @@ defmodule CercleApi.APIV2.BoardController do
   use CercleApi.Web, :controller
   alias CercleApi.Board
   alias CercleApi.BoardColumn
-  alias CercleApi.Contact
   alias CercleApi.Company
-  alias CercleApi.Organization
-  alias CercleApi.User
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -23,11 +20,10 @@ defmodule CercleApi.APIV2.BoardController do
     company_id  = current_user.company_id
     query = from p in Board,
       where: p.company_id == ^company_id,
-      order_by: [desc: p.updated_at]
+      order_by: [desc: p.updated_at],
+      preload: [:board_columns]
 
-    boards = query
-    |> Repo.all |> Repo.preload([:board_columns])
-
+    boards = Repo.all(query)
     render(conn, "index.json", boards: boards)
   end
 
@@ -45,12 +41,12 @@ defmodule CercleApi.APIV2.BoardController do
         Enum.each [0, 1, 2, 3, 4], fn (index) ->
           boardcol_params = %{:board_id => board.id, :order => index, :name => Enum.at(steps, index)}
           changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
-          board_column = CercleApi.Repo.insert!(changeset)
+          CercleApi.Repo.insert!(changeset)
         end
 
         conn
         |> put_status(:created)
-        |> render("show.json", board: board)
+        |> render("show.json", board: Repo.preload(board, [:board_columns]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -63,7 +59,7 @@ defmodule CercleApi.APIV2.BoardController do
     changeset = Board.changeset(board, board_params)
     case Repo.update(changeset) do
       {:ok, board} ->
-        render(conn, "show.json", board: board)
+        render(conn, "show.json", board: Repo.preload(board, [:board_columns]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -71,14 +67,14 @@ defmodule CercleApi.APIV2.BoardController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(_conn, %{"id" => _id}) do
   end
 
   def archive(conn, %{"board_id" => id}) do
     board = Repo.get!(Board, id)
     changeset = Board.changeset(board, %{archived: true})
     case Repo.update(changeset) do
-      {:ok, board} ->
+      {:ok, _} ->
         json conn, %{status: 200}
       {:error, changeset} ->
         conn
@@ -91,7 +87,7 @@ defmodule CercleApi.APIV2.BoardController do
     board = Repo.get!(Board, id)
     changeset = Board.changeset(board, %{archived: false})
     case Repo.update(changeset) do
-      {:ok, board} ->
+      {:ok, _} ->
         json conn, %{status: 200}
       {:error, changeset} ->
         conn
