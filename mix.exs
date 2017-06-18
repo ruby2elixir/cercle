@@ -27,7 +27,7 @@ defmodule CercleApi.Mixfile do
      applications: [
        :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
        :gettext, :phoenix_ecto, :postgrex, :ex_aws, :hackney, :httpoison, :tzdata,
-       :csv, :ex_csv, :uuid, :arc_ecto, :rollbax
+       :csv, :ex_csv, :uuid, :arc_ecto, :rollbax, :iconv
      ]
     ]
   end
@@ -48,7 +48,7 @@ defmodule CercleApi.Mixfile do
      {:phoenix_html, "~> 2.9.2"},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:mailman, "~> 0.2.2"},
+     {:mailman, "~> 0.3.0"},
      {:arc, "~> 0.8.0"},
      {:ex_aws, "~> 1.1"},
      {:httpoison, "~> 0.7"},
@@ -61,6 +61,8 @@ defmodule CercleApi.Mixfile do
      {:basic_auth, "~> 2.0.0"},
      {:csv, "~> 1.4.2"},
      {:ex_csv, "~> 0.1.5"},
+     {:xlsxir, "~> 1.5"},
+     {:exoffice, "~> 0.1.0"},
      {:uuid, "~> 1.1"},
      {:tzdata, "~> 0.5.8"},
      {:guardian, "~> 0.14.2"},
