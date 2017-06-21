@@ -83,10 +83,11 @@ defmodule CercleApi.Router do
 
     resources "/board", BoardController
     get "/activity", ActivityController, :index
-    get "/import", ContactController, :import
-    post "/import_data", ContactController, :import_data
-    post "/view_uploaded_data", ContactController, :view_uploaded_data
-    post "/create_nested_data", ContactController, :create_nested_data
+
+    get "/import", ImportController, :import
+    post "/import_data", ImportController, :import_data
+    post "/view_uploaded_data", ImportController, :view_uploaded_data
+    post "/create_nested_data", ImportController, :create_nested_data
 
   end
 
