@@ -38,6 +38,11 @@ defmodule CercleApi.ImportContactFile do
     import_file.content["items"]
   end
 
+  def header(import_file) do
+    [header_row|_] = items(import_file)
+    Enum.map(header_row, &String.strip(&1))
+  end
+
   def parse(file, "text/csv") do
     file.path
     |> File.read!

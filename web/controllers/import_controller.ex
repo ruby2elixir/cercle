@@ -43,25 +43,13 @@ defmodule CercleApi.ImportController do
   end
 
   def create_nested_data(conn, %{"mapping" => mapping, "temp_file" => temp_file}) do
-
     user = Guardian.Plug.current_resource(conn)
-    company_id = user.company_id
     import_file = Repo.get_by!(ImportContactFile, uuid: temp_file)
-    table = import_file.content["items"]
-    [header_row|rows] = table
-    header = Enum.map(header_row, &String.strip(&1))
-
+    [_|rows] = import_file.content["items"]
+    header = ImportContactFile.header(import_file)
     total_rows = Enum.count(rows) - 1
     iterations = div(total_rows, 100)
-    datetime = Timezone.convert(Timex.now, user.time_zone)
-    date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
-    time = Timex.format!(datetime, "%H:%M", :strftime)
-    tag_name = "imported #{date} at #{time}"
-    tag_id = Repo.insert!(%Tag{name: tag_name, company_id: company_id}).id
-    str_tag_id = Integer.to_string(tag_id)
-
-
-
+    str_tag_id = imported_tag_id(user)
     responses  = for n <- 0..iterations do
       lower..upper = (n * 100..(n + 1) * 100 -1)
       if upper > total_rows do
@@ -70,8 +58,7 @@ defmodule CercleApi.ImportController do
 
       items = for i <- lower..upper do
         row_data = %{}
-        selected_row = Enum.map(Enum.at(rows, i), &String.strip(&1))
-        row = Enum.zip(header, selected_row) |> Enum.into(%{})
+        row = prepare_row(rows, i, header)
         contact_data = contact_data_mapping(row, mapping["contact"])
         organization_data = organization_data_mapping(row, mapping["organization"])
 
@@ -111,5 +98,22 @@ defmodule CercleApi.ImportController do
       "website" => row[mapping["website"]],
       "description" => row[mapping["description"]]
     }
+  end
+
+  defp imported_tag_id(user) do
+    datetime = Timezone.convert(Timex.now, user.time_zone)
+    date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
+    time = Timex.format!(datetime, "%H:%M", :strftime)
+    tag_name = "imported #{date} at #{time}"
+    tag = %Tag{name: tag_name, company_id: user.company_id}
+    |> Repo.insert!
+    Integer.to_string(tag.id)
+  end
+
+  defp prepare_row(rows, index, header) do
+    row = Enum.at(rows, index)
+    |> Enum.map(&String.strip(&1))
+    Enum.zip(header, row)
+    |> Enum.into(%{})
   end
 end
