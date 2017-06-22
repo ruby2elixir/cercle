@@ -60,9 +60,12 @@ export default {
   },
   methods: {
     loadColumns: function() {
-      this.columns = this.boards.filter( (b)  => {
-          return b.id === parseInt(this.boardId)
-      })
+      let board = this.boards.filter( (b)  => {
+        return b.id === parseInt(this.boardId)
+      })[0]
+
+      if (board)
+        this.columns = board.board_columns
       if (this.columns.length)
         this.columnId = this.columns[0].id
     },
