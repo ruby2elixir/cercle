@@ -34,7 +34,7 @@
     </div>
     <div class="form-group">
       <button class="btn btn-success" v-on:click="saveContact">Save</button>
-      <a @click="cancel">Cancel</a>
+      <a class="btn btn-link" @click="cancel">Cancel</a>
     </div>
   </div>
 </template>
@@ -60,15 +60,11 @@ export default {
   },
   methods: {
     loadColumns: function() {
-      this.columns = [];
-      for(var i=0; i<this.boards.length; i++) {
-        if(this.boardId === this.boards[i].id) {
-          this.columns = this.boards[i].board_columns;
-          break;
-        }
-      }
-      if(this.columns.length)
-        this.columnId = this.columns[0].id;
+      this.columns = this.boards.filter( (b)  => {
+          return b.id === parseInt(this.boardId)
+      })
+      if (this.columns.length)
+        this.columnId = this.columns[0].id
     },
 
     addContactToBoard: function(userId, companyId, contactId, boardId, columnId) {
@@ -116,7 +112,7 @@ export default {
     },
 
     cancel: function() {
-      this.$emit('hide-new-contact');
+      this.$emit('close');
     },
 
     selectContact(con) {

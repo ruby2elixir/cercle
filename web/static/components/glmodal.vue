@@ -11,7 +11,7 @@
       <button type="button" class="close" @click="close()"  v-if="!options.closed_in_header" >
         <span>&times;</span>
       </button>
-      <component keep-alive v-bind:is="view" v-bind="modalData">
+      <component keep-alive v-bind:is="view" v-bind="modalData" v-on:close="close()">
       </component>
     </div>
     <span slot="modal-footer"></span>
@@ -19,8 +19,8 @@
 
 </template>
 <script>
-    import ContactForm from './contacts/edit.vue';
-    import NewContact from './contacts/new.vue';
+import ContactForm from './contacts/edit.vue';
+import NewContact from './contacts/new.vue';
 export default {
       data() {
         return {
