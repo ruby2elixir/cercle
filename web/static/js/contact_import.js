@@ -198,7 +198,6 @@ $(function() {
 
   $('body').on('click','.revert',function(){
     if($(this).parent().hasClass('contact-fields')){
-      console.log(jsonData['contact'][$(this).parent().text()]);
       delete jsonData['contact'][$(this).parent().text()];
     }
     else{
@@ -211,7 +210,6 @@ $(function() {
 });
 
 function prepareFileTable(tableName,headers,firstRow,topFiveRows) {
-  console.log(topFiveRows);
   var tbl = document.getElementById(tableName);
   for (var i = 0; i < headers.length; i++){
     var tooltipValues = [];
