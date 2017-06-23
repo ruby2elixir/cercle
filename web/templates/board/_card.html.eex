@@ -13,9 +13,7 @@
       <div style="font-size:12px;">
       </div>
       <div style="font-size:13px;margin-top:5px;color:grey;">
-        <%=if(length(@card.activities) == 0) do %>
-        <a href="/contact/<%=@card.main_contact.id%>/card/<%=@card.id%>"><i class="fa fa-circle" aria-hidden="true" style="color:red;"></i></a>
-        <% else %>
+        <%=if(!length(@card.activities) == 0) do %>
            <%= if Enum.at(@card.activities, 0).user do %>
             <img class="img-circle" src="<%= CercleApi.UserProfileImage.url({Enum.at(@card.activities, 0).user.profile_image, Enum.at(@card.activities, 0).user}, :small) %>" alt="user image" style="width:25px;position:relative;top:-2px;">
           <% else %>
