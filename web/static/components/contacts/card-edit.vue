@@ -415,11 +415,15 @@
         });
 
         this.cardChannel.on('timeline_event:created', payload => {
-          this.eventAddOrUpdate(payload.event);
+          if (payload.event.event_name === 'comment') {
+            this.eventAddOrUpdate(payload.event);
+          }
         });
 
         this.cardChannel.on('timeline_event:updated', payload => {
-          this.eventAddOrUpdate(payload.event);
+          if (payload.event.event_name === 'comment') {
+            this.eventAddOrUpdate(payload.event);
+          }
         });
 
         this.cardChannel.on('timeline_event:deleted', payload => {

@@ -91,7 +91,6 @@ export default {
   },
   mounted() {
     this.$http.get('/api/v2/board/').then(resp => {
-      console.log(resp.data.data);
       this.boards = resp.data.data;
     });
   }
