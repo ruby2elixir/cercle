@@ -125,3 +125,15 @@ defimpl Poison.Encoder, for: CercleApi.Contact do
     |> Poison.Encoder.encode(options)
   end
 end
+
+defimpl CSV.Encode, for: CercleApi.Contact do
+  def encode(contact, env \\ []) do
+    [
+      contact.first_name, contact.last_name,
+      contact.email, contact.phone,
+      contact.job_title, contact.description
+    ]
+    |> Enum.map(fn(v) -> CSV.Encode.encode(v, env) end)
+    |> Enum.join(",")
+  end
+end

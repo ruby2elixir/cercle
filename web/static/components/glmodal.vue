@@ -22,40 +22,40 @@
 import ContactForm from './contacts/edit.vue';
 import NewContact from './contacts/new.vue';
 export default {
-      data() {
-        return {
-          windowClass: '',
-          open: false,
-          modalData: {},
-          view: null,
-          options: {}
-        };
+  data() {
+    return {
+      windowClass: '',
+      open: false,
+      modalData: {},
+      view: null,
+      options: {}
+    };
   },
-      methods: {
-        sizeModal() { return this.options.size || 'large'; },
-        close() { this.open = false;  }
+  methods: {
+    sizeModal() { return this.options.size || 'large'; },
+    close() { this.open = false;  }
 
-      },
-      computed: {
-        largeSize: function() { return this.sizeModal() === 'large'; },
-        smallSize: function() { return this.sizeModal() === 'small'; }
-
-      },
-      components: {
-        'modal': VueStrap.modal,
-        'contact-form': ContactForm,
-        'new-contact-form': NewContact
   },
-      mounted() {
-        let vm = this;
-        vm.$glmodal.$on('open', function(options){
-          vm.view = options['view'];
-          vm.modalData = options['data'];
-          vm.windowClass = options['class'];
-          vm.options = options;
-          vm.open = true;
-        });
-        vm.$root.$on('esc-keyup', () => { this.open = false; });
+  computed: {
+    largeSize: function() { return this.sizeModal() === 'large'; },
+    smallSize: function() { return this.sizeModal() === 'small'; }
+
+  },
+  components: {
+    'modal': VueStrap.modal,
+    'contact-form': ContactForm,
+    'new-contact-form': NewContact
+  },
+  mounted() {
+    let vm = this;
+    vm.$glmodal.$on('open', function(options){
+      vm.view = options['view'];
+      vm.modalData = options['data'];
+      vm.windowClass = options['class'];
+      vm.options = options;
+      vm.open = true;
+    });
+    vm.$root.$on('esc-keyup', () => { this.open = false; });
   }
 };
 </script>

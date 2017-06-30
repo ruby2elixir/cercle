@@ -107,9 +107,9 @@
       };
     },
     watch: {
-        contactList() {
+      contactList() {
 
-        }
+      }
     },
     components: {
       'modal': VueStrap.modal,
@@ -132,7 +132,21 @@
         }
       },
       exportSelectContacts() {
-        console.log('export contacts', this.contactList)
+        let url = '/api/v2/contact/export';
+        this.$http.get(url, {params: { contactIds: this.contactList }})
+              .then(resp => {
+                let headers = resp.headers;
+                let contentDisposition = headers.get('Content-Disposition') || '';
+                let filename = contentDisposition.split('filename=')[1];
+                filename = filename.replace(/"/g,'');
+
+                let blob = new Blob([resp.data],{type:headers['content-type']});
+                let link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.target = '_self';
+                link.download = filename;
+                link.click();
+              });
       },
       handleCheckAllChange(event) {
         if (event.target.checked) {
@@ -151,9 +165,12 @@
       contactShow(contact) {
         this.contact = contact;
         this.$glmodal.$emit(
-  'open', {
-    view: 'contact-form', class: 'contact-modal', data: { contact_id: contact.id }
-  });
+            'open',
+            {
+                view: 'contact-form', class: 'contact-modal',
+                data: { contact_id: contact.id }
+            }
+        );
       },
       loadContacts(opts){
         let url = '/api/v2/contact';
