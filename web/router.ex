@@ -100,6 +100,7 @@ defmodule CercleApi.Router do
     resources "/api/v2/contact", APIV2.ContactController
     put "/api/v2/contact/:id/update_tags", APIV2.ContactController, :update_tags
     put "/api/v2/contact/:id/utags", APIV2.ContactController, :utags
+    delete "/api/v2/contact/multiple/delete", APIV2.ContactController, :multiple_delete
     resources "/api/v2/tag", APIV2.TagController, only: [:index, :create]
 
     resources "/api/v2/companies", APIV2.CompanyController

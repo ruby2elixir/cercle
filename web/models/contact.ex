@@ -22,11 +22,14 @@ defmodule CercleApi.Contact do
     field :job_title, :string
     field :cards, {:array, :map}, virtual: true
 
-    many_to_many :tags, CercleApi.Tag, join_through: CercleApi.ContactTag
+    many_to_many :tags, CercleApi.Tag, join_through: CercleApi.ContactTag,
+      on_delete: :delete_all
     field :data, :map #JSONB FIELD in POSTRESQL DB  for Custom Fields
 
-    has_many :activities, CercleApi.Activity, foreign_key: :contact_id, on_delete: :delete_all
-    has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :contact_id, on_delete: :delete_all
+    has_many :activities, CercleApi.Activity, foreign_key: :contact_id,
+      on_delete: :delete_all
+    has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :contact_id,
+      on_delete: :delete_all
     timestamps
   end
 

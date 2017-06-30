@@ -3,7 +3,8 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card, CardService, ContactService}
+  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card,
+                   CardService, ContactService}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -169,25 +170,16 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def delete(conn, %{"id" => id}) do
-    contact = Repo.get!(Contact, id)
-    cards = Contact.cards(contact)
-
-    for op <- cards do
-      contact_ids = List.delete(op.contact_ids, contact.id)
-      case length(contact_ids) do
-        0 ->
-          Repo.delete!(op)
-          CardService.delete(op)
-        _ ->
-          changeset = Card.changeset(op, %{contact_ids: contact_ids})
-          Repo.update(changeset)
-      end
-    end
-
-    Repo.delete!(contact)
-    ContactService.delete(contact)
+    delete_contact(id)
 
     # send_resp(conn, :no_content, "")
+    json conn, %{status: 200}
+  end
+
+  # multiple delete contacts
+  #
+  def multiple_delete(conn, %{"contact_ids" => contact_ids}) do
+    for contact_id <- contact_ids, do: delete_contact(contact_id)
     json conn, %{status: 200}
   end
 
@@ -205,5 +197,25 @@ defmodule CercleApi.APIV2.ContactController do
     else
       %{}
     end
+  end
+
+  defp delete_contact(contact_id) do
+    contact = Repo.get!(Contact, contact_id)
+    cards = Contact.cards(contact)
+
+    for op <- cards do
+      contact_ids = List.delete(op.contact_ids, contact.id)
+      case length(contact_ids) do
+        0 ->
+          Repo.delete!(op)
+          CardService.delete(op)
+        _ ->
+          changeset = Card.changeset(op, %{contact_ids: contact_ids})
+          Repo.update(changeset)
+      end
+    end
+
+    Repo.delete!(contact)
+    ContactService.delete(contact)
   end
 end
