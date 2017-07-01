@@ -166,10 +166,10 @@
         this.contact = contact;
         this.$glmodal.$emit(
             'open',
-            {
-                view: 'contact-form', class: 'contact-modal',
-                data: { contact_id: contact.id }
-            }
+          {
+            view: 'contact-form', class: 'contact-modal',
+            data: { contact_id: contact.id }
+          }
         );
       },
       loadContacts(opts){

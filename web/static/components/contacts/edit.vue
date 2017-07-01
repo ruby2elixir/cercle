@@ -10,7 +10,9 @@
                 <td style="width:50%;padding:20px;vertical-align: top;padding-right:0px;">
                   <profile-edit
                     :contact="contact"
-                    :tags="tags" />
+                    :tags="tags"
+                    v-on:updateTags="updateTags"
+                    />
                   <delete-contact :contact="contact" v-if="!(card && !browseCards)"></delete-contact>
                 </td>
 
@@ -131,6 +133,9 @@ export default {
   methods: {
     changeContactDisplay(contactId) {
       this.$emit('changecontactdisplay', contactId);
+    },
+    updateTags(selectedTags) {
+      this.tags = selectedTags;
     },
     updateOrganization(org) {
       this.organization = org;
