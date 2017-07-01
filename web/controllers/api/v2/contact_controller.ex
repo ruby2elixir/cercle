@@ -170,16 +170,24 @@ defmodule CercleApi.APIV2.ContactController do
   end
 
   def delete(conn, %{"id" => id}) do
-    delete_contact(id)
+    contact = Repo.get!(Contact, id)
+    delete_contact(contact)
 
-    # send_resp(conn, :no_content, "")
     json conn, %{status: 200}
   end
 
   # multiple delete contacts
   #
   def multiple_delete(conn, %{"contact_ids" => contact_ids}) do
-    for contact_id <- contact_ids, do: delete_contact(contact_id)
+    current_user = CercleApi.Plug.current_user(conn)
+    company_id  = current_user.company_id
+
+    query = from c in Contact,
+      where: c.company_id == ^company_id,
+      where: c.id in ^contact_ids
+    contacts = Repo.all(query)
+
+    for contact <- contacts, do: delete_contact(contact)
     json conn, %{status: 200}
   end
 
@@ -199,8 +207,8 @@ defmodule CercleApi.APIV2.ContactController do
     end
   end
 
-  defp delete_contact(contact_id) do
-    contact = Repo.get!(Contact, contact_id)
+  defp delete_contact(contact) do
+
     cards = Contact.cards(contact)
 
     for op <- cards do

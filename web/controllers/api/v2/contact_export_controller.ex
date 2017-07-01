@@ -3,11 +3,10 @@ defmodule CercleApi.APIV2.ContactExportController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{ Repo, Contact }
+  alias CercleApi.{Repo, Contact}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
-
 
   def export(conn, %{"contact_ids" => contact_ids}) do
     conn
@@ -16,8 +15,9 @@ defmodule CercleApi.APIV2.ContactExportController do
     |> send_resp(200, csv_content(contact_ids))
   end
 
-  defp csv_content(contact_ids) do
-    contacts = from(c in Contact, where: c.id in ^contact_ids)
+  def csv_content(contact_ids) do
+    query = from(c in Contact, where: c.id in ^contact_ids)
+    contacts = query
     |> Repo.all
     |> Enum.map(fn(m) -> [m] end)
 
