@@ -22,11 +22,14 @@ defmodule CercleApi.Contact do
     field :job_title, :string
     field :cards, {:array, :map}, virtual: true
 
-    many_to_many :tags, CercleApi.Tag, join_through: CercleApi.ContactTag
+    many_to_many :tags, CercleApi.Tag, join_through: CercleApi.ContactTag,
+      on_delete: :delete_all
     field :data, :map #JSONB FIELD in POSTRESQL DB  for Custom Fields
 
-    has_many :activities, CercleApi.Activity, foreign_key: :contact_id, on_delete: :delete_all
-    has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :contact_id, on_delete: :delete_all
+    has_many :activities, CercleApi.Activity, foreign_key: :contact_id,
+      on_delete: :delete_all
+    has_many :timeline_event, CercleApi.TimelineEvent, foreign_key: :contact_id,
+      on_delete: :delete_all
     timestamps
   end
 
@@ -120,5 +123,17 @@ defimpl Poison.Encoder, for: CercleApi.Contact do
       :description, :company_id, :updated_at])
     |> Map.put(:name, CercleApi.Contact.full_name(model))
     |> Poison.Encoder.encode(options)
+  end
+end
+
+defimpl CSV.Encode, for: CercleApi.Contact do
+  def encode(contact, env \\ []) do
+    [
+      contact.first_name, contact.last_name,
+      contact.email, contact.phone,
+      contact.job_title, contact.description
+    ]
+    |> Enum.map(fn(v) -> CSV.Encode.encode(v, env) end)
+    |> Enum.join(",")
   end
 end

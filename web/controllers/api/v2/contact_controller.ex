@@ -3,7 +3,8 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card, CardService, ContactService}
+  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card,
+                   CardService, ContactService}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -170,24 +171,23 @@ defmodule CercleApi.APIV2.ContactController do
 
   def delete(conn, %{"id" => id}) do
     contact = Repo.get!(Contact, id)
-    cards = Contact.cards(contact)
+    delete_contact(contact)
 
-    for op <- cards do
-      contact_ids = List.delete(op.contact_ids, contact.id)
-      case length(contact_ids) do
-        0 ->
-          Repo.delete!(op)
-          CardService.delete(op)
-        _ ->
-          changeset = Card.changeset(op, %{contact_ids: contact_ids})
-          Repo.update(changeset)
-      end
-    end
+    json conn, %{status: 200}
+  end
 
-    Repo.delete!(contact)
-    ContactService.delete(contact)
+  # multiple delete contacts
+  #
+  def multiple_delete(conn, %{"contact_ids" => contact_ids}) do
+    current_user = CercleApi.Plug.current_user(conn)
+    company_id  = current_user.company_id
 
-    # send_resp(conn, :no_content, "")
+    query = from c in Contact,
+      where: c.company_id == ^company_id,
+      where: c.id in ^contact_ids
+    contacts = Repo.all(query)
+
+    for contact <- contacts, do: delete_contact(contact)
     json conn, %{status: 200}
   end
 
@@ -205,5 +205,25 @@ defmodule CercleApi.APIV2.ContactController do
     else
       %{}
     end
+  end
+
+  defp delete_contact(contact) do
+
+    cards = Contact.cards(contact)
+
+    for op <- cards do
+      contact_ids = List.delete(op.contact_ids, contact.id)
+      case length(contact_ids) do
+        0 ->
+          Repo.delete!(op)
+          CardService.delete(op)
+        _ ->
+          changeset = Card.changeset(op, %{contact_ids: contact_ids})
+          Repo.update(changeset)
+      end
+    end
+
+    Repo.delete!(contact)
+    ContactService.delete(contact)
   end
 end

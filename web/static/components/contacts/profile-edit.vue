@@ -1,37 +1,36 @@
 <template>
+  <div class="">
     <div class="">
-      <div class="">
-        <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;font-weight:bold;color:rgb(99,99,99);">
-          <i class="fa fa-user" style="color:#d8d8d8;"></i>
-          <name-input-modal :first-name="contact.first_name" :last-name="contact.last_name" v-on:input="nameInput"/>
-        </h3>
-            <div>
-              <input-modal v-model="contact.job_title" v-on:input="updateContact" placeholder="Job Title" label="Job Title" />
-            </div>
-            <div>
-            <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Email" label="Email" />
-            </div>
-            <div>
-            <input-modal v-model="contact.phone" v-on:input="updateContact" placeholder="Phone" label="Phone" />
-            </div>
-          <div class="" style="padding-bottom:4px;">
-           <div class="contact-tags-box">
-             <button type="button" class="btn btn-box-tool btn-default btn-sm" v-for="(tag, index) in tags" style="margin: 2px;" v-on:click="removeTag(index);">
-               {{tag.name}}
-               <i class="fa fa-fw fa-close"></i>
-             </button>
-             <button type="button" class="btn btn-link" v-on:click="openTagsWindow()">
-               <i class="fa fa-fw fa-plus"></i>Add
-             </button>
+      <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;font-weight:bold;color:rgb(99,99,99);">
+        <i class="fa fa-user" style="color:#d8d8d8;"></i>
+        <name-input-modal :first-name="contact.first_name" :last-name="contact.last_name" v-on:input="nameInput"/>
+      </h3>
+      <div>
+        <input-modal v-model="contact.job_title" v-on:input="updateContact" placeholder="Job Title" label="Job Title" />
+      </div>
+      <div>
+        <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Email" label="Email" />
+      </div>
+      <div>
+        <input-modal v-model="contact.phone" v-on:input="updateContact" placeholder="Phone" label="Phone" />
+      </div>
+      <div class="" style="padding-bottom:4px;">
+        <div class="contact-tags-box">
+          <button type="button" class="btn btn-box-tool btn-default btn-sm" v-for="(tag, index) in tags" style="margin: 2px;" v-on:click="removeTag(index);">
+            {{tag.name}}
+            <i class="fa fa-fw fa-close"></i>
+          </button>
+          <button type="button" class="btn btn-link" v-on:click="openTagsWindow()">
+            <i class="fa fa-fw fa-plus"></i>Add
+          </button>
+        </div>
+
+        <modal title="Tags" large :show="openTagModal">
+          <div class="modal-header" slot="modal-header">
+            <button type="button" class="close" @click="openTagModal = false"><span>&times;</span></button>
+            <h4 class="modal-title">Tags</h4>
           </div>
-          <modal title="Tags" large :show.sync="openTagModal">
-            <div class="modal-header" slot="modal-header">
-              <button type="button" class="close" @click="openTagModal = false"><span>&times;</span></button>
-              <h4 class="modal-title">Tags</h4>
-            </div>
-            <div slot="modal-body" class="modal-body">
-
-
+          <div slot="modal-body" class="modal-body">
             <v-select
               multiple
               label="name"
@@ -41,17 +40,17 @@
               :taggable="true"
               :placeholder="Tags"
               :createOption='addNewTag'
-             ></v-select>
-            </div>
-            <div slot="modal-footer" class="modal-footer">
-             <button type="button" class="btn btn-success" v-on:click="saveChangesTag" >Save changes</button>
-            </div>
-          </modal>
-
+              ></v-select>
           </div>
-          <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
-      </div><!-- /.box-body -->
-    </div><!-- /.box -->
+          <div slot="modal-footer" class="modal-footer">
+            <button type="button" class="btn btn-success" v-on:click="saveChangesTag" >Save changes</button>
+          </div>
+        </modal>
+
+      </div>
+      <inline-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Description" ></inline-text-edit>
+    </div><!-- /.box-body -->
+  </div><!-- /.box -->
 
 </template>
 
@@ -97,20 +96,23 @@ export default {
     addNewTag(input){
       this.$http.post('/api/v2/tag', {
         tags: { name: input }
-      }).then(resp => {
       });
 
       return { id: input, name: input };
     },
     saveChangesTag(){
-      this.tagIds = this.chooseTags.map(function(j) { return j.id; });
-      this.tags = this.chooseTags.map(function(j) { return {id: j.id, name: j.name };  });
+      this.tagIds = this.chooseTags.map((j) => j.id);
+      let selectedTags = this.chooseTags.map((j) => {
+        return    {id: j.id, name: j.name };
+      });
+      this.$emit('updateTags', selectedTags);
       this.updateTags();
       this.openTagModal = false;
     },
     openTagsWindow(){
-
-      this.chooseTags = this.tags.map(function(j) { return {id: j.id, name: j.name }; });
+      this.chooseTags = this.tags.map((j) => {
+        return {id: j.id, name: j.name };
+      });
       this.getTags();
       this.openTagModal = true;
     },

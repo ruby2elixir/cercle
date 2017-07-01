@@ -57,44 +57,47 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   end
 
   test "try to update authorized contact with valid params", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", company_id: state[:company].id, user_id: state[:user].id})
-    contact = Repo.insert!(changeset)
+    contact = insert(:contact, user: state[:user], company: state[:company])
     conn = put state[:conn], "/api/v2/contact/#{contact.id}", contact: %{name: "Modified Contact"}
     assert json_response(conn, 200)["data"]["id"]
   end
 
   test "try to update unauthorized contact", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", company_id: state[:company].id + 1})
-    contact = Repo.insert!(changeset)
+    contact = insert(:contact)
     conn = put state[:conn], "/api/v2/contact/#{contact.id}", contact: %{name: "Modified Contact"}
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to show authorized contact", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", company_id: state[:company].id, user_id: state[:user].id})
-    contact = Repo.insert!(changeset)
+    contact = insert(:contact, user: state[:user], company: state[:company])
     conn = get state[:conn], "/api/v2/contact/#{contact.id}", user_id: state[:user].id, company_id: state[:company].id
     assert json_response(conn, 200)["data"]
   end
 
   test "try to show unauthorized contact", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", company_id: state[:company].id + 1})
-    contact = Repo.insert!(changeset)
+    contact = insert(:contact)
     conn = get state[:conn], "/api/v2/contact/#{contact.id}", user_id: state[:user].id, company_id: state[:company].id
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to delete unauthorized contact", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", company_id: state[:company].id + 1})
-    contact = Repo.insert!(changeset)
+    contact = insert(:contact)
     conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to delete authorized contact", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
-    contact = Repo.insert!(changeset)
+    contact = insert(:contact, user: state[:user], company: state[:company])
     conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    assert json_response(conn, 200)
+  end
+
+  test "multiple_delete", state do
+    contact = insert(:contact, user: state[:user], company: state[:company])
+    contact1 = insert(:contact)
+    conn = delete state[:conn], "/api/v2/contact/multiple/delete", contact_ids: [contact.id, contact1.id]
+    assert Repo.get(Contact, contact.id) == nil
+    assert Repo.get(Contact, contact1.id).id == contact1.id
     assert json_response(conn, 200)
   end
 
@@ -102,9 +105,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
-    contact = Repo.insert!(changeset)
-
+    contact = insert(:contact, user: state[:user], company: state[:company])
     changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     card = Repo.insert!(changeset)
 
@@ -123,9 +124,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   end
 
   test "deleting contact should delete card and its attachments", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
-    contact = Repo.insert!(changeset)
-
+    contact = insert(:contact, user: state[:user], company: state[:company])
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
@@ -155,12 +154,8 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   end
 
   test "deleting contact should update card if it has other contacts", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
-    contact = Repo.insert!(changeset)
-
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "2", user_id: state[:user].id, company_id: state[:company].id})
-    contact2 = Repo.insert!(changeset)
-
+    contact = insert(:contact, user: state[:user], company: state[:company])
+    contact2 = insert(:contact, user: state[:user], company: state[:company])
     changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
     card = Repo.insert!(changeset)
 
@@ -174,9 +169,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   end
 
   test "deleting contact should delete associated timeline events", state do
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
-    contact = Repo.insert!(changeset)
-
+    contact = insert(:contact, user: state[:user], company: state[:company])
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
@@ -203,9 +196,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   test "deleting contact should delete associated activities", state do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
-
-    changeset = Contact.changeset(%Contact{}, %{first_name: "Contact", last_name: "1", user_id: state[:user].id, company_id: state[:company].id})
-    contact = Repo.insert!(changeset)
+    contact = insert(:contact, user: state[:user], company: state[:company])
 
     changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
     card = Repo.insert!(changeset)
