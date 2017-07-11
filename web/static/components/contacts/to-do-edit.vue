@@ -25,6 +25,7 @@
              v-model="task.due_date"
              type="datetime"
              :editable="false"
+             size="small"
              placeholder="Select date and time">
             </el-date-picker>
           </div>

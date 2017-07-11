@@ -68,15 +68,30 @@
           </select>
 
         </div>
+        <div class="mt-1 mb-1">
+          Due Date:
+          <el-date-picker
+                          class="card-due-date"
+                          v-on:change="updateCard"
+                          v-model="item.due_date"
+                          type="datetime"
+                          size="mini"
+                          format="yyyy-MM-dd HH:mm"
+                          :editable="false"
+                          :min_date="new Date()"
+            >
+          </el-date-picker>
+        </div>
+        <div class="mt-1 mb-1">
+          Description
+          <br />
+          <div class="mt-1" data-placeholder="Write a description...">
+            <markdown-text-edit v-model="item.description" v-on:input="updateCard" placeholder="Write a description" ></markdown-text-edit>
+          </div>
+          <br />
+        </div>
 
-            <div class="mt-1 mb-1">
-              Description
-              <br />
-              <div class="mt-1" data-placeholder="Write a description...">
-               <markdown-text-edit v-model="item.description" v-on:input="updateCard" placeholder="Write a description" ></markdown-text-edit>
-              </div>
-              <br />
-            </div>
+
       </div>
       <div class="attachments">
 
@@ -364,7 +379,8 @@
 
       subscribe() {
 
-        this.cardChannel.on('card:updated', payload => {
+        this.cardChannel.on('card:updateddd', payload => {
+          this.allowUpdate = false
           if (payload.card) {
             this.$data.item = payload.card;
             this.$data.cardContacts = payload.card_contacts;
@@ -383,6 +399,7 @@
           if (payload.card.status.toString() === '1') {
             this.$emit('browse');
           }
+          this.allowUpdate = true
         });
 
         this.cardChannel.on('card:added_attachment', payload => {
@@ -488,7 +505,8 @@
       'modal': VueStrap.modal,
       'file-upload': FileUpload,
       'delete-contact': DeleteContact,
-      'board-column-select': BoardColumnSelect
+      'board-column-select': BoardColumnSelect,
+      'el-date-picker': ElementUi.DatePicker
     },
 
     mounted() {
@@ -499,6 +517,12 @@
   };
 </script>
 <style lang="sass">
+  .card-due-date {
+    width:140px !important;
+    .el-input__inner {
+      background-color: #eaeaea;
+    }
+  }
   .attachments {
   margin-bottom: 20px;
   .attach-item {
