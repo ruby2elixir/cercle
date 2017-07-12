@@ -38,7 +38,7 @@ export default {
       if (event.contact_id) {
         this.$glmodal.$emit(
           'open', {
-            view: 'contact-form', class: 'contact-modal', data: { card_id: event.card_id, contact_id: event.contact_id }
+            view: 'contact-form', class: 'contact-modal', data: { 'card_id': event.card_id, 'contact_id': event.contact_id }
           });
       }
     },
@@ -79,7 +79,7 @@ export default {
 
     },
     changeContactDisplay(contactId) {
-      this.selectItem.contact_id = contactId;
+      this.$set(this.selectItem, 'contact_id', contactId);
     }
 
   },

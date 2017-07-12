@@ -292,7 +292,7 @@
           this.item.contact_ids.splice(this.item.contact_ids.indexOf(contactId), 1);
 
           let url = '/api/v2/card/' + this.item.id;
-          this.$http.put(url, {card: {contact_ids: this.item.contact_ids}}).then(resp => {
+          this.$http.put(url, {card: { contactIds: this.item.contact_ids}}).then(resp => {
             if(resp.data.errors && resp.data.errors.contact_ids) {
               alert(resp.data.errors.contact_ids);
             } else {
@@ -330,17 +330,17 @@
       },
 
       boardColumnChange(data) {
-        this.item.board_id = data.boardId;
-        this.item.board_column_id = data.boardColumnId;
+        this.$set(this.item, 'board_id', data.boardId);
+        this.$set(this.item, 'board_column_id', data.boardColumnId);
         this.updateCard();
 
         // Update the card in UI
-        let _card = $(".portlet[data-id='" + this.card.id + "']");
-        let _col_selector = ".column[data-id='" + data.boardColumnId + "']";
-        if(_card.closest(_col_selector).length == 0) {
+        let _card = $('.portlet[data-id=\'' + this.card.id + '\']');
+        let _colSelector = '.column[data-id=\'' + data.boardColumnId + '\']';
+        if(_card.closest(_colSelector).length === 0) {
           // Card is in different column
-          let _col = $(_col_selector);
-          if(_col.length != 0) {
+          let _col = $(_colSelector);
+          if(_col.length !== 0) {
             _col.append(_card);
           } else {
             _card.hide();
@@ -380,7 +380,7 @@
       subscribe() {
 
         this.cardChannel.on('card:updateddd', payload => {
-          this.allowUpdate = false
+          this.allowUpdate = false;
           if (payload.card) {
             this.$data.item = payload.card;
             this.$data.cardContacts = payload.card_contacts;
@@ -399,7 +399,7 @@
           if (payload.card.status.toString() === '1') {
             this.$emit('browse');
           }
-          this.allowUpdate = true
+          this.allowUpdate = true;
         });
 
         this.cardChannel.on('card:added_attachment', payload => {

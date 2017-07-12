@@ -62,7 +62,6 @@ import InlineEdit from '../inline-common-edit.vue';
 import InlineTextEdit from '../inline-textedit.vue';
 import nameInputModal from '../shared/name-input-modal.vue';
 import inputModal from '../shared/input-modal.vue';
-
 export default {
   props: [
     'contact',
@@ -138,8 +137,8 @@ export default {
       this.$http.put(url, { contact: this.contact } );
     },
     nameInput: function(data) {
-      this.contact.first_name = data.firstName;
-      this.contact.last_name = data.lastName;
+      this.$set(this.contact, 'first_name', data.firstName);
+      this.$set(this.contact, 'last_name', data.lastName);
       this.updateContact();
     }
   },
