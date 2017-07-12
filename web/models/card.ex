@@ -5,8 +5,8 @@ defmodule CercleApi.Card do
   use CercleApi.Web, :model
 
   @derive {Poison.Encoder, only: [
-              :id, :name, :description, :status, :contact_ids, :user_id,
-              :board_id, :board_column_id
+              :id, :name, :description, :due_date, :status, :contact_ids,
+              :user_id, :board_id, :board_column_id
             ]}
 
   schema "cards" do
@@ -16,6 +16,7 @@ defmodule CercleApi.Card do
     field :contacts, {:array, :map}, virtual: true
     field :main_contact, {:map, CercleApi.Contact}, virtual: true
     field :contact_ids, {:array, :integer}
+    field :due_date, Ecto.DateTime
     belongs_to :user, CercleApi.User
     belongs_to :company, CercleApi.Company
     belongs_to :board, CercleApi.Board
@@ -36,7 +37,8 @@ defmodule CercleApi.Card do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids, :board_id, :board_column_id, :description])
+    |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids,
+                    :board_id, :board_column_id, :description, :due_date])
     |> validate_required([:contact_ids, :user_id, :company_id])
     |> validate_length(:contact_ids, min: 1, message: "Atleast 1 contact is required")
   end
@@ -91,7 +93,8 @@ defimpl Poison.Encoder, for: CercleApi.Card do
   def encode(model, options) do
     model
     |> Map.take(
-      [:id, :name, :description, :status, :contact_ids, :user_id, :board_id, :board_column_id]
+      [:id, :name, :description, :due_date, :status,
+       :contact_ids, :user_id, :board_id, :board_column_id]
     )
     |> Poison.Encoder.encode(options)
   end

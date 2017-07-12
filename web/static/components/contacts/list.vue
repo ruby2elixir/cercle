@@ -168,7 +168,7 @@
             'open',
           {
             view: 'contact-form', class: 'contact-modal',
-            data: { contact_id: contact.id }
+            data: { 'contact_id': contact.id }
           }
         );
       },

@@ -19,7 +19,7 @@
     methods: {
       save: function(webhook) {
         if(webhook.url) {
-          this.$http.post('/api/v2/webhooks', {webhook_subscription: webhook});
+          this.$http.post('/api/v2/webhooks', { 'webhook_subscription': webhook });
         } else {
           this.$http.delete('/api/v2/webhooks/'+webhook.event);
         }

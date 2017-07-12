@@ -68,15 +68,30 @@
           </select>
 
         </div>
+        <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" >
+          Due Date:
+          <el-date-picker
+                          class="card-due-date"
+                          v-on:change="updateCard"
+                          v-model="item.due_date"
+                          type="datetime"
+                          size="mini"
+                          format="yyyy-MM-dd HH:mm"
+                          :editable="false"
+                          :min_date="new Date()"
+            >
+          </el-date-picker>
+        </div>
+        <div class="mt-1 mb-1">
+          Description
+          <br />
+          <div class="mt-1" data-placeholder="Write a description...">
+            <markdown-text-edit v-model="item.description" v-on:input="updateCard" placeholder="Write a description" ></markdown-text-edit>
+          </div>
+          <br />
+        </div>
 
-            <div class="mt-1 mb-1">
-              Description
-              <br />
-              <div class="mt-1" data-placeholder="Write a description...">
-               <markdown-text-edit v-model="item.description" v-on:input="updateCard" placeholder="Write a description" ></markdown-text-edit>
-              </div>
-              <br />
-            </div>
+
       </div>
       <div class="attachments">
 
@@ -188,7 +203,9 @@
       };
     },
     computed: {
-
+      isDueFuture(){
+        return this.item.due_date > new Date()
+      },
       uploadHeaders(){
         return { Authorization: 'Bearer ' + Vue.currentUser.token   };
       }
@@ -277,7 +294,7 @@
           this.item.contact_ids.splice(this.item.contact_ids.indexOf(contactId), 1);
 
           let url = '/api/v2/card/' + this.item.id;
-          this.$http.put(url, {card: {contact_ids: this.item.contact_ids}}).then(resp => {
+          this.$http.put(url, {card: { contactIds: this.item.contact_ids}}).then(resp => {
             if(resp.data.errors && resp.data.errors.contact_ids) {
               alert(resp.data.errors.contact_ids);
             } else {
@@ -315,17 +332,17 @@
       },
 
       boardColumnChange(data) {
-        this.item.board_id = data.boardId;
-        this.item.board_column_id = data.boardColumnId;
+        this.$set(this.item, 'board_id', data.boardId);
+        this.$set(this.item, 'board_column_id', data.boardColumnId);
         this.updateCard();
 
         // Update the card in UI
-        let _card = $(".portlet[data-id='" + this.card.id + "']");
-        let _col_selector = ".column[data-id='" + data.boardColumnId + "']";
-        if(_card.closest(_col_selector).length == 0) {
+        let _card = $('.portlet[data-id=\'' + this.card.id + '\']');
+        let _colSelector = '.column[data-id=\'' + data.boardColumnId + '\']';
+        if(_card.closest(_colSelector).length === 0) {
           // Card is in different column
-          let _col = $(_col_selector);
-          if(_col.length != 0) {
+          let _col = $(_colSelector);
+          if(_col.length !== 0) {
             _col.append(_card);
           } else {
             _card.hide();
@@ -364,7 +381,8 @@
 
       subscribe() {
 
-        this.cardChannel.on('card:updated', payload => {
+        this.cardChannel.on('card:updateddd', payload => {
+          this.allowUpdate = false;
           if (payload.card) {
             this.$data.item = payload.card;
             this.$data.cardContacts = payload.card_contacts;
@@ -383,6 +401,7 @@
           if (payload.card.status.toString() === '1') {
             this.$emit('browse');
           }
+          this.allowUpdate = true;
         });
 
         this.cardChannel.on('card:added_attachment', payload => {
@@ -488,7 +507,8 @@
       'modal': VueStrap.modal,
       'file-upload': FileUpload,
       'delete-contact': DeleteContact,
-      'board-column-select': BoardColumnSelect
+      'board-column-select': BoardColumnSelect,
+      'el-date-picker': ElementUi.DatePicker
     },
 
     mounted() {
@@ -499,6 +519,19 @@
   };
 </script>
 <style lang="sass">
+  .is-due-past {
+    .card-due-date {
+      .el-input__inner {
+        background-color: #f3d0d0;
+      }
+    }
+  }
+  .card-due-date {
+    width:140px !important;
+    .el-input__inner {
+      background-color: #eaeaea;
+    }
+  }
   .attachments {
   margin-bottom: 20px;
   .attach-item {

@@ -34,6 +34,7 @@ defmodule CercleApi.APIV2.CardView do
       company_id: card.company_id,
       name: card.name,
       description: card.description,
+      due_date: card.due_date,
       status: card.status,
       contact_ids: card.contact_ids,
       user_id: card.user_id,
