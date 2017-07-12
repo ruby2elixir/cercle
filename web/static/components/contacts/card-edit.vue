@@ -68,7 +68,7 @@
           </select>
 
         </div>
-        <div class="mt-1 mb-1">
+        <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" >
           Due Date:
           <el-date-picker
                           class="card-due-date"
@@ -203,7 +203,9 @@
       };
     },
     computed: {
-
+      isDueFuture(){
+        return this.item.due_date > new Date()
+      },
       uploadHeaders(){
         return { Authorization: 'Bearer ' + Vue.currentUser.token   };
       }
@@ -517,6 +519,13 @@
   };
 </script>
 <style lang="sass">
+  .is-due-past {
+    .card-due-date {
+      .el-input__inner {
+        background-color: #f3d0d0;
+      }
+    }
+  }
   .card-due-date {
     width:140px !important;
     .el-input__inner {
