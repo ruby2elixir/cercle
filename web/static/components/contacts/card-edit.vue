@@ -18,6 +18,8 @@
       <button type="button" v-show="item.status === 0" class="btn btn-default archive " v-on:click="archiveCard">ARCHIVE</button>
       <button type="button" v-show="item.status === 1" class="btn btn-default archive " v-on:click="unarchiveCard">UNARCHIVE</button>
       <br />
+      <button type="button" class="btn btn-default archive " v-on:click="openDueDatePicker">DUE DATE</button>
+      <br />
       <br />
       <div class="text-center" style="margin-top:10px;color:grey;">
         <a class="show-more" v-show="!showMoreOptions" @click="showMoreOptions=true" style="text-decoration:none;">+More options</a>
@@ -68,17 +70,19 @@
           </select>
 
         </div>
-        <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" >
+        <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="item.due_date || showDueDatePicker" >
           Due Date:
           <el-date-picker
-                          class="card-due-date"
-                          v-on:change="updateCard"
-                          v-model="item.due_date"
-                          type="datetime"
-                          size="mini"
-                          format="yyyy-MM-dd HH:mm"
-                          :editable="false"
-                          :min_date="new Date()"
+            class="card-due-date"
+            v-on:change="updateCard"
+            v-model="item.due_date"
+            type="datetime"
+            size="mini"
+            format="yyyy-MM-dd HH:mm"
+            :editable="false"
+            :min_date="new Date()"
+            :clearable="true"
+            ref="dueDatePicker"
             >
           </el-date-picker>
         </div>
@@ -198,19 +202,29 @@
         activities: [],
         events: [],
         cardContacts: [],
-        showMoreOptions: false
+        showMoreOptions: false,
+        showDueDatePicker: false
 
       };
     },
     computed: {
       isDueFuture(){
-        return this.item.due_date > new Date()
+        return this.item.due_date > new Date();
       },
       uploadHeaders(){
         return { Authorization: 'Bearer ' + Vue.currentUser.token   };
       }
     },
     methods: {
+      openDueDatePicker() {
+        let vm = this;
+        vm.showDueDatePicker = true;
+        vm.$refs.dueDatePicker.handleClose = function() {
+          vm.showDueDatePicker = false;
+          this.pickerVisible = false;
+        };
+        vm.$refs.dueDatePicker.showPicker();
+      },
       changeContactDisplay(event, contactId) {
         event.preventDefault();
         this.$emit('changeContactDisplay', contactId);
