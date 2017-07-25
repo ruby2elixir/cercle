@@ -1,5 +1,4 @@
 $(function() {
-  var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
 
   $('#tag-edit-table a.edit-link').click(function(e){
     console.log($(this).parent().parent().find('textarea'));

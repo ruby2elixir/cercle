@@ -1,6 +1,5 @@
 export var Pipeline = {
   start: function(){
-    var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
     $( '.column' ).sortable({
       connectWith: ['.column', '.column_status'],
       handle: '.portlet-content',

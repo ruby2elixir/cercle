@@ -1,6 +1,5 @@
 export var BoardColumnPipeline = {
   start: function(){
-    var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
     var originalOrder;
     $( '#board_columns' ).sortable({
       cursor: 'move',

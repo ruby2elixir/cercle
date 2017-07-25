@@ -1,5 +1,4 @@
 $(function() {
-  var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
   $('.referral-form').submit(function(e){
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);

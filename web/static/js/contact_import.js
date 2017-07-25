@@ -6,14 +6,13 @@ $(function() {
   var fileName='';
   var xhr;
 
-  var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
   $('#fileupload').fileupload({
     dataType: 'json',
-     headers: {
-         'Authorization': 'Bearer '+jwtToken,
-         'x-csrf-token': window.csrfToken
-     },
-     add: function (e, data) {
+    headers: {
+      'Authorization': 'Bearer '+jwtToken,
+      'x-csrf-token': window.csrfToken
+    },
+    add: function (e, data) {
       fileName = data.files[0].name;
       var fileSize = (data.files[0].size/1000).toFixed(1);
       $('#list-uploaded-file').find('table tbody tr td')[0].innerHTML = fileName;
@@ -128,8 +127,8 @@ $(function() {
         type: 'POST',
         dataType: 'json',
         headers: {
-            'Authorization': 'Bearer '+jwtToken,
-            'x-csrf-token': window.csrfToken
+          'Authorization': 'Bearer '+jwtToken,
+          'x-csrf-token': window.csrfToken
         },
         async: true,
         data: {
@@ -173,8 +172,8 @@ $(function() {
         url: '/create_nested_data',
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer '+jwtToken,
-            'x-csrf-token': window.csrfToken
+          'Authorization': 'Bearer '+jwtToken,
+          'x-csrf-token': window.csrfToken
         },
         data: {
           'mapping': jsonData,

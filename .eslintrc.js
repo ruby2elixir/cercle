@@ -21,7 +21,8 @@ module.exports = {
     'Moment': true,
     'ElementUi': true,
     'MarkdownIt': true,
-    'FileUpload': true
+    'FileUpload': true,
+    'jwtToken': true
   },
   'ecmaFeatures': {
     'modules': true

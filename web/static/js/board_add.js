@@ -1,6 +1,5 @@
 $(function() {
   $('#board-form').submit(function(e){
-    var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
     if($('#contact_name').val() !== ''){
@@ -16,7 +15,7 @@ $(function() {
         }
       });
     }else{
-      $(this).find('input[type=submit]').removeAttr('disabled');  
+      $(this).find('input[type=submit]').removeAttr('disabled');
       alert('Name can\'t be blank');
     }
   });

@@ -1,7 +1,6 @@
 import { Pipeline } from './opportunity_pipeline';
 
 $(function() {
-  var jwtToken = document.querySelector('meta[name="guardian_token"]').content;
   $(document).on('submit','#new_board_column_form',function(e){
     e.preventDefault();
     $(this).find('input[type=submit]').attr('disabled', true);
@@ -24,7 +23,7 @@ $(function() {
         }
       });
     }else{
-      $(this).find('input[type=submit]').removeAttr('disabled');  
+      $(this).find('input[type=submit]').removeAttr('disabled');
       alert('Name can\'t be blank');
     }
   });

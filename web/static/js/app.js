@@ -105,7 +105,10 @@ const VueCurrentUser = {
     };
   }
 };
-if (document.querySelector('meta[name="guardian_token"]').content) {
+
+window.jwtToken = null;
+if (document.querySelector('meta[name="guardian_token"]')) {
+  window.jwtToken = document.querySelector('meta[name="guardian_token"]').content;
   Vue.use(VueCurrentUser, {
     userId: document.querySelector('meta[name="user_id"]').content,
     token: document.querySelector('meta[name="guardian_token"]').content,
