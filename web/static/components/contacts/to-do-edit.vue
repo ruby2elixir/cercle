@@ -32,7 +32,7 @@
 
           <div class="col-md-1">
             <select v-model="task.user_id" v-on:change="updateTask(task)">
-              <option v-for="user in companyUsers" :value="user.id">{{(user.user_name.toUpperCase()).slice(0, 2)}}</option>
+              <option v-for="user in companyUsers"  v-if="!!user.user_name" :value="user.id">{{shortUserName(user)}}</option>
             </select>
           </div>
 
@@ -88,6 +88,13 @@
       }
     },
     methods: {
+      shortUserName(user) {
+        let shortName = '';
+        if (user.user_name) {
+          shortName = user.user_name.toUpperCase().slice(0, 2);
+        }
+        return shortName;
+      },
       addTask() {
         let url = '/api/v2/activity/';
         this.$http.post(url, {
