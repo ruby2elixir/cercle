@@ -15,10 +15,10 @@
         </file-upload>
       </div>
       <br />
+      <button type="button" class="btn btn-default archive " v-on:click="openDueDatePicker">DUE DATE</button>
+      <br />
       <button type="button" v-show="item.status === 0" class="btn btn-default archive " v-on:click="archiveCard">ARCHIVE</button>
       <button type="button" v-show="item.status === 1" class="btn btn-default archive " v-on:click="unarchiveCard">UNARCHIVE</button>
-      <br />
-      <button type="button" class="btn btn-default archive " v-on:click="openDueDatePicker">DUE DATE</button>
       <br />
       <br />
       <div class="text-center" style="margin-top:10px;color:grey;">
