@@ -10,18 +10,12 @@
              <h3 class="box-title" style="">Settings</h3>
            </div>
            <div class="box-body no-padding">
-             <ul class="nav nav-pills nav-stacked">
-               <li><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
-               <li><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a></li>
-               <li><a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a></li>
-               <li><a href="/import"><i class="fa fa-edit"></i>Import CSV</a></li>
-               <li class='active'><a href="#"><i class="fa fa-edit"></i>Edit Tags</a></li>
-             </ul>
+             <%= render CercleApi.SharedView, "settings_nav.html", conn: @conn, active: :fields %>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
-         
+
        </div><!-- /.col -->
-       
+
        <div class="col-md-9">
          <!-- Horizontal Form -->
          <!-- general form elements disabled -->
@@ -68,7 +62,7 @@
         // get json
         var json = editor.get();
     </script>
-                  
+
                 </div>
                  <br />
                 <br />
@@ -77,8 +71,8 @@
                <input type="submit" class="btn btn-primary pull-right" value="Save" />
              </div>
           <% end %>
-       </div> 
-         
+       </div>
+
   </div>
-    
+
 </section><!-- /.content -->

@@ -16,13 +16,14 @@ defmodule CercleApi.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :password_reset_code, :string
-    belongs_to :company, CercleApi.Company
+    field :notification, :boolean
     field :login, :string
     field :profile_image, CercleApi.UserProfileImage.Type
     field :name, :string #is username
     field :time_zone, :string, default: "America/New_York"
     timestamps
 
+    belongs_to :company, CercleApi.Company
     has_many :activities, CercleApi.Activity, on_delete: :delete_all
     has_many :timeline_event, CercleApi.TimelineEvent
     has_many :cards, CercleApi.Card
@@ -39,8 +40,9 @@ defmodule CercleApi.User do
   """
   def changeset(model, params \\ :invalid) do
     model
-    |> cast(params, [:login, :user_name, :password_reset_code, :company_id,
-                    :name, :time_zone])
+    |> cast(params, [
+          :login, :user_name, :password_reset_code, :company_id,
+          :name, :time_zone, :notification])
     |> cast_attachments(params, [:profile_image])
     |> validate_required([:login])
     |> unique_constraint(:login)

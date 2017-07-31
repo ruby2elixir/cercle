@@ -10,14 +10,7 @@
              <h3 class="box-title" style="">Settings</h3>
            </div>
            <div class="box-body no-padding">
-             <ul class="nav nav-pills nav-stacked">
-              <li class="active" ><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
-              <li><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a></li>
-              <li><a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a></li>
-              <li><a href="/import"><i class="fa fa-edit"></i>Import CSV</a></li>
-              <li><a href="/settings/tags_edit"><i class="fa fa-edit"></i>Edit Tags</a></li>
-              <li><a href="/settings/api_key"><i class="fa fa-edit"></i>Third Party</a></li>
-             </ul>
+             <%= render CercleApi.SharedView, "settings_nav.html", conn: @conn, active: :profile %>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
        </div><!-- /.col -->
@@ -26,7 +19,7 @@
          <!-- Horizontal Form -->
          <!-- general form elements disabled -->
          <div class="box box-primary">
-           <%= form_for @changeset, "/settings/profile_update", [multipart: true], fn f -> %>
+           <%= form_for @changeset, "/settings/profile", [multipart: true], fn f -> %>
               <%= if f.errors != [] do %>
                 <div class="alert alert-danger">
                   <p>Oops, something went wrong!<br> Please check the errors below:</p>
@@ -55,6 +48,13 @@
                   <%= error_tag f, :name %>
                 </div>
                 <br />
+
+                <div class="form-group">
+                  <%= checkbox f, :notification %>
+                  <%= label f, :notification, "Notification", class: "control-label" %>
+                </div>
+                <br />
+
                <!-- text input -->
                 <div class="form-group">
                   <%= label f, :login, "Email", class: "control-label" %>
@@ -75,7 +75,7 @@
                   <%= label f, :time_zone, "Time Zone", class: "control-label" %>
                   <%= select(f, :time_zone , load_timezones, prompt: "Choose your Time Zone", class: "form-control") %>
                   <%= error_tag f, :time_zone %>
-                </div>                
+                </div>
                 <br />
 
                 <div class="form-group">

@@ -9,15 +9,7 @@
              <h3 class="box-title" style="">Settings</h3>
            </div>
            <div class="box-body no-padding">
-             <ul class="nav nav-pills nav-stacked">
-              <li><a href="/settings/profile_edit"><i class="fa fa-edit"></i>Profile</a></li>
-              <li><a href="/settings/company_edit"><i class="fa fa-edit"></i>Company</a></li>
-              <li><a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a></li>
-              <li><a href="/import"><i class="fa fa-edit"></i>Import CSV</a></li>
-              <li><a href="/settings/tags_edit"><i class="fa fa-edit"></i>Edit Tags</a></li>
-              <li><a href="/settings/api_key"><i class="fa fa-edit"></i>Third Party</a></li>
-              <li class='active'><a href="/settings/webhooks"><i class="fa fa-edit"></i>Webhooks</a></li>
-             </ul>
+             <%= render CercleApi.SharedView, "settings_nav.html", conn: @conn, active: :webhooks %>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
        </div><!-- /.col -->
@@ -30,6 +22,6 @@
            </div><!-- /.box-header -->
            <webhooks />
          </div><!-- /.box -->
-       </div>  
+       </div>
   </div>
 </section><!-- /.content -->
