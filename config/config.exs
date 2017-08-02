@@ -55,5 +55,8 @@ config :ex_oauth2_provider, ExOauth2Provider,
 config :cercleApi, CercleApi.Scheduler,
   jobs: [
     # Every minute
-    {"* * * * *", fn -> IO.puts("run scheduler") end}
+    {"* * * * *", {CercleApi.Tasks.CardNotification, :due_date_start, []}},
+    {"*/15 * * * *", {CercleApi.Tasks.CardNotification, :before_due_date, []}},
+    {"* * * * *", {CercleApi.Tasks.ActivityNotification, :due_date_start, []}},
+    {"*/15 * * * *", {CercleApi.Tasks.ActivityNotification, :before_due_date, []}},
   ]
