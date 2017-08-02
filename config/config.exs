@@ -51,3 +51,9 @@ config :ex_oauth2_provider, ExOauth2Provider,
   resource_owner: CercleApi.User,
   application_owner: CercleApi.AdminUser,
   use_refresh_token: true
+
+config :cercleApi, CercleApi.Scheduler,
+  jobs: [
+    # Every minute
+    {"* * * * *", fn -> IO.puts("run scheduler") end}
+  ]
