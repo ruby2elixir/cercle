@@ -19,4 +19,9 @@ defmodule CercleApi.Notification do
     |> cast(params, [:target_type, :target_id, :delivery_time, :sent, :notification_type])
     |> validate_required([:target_type, :target_id, :delivery_time, :sent, :notification_type])
   end
+
+  def find_by_target(target_type, target_id) do
+    __MODULE__
+    |> CercleApi.Repo.get_by(target_type: target_type, target_id: target_id)
+  end
 end
