@@ -23,6 +23,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 - Card Comments
 - Card Email Notification System for team member
 - Import CSV
+- Export CSV 
 - Board Timeline on a sidebar
 - Board Archive/Unarchive
 - Oauth for API in Zapier
