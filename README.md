@@ -8,7 +8,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 ## Why Cercle?
 - realtime
-- visual
+- visual like Trello
 - simple
 - API ready
 - open source
