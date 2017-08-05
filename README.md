@@ -12,29 +12,29 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 - simple
 - API ready
 - open source
-- free if you install it by yourself
-- $1.99 per month with unlimited number of users if we do the hosting for you.
+- free
 
 ## Current features
-- Import CSV
-- Contact Tags
-- Contact Organization
-- Each Contact can be linked to visual Card into a Board
-- Board Timeline on a sidebar
-- Board Archive/Unarchive
+- Each Card can be linked to several contacts
+- Card Contact Tags
+- Card Contact Organization
 - Card Attachements
 - Card Tasks
 - Card Comments
 - Card Email Notification System for team member
+- Import CSV
+- Board Timeline on a sidebar
+- Board Archive/Unarchive
 - Oauth for API in Zapier
 
 
 ## Changelog
 
-### June 7 2017, V1.0 Release Candidate
+### V1.1 (TBD)
+- UX improvements so we can use Card without contacts (Trello Clone feature)
 
-#### New Feature
-
+### V1.0 - June 2017
+#### New Features
 - Oauth Integration with Zapier
 - Add Full name option during CSV Import
 
