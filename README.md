@@ -32,11 +32,11 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 ## Changelog
 
 ### V1.1 (TBD)
+#### New Features
 - UX improvements so we can use Card without contacts (Trello Clone feature)
 - Notification system for task due date & Card due date
 
 ### V1.0 - June 2017
-#### New Features
 - Oauth Integration with Zapier
 - Add Full name option during CSV Import
 
