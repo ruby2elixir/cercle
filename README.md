@@ -32,6 +32,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 ### V1.1 (TBD)
 - UX improvements so we can use Card without contacts (Trello Clone feature)
+- Notification system for task due date & Card due date
 
 ### V1.0 - June 2017
 #### New Features
