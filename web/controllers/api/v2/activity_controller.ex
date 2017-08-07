@@ -54,6 +54,7 @@ defmodule CercleApi.APIV2.ActivityController do
       {:ok, activity} ->
         activity = activity
         |> Repo.preload([:contact, :user])
+        ActivityService.add(activity)
         CercleApi.Endpoint.broadcast!(
           "cards:" <> to_string(activity.card_id),
           "activity:created", %{"activity" => activity}
@@ -83,6 +84,7 @@ defmodule CercleApi.APIV2.ActivityController do
       {:ok, activity} ->
         activity = activity
         |> Repo.preload([:contact, :user])
+        ActivityService.add(activity)
         CercleApi.Endpoint.broadcast!(
           "cards:" <> to_string(activity.card_id),
           "activity:updated", %{"activity" => activity}
