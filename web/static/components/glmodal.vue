@@ -20,6 +20,7 @@
 </template>
 <script>
 import ContactForm from './contacts/edit.vue';
+import CardShow from './cards/show.vue';
 import NewContact from './contacts/new.vue';
 export default {
   data() {
@@ -44,6 +45,7 @@ export default {
   components: {
     'modal': VueStrap.modal,
     'contact-form': ContactForm,
+    'card-show': CardShow,
     'new-contact-form': NewContact
   },
   mounted() {
@@ -54,6 +56,8 @@ export default {
       vm.windowClass = options['class'];
       vm.options = options;
       vm.open = true;
+
+      console.log(vm.modalData);
     });
     vm.$root.$on('esc-keyup', () => { this.open = false; });
   }

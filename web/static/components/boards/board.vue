@@ -43,7 +43,7 @@
         this.card = { id: cardId };
         this.$glmodal.$emit(
           'open', {
-            view: 'contact-form', class: 'contact-modal', data: { 'card_id': cardId, 'contact_id': contactId }
+            view: 'card-show', class: 'card-modal', data: { 'card_id': cardId }
           });
       },
       changeContactDisplay(contactId) {
