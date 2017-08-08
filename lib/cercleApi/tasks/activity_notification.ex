@@ -8,36 +8,34 @@ defmodule CercleApi.Tasks.ActivityNotification do
 
   def run do
     IO.puts "run ActivityNotification"
-    send_current_notification
-    send_prestart_notification
-  end
-
-  def send_current_notification do
-    from_time = Timex.now |> Timex.shift(minutes: -5)
-    to_time = Timex.now |> Timex.shift(minutes: 1)
     Enum.each(
-      get_items(from_time, to_time),
-      fn (item) -> send_email(item, "start") end
+      get_items,
+      fn (item) -> send_email(item) end
     )
   end
-
-  def send_prestart_notification do
-    from_time = Timex.now|> Timex.shift(minutes: 60)
-    to_time = Timex.now |> Timex.shift(minutes: 65)
-    Enum.each(
-      get_items(from_time, to_time),
-      fn (item) -> send_email(item, "before_start") end
-    )
-  end
-
-  def send_email(item, "start") do
+  def send_email(%CercleApi.Notification{notification_type: "start"} = item) do
     target = load_item(item)
     if target.user.notification do
       mail = %Mailman.Email{
-        subject: "Start",
+        subject: "Start Notification",
         from: "no-reply@cercle.co",
         to: [target.user.login],
-        html: email_html(target, item.target_type)
+        html: email_html(target, item, "start")
+      }
+      Mailer.deliver(mail)
+      item
+      |> Notification.changeset(%{sent: true})
+      |> Repo.update
+    end
+  end
+  def send_email(%CercleApi.Notification{notification_type: "prestart"} = item) do
+    target = load_item(item)
+    if target.user.notification do
+      mail = %Mailman.Email{
+        subject: "PreStart Notification",
+        from: "no-reply@cercle.co",
+        to: [target.user.login],
+        html: email_html(target, item, "prestart")
       }
       Mailer.deliver(mail)
       item
@@ -46,45 +44,47 @@ defmodule CercleApi.Tasks.ActivityNotification do
     end
   end
 
-  def send_email(item, "before_start") do
-    target = load_item(item)
-    if target.user.notification do
-      mail = %Mailman.Email{
-        subject: "Before Start",
-        from: "no-reply@cercle.co",
-        to: [target.user.login],
-        html: email_html(target, item.target_type)
-      }
-      Mailer.deliver(mail)
-    end
-  end
-
-  defp email_html(target, template_type) do
+  def email_html(target, item, event_type) do
     Phoenix.View.render_to_string(
-      CercleApi.EmailView, "start_#{template_type}.html",
+      CercleApi.EmailView, "#{event_type}_#{item.target_type}.html",
       target: target,
-      receiver: target.user.user_name
+      receiver: target.user.user_name,
+      due_date: Timex.format!(target.due_date, "{0M}/{0D}/{YYYY} {h24}:{m}"),
+      contact_id: contact_id(target),
+      name: target_name(target)
     )
   end
 
-  defp load_item(%{target_type: "card"} = item) do
+  def target_name(%CercleApi.Card{} = card) do
+    with card <- Repo.preload(card, [:board, :board_column]) do
+      "In #{card.board.name} - #{card.board_column.name}"
+    end
+  end
+
+  def target_name(%CercleApi.Activity{} = activity), do: activity.title
+
+  def contact_id(%CercleApi.Card{} = card), do:  List.first(card.contact_ids || [])
+  def contact_id(%CercleApi.Activity{} = activity), do: activity.contact_id
+
+
+  def load_item(%{target_type: "card"} = item) do
     Card
     |> Repo.get_by(id: item.target_id)
     |> Repo.preload([:user])
   end
 
-  defp load_item(%{target_type: "activity"} = item) do
+  def load_item(%{target_type: "activity"} = item) do
     Activity
     |> Repo.get_by(id: item.target_id)
     |> Repo.preload([:user])
   end
 
-  defp get_items(from_time, to_time) do
+  def get_items do
+    date = Timex.now()
     query = from p in Notification,
-      where: p.delivery_time  >= ^from_time,
-      where: p.delivery_time <= ^to_time,
+      where: p.delivery_time <= ^date,
       where: p.sent == false,
-      where: p.target_type in ["card", "active"],
+      where: p.target_type in ["card", "activity"],
       order_by: [asc: p.delivery_time]
 
     Repo.all(query)
