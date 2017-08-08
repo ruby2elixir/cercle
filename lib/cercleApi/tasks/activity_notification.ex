@@ -7,10 +7,6 @@ defmodule CercleApi.Tasks.ActivityNotification do
   alias CercleApi.{Repo, Activity, Card, Notification, Mailer}
 
   def run do
-    # {:ok, _} = Application.ensure_started(:timex)
-    #Application.ensure_all_started(:timex)
-    # Application.load(:tzdata)
-    # :ok = Application.ensure_started(:tzdata)
     IO.puts "run ActivityNotification"
     send_current_notification
     send_prestart_notification

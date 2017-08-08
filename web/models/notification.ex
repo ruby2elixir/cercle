@@ -24,4 +24,12 @@ defmodule CercleApi.Notification do
     __MODULE__
     |> CercleApi.Repo.get_by(target_type: target_type, target_id: target_id)
   end
+
+  def find_by_target(target_type, target_id, event_type) do
+    __MODULE__
+    |> CercleApi.Repo.get_by(
+      target_type: target_type,
+      target_id: target_id,
+      notification_type: event_type)
+  end
 end
