@@ -106,7 +106,8 @@ body, form, ul, table {
 
 
 .modal-lg {
-    width: 750px;
+	width: auto;
+    max-width: 750px;
 }
 
 
