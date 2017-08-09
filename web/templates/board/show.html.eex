@@ -9,7 +9,7 @@
           <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>" style="color:white;font-weight:bold;"><%= @board.name %></span>
         </h2>
         <h2 class=' btn btn-default'>
-          <span @click="newContact(<%= Poison.encode!([@board]) %>, <%= @company.id %>)" style="font-weight:bold; font-size: 16px;">+ Add contact</span>
+          <span @click="newCard(<%= Poison.encode!([@board]) %>, <%= @company.id %>)" style="font-weight:bold; font-size: 16px;">+ Add card</span>
         </a>
 </section>
 
@@ -36,7 +36,7 @@
                 <div class="column" data-id="<%=col.id%>">
 
                   <%= for card <- @cards do %>
-                      <%=if (card.board_column_id == col.id) && card.main_contact do %>
+                      <%=if (card.board_column_id == col.id) do %>
                         <%= render "_card.html", card: card %>
                       <%=end%>
                   <%end%>

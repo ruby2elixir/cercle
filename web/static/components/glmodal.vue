@@ -22,6 +22,7 @@
 import ContactForm from './contacts/edit.vue';
 import CardShow from './cards/show.vue';
 import NewContact from './contacts/new.vue';
+import NewCard from './cards/new.vue';
 export default {
   data() {
     return {
@@ -46,7 +47,8 @@ export default {
     'modal': VueStrap.modal,
     'contact-form': ContactForm,
     'card-show': CardShow,
-    'new-contact-form': NewContact
+    'new-contact-form': NewContact,
+    'new-card-form': NewCard
   },
   mounted() {
     let vm = this;
@@ -56,8 +58,6 @@ export default {
       vm.windowClass = options['class'];
       vm.options = options;
       vm.open = true;
-
-      console.log(vm.modalData);
     });
     vm.$root.$on('esc-keyup', () => { this.open = false; });
   }

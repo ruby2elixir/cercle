@@ -3,11 +3,11 @@
     <div class="row">
       <div class="col-lg-9 card-info">
         <div class="card-title">
-          <i class="fa fa-rocket" style="color:#d8d8d8;"></i>
+          <i class="fa fa-rocket"></i>
           <inline-edit v-model="card.name" v-on:input="updateCard" placeholder="Card Name"></inline-edit>
         </div>
 
-        <div class="managers">
+        <div class="managers" v-if="companyUsers.length > 0">
           Managed by:
           <select v-model.number="card.user_id"  v-on:change="updateCard">
             <option v-for="user in companyUsers" :value.number="user.id">{{user.user_name}}</option>
@@ -35,34 +35,50 @@
           <markdown-text-edit v-model="card.description" v-on:input="updateCard" placeholder="Write a description" ></markdown-text-edit>
         </div>
 
-        <div class="card-contacts-container">
+        <div class="card-contacts-container" v-if="contacts.length > 0">
           <div class="title">
-            <i class="fa fa-user" style="color:#d8d8d8;"></i> Contacts
+            <i class="fa fa-user"></i> Contacts
           </div>
           
           <div class="card-contacts">
             <div class="card-contacts-list">
               <span v-for="contact in contacts" :class="contactClass(contact)">
                 <a href='#' v-on:click="changeContactDisplay($event, contact.id)">{{ contact.name }}</a>
-                <a class="remove" @click="removeContact(contact.id)" v-if="contacts.length > 1">×</a>
+                <a class="remove" @click="removeContact(contact.id)">×</a>
               </span>
             </div>
 
             <div class="active-contact-info" v-if="activeContact">
               <div class="row contact-attributes">
-                <div class="col-lg-6">
-                  Phone number
+                <div class="col-lg-4">
+                  Name
                   <br />
                   <span class="attribute-value">
-                    <inline-edit v-model="activeContact.phone" v-on:input="updateContact" placeholder="Click to add"></inline-edit>
+                    <name-input-modal :first-name="activeContact.first_name" :last-name="activeContact.last_name" v-on:input="contactNameInput"/>
                   </span>
                 </div>
 
-                <div class="col-lg-6">
+                <div class="col-lg-4">
+                  Title
+                  <br />
+                  <span class="attribute-value">
+                    <input-modal v-model="activeContact.job_title" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
+                  </span>
+                </div>
+
+                <div class="col-lg-4">
+                  Phone number
+                  <br />
+                  <span class="attribute-value">
+                    <input-modal v-model="activeContact.phone" v-on:input="updateContact"  placeholder="Click to add" label="Phone" />
+                  </span>
+                </div>
+
+                <div class="col-lg-4">
                   Email
                   <br />
                   <span class="attribute-value">
-                    <inline-edit v-model="activeContact.email" v-on:input="updateContact" placeholder="Click to add"></inline-edit>
+                    <input-modal v-model="activeContact.email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
                   </span>
                 </div>
               </div>
@@ -143,6 +159,8 @@
   import ToDo from '../contacts/to-do-edit.vue';
   import CommentForm from '../contacts/comment-form.vue';
   import TimelineEvents from '../contacts/timeline-events.vue';
+  import inputModal from '../shared/input-modal.vue';
+  import nameInputModal from '../shared/name-input-modal.vue';
 
   export default {
     props: ['card_id'],
@@ -167,6 +185,7 @@
         attachments: [],
         card: {},
         contacts: [],
+        contact_ids: [],
         activeContact: null,
         events: [],
         activities: [],
@@ -198,20 +217,26 @@
       'timeline_events': TimelineEvents,
       'modal': VueStrap.modal,
       'file-upload': FileUpload,
-      'el-date-picker': ElementUi.DatePicker
+      'el-date-picker': ElementUi.DatePicker,
+      'name-input-modal': nameInputModal,
+      'input-modal': inputModal
     },
     methods: {
       userImage() {
         return Vue.currentUser.userImage;
       },
       contactClass(contact) {
-        if(this.activeContact.id === contact.id) {
-          return 'contact active';
-        } else {
-          return 'contact';
+        let className = "contact";
+        if(this.activeContact && this.activeContact.id === contact.id) {
+          className += ' active';
         }
+        return className;
       },
-
+      contactNameInput: function(data) {
+        this.$set(this.activeContact, 'first_name', data.firstName);
+        this.$set(this.activeContact, 'last_name', data.lastName);
+        this.updateContact();
+      },
       eventAddOrUpdate(event) {
         let itemIndex = this.$data.events.findIndex(function(item){
           return item.id === parseInt(event.id);
@@ -266,6 +291,7 @@
           let urlOpp = '/api/v2/card/'+ this.card.id;
           let contactIds = [];
           this.contacts.push(resp.data.data);
+          this.card.contact_ids = this.card.contact_ids || [];
           this.card.contact_ids.push(resp.data.data.id);
           this.$http.put(urlOpp,{ card: { contactIds: this.card.contact_ids  } }).then(resp2 => {
             this.changeContactDisplay(null, this.contacts[this.contacts.length - 1].id);
@@ -315,10 +341,38 @@
       },
 
       removeContact(contactId) {
+        if(confirm('Are you sure?')) {
+          this.card.contact_ids.splice(this.card.contact_ids.indexOf(contactId), 1);
+
+          let url = '/api/v2/card/' + this.card.id;
+          this.$http.put(url, {card: { contactIds: this.card.contact_ids}}).then(resp => {
+            if(resp.data.errors && resp.data.errors.contact_ids) {
+              alert(resp.data.errors.contact_ids);
+            } else {
+              var index = -1;
+              for(var i=0; i < this.contacts.length; i++) {
+                if(this.contacts[i].id === contactId) {
+                  index = i;
+                  break;
+                }
+              }
+              if(index !== -1) {
+                this.contacts.splice(index, 1);
+              }
+
+              if(this.activeContact.id == contactId && this.contacts.length>0)
+                this.changeContactDisplay(null, this.contacts[0].id);
+            }
+          }, resp => {
+            if(resp.data.errors.contact_ids) {
+              alert(resp.data.errors.contact_ids);
+            }
+          });
+        }
       },
 
       loadContactInfo() {
-        if (this.activeContact.id) {
+        if (this.activeContact) {
           this.$http.get('/api/v2/contact/' + this.activeContact.id).then(resp => {
             this.company = resp.data.company;
             this.companyUsers = resp.data.company_users;
@@ -330,6 +384,7 @@
         this.$http.get('/api/v2/card/' + this.card_id).then(resp => {
           this.card = resp.data.card;
           this.contacts = resp.data.card_contacts;
+          this.contact_ids = resp.data.card.contact_ids;
           this.activeContact = this.contacts[0];
           this.activities = resp.data.activities;
           this.events = resp.data.events;
@@ -348,6 +403,10 @@
   .card-show {
     padding: 20px;
     background-color: #edf0f5;
+
+    .fa {
+      color:#d8d8d8;
+    }
 
     .file-uploads-title {
       font-weight: normal;
