@@ -73,7 +73,6 @@ defmodule CercleApi.Mixfile do
      {:rummage_ecto, "~> 1.1.0"},
      {:rollbax, "~> 0.8.2"},
      {:ex_oauth2_provider, "~> 0.2.0"},
-     {:quantum, "~> 2.0"},
 
      # dev
      {:phoenix_live_reload, "~> 1.0", only: :dev},

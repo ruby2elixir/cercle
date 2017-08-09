@@ -51,12 +51,3 @@ config :ex_oauth2_provider, ExOauth2Provider,
   resource_owner: CercleApi.User,
   application_owner: CercleApi.AdminUser,
   use_refresh_token: true
-
-config :cercleApi, CercleApi.Scheduler,
-  jobs: [
-    # Every minute
-    # {"* * * * *", {CercleApi.Tasks.CardNotification, :due_date_start, []}},
-    # {"*/15 * * * *", {CercleApi.Tasks.CardNotification, :before_due_date, []}},
-    # {"* * * * *", {CercleApi.Tasks.ActivityNotification, :due_date_start, []}},
-    # {"*/15 * * * *", {CercleApi.Tasks.ActivityNotification, :before_due_date, []}},
-  ]
