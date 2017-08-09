@@ -543,7 +543,7 @@
   .card-due-date {
     width:140px !important;
     .el-input__inner {
-      background-color: #eaeaea;
+      background-color: white;
     }
   }
   .attachments {
