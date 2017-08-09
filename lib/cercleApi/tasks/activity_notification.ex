@@ -1,4 +1,5 @@
 defmodule CercleApi.Tasks.ActivityNotification do
+  @moduledoc false
 
   require Logger
   import Ecto.Query, only: [from: 1, from: 2]
@@ -65,7 +66,6 @@ defmodule CercleApi.Tasks.ActivityNotification do
 
   def contact_id(%CercleApi.Card{} = card), do:  List.first(card.contact_ids || [])
   def contact_id(%CercleApi.Activity{} = activity), do: activity.contact_id
-
 
   def load_item(%{target_type: "card"} = item) do
     Card

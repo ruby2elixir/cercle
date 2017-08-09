@@ -1,4 +1,5 @@
 defmodule CercleApi.Notification do
+  @moduledoc false
   use CercleApi.Web, :model
 
   schema "notifications" do

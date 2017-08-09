@@ -70,7 +70,7 @@ defmodule CercleApi.CardService do
       event: event,
       data: payload_data(card)
     }
-    ActivityService.add(card)
+    CercleApi.ActivityService.add(card)
     with channel <- "contacts:"  <> to_string(List.first(card.contact_ids)),
       do: CercleApi.Endpoint.broadcast!(
             channel, "card:created", %{
@@ -97,7 +97,7 @@ defmodule CercleApi.CardService do
       event: event,
       data: payload_data(card)
     }
-    ActivityService.add(card)
+    CercleApi.ActivityService.add(card)
     with channel <- "cards:" <> to_string(card.id),
          card_contacts <- CercleApi.Card.contacts(card),
       do: CercleApi.Endpoint.broadcast!(
