@@ -536,7 +536,7 @@
   .is-due-past {
     .card-due-date {
       .el-input__inner {
-        background-color: #f3d0d0;
+        background-color: white;
       }
     }
   }
