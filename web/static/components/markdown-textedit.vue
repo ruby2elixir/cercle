@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-on-click-outside='cancelEdit'>
     <div v-show="editMode">
       <textarea v-model="rawText" v-autosize="rawText" class="card-textarea"  />
       <button class="btn btn-success" v-on:click="updateValue">Save</button>

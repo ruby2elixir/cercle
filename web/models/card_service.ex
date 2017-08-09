@@ -71,12 +71,14 @@ defmodule CercleApi.CardService do
       data: payload_data(card)
     }
 
-    with channel <- "contacts:"  <> to_string(List.first(card.contact_ids)),
-      do: CercleApi.Endpoint.broadcast!(
-            channel, "card:created", %{
-              "card" => CercleApi.APIV2.ContactView.card_json(card)
-            }
-          )
+    if card.contact_ids do
+      with channel <- "contacts:"  <> to_string(List.first(card.contact_ids)),
+        do: CercleApi.Endpoint.broadcast!(
+              channel, "card:created", %{
+                "card" => CercleApi.APIV2.ContactView.card_json(card)
+              }
+            )
+    end
 
     changeset = event_changeset(user, event, card,
       event_payload(card, %{action: :create_card}))
