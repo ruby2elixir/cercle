@@ -11,9 +11,9 @@
       </h3>
 
       <div style="padding:15px;">
-        <div  v-for="task in tasks" class="task row" v-if="showDoneTasks || !task.is_done">
+        <div  v-for="task in tasks" class="task row" v-if="showDoneTasks || !task.isDone">
           <div class="col-md-1 task-is-done">
-            <el-checkbox v-model="task.is_done" v-on:change="updateTask(task)"></el-checkbox>
+            <el-checkbox v-model="task.isDone" v-on:change="updateTask(task)"></el-checkbox>
           </div>
 
           <div class="col-md-5">
@@ -22,7 +22,7 @@
           <div class="col-md-4">
             <el-date-picker
              v-on:change="updateTask(task)"
-             v-model="task.due_date"
+             v-model="task.dueDate"
              type="datetime"
              :editable="false"
              size="small"
@@ -31,8 +31,8 @@
           </div>
 
           <div class="col-md-1">
-            <select v-model="task.user_id" v-on:change="updateTask(task)">
-              <option v-for="user in companyUsers"  v-if="!!user.user_name" :value="user.id">{{shortUserName(user)}}</option>
+            <select v-model="task.userId" v-on:change="updateTask(task)">
+              <option v-for="user in companyUsers"  v-if="!!user.userName" :value="user.id">{{shortUserName(user)}}</option>
             </select>
           </div>
 
@@ -90,8 +90,8 @@
     methods: {
       shortUserName(user) {
         let shortName = '';
-        if (user.user_name) {
-          shortName = user.user_name.toUpperCase().slice(0, 2);
+        if (user.userName) {
+          shortName = user.userName.toUpperCase().slice(0, 2);
         }
         return shortName;
       },
@@ -119,12 +119,12 @@
         this.$http.put(url, {
           activity: {
             title: task.title,
-            dueDate: task.due_date,
+            dueDate: task.dueDate,
             contactId: this.contact.id,
             cardId: this.card.id,
-            userId: task.user_id,
+            userId: task.userId,
             companyId: this.company.id,
-            isDone: task.is_done
+            isDone: task.isDone
           }
         }).then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
       }
