@@ -536,14 +536,14 @@
   .is-due-past {
     .card-due-date {
       .el-input__inner {
-        background-color: #f3d0d0;
+        background-color: white;
       }
     }
   }
   .card-due-date {
     width:140px !important;
     .el-input__inner {
-      background-color: #eaeaea;
+      background-color: white;
     }
   }
   .attachments {
