@@ -3,6 +3,11 @@
       <div style="font-size:14px;font-weight:800;padding-bottom:10px;cursor:pointer;" v-on:click.stop="cardShow(<%=@card.id%>)">
           <span class='name' style="color:#222222;">
             <%=@card.name %>
+            <%= if @card.main_contact do %>
+              <span style="color:rgb(119, 119, 119);">
+              - <%=@card.main_contact.first_name %> <%=@card.main_contact.last_name %>
+              </span>
+            <% end %>
           </span>
       </div>
       <div style="font-size:12px;">
