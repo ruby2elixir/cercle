@@ -140,11 +140,12 @@
     <modal large :show.sync="openContactModal">
       <div slot="modal-header" class="modal-header">
        <button type="button" class="close" @click="openContactModal=false"><span>&times;</span></button>
-       <h4 class="modal-title">What is his name?</h4>
+       <h4 class="modal-title">Add contact</h4>
       </div>
         <div slot="modal-body" class="modal-body">
-        <input class="form-control" v-model="newContactName" type="text" placeholder="Name of the Contact">
+          <add-contact @select-contact="selectContact" />
         </div>
+
         <div slot="modal-footer" class="modal-footer">
          <button type="button" class="btn btn-success" v-on:click="addContact">Add Contact</button>
         </div>
@@ -161,6 +162,7 @@
   import TimelineEvents from '../contacts/timeline-events.vue';
   import inputModal from '../shared/input-modal.vue';
   import nameInputModal from '../shared/name-input-modal.vue';
+  import AddContact from './add-contact.vue';
 
   export default {
     props: ['card_id'],
@@ -192,7 +194,7 @@
         company: null,
         companyUsers: [],
         openContactModal: false,
-        newContactName: '',
+        addContactData: {},
         showDueDatePicker: false
       };
     },
@@ -219,7 +221,8 @@
       'file-upload': FileUpload,
       'el-date-picker': ElementUi.DatePicker,
       'name-input-modal': nameInputModal,
-      'input-modal': inputModal
+      'input-modal': inputModal,
+      'add-contact': AddContact
     },
     methods: {
       userImage() {
@@ -275,28 +278,41 @@
             currentUserTimeZone: Vue.currentUser.timeZone
           } }).then( resp => { this.taskAddOrUpdate(resp.data.data); });
       },
+      selectContact(data) {
+        this.addContactData = data;
+      },
       addContact(){
-        let url = '/api/v2/contact';
-        let data = {
-          name: this.newContactName,
-          userId: this.card.user_id
-        };
-        if (this.company) {
-          data['company_id'] = this.company.id;
-        }
-        if (this.organization) {
-          data['organization_id'] = this.organization.id;
-        }
-        this.$http.post(url, { contact: data }).then(resp => {
-          let urlOpp = '/api/v2/card/'+ this.card.id;
-          let contactIds = [];
-          this.contacts.push(resp.data.data);
+        let cardUrl = '/api/v2/card/'+ this.card.id;
+        if(this.addContactData.isExistingContact) {
+          this.contacts.push(this.addContactData.contact);
           this.card.contact_ids = this.card.contact_ids || [];
-          this.card.contact_ids.push(resp.data.data.id);
-          this.$http.put(urlOpp,{ card: { contactIds: this.card.contact_ids  } }).then(resp2 => {
-            this.changeContactDisplay(null, this.contacts[this.contacts.length - 1].id);
+          this.card.contact_ids.push(this.addContactData.contact.id);
+          this.$http.put(cardUrl,{ card: { contactIds: this.card.contact_ids  } }).then(resp2 => {
+            this.changeContactDisplay(null, this.addContactData.contact.id);
           });
-        });
+        } else {
+          let url = '/api/v2/contact';
+          let data = {
+            name: this.addContactData.contact.name,
+            email: this.addContactData.contact.email,
+            phone: this.addContactData.contact.phone,
+            userId: this.card.user_id
+          };
+          if (this.company) {
+            data['company_id'] = this.company.id;
+          }
+          if (this.organization) {
+            data['organization_id'] = this.organization.id;
+          }
+          this.$http.post(url, { contact: data }).then(resp => {
+            this.contacts.push(this.addContactData.contact);
+            this.card.contact_ids = this.card.contact_ids || [];
+            this.card.contact_ids.push(resp.data.data.id);
+            this.$http.put(cardUrl,{ card: { contactIds: this.card.contact_ids  } }).then(resp2 => {
+              this.changeContactDisplay(null, this.contacts[this.contacts.length - 1].id);
+            });
+          });
+        }
 
         this.newContactName = '';
         this.openContactModal = false;
@@ -374,6 +390,9 @@
       loadContactInfo() {
         if (this.activeContact) {
           this.$http.get('/api/v2/contact/' + this.activeContact.id).then(resp => {
+            this.activeContact.name = resp.data.contact.name;
+            this.activeContact.first_name = resp.data.contact.first_name;
+            this.activeContact.last_name = resp.data.contact.last_name;
             this.company = resp.data.company;
             this.companyUsers = resp.data.company_users;
           });
@@ -403,6 +422,10 @@
   .card-show {
     padding: 20px;
     background-color: #edf0f5;
+
+    .modal-body {
+      padding: 10px;
+    }
 
     .fa {
       color:#d8d8d8;

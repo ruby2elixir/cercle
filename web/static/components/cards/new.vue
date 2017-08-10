@@ -7,24 +7,7 @@
       <textarea class="form-control" v-model="description" placeholder="Write a description"></textarea>
     </div>
 
-
-    <div class="form-group">
-      <v-select v-model="contact.name"
-                :debounce="250"
-                :on-change="selectContact"
-                :on-search="searchContacts"
-                :options="searchedContacts"
-                :taggable="true"
-                placeholder="Full Name"
-                label="name"><span slot="no-options"></span></v-select>
-    </div>
-    <div class="form-group">
-      <input type="email" v-model="contact.email" placeholder="Email" class="form-control" :disabled="existingContactId!=null" />
-    </div>
-    <div class="form-group">
-      <input type="phone" v-model="contact.phone" placeholder="Phone" class="form-control" :disabled="existingContactId!=null" />
-    </div>
-
+    <add-contact @select-contact="selectContact" />
 
     <div class="form-group" v-show="defaultBoardId==null">
       <label>
@@ -49,6 +32,7 @@
 </template>
 
 <script>
+  import AddContact from './add-contact.vue';
   export default {
     props: ['userId', 'companyId', 'boards', 'defaultBoardId'],
     data: function() {
@@ -68,7 +52,8 @@
       };
     },
     components: {
-      'v-select': vSelect.VueSelect
+      'v-select': vSelect.VueSelect,
+      'add-contact': AddContact
     },
     methods: {
       loadColumns: function() {
@@ -124,25 +109,15 @@
         this.$emit('close');
       },
 
-      selectContact(con) {
-        if(typeof con!=='string') {
-          this.existingContactId = con.id;
-          this.contact.email = con.email;
-          this.contact.phone = con.phone;
+      selectContact(data) {
+        if(data.isExistingContact) {
+          this.existingContactId = data.contact.id;
         } else {
           this.existingContactId = null;
-          this.contact.name = con;
-          this.contact.email = null;
-          this.contact.phone = null;
         }
-      },
-
-      searchContacts(search, loading) {
-        loading(true);
-        this.$http.get('/api/v2/contact', { params: { q: search }}).then(resp => {
-          this.searchedContacts = resp.data.data;
-          loading(false);
-        });
+        this.contact.name = data.contact.name;
+        this.contact.email = data.contact.email;
+        this.contact.phone = data.contact.phone;
       }
     },
     mounted: function() {
