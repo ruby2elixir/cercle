@@ -410,7 +410,6 @@
           this.$http.get('/api/v2/contact/' + this.activeContact.id).then(resp => {
             this.activeContact.firstName = resp.data.contact.firstName;
             this.activeContact.lastName = resp.data.contact.lastName;
-            this.companyUsers = resp.data.companyUsers;
           });
         }
       },
@@ -424,6 +423,7 @@
           this.activities = resp.data.activities;
           this.events = resp.data.events;
           this.company = resp.data.company;
+          this.companyUsers = resp.data.companyUsers;
 
           this.loadContactInfo();
         });

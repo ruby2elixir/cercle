@@ -70,7 +70,7 @@ defmodule CercleApi.Card do
 
     from q in query, preload: [
       :attachments,
-      :company,
+      company: [:users],
       activities: [:user],
       timeline_event: ^comments_query
     ]
