@@ -115,6 +115,8 @@
           }).then( resp => {
             this.saveCard([resp.data.data.id]);
           });
+        } else {
+          this.saveCard();
         }
       },
 
