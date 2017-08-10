@@ -27,7 +27,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
     case Repo.insert(changeset) do
       {:ok, timeline_event} ->
         timeline_event_reload = timeline_event
-        |> Repo.preload([:user, :card])
+        |> Repo.preload([:user, card: [:board]])
         CercleApi.TimelineEventService.create(timeline_event_reload)
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
