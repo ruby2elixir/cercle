@@ -59,13 +59,19 @@
   </script>
 <style lang="sass">
   .timeline_event_delete {
-  margin-left: 0px;
-  text-decoration: underline;
-  cursor: pointer;
+    margin-left: 0px;
+    text-decoration: underline;
+    cursor: pointer;
   }
 
   .timeline_event_edit {
-  float: right;
-  margin-right: 14px;
+    float: right;
+    margin-right: 14px;
+  }
+
+  .user-block {
+    float: left;
+    width: 45px;
+    margin-left: 10px;
   }
 </style>

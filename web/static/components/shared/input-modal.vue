@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span v-on-click-outside='cancel'>
     <span v-on:click="showModal">
       {{value || placeholder}}
     </span>

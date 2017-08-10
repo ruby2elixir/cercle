@@ -20,6 +20,24 @@
       'new-contact': NewContact
     },
     methods: {
+      newCard(boards, companyId) {
+        this.$glmodal.$emit(
+              'open', {
+                view: 'new-card-form',
+                class: 'new-card-modal',
+                title: 'Add a card into this board',
+                'closed_in_header': true,
+                size: 'medium',
+                'display_header': true,
+                data: {
+                  'board_id': this.board_id,
+                  'default-board-id': this.board_id,
+                  'user-id': Vue.currentUser.userId,
+                  'company-id': companyId,
+                  boards: boards
+                }
+              });
+      },
       newContact(boards, companyId) {
         this.$glmodal.$emit(
               'open', {
@@ -38,12 +56,11 @@
                 }
               });
       },
-      contactShow(contactId, cardId) {
-        this.contact = {id: contactId};
+      cardShow(cardId) {
         this.card = { id: cardId };
         this.$glmodal.$emit(
           'open', {
-            view: 'contact-form', class: 'contact-modal', data: { 'card_id': cardId, 'contact_id': contactId }
+            view: 'card-show', class: 'card-modal', data: { 'cardId': cardId }
           });
       },
       changeContactDisplay(contactId) {

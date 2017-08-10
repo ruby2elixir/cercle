@@ -45,3 +45,10 @@
     }
   };
 </script>
+
+<style lang="sass">
+  .message-block {
+    margin-left: 50px;
+    margin-right: 10px;
+  }
+</style>

@@ -39,14 +39,17 @@ defmodule CercleApi.Card do
     model
     |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids,
                     :board_id, :board_column_id, :description, :due_date])
-    |> validate_required([:contact_ids, :user_id, :company_id])
-    |> validate_length(:contact_ids, min: 1, message: "Atleast 1 contact is required")
+    |> validate_required([:user_id, :company_id])
   end
 
   def contacts(card) do
-    card_contacts = from contact in CercleApi.Contact,
-      where: contact.id in ^card.contact_ids
-    CercleApi.Repo.all(card_contacts)
+    if card.contact_ids do
+      card_contacts = from contact in CercleApi.Contact,
+        where: contact.id in ^card.contact_ids
+      resp = CercleApi.Repo.all(card_contacts)
+    else
+      []
+    end
   end
 
   def get_main_contact(card) do
