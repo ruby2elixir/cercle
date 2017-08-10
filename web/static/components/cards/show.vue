@@ -305,11 +305,11 @@
             data['organization_id'] = this.organization.id;
           }
           this.$http.post(url, { contact: data }).then(resp => {
-            this.contacts.push(this.addContactData.contact);
+            this.contacts.push(resp.data.data);
             this.card.contact_ids = this.card.contact_ids || [];
             this.card.contact_ids.push(resp.data.data.id);
             this.$http.put(cardUrl,{ card: { contactIds: this.card.contact_ids  } }).then(resp2 => {
-              this.changeContactDisplay(null, this.contacts[this.contacts.length - 1].id);
+              this.changeContactDisplay(null, resp.data.data.id);
             });
           });
         }
