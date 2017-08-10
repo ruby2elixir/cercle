@@ -24,6 +24,7 @@ defmodule CercleApi.APIV2.CardView do
       card_contacts: card_contacts,
       board: board,
       company: card.company,
+      company_users: card.company.users,
       board_columns: board.board_columns,
       attachments: attachments
       }
