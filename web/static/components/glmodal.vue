@@ -60,6 +60,9 @@ export default {
       vm.open = true;
     });
     vm.$root.$on('esc-keyup', () => { this.open = false; });
+    vm.$glmodal.$on('close', function(options){
+      vm.open = false;
+    });
   }
 };
 </script>

@@ -32,20 +32,18 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
         user = current_user
-        contact = Repo.get!(CercleApi.Contact, timeline_event_params["contact_id"])
         |> Repo.preload [:company]
-        comment = timeline_event_params["content"]
-        company = contact.company
-        parts = String.split(comment, " ")
+        company = user.company
+        |> Repo.preload [:users]
+        users = company.users
 
-        users = company
-        |> assoc(:users)
-        |> Repo.all
+        comment = timeline_event_params["content"]
+        parts = String.split(comment, " ")
 
         Enum.each parts, fn x ->
           Enum.each users, fn u ->
             if x == ("@" <> to_string(u.name)) do
-              CercleApi.Mailer.deliver notification_email(u.login, contact, true, comment, company, user , u)
+              CercleApi.Mailer.deliver notification_email(u.login, timeline_event_reload.card, true, comment, company, user , u)
             end
           end
         end
@@ -61,13 +59,13 @@ defmodule CercleApi.APIV2.TimelineEventController do
     end
   end
 
-  def notification_email(emailTo, reward, status, comment, company, user, user2) do
+  def notification_email(emailTo, card, status, comment, company, user, user2) do
       %Mailman.Email{
-        subject: user.user_name <> " commented on " <> Contact.full_name(reward),
+        subject: user.user_name <> " commented on " <> card.name,
         from: "referral@cercle.co",
         to: [emailTo],
         html: Phoenix.View.render_to_string(CercleApi.EmailView,
-          "lead_notification.html", reward: reward, status: status,
+          "event_notification.html", card: card, status: status,
           comment: comment, company: company, user: user, user2: user2)
         }
   end

@@ -23,6 +23,7 @@ defmodule CercleApi.APIV2.CardView do
       events: card.timeline_event,
       card_contacts: card_contacts,
       board: board,
+      company: card.company,
       board_columns: board.board_columns,
       attachments: attachments
       }

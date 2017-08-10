@@ -4,13 +4,12 @@ defmodule CercleApi.Activity do
 
   @derive {Poison.Encoder, only: [
               :id, :title, :is_done, :due_date,
-              :company_id, :contact_id, :user_id, :card_id, :user, :contact
+              :company_id, :user_id, :card_id, :user
             ]}
 
   schema "activities" do
     belongs_to :card, CercleApi.Card
     belongs_to :user, CercleApi.User
-    belongs_to :contact, CercleApi.Contact
     belongs_to :company, CercleApi.Company
     field :due_date, Ecto.DateTime
     field :is_done, :boolean, default: false
@@ -28,9 +27,9 @@ defmodule CercleApi.Activity do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, [
-          :user_id, :contact_id, :company_id, :due_date, :is_done,
+          :user_id, :company_id, :due_date, :is_done,
           :title, :card_id])
-    |> validate_required([:user_id, :contact_id, :card_id, :company_id])
+    |> validate_required([:user_id, :card_id, :company_id])
   end
 
   def by_status(query, status \\ false) do
@@ -100,7 +99,7 @@ defmodule CercleApi.Activity do
 
     query
     |> CercleApi.Repo.all
-    |> CercleApi.Repo.preload([:contact, :user])
+    |> CercleApi.Repo.preload([:user])
   end
 
   def overdue(user) do
@@ -111,12 +110,11 @@ defmodule CercleApi.Activity do
       where: p.user_id == ^user.id,
       where: p.company_id == ^user.company_id,
       where: p.due_date  <= ^from_time,
-      where: not is_nil(p.contact_id),
       order_by: [asc: p.due_date]
 
     query
     |> CercleApi.Repo.all
-    |> CercleApi.Repo.preload([:contact, :user])
+    |> CercleApi.Repo.preload([:user])
   end
 
   def later(user) do
@@ -132,6 +130,6 @@ defmodule CercleApi.Activity do
 
     query
     |> CercleApi.Repo.all
-    |> CercleApi.Repo.preload([:contact, :user])
+    |> CercleApi.Repo.preload([:user])
   end
 end

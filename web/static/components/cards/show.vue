@@ -4,7 +4,9 @@
       <div class="col-lg-9 card-info">
         <div class="card-title">
           <i class="fa fa-rocket"></i>
-          <inline-edit v-model="card.name" v-on:input="updateCard" placeholder="Card Name"></inline-edit>
+          <div class="card-title-input-block">
+            <inline-text-edit v-model="card.name" v-on:input="updateCard" placeholder="Card Name"></inline-text-edit>
+          </div>
         </div>
 
         <div class="managers" v-if="companyUsers.length > 0">
@@ -115,17 +117,13 @@
         <to-do
           :activities="activities"
           :companyUsers="companyUsers"
-          :contact="activeContact"
           :card="card"
           :company="company"
           :timeZone="time_zone"
           v-on:taskAddOrUpdate="taskAddOrUpdate"
           v-on:taskDelete="taskDelete"
-          v-if="activeContact"
         >
-
           <comment_form slot="comment-form"
-            :contact="activeContact"
             :card="card"
             :userImage="userImage()"
             v-on:eventAddOrUpdate="eventAddOrUpdate"
@@ -158,10 +156,11 @@
 <script>
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../inline-common-edit.vue';
+  import InlineTextEdit from '../inline-textedit.vue';
   import MarkdownTextEdit from '../markdown-textedit.vue';
-  import ToDo from '../contacts/to-do-edit.vue';
-  import CommentForm from '../contacts/comment-form.vue';
-  import TimelineEvents from '../contacts/timeline-events.vue';
+  import ToDo from './to-do-edit.vue';
+  import CommentForm from './comment-form.vue';
+  import TimelineEvents from './timeline-events.vue';
   import inputModal from '../shared/input-modal.vue';
   import nameInputModal from '../shared/name-input-modal.vue';
   import AddContact from './add-contact.vue';
@@ -215,6 +214,7 @@
     },
     components: {
       'inline-edit': InlineEdit,
+      'inline-text-edit': InlineTextEdit,
       'markdown-text-edit': MarkdownTextEdit,
       'to-do': ToDo,
       'comment_form': CommentForm,
@@ -392,8 +392,9 @@
       archiveCard() {
         let url = '/api/v2/card/' + this.card.id;
         this.$http.put(url, { card: { status: '1'} }).then(resp => {
+          $('.portlet[data-id=' + this.card.id + ']').hide();
+          this.$glmodal.$emit('close');
           this.card = resp.data.data;
-          window.location.reload();
         });
       },
 
@@ -401,7 +402,6 @@
         let url = '/api/v2/card/' + this.card.id;
         this.$http.put(url, { card: { status: '0'} }).then(resp => {
           this.card = resp.data.data;
-          window.location.reload();
         });
       },
 
@@ -410,7 +410,6 @@
           this.$http.get('/api/v2/contact/' + this.activeContact.id).then(resp => {
             this.activeContact.firstName = resp.data.contact.firstName;
             this.activeContact.lastName = resp.data.contact.lastName;
-            this.company = resp.data.company;
             this.companyUsers = resp.data.companyUsers;
           });
         }
@@ -424,6 +423,7 @@
           this.activeContact = this.contacts[0];
           this.activities = resp.data.activities;
           this.events = resp.data.events;
+          this.company = resp.data.company;
 
           this.loadContactInfo();
         });
@@ -456,6 +456,16 @@
       color: rgb(99, 99, 99);
       font-weight: bold;
       font-size: 24px;
+
+      .fa {
+        position: relative;
+        top: 10px;
+        float: left;
+      }
+
+      .card-title-input-block {
+        margin-left: 30px;
+      }
     }
 
     .card-description {

@@ -3,9 +3,6 @@
     <div class="form-group">
       <input type="text" v-model="name" placeholder="Name" class="form-control" />
     </div>
-    <div class="form-group">
-      <textarea class="form-control" v-model="description" placeholder="Write a description"></textarea>
-    </div>
 
     <add-contact @select-contact="selectContact" />
 
@@ -80,7 +77,7 @@
             description: this.description
           }
         }).then(resp => {
-          window.location.href = "/board/" + resp.data.data.board.id;
+          window.location.href = '/board/' + resp.data.data.board.id;
         });
       },
 
