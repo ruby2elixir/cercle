@@ -99,6 +99,7 @@ defmodule CercleApi.CardService do
       event: event,
       data: payload_data(card)
     }
+    CercleApi.ActivityService.add(card)
     with channel <- "cards:" <> to_string(card.id),
          card_contacts <- CercleApi.Card.contacts(card),
       do: CercleApi.Endpoint.broadcast!(

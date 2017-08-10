@@ -10,7 +10,7 @@ defmodule CercleApi do
       # Start the endpoint when the application starts
       supervisor(CercleApi.Endpoint, []),
       # Start the Ecto repository
-      supervisor(CercleApi.Repo, []),
+      supervisor(CercleApi.Repo, [])
       # Here you could define other workers and supervisors as children
       # worker(CercleApi.Worker, [arg1, arg2, arg3]),
     ]
