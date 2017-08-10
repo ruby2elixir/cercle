@@ -95,16 +95,18 @@
         <button type="button" class="btn btn-default btn-block" @click="addTask">ADD TASK</button>
         <button type="button" class="btn btn-default btn-block" @click="openContactModal = true">ADD CONTACT</button>
         <button type="button" class="btn btn-default btn-block " v-on:click="openDueDatePicker">DUE DATE</button>
-       <div class="upload-btn btn btn-default btn-block" style="height: 34px;font-weight:normal;">
-        <file-upload
-          title="UPLOAD FILE"
-          name="attachment"
-          :post-action="'/api/v2/card/' + card.id + '/attachments'"
-          :headers="uploadHeaders"
-          :events="uploadEvents"
-          ref="attachment">
-        </file-upload>
-      </div>
+        <div class="upload-btn btn btn-default btn-block" style="height: 34px;font-weight:normal;">
+          <file-upload
+            title="UPLOAD FILE"
+            name="attachment"
+            :post-action="'/api/v2/card/' + card.id + '/attachments'"
+            :headers="uploadHeaders"
+            :events="uploadEvents"
+            ref="attachment">
+          </file-upload>
+        </div>
+        <button type="button" v-show="card.status === 0" class="btn btn-default btn-block" v-on:click="archiveCard">ARCHIVE</button>
+        <button type="button" v-show="card.status === 1" class="btn btn-default btn-block" v-on:click="unarchiveCard">UNARCHIVE</button>
       </div>
     </div>
 
@@ -385,6 +387,22 @@
             }
           });
         }
+      },
+
+      archiveCard() {
+        let url = '/api/v2/card/' + this.card.id;
+        this.$http.put(url, { card: { status: '1'} }).then(resp => {
+          this.card = resp.data.data;
+          window.location.reload();
+        });
+      },
+
+      unarchiveCard() {
+        let url = '/api/v2/card/' + this.card.id;
+        this.$http.put(url, { card: { status: '0'} }).then(resp => {
+          this.card = resp.data.data;
+          window.location.reload();
+        });
       },
 
       loadContactInfo() {
