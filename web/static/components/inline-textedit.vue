@@ -1,5 +1,5 @@
 <template>
-  <textarea v-bind:value="value"  v-on:blur="updateValue($event.target.value)" class="inline-textarea"  />
+  <textarea v-bind:value="value"  v-on:blur="updateValue($event.target.value)" class="inline-textarea" v-autosize="rawText" />
 </template>
 
 <script>

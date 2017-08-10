@@ -34,11 +34,9 @@ defmodule CercleApi.APIV2.ActivityView do
       due_date: activity.due_date,
       due_date_with_current_timezone: due_date_with_tz,
       company_id: activity.company_id,
-      contact_id: activity.contact_id,
       user_id: activity.user_id,
       card_id: activity.card_id,
-      user: activity.user,
-      contact: activity.contact
+      user: activity.user
     }
   end
 end
