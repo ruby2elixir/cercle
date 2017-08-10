@@ -19,7 +19,7 @@ defmodule CercleApi.Tasks.ActivityNotification do
     if target.user.notification do
       mail = %Mailman.Email{
         subject: "Start Notification",
-        from: "no-reply@cercle.co",
+        from: "referral@cercle.co",
         to: [target.user.login],
         html: email_html(target, item, "start")
       }
@@ -34,7 +34,7 @@ defmodule CercleApi.Tasks.ActivityNotification do
     if target.user.notification do
       mail = %Mailman.Email{
         subject: "PreStart Notification",
-        from: "no-reply@cercle.co",
+        from: "referral@cercle.co",
         to: [target.user.login],
         html: email_html(target, item, "prestart")
       }
