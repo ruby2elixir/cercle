@@ -43,7 +43,7 @@
           <div class="card-contacts">
             <div class="card-contacts-list">
               <span v-for="contact in contacts" :class="contactClass(contact)">
-                <a href='#' v-on:click="changeContactDisplay($event, contact.id)">{{ contact.name }}</a>
+                <a href='#' v-on:click="changeContactDisplay($event, contact.id)">{{ contact.firstName }} {{ contact.lastName }}</a>
                 <a class="remove" @click="removeContact(contact.id)">×</a>
               </span>
             </div>
@@ -54,7 +54,7 @@
                   Name
                   <br />
                   <span class="attribute-value">
-                    <name-input-modal :first-name="activeContact.first_name" :last-name="activeContact.last_name" v-on:input="contactNameInput"/>
+                    <name-input-modal :first-name="activeContact.firstName" :last-name="activeContact.lastName" v-on:input="contactNameInput"/>
                   </span>
                 </div>
 
@@ -62,7 +62,7 @@
                   Title
                   <br />
                   <span class="attribute-value">
-                    <input-modal v-model="activeContact.job_title" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
+                    <input-modal v-model="activeContact.jobTitle" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
                   </span>
                 </div>
 
@@ -165,7 +165,7 @@
   import AddContact from './add-contact.vue';
 
   export default {
-    props: ['card_id'],
+    props: ['cardId'],
     data() {
       return {
         uploadEvents: {
@@ -187,7 +187,7 @@
         attachments: [],
         card: {},
         contacts: [],
-        contact_ids: [],
+        contactIds: [],
         activeContact: null,
         events: [],
         activities: [],
@@ -199,7 +199,7 @@
       };
     },
     watch: {
-      card_id() {
+      cardId() {
         this.initialize();
       }
     },
@@ -229,15 +229,15 @@
         return Vue.currentUser.userImage;
       },
       contactClass(contact) {
-        let className = "contact";
+        let className = 'contact';
         if(this.activeContact && this.activeContact.id === contact.id) {
           className += ' active';
         }
         return className;
       },
       contactNameInput: function(data) {
-        this.$set(this.activeContact, 'first_name', data.firstName);
-        this.$set(this.activeContact, 'last_name', data.lastName);
+        this.$set(this.activeContact, 'firstName', data.firstName);
+        this.$set(this.activeContact, 'lastName', data.lastName);
         this.updateContact();
       },
       eventAddOrUpdate(event) {
@@ -285,9 +285,9 @@
         let cardUrl = '/api/v2/card/'+ this.card.id;
         if(this.addContactData.isExistingContact) {
           this.contacts.push(this.addContactData.contact);
-          this.card.contact_ids = this.card.contact_ids || [];
-          this.card.contact_ids.push(this.addContactData.contact.id);
-          this.$http.put(cardUrl,{ card: { contactIds: this.card.contact_ids  } }).then(resp2 => {
+          this.card.contactIds = this.card.contactIds || [];
+          this.card.contactIds.push(this.addContactData.contact.id);
+          this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
             this.changeContactDisplay(null, this.addContactData.contact.id);
           });
         } else {
@@ -306,9 +306,9 @@
           }
           this.$http.post(url, { contact: data }).then(resp => {
             this.contacts.push(resp.data.data);
-            this.card.contact_ids = this.card.contact_ids || [];
-            this.card.contact_ids.push(resp.data.data.id);
-            this.$http.put(cardUrl,{ card: { contactIds: this.card.contact_ids  } }).then(resp2 => {
+            this.card.contactIds = this.card.contact_ids || [];
+            this.card.contactIds.push(resp.data.data.id);
+            this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
               this.changeContactDisplay(null, resp.data.data.id);
             });
           });
@@ -358,12 +358,12 @@
 
       removeContact(contactId) {
         if(confirm('Are you sure?')) {
-          this.card.contact_ids.splice(this.card.contact_ids.indexOf(contactId), 1);
+          this.card.contactIds.splice(this.card.contactIds.indexOf(contactId), 1);
 
           let url = '/api/v2/card/' + this.card.id;
-          this.$http.put(url, {card: { contactIds: this.card.contact_ids}}).then(resp => {
-            if(resp.data.errors && resp.data.errors.contact_ids) {
-              alert(resp.data.errors.contact_ids);
+          this.$http.put(url, {card: { contactIds: this.card.contactIds}}).then(resp => {
+            if(resp.data.errors && resp.data.errors.contactIds) {
+              alert(resp.data.errors.contactIds);
             } else {
               var index = -1;
               for(var i=0; i < this.contacts.length; i++) {
@@ -376,12 +376,12 @@
                 this.contacts.splice(index, 1);
               }
 
-              if(this.activeContact.id == contactId && this.contacts.length>0)
+              if(this.activeContact.id === contactId && this.contacts.length>0)
                 this.changeContactDisplay(null, this.contacts[0].id);
             }
           }, resp => {
-            if(resp.data.errors.contact_ids) {
-              alert(resp.data.errors.contact_ids);
+            if(resp.data.errors.contactIds) {
+              alert(resp.data.errors.contactIds);
             }
           });
         }
@@ -390,20 +390,19 @@
       loadContactInfo() {
         if (this.activeContact) {
           this.$http.get('/api/v2/contact/' + this.activeContact.id).then(resp => {
-            this.activeContact.name = resp.data.contact.name;
-            this.activeContact.first_name = resp.data.contact.first_name;
-            this.activeContact.last_name = resp.data.contact.last_name;
+            this.activeContact.firstName = resp.data.contact.firstName;
+            this.activeContact.lastName = resp.data.contact.lastName;
             this.company = resp.data.company;
-            this.companyUsers = resp.data.company_users;
+            this.companyUsers = resp.data.companyUsers;
           });
         }
       },
 
       initialize() {
-        this.$http.get('/api/v2/card/' + this.card_id).then(resp => {
+        this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
           this.card = resp.data.card;
-          this.contacts = resp.data.card_contacts;
-          this.contact_ids = resp.data.card.contact_ids;
+          this.contacts = resp.data.cardContacts;
+          this.contactIds = resp.data.card.contactIds;
           this.activeContact = this.contacts[0];
           this.activities = resp.data.activities;
           this.events = resp.data.events;

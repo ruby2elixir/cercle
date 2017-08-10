@@ -57,7 +57,7 @@ Vue.use(require('vue-moment-jalaali'));
 Vue.use(VueResource);
 Vue.use(VueResourceCaseConverter, {
   responseUrlFilter(url) {
-    if(/\/api\/v2\/board\//.test(url))
+    if(/\/api\/v2\//.test(url))
       return true;
     else
       return false;
