@@ -9,17 +9,17 @@
 
         <div class="managers" v-if="companyUsers.length > 0">
           Managed by:
-          <select v-model.number="card.user_id"  v-on:change="updateCard">
-            <option v-for="user in companyUsers" :value.number="user.id">{{user.user_name}}</option>
+          <select v-model.number="card.userId"  v-on:change="updateCard">
+            <option v-for="user in companyUsers" :value.number="user.id">{{user.userName}}</option>
           </select>
 
         </div>
-        <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.due_date || showDueDatePicker" >
+        <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.dueDate || showDueDatePicker" >
           Due Date:
           <el-date-picker
             class="card-due-date"
             v-on:change="updateCard"
-            v-model="card.due_date"
+            v-model="card.dueDate"
             type="datetime"
             size="mini"
             format="yyyy-MM-dd HH:mm"
@@ -205,7 +205,7 @@
     },
     computed: {
       isDueFuture(){
-        return this.card.due_date > new Date();
+        return this.card.dueDate > new Date();
       },
       uploadHeaders(){
         return { Authorization: 'Bearer ' + Vue.currentUser.token   };
@@ -296,7 +296,7 @@
             name: this.addContactData.contact.name,
             email: this.addContactData.contact.email,
             phone: this.addContactData.contact.phone,
-            userId: this.card.user_id
+            userId: this.card.userId
           };
           if (this.company) {
             data['company_id'] = this.company.id;
