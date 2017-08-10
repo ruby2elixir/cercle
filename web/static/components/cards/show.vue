@@ -119,14 +119,14 @@
           :timeZone="time_zone"
           v-on:taskAddOrUpdate="taskAddOrUpdate"
           v-on:taskDelete="taskDelete"
+          v-if="activeContact"
         >
 
           <comment_form slot="comment-form"
             :contact="activeContact"
             :card="card"
-            :user_image="userImage()"
+            :userImage="userImage()"
             v-on:eventAddOrUpdate="eventAddOrUpdate"
-
            />
           <timeline_events
             slot="timeline-events"

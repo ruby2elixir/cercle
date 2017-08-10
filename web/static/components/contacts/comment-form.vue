@@ -15,28 +15,27 @@
 
 <script>
   export default {
-    props: ['contact', 'card', 'user_image'],
+    props: ['contact', 'card', 'userImage'],
     data(){
       return {
         message: '',
         defaultImg: '/images/pp_2.png',
-        userImg: this.user_image
+        userImg: this.userImage
       };
     },
 
     methods: {
-
       sendMessage(){
         let url = '/api/v2/timeline_events';
-        this.$http.post(url,
-          { timelineEvent: {
-            companyId: this.contact.company_id,
+        this.$http.post(url, {
+          timelineEvent: {
+            companyId: this.contact.companyId,
             contactId: this.contact.id,
             content: this.message,
             eventName: 'comment',
             cardId: this.card.id
           }
-          }).then(resp => { this.$emit('eventAddOrUpdate', resp.data.data); });
+        }).then(resp => { this.$emit('eventAddOrUpdate', resp.data.data); });
 
         this.message = '';
       }
