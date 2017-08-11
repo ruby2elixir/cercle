@@ -94,9 +94,9 @@
       </div>
 
       <div class="col-lg-3 card-actions">
-        <button type="button" class="btn btn-default btn-block" @click="addTask">ADD TASK</button>
         <button type="button" class="btn btn-default btn-block" @click="openContactModal = true">ADD CONTACT</button>
-        <button type="button" class="btn btn-default btn-block " v-on:click="openDueDatePicker">DUE DATE</button>
+        <button type="button" class="btn btn-default btn-block" @click="addTask">ADD TASK</button>
+        <button type="button" class="btn btn-default btn-block " v-on:click="openDueDatePicker">ADD DUE DATE</button>
         <div class="upload-btn btn btn-default btn-block" style="height: 34px;font-weight:normal;">
           <file-upload
             title="UPLOAD FILE"
