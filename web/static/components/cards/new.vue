@@ -1,10 +1,8 @@
 <template>
   <div class="new-card-form">
     <div class="form-group">
-      <input type="text" v-model="name" placeholder="Name" class="form-control" />
+      <input type="text" v-model="name" placeholder="Name of the Card" class="form-control" />
     </div>
-
-    <add-contact @select-contact="selectContact" />
 
     <div class="form-group" v-show="defaultBoardId==null">
       <label>
@@ -21,6 +19,12 @@
         <option v-for="col in columns" :value="col.id">{{ col.name }}</option>
       </select>
     </div>
+    <i>Include a contact into the card (optional)</i>
+    <Br />
+    <Br />
+    <add-contact @select-contact="selectContact" />
+
+
     <div class="form-group">
       <button class="btn btn-success" v-on:click="saveData">Save</button>
       <a class="btn btn-link" @click="cancel">Cancel</a>
