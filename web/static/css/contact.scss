@@ -3,7 +3,7 @@
   overflow-y: auto !important;
 }
 
-.contact-edit {
+.card-show {
   .organization-block {
     .removeOrg {
       color:grey;
@@ -210,17 +210,16 @@
 
   /* events block*/
   .contact-page-events {
+    margin-top:30px;
     .event {
-      padding:5px;
       padding-top:0px;
       margin-bottom:20px;
       .user-block {
         float:left;
-        width:45px;
-        margin-left:10px;
+        width:40px;
       }
       .message-block {
-        margin-left:60px;
+        margin-left:50px;
         .well {
           padding:15px;
           font-size:15px;

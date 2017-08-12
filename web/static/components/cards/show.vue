@@ -122,18 +122,18 @@
           :timeZone="time_zone"
           v-on:taskAddOrUpdate="taskAddOrUpdate"
           v-on:taskDelete="taskDelete"
-        >
-          <comment_form slot="comment-form"
+        ></to-do>
+        <comment_form slot="comment-form"
             :card="card"
             :userImage="userImage()"
             v-on:eventAddOrUpdate="eventAddOrUpdate"
-           />
-          <timeline_events
+        />
+        <timeline_events
             slot="timeline-events"
             :events="events"
             v-on:eventDelete="eventDelete"
-            />
-        </to-do>
+        />
+       
       </div>
     </div>
 
