@@ -44,19 +44,19 @@
           
           <div class="card-contacts">
             <div class="card-contacts-list">
-              <span v-for="contact in contacts" :class="contactClass(contact)">
-                <a href='#' v-on:click="changeContactDisplay($event, contact.id)">{{ contact.firstName }} {{ contact.lastName }}</a>
+              <span v-for="(contact, index) in contacts" :class="contactClass(index)">
+                <a href='#' v-on:click="activeContactIndex=index">{{ contact.firstName }} {{ contact.lastName }}</a>
                 <a class="remove" @click="removeContact(contact.id)">×</a>
               </span>
             </div>
 
-            <div class="active-contact-info" v-if="activeContact">
+            <div class="active-contact-info" v-if="activeContact()">
               <div class="row contact-attributes">
                 <div class="col-lg-4">
                   Name
                   <br />
                   <span class="attribute-value">
-                    <name-input-modal :first-name="activeContact.firstName" :last-name="activeContact.lastName" v-on:input="contactNameInput"/>
+                    <name-input-modal :first-name="activeContact().firstName" :last-name="activeContact().lastName" v-on:input="contactNameInput"/>
                   </span>
                 </div>
 
@@ -64,7 +64,7 @@
                   Title
                   <br />
                   <span class="attribute-value">
-                    <input-modal v-model="activeContact.jobTitle" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
+                    <input-modal v-model="activeContact().jobTitle" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
                   </span>
                 </div>
 
@@ -72,7 +72,7 @@
                   Phone number
                   <br />
                   <span class="attribute-value">
-                    <input-modal v-model="activeContact.phone" v-on:input="updateContact"  placeholder="Click to add" label="Phone" />
+                    <input-modal v-model="activeContact().phone" v-on:input="updateContact"  placeholder="Click to add" label="Phone" />
                   </span>
                 </div>
 
@@ -80,13 +80,13 @@
                   Email
                   <br />
                   <span class="attribute-value">
-                    <input-modal v-model="activeContact.email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
+                    <input-modal v-model="activeContact().email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
                   </span>
                 </div>
               </div>
 
               <div class="contact-description">
-                <markdown-text-edit v-model="activeContact.description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
+                <markdown-text-edit v-model="activeContact().description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
               </div>
             </div>
           </div>
@@ -220,7 +220,7 @@
         card: {},
         contacts: [],
         contactIds: [],
-        activeContact: null,
+        activeContactIndex: null,
         events: [],
         activities: [],
         company: null,
@@ -232,7 +232,7 @@
     },
     watch: {
       cardId() {
-        this.initialize();
+        this.initChannel();
       }
     },
     computed: {
@@ -258,19 +258,22 @@
       'add-contact': AddContact
     },
     methods: {
+      activeContact() {
+        return this.contacts[this.activeContactIndex];
+      },
       userImage() {
         return Vue.currentUser.userImage;
       },
-      contactClass(contact) {
+      contactClass(index) {
         let className = 'contact';
-        if(this.activeContact && this.activeContact.id === contact.id) {
+        if(this.activeContactIndex === index) {
           className += ' active';
         }
         return className;
       },
       contactNameInput: function(data) {
-        this.$set(this.activeContact, 'firstName', data.firstName);
-        this.$set(this.activeContact, 'lastName', data.lastName);
+        this.contacts[this.activeContactIndex].firstName = data.firstName;
+        this.contacts[this.activeContactIndex].lastName = data.lastName;
         this.updateContact();
       },
       eventAddOrUpdate(event) {
@@ -302,7 +305,7 @@
         let url = '/api/v2/activity/';
         this.$http.post(url, {
           activity: {
-            contactId: this.activeContact.id,
+            contactId: this.contacts[this.activeContactIndex].id,
             cardId: this.cardId,
             userId: Vue.currentUser.userId,
             dueDate: new Date().toISOString(),
@@ -314,41 +317,47 @@
       selectContact(data) {
         this.addContactData = data;
       },
-      addContact(){
+      addExistingContact(contact) {
         let cardUrl = '/api/v2/card/'+ this.cardId;
+        this.contacts.push(contact);
+        this.card.contactIds = this.card.contactIds || [];
+        this.card.contactIds.push(contact.id);
+        this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
+          this.activeContactIndex = this.contacts.length-1;
+          this.openContactModal = false;
+        });
+      },
+      addContact(){
         if(this.addContactData.isExistingContact) {
-          this.contacts.push(this.addContactData.contact);
-          this.card.contactIds = this.card.contactIds || [];
-          this.card.contactIds.push(this.addContactData.contact.id);
-          this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
-            this.changeContactDisplay(null, this.addContactData.contact.id);
-          });
+          this.addExistingContact(this.addContactData.contact);
         } else {
           let url = '/api/v2/contact';
-          let data = {
-            name: this.addContactData.contact.name,
-            email: this.addContactData.contact.email,
-            phone: this.addContactData.contact.phone,
-            userId: this.card.userId
-          };
-          if (this.company) {
-            data['company_id'] = this.company.id;
-          }
-          if (this.organization) {
-            data['organization_id'] = this.organization.id;
-          }
-          this.$http.post(url, { contact: data }).then(resp => {
-            this.contacts.push(resp.data.data);
-            this.card.contactIds = this.card.contact_ids || [];
-            this.card.contactIds.push(resp.data.data.id);
-            this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
-              this.changeContactDisplay(null, resp.data.data.id);
-            });
-          });
-        }
+          let contact = this.addContactData.contact;
+          if(contact) {
+            let data = {
+              name: contact.name,
+              email: contact.email,
+              phone: contact.phone,
+              userId: this.card.userId
+            };
+            if (this.company) {
+              data['company_id'] = this.company.id;
+            }
+            if (this.organization) {
+              data['organization_id'] = this.organization.id;
+            }
 
-        this.newContactName = '';
-        this.openContactModal = false;
+            this.$http.post(url, { contact: data }).then(resp => {
+              if(resp.data.errors) {
+                alert('Please select a contact name from the list');
+              } else {
+                this.addExistingContact(resp.data.data);
+              }
+            });
+          } else {
+            alert('Please select a contact name from the list');
+          }
+        }
       },
 
       taskAddOrUpdate(task) {
@@ -390,22 +399,14 @@
       },
 
       updateContact: function(){
-        let url = '/api/v2/contact/' + this.activeContact.id;
-        this.$http.put(url, { contact: this.activeContact } );
-      },
-
-      changeContactDisplay(event, contactId) {
-        for(var i=0; i<this.contacts.length; i++) {
-          if(this.contacts[i].id === contactId) {
-            this.activeContact = this.contacts[i];
-            this.loadContactInfo();
-            break;
-          }
-        }
+        let url = '/api/v2/contact/' + this.contacts[this.activeContactIndex].id;
+        this.$http.put(url, { contact: this.contacts[this.activeContactIndex] } );
       },
 
       removeContact(contactId) {
+        console.log(contactId);
         if(confirm('Are you sure?')) {
+          this.card.contactIds = window.Array.from(this.card.contactIds); // This eliminates duplicate contactids
           this.card.contactIds.splice(this.card.contactIds.indexOf(contactId), 1);
 
           let url = '/api/v2/card/' + this.cardId;
@@ -420,12 +421,13 @@
                   break;
                 }
               }
+
               if(index !== -1) {
                 this.contacts.splice(index, 1);
-              }
 
-              if(this.activeContact.id === contactId && this.contacts.length>0)
-                this.changeContactDisplay(null, this.contacts[0].id);
+                if(this.activeContactIndex >= this.contacts.length)
+                  this.activeContactIndex = 0;
+              }
             }
           }, resp => {
             if(resp.data.errors.contactIds) {
@@ -439,7 +441,6 @@
         let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: { status: '1'} }).then(resp => {
           $('.portlet[data-id=' + this.cardId + ']').hide();
-          this.$glmodal.$emit('close');
           this.card = resp.data.data;
         });
       },
@@ -447,20 +448,20 @@
       unarchiveCard() {
         let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: { status: '0'} }).then(resp => {
+          $('.portlet[data-id=' + this.cardId + ']').show();
           this.card = resp.data.data;
         });
       },
 
-      loadContactInfo() {
-        if (this.activeContact) {
-          this.$http.get('/api/v2/contact/' + this.activeContact.id).then(resp => {
-            this.activeContact.firstName = resp.data.contact.firstName;
-            this.activeContact.lastName = resp.data.contact.lastName;
-          });
-        }
-      },
-
       refreshCard(payload){
+        if(payload.company) {
+          this.company = payload.company;
+        }
+
+        if(payload.companyUsers) {
+          this.companyUsers = payload.companyUsers;
+        }
+
         if (payload.activities) {
           this.activities = payload.activities;
         }
@@ -477,8 +478,8 @@
         if (payload.card) {
           this.card = payload.card;
         }
-        if (payload.card_contacts) {
-          this.cardContacts = payload.card_contacts;
+        if (payload.cardContacts) {
+          this.contacts = payload.cardContacts;
         }
 
         if (payload.attachments) {
@@ -489,10 +490,10 @@
 
       subscribe() {
         this.cardChannel.on('card:updated', payload => {
-          this.allowUpdate = false;
-          if (payload.card) {
-            this.card = payload.card;
-            this.cardContacts = payload.card_contacts;
+          let _payload = window.toCamel(payload);
+          if (_payload.card) {
+            this.card = _payload.card;
+            this.cardContacts = _payload.cardContacts;
           }
         });
 
@@ -556,6 +557,7 @@
         if (this.cardId) {
           this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
             this.refreshCard(resp.data);
+            this.activeContactIndex = 0;
           });
         }
         this.cardChannel = this.socket.channel(channelTopic, {});
@@ -563,37 +565,9 @@
         this.cardChannel.join()
               .receive('ok', resp => { })
               .receive('error', resp => {  });
-      },
-
-      clearCard() {
-        this.allowUpdate = false;
-        this.card = null;
-        this.leaveChannel();
-      },
-      setCard(opp) {
-        this.allowUpdate = false;
-        this.card = opp;
-        this.initChannel();
-      },
-
-      initialize() {
-        this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
-          this.card = resp.data.card;
-          this.contacts = resp.data.cardContacts;
-          this.contactIds = resp.data.card.contactIds;
-          this.activeContact = this.contacts[0];
-          this.activities = resp.data.activities;
-          this.events = resp.data.events;
-          this.company = resp.data.company;
-          this.companyUsers = resp.data.companyUsers;
-          this.attachments = resp.data.attachments;
-
-          this.loadContactInfo();
-        });
       }
     },
     mounted(){
-      this.initialize();
       this.initChannel();
     }
   };
