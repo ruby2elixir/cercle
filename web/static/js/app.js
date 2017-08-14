@@ -106,6 +106,35 @@ const VueCurrentUser = {
   }
 };
 
+window.toCamel = function(o) {
+  var newO, origKey, newKey, value;
+  if (o instanceof Array) {
+    newO = [];
+    for (origKey in o) {
+      value = o[origKey];
+      if (typeof value === 'object') {
+        value = window.toCamel(value);
+      }
+      newO.push(value);
+    }
+  } else {
+    newO = {};
+    for (origKey in o) {
+      if (o.hasOwnProperty(origKey)) {
+        newKey = origKey.replace(/[\-_\s]+(.)?/g, function(match, chr) {
+          return chr ? chr.toUpperCase() : '';
+        });
+        value = o[origKey];
+        if (value !== null && value.constructor === Object) {
+          value = window.toCamel(value);
+        }
+        newO[newKey] = value;
+      }
+    }
+  }
+  return newO;
+};
+
 window.jwtToken = null;
 if (document.querySelector('meta[name="guardian_token"]')) {
   window.jwtToken = document.querySelector('meta[name="guardian_token"]').content;

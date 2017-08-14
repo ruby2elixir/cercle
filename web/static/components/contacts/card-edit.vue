@@ -98,31 +98,30 @@
 
       </div>
       <div class="attachments">
+       <h3 style="color:rgb(99,99,99);font-weight:bold;"  v-if="attachments.length > 0">
+         <i class="fa fa-fw fa-paperclip" style="color:#d8d8d8;"></i>Attachments
+       </h3>
 
-         <h3 style="color:rgb(99,99,99);font-weight:bold;"  v-if="attachments.length > 0">
-           <i class="fa fa-fw fa-paperclip" style="color:#d8d8d8;"></i>Attachments
-         </h3>
-
-         <div v-if="attachments.length > 0">
-           <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
-             <div :class="['thumb', fileTypeClass(attach)]" >
-               <img :src="attach.thumb_url" v-if="attach.image" />
-             </div>
-             <div class="info">
-             <div>{{attach.file_name}}</div>
-             <div>Added {{attach.inserted_at | moment('MMM DD [at] h:m A')}}</div>
-             <div class="attach-action">
-              <a :href="attach.attachment_url" target="_blank">
-               <i class="fa fa-download" aria-hidden="true"></i>
-               Download</a>
-              <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
-              <i class="fa fa-times" aria-hidden="true"></i>
-               Delete</button>
-             </div>
-             </div>
+       <div v-if="attachments.length > 0">
+         <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
+           <div :class="['thumb', fileTypeClass(attach)]" >
+             <img :src="attach.thumb_url" v-if="attach.image" />
+           </div>
+           <div class="info">
+           <div>{{attach.file_name}}</div>
+           <div>Added {{attach.inserted_at | moment('MMM DD [at] h:m A')}}</div>
+           <div class="attach-action">
+            <a :href="attach.attachment_url" target="_blank">
+             <i class="fa fa-download" aria-hidden="true"></i>
+             Download</a>
+            <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
+            <i class="fa fa-times" aria-hidden="true"></i>
+             Delete</button>
+           </div>
            </div>
          </div>
-        </div>
+       </div>
+      </div>
       <to-do
         :activities="activities"
         :companyUsers="company_users"

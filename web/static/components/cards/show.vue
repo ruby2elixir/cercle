@@ -112,6 +112,36 @@
       </div>
     </div>
 
+    <div class="row" v-if="attachments.length > 0">
+      <div class="col-lg-12">
+        <div class="attachments">
+          <h3 style="color:rgb(99,99,99);font-weight:bold;">
+            <i class="fa fa-fw fa-paperclip"></i>Attachments
+          </h3>
+
+          <div v-if="attachments.length > 0">
+            <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
+              <div :class="['thumb', fileTypeClass(attach)]" >
+                <img :src="attach.thumb_url" v-if="attach.image" />
+              </div>
+              <div class="info">
+                <div>{{attach.file_name}}</div>
+                <div>Added {{attach.inserted_at | moment('MMM DD [at] h:m A')}}</div>
+                <div class="attach-action">
+                 <a :href="attach.attachment_url" target="_blank">
+                  <i class="fa fa-download" aria-hidden="true"></i>
+                  Download</a>
+                 <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
+                 <i class="fa fa-times" aria-hidden="true"></i>
+                  Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-lg-12">
         <to-do
@@ -184,6 +214,7 @@
             this.$notification.$emit('alert', {'msg': 'Start upload'});
           }
         },
+        socket: null,
         attachment: {},
         attachments: [],
         card: {},
@@ -243,13 +274,13 @@
         this.updateContact();
       },
       eventAddOrUpdate(event) {
-        let itemIndex = this.$data.events.findIndex(function(item){
+        let itemIndex = this.events.findIndex(function(item){
           return item.id === parseInt(event.id);
         });
         if (itemIndex === -1){
-          this.$data.events.unshift(event);
+          this.events.unshift(event);
         } else {
-          this.$data.events.splice(itemIndex, 1, event);
+          this.events.splice(itemIndex, 1, event);
         }
       },
       eventDelete(eventId) {
@@ -272,7 +303,7 @@
         this.$http.post(url, {
           activity: {
             contactId: this.activeContact.id,
-            cardId: this.card.id,
+            cardId: this.cardId,
             userId: Vue.currentUser.userId,
             dueDate: new Date().toISOString(),
             companyId: this.company.id,
@@ -284,7 +315,7 @@
         this.addContactData = data;
       },
       addContact(){
-        let cardUrl = '/api/v2/card/'+ this.card.id;
+        let cardUrl = '/api/v2/card/'+ this.cardId;
         if(this.addContactData.isExistingContact) {
           this.contacts.push(this.addContactData.contact);
           this.card.contactIds = this.card.contactIds || [];
@@ -337,9 +368,24 @@
         });
         if (itemIndex !== -1){ this.$data.activities.splice(itemIndex, 1); }
       },
+      fileTypeClass(attach) {
+        const klasses = {
+          '.pdf': 'fa fa-file-pdf-o'
+        };
+
+        let cssClass = '';
+        if (!attach.image) {
+          cssClass = 'file ' + (klasses[attach.ext_file] || 'fa fa-file-o');
+        }
+        return cssClass;
+      },
+      deleteAttachment(attachId) {
+        let url = '/api/v2/card/'+this.cardId+'/attachments/' + attachId;
+        this.$http.delete(url, {  });
+      },
 
       updateCard() {
-        let url = '/api/v2/card/' + this.card.id;
+        let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: this.card });
       },
 
@@ -362,7 +408,7 @@
         if(confirm('Are you sure?')) {
           this.card.contactIds.splice(this.card.contactIds.indexOf(contactId), 1);
 
-          let url = '/api/v2/card/' + this.card.id;
+          let url = '/api/v2/card/' + this.cardId;
           this.$http.put(url, {card: { contactIds: this.card.contactIds}}).then(resp => {
             if(resp.data.errors && resp.data.errors.contactIds) {
               alert(resp.data.errors.contactIds);
@@ -390,16 +436,16 @@
       },
 
       archiveCard() {
-        let url = '/api/v2/card/' + this.card.id;
+        let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: { status: '1'} }).then(resp => {
-          $('.portlet[data-id=' + this.card.id + ']').hide();
+          $('.portlet[data-id=' + this.cardId + ']').hide();
           this.$glmodal.$emit('close');
           this.card = resp.data.data;
         });
       },
 
       unarchiveCard() {
-        let url = '/api/v2/card/' + this.card.id;
+        let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: { status: '0'} }).then(resp => {
           this.card = resp.data.data;
         });
@@ -414,6 +460,122 @@
         }
       },
 
+      refreshCard(payload){
+        if (payload.activities) {
+          this.activities = payload.activities;
+        }
+
+        if (payload.board) {
+          this.board = payload.board;
+          this.boardColumns = payload.board_columns;
+        }
+
+        if (payload.events) {
+          this.events = payload.events;
+        }
+
+        if (payload.card) {
+          this.card = payload.card;
+        }
+        if (payload.card_contacts) {
+          this.cardContacts = payload.card_contacts;
+        }
+
+        if (payload.attachments) {
+          this.attachments = payload.attachments;
+        }
+        this.allowUpdate = true;
+      },
+
+      subscribe() {
+        this.cardChannel.on('card:updated', payload => {
+          this.allowUpdate = false;
+          if (payload.card) {
+            this.card = payload.card;
+            this.cardContacts = payload.card_contacts;
+          }
+        });
+
+        this.cardChannel.on('card:added_attachment', payload => {
+          this.attachments.unshift(payload.attachment);
+        });
+
+        this.cardChannel.on('card:deleted_attachment', payload => {
+          if (payload.card) {
+            let cardIndex = this.attachments.findIndex(function(card){
+              return card.id === parseInt(payload.attachment_id);
+            });
+
+            this.attachments.splice(cardIndex, 1);
+          }
+        });
+
+        this.cardChannel.on('activity:created', payload => {
+          let _payload = window.toCamel(payload);
+          this.taskAddOrUpdate(_payload.activity);
+        });
+
+        this.cardChannel.on('activity:deleted', payload => {
+          let _payload = window.toCamel(payload);
+          this.taskDelete(_payload.activityId);
+        });
+
+        this.cardChannel.on('activity:updated', payload => {
+          let _payload = window.toCamel(payload);
+          this.taskAddOrUpdate(_payload.activity);
+        });
+
+        this.cardChannel.on('timeline_event:created', payload => {
+          let _payload = window.toCamel(payload);
+          if (_payload.event.eventName === 'comment') {
+            this.eventAddOrUpdate(_payload.event);
+          }
+        });
+
+        this.cardChannel.on('timeline_event:updated', payload => {
+          let _payload = window.toCamel(payload);
+          if (_payload.event.eventName === 'comment') {
+            this.eventAddOrUpdate(_payload.event);
+          }
+        });
+
+        this.cardChannel.on('timeline_event:deleted', payload => {
+          let _payload = window.toCamel(payload);
+          this.eventDelete(_payload.id);
+        });
+      },
+      leaveChannel() {
+        if (this.cardChannel) {
+          this.cardChannel.leave();
+        }
+      },
+      initChannel(){
+        this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
+        this.socket.connect();
+        let channelTopic = 'cards:' + this.cardId;
+        if (this.cardId) {
+          this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
+            this.refreshCard(resp.data);
+          });
+        }
+        this.cardChannel = this.socket.channel(channelTopic, {});
+        this.subscribe();
+        this.cardChannel.join()
+              .receive('ok', resp => { })
+              .receive('error', resp => {  });
+      },
+
+      clearCard() {
+        this.allowUpdate = false;
+        this.card = null;
+        this.leaveChannel();
+      },
+      setCard(opp) {
+        this.allowUpdate = false;
+        this.card = opp;
+        this.initChannel();
+      },
+
       initialize() {
         this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
           this.card = resp.data.card;
@@ -424,6 +586,7 @@
           this.events = resp.data.events;
           this.company = resp.data.company;
           this.companyUsers = resp.data.companyUsers;
+          this.attachments = resp.data.attachments;
 
           this.loadContactInfo();
         });
@@ -431,6 +594,7 @@
     },
     mounted(){
       this.initialize();
+      this.initChannel();
     }
   };
 </script>
