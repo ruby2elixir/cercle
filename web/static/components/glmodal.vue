@@ -8,7 +8,7 @@
     </div>
     <span slot="modal-header" v-if="!options.display_header"></span>
     <div slot="modal-body" class="modal-body">
-      <button type="button" class="close" @click="close()"  v-if="!options.closed_in_header" >
+      <button type="button" class="close" @click="close()"  v-if="!options.closed_in_header" style="padding:6px;">
         <span>&times;</span>
       </button>
       <component keep-alive v-bind:is="view" v-bind="modalData" v-on:close="close()">
