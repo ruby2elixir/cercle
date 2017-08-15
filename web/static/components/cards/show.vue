@@ -404,7 +404,6 @@
       },
 
       removeContact(contactId) {
-        console.log(contactId);
         if(confirm('Are you sure?')) {
           this.card.contactIds = window.Array.from(this.card.contactIds); // This eliminates duplicate contactids
           this.card.contactIds.splice(this.card.contactIds.indexOf(contactId), 1);
