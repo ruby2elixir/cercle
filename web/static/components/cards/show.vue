@@ -50,13 +50,13 @@
               </span>
             </div>
 
-            <div class="active-contact-info" v-if="activeContact()">
+            <div class="active-contact-info" v-if="activeContact">
               <div class="row contact-attributes">
                 <div class="col-lg-4">
                   Name
                   <br />
                   <span class="attribute-value">
-                    <name-input-modal :first-name="activeContact().firstName" :last-name="activeContact().lastName" v-on:input="contactNameInput"/>
+                    <name-input-modal :first-name="activeContact.firstName" :last-name="activeContact.lastName" v-on:input="contactNameInput"/>
                   </span>
                 </div>
 
@@ -64,7 +64,7 @@
                   Title
                   <br />
                   <span class="attribute-value">
-                    <input-modal v-model="activeContact().jobTitle" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
+                    <input-modal v-model="activeContact.jobTitle" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
                   </span>
                 </div>
 
@@ -72,7 +72,7 @@
                   Phone number
                   <br />
                   <span class="attribute-value">
-                    <input-modal v-model="activeContact().phone" v-on:input="updateContact"  placeholder="Click to add" label="Phone" />
+                    <input-modal v-model="activeContact.phone" v-on:input="updateContact"  placeholder="Click to add" label="Phone" />
                   </span>
                 </div>
 
@@ -80,13 +80,13 @@
                   Email
                   <br />
                   <span class="attribute-value">
-                    <input-modal v-model="activeContact().email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
+                    <input-modal v-model="activeContact.email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
                   </span>
                 </div>
               </div>
 
               <div class="contact-description">
-                <markdown-text-edit v-model="activeContact().description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
+                <markdown-text-edit v-model="activeContact.description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
               </div>
             </div>
           </div>
@@ -236,6 +236,9 @@
       }
     },
     computed: {
+      activeContact() {
+        return this.contacts[this.activeContactIndex];
+      },
       isDueFuture(){
         return this.card.dueDate > new Date();
       },
@@ -258,9 +261,6 @@
       'add-contact': AddContact
     },
     methods: {
-      activeContact() {
-        return this.contacts[this.activeContactIndex];
-      },
       userImage() {
         return Vue.currentUser.userImage;
       },
@@ -490,7 +490,7 @@
 
       subscribe() {
         this.cardChannel.on('card:updated', payload => {
-          let _payload = window.toCamel(payload);
+          let _payload = this.camelCaseKeys(payload);
           if (_payload.card) {
             this.card = _payload.card;
             this.cardContacts = _payload.cardContacts;
@@ -512,36 +512,36 @@
         });
 
         this.cardChannel.on('activity:created', payload => {
-          let _payload = window.toCamel(payload);
+          let _payload = this.camelCaseKeys(payload);
           this.taskAddOrUpdate(_payload.activity);
         });
 
         this.cardChannel.on('activity:deleted', payload => {
-          let _payload = window.toCamel(payload);
+          let _payload = this.camelCaseKeys(payload);
           this.taskDelete(_payload.activityId);
         });
 
         this.cardChannel.on('activity:updated', payload => {
-          let _payload = window.toCamel(payload);
+          let _payload = this.camelCaseKeys(payload);
           this.taskAddOrUpdate(_payload.activity);
         });
 
         this.cardChannel.on('timeline_event:created', payload => {
-          let _payload = window.toCamel(payload);
+          let _payload = this.camelCaseKeys(payload);
           if (_payload.event.eventName === 'comment') {
             this.eventAddOrUpdate(_payload.event);
           }
         });
 
         this.cardChannel.on('timeline_event:updated', payload => {
-          let _payload = window.toCamel(payload);
+          let _payload = this.camelCaseKeys(payload);
           if (_payload.event.eventName === 'comment') {
             this.eventAddOrUpdate(_payload.event);
           }
         });
 
         this.cardChannel.on('timeline_event:deleted', payload => {
-          let _payload = window.toCamel(payload);
+          let _payload = this.camelCaseKeys(payload);
           this.eventDelete(_payload.id);
         });
       },

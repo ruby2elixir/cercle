@@ -90,6 +90,39 @@ Object.defineProperty(Vue.prototype, '$glmodal', {
   }
 });
 
+Vue.mixin( {
+  methods: {
+    camelCaseKeys: function(o){
+      var newO, origKey, newKey, value;
+      if (o instanceof Array) {
+        newO = [];
+        for (origKey in o) {
+          value = o[origKey];
+          if (typeof value === 'object') {
+            value = this.camelCaseKeys(value);
+          }
+          newO.push(value);
+        }
+      } else {
+        newO = {};
+        for (origKey in o) {
+          if (o.hasOwnProperty(origKey)) {
+            newKey = origKey.replace(/[\-_\s]+(.)?/g, function(match, chr) {
+              return chr ? chr.toUpperCase() : '';
+            });
+            value = o[origKey];
+            if (value !== null && value.constructor === Object) {
+              value = this.camelCaseKeys(value);
+            }
+            newO[newKey] = value;
+          }
+        }
+      }
+      return newO;
+    }
+  }
+});
+
 const VueCurrentUser = {
   install(Vue, options) {
     localStorage.setItem('auth_token', options['token']);
@@ -104,35 +137,6 @@ const VueCurrentUser = {
       }
     };
   }
-};
-
-window.toCamel = function(o) {
-  var newO, origKey, newKey, value;
-  if (o instanceof Array) {
-    newO = [];
-    for (origKey in o) {
-      value = o[origKey];
-      if (typeof value === 'object') {
-        value = window.toCamel(value);
-      }
-      newO.push(value);
-    }
-  } else {
-    newO = {};
-    for (origKey in o) {
-      if (o.hasOwnProperty(origKey)) {
-        newKey = origKey.replace(/[\-_\s]+(.)?/g, function(match, chr) {
-          return chr ? chr.toUpperCase() : '';
-        });
-        value = o[origKey];
-        if (value !== null && value.constructor === Object) {
-          value = window.toCamel(value);
-        }
-        newO[newKey] = value;
-      }
-    }
-  }
-  return newO;
 };
 
 window.jwtToken = null;
