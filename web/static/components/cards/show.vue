@@ -44,8 +44,8 @@
           
           <div class="card-contacts">
             <div class="card-contacts-list">
-              <span v-for="contact in contacts" :class="contactClass(contact)">
-                <a href='#' v-on:click="changeContactDisplay($event, contact.id)">{{ contact.firstName }} {{ contact.lastName }}</a>
+              <span v-for="(contact, index) in contacts" :class="contactClass(index)">
+                <a href='#' v-on:click="activeContactIndex=index">{{ contact.firstName }} {{ contact.lastName }}</a>
                 <a class="remove" @click="removeContact(contact.id)">×</a>
               </span>
             </div>
@@ -109,6 +109,36 @@
         </div>
         <button type="button" v-show="card.status === 0" class="btn btn-default btn-block" v-on:click="archiveCard">ARCHIVE</button>
         <button type="button" v-show="card.status === 1" class="btn btn-default btn-block" v-on:click="unarchiveCard">UNARCHIVE</button>
+      </div>
+    </div>
+
+    <div class="row" v-if="attachments.length > 0">
+      <div class="col-lg-12">
+        <div class="attachments">
+          <h3 style="color:rgb(99,99,99);font-weight:bold;">
+            <i class="fa fa-fw fa-paperclip"></i>Attachments
+          </h3>
+
+          <div v-if="attachments.length > 0">
+            <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
+              <div :class="['thumb', fileTypeClass(attach)]" >
+                <img :src="attach.thumb_url" v-if="attach.image" />
+              </div>
+              <div class="info">
+                <div>{{attach.file_name}}</div>
+                <div>Added {{attach.inserted_at | moment('MMM DD [at] h:m A')}}</div>
+                <div class="attach-action">
+                 <a :href="attach.attachment_url" target="_blank">
+                  <i class="fa fa-download" aria-hidden="true"></i>
+                  Download</a>
+                 <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
+                 <i class="fa fa-times" aria-hidden="true"></i>
+                  Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -184,12 +214,13 @@
             this.$notification.$emit('alert', {'msg': 'Start upload'});
           }
         },
+        socket: null,
         attachment: {},
         attachments: [],
         card: {},
         contacts: [],
         contactIds: [],
-        activeContact: null,
+        activeContactIndex: null,
         events: [],
         activities: [],
         company: null,
@@ -201,10 +232,13 @@
     },
     watch: {
       cardId() {
-        this.initialize();
+        this.initChannel();
       }
     },
     computed: {
+      activeContact() {
+        return this.contacts[this.activeContactIndex];
+      },
       isDueFuture(){
         return this.card.dueDate > new Date();
       },
@@ -230,26 +264,26 @@
       userImage() {
         return Vue.currentUser.userImage;
       },
-      contactClass(contact) {
+      contactClass(index) {
         let className = 'contact';
-        if(this.activeContact && this.activeContact.id === contact.id) {
+        if(this.activeContactIndex === index) {
           className += ' active';
         }
         return className;
       },
       contactNameInput: function(data) {
-        this.$set(this.activeContact, 'firstName', data.firstName);
-        this.$set(this.activeContact, 'lastName', data.lastName);
+        this.contacts[this.activeContactIndex].firstName = data.firstName;
+        this.contacts[this.activeContactIndex].lastName = data.lastName;
         this.updateContact();
       },
       eventAddOrUpdate(event) {
-        let itemIndex = this.$data.events.findIndex(function(item){
+        let itemIndex = this.events.findIndex(function(item){
           return item.id === parseInt(event.id);
         });
         if (itemIndex === -1){
-          this.$data.events.unshift(event);
+          this.events.unshift(event);
         } else {
-          this.$data.events.splice(itemIndex, 1, event);
+          this.events.splice(itemIndex, 1, event);
         }
       },
       eventDelete(eventId) {
@@ -271,8 +305,8 @@
         let url = '/api/v2/activity/';
         this.$http.post(url, {
           activity: {
-            contactId: this.activeContact.id,
-            cardId: this.card.id,
+            contactId: this.contacts[this.activeContactIndex].id,
+            cardId: this.cardId,
             userId: Vue.currentUser.userId,
             dueDate: new Date().toISOString(),
             companyId: this.company.id,
@@ -283,41 +317,47 @@
       selectContact(data) {
         this.addContactData = data;
       },
+      addExistingContact(contact) {
+        let cardUrl = '/api/v2/card/'+ this.cardId;
+        this.contacts.push(contact);
+        this.card.contactIds = this.card.contactIds || [];
+        this.card.contactIds.push(contact.id);
+        this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
+          this.activeContactIndex = this.contacts.length-1;
+          this.openContactModal = false;
+        });
+      },
       addContact(){
-        let cardUrl = '/api/v2/card/'+ this.card.id;
         if(this.addContactData.isExistingContact) {
-          this.contacts.push(this.addContactData.contact);
-          this.card.contactIds = this.card.contactIds || [];
-          this.card.contactIds.push(this.addContactData.contact.id);
-          this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
-            this.changeContactDisplay(null, this.addContactData.contact.id);
-          });
+          this.addExistingContact(this.addContactData.contact);
         } else {
           let url = '/api/v2/contact';
-          let data = {
-            name: this.addContactData.contact.name,
-            email: this.addContactData.contact.email,
-            phone: this.addContactData.contact.phone,
-            userId: this.card.userId
-          };
-          if (this.company) {
-            data['company_id'] = this.company.id;
-          }
-          if (this.organization) {
-            data['organization_id'] = this.organization.id;
-          }
-          this.$http.post(url, { contact: data }).then(resp => {
-            this.contacts.push(resp.data.data);
-            this.card.contactIds = this.card.contact_ids || [];
-            this.card.contactIds.push(resp.data.data.id);
-            this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
-              this.changeContactDisplay(null, resp.data.data.id);
-            });
-          });
-        }
+          let contact = this.addContactData.contact;
+          if(contact) {
+            let data = {
+              name: contact.name,
+              email: contact.email,
+              phone: contact.phone,
+              userId: this.card.userId
+            };
+            if (this.company) {
+              data['company_id'] = this.company.id;
+            }
+            if (this.organization) {
+              data['organization_id'] = this.organization.id;
+            }
 
-        this.newContactName = '';
-        this.openContactModal = false;
+            this.$http.post(url, { contact: data }).then(resp => {
+              if(resp.data.errors) {
+                alert('Please select a contact name from the list');
+              } else {
+                this.addExistingContact(resp.data.data);
+              }
+            });
+          } else {
+            alert('Please select a contact name from the list');
+          }
+        }
       },
 
       taskAddOrUpdate(task) {
@@ -337,32 +377,38 @@
         });
         if (itemIndex !== -1){ this.$data.activities.splice(itemIndex, 1); }
       },
+      fileTypeClass(attach) {
+        const klasses = {
+          '.pdf': 'fa fa-file-pdf-o'
+        };
+
+        let cssClass = '';
+        if (!attach.image) {
+          cssClass = 'file ' + (klasses[attach.ext_file] || 'fa fa-file-o');
+        }
+        return cssClass;
+      },
+      deleteAttachment(attachId) {
+        let url = '/api/v2/card/'+this.cardId+'/attachments/' + attachId;
+        this.$http.delete(url, {  });
+      },
 
       updateCard() {
-        let url = '/api/v2/card/' + this.card.id;
+        let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: this.card });
       },
 
       updateContact: function(){
-        let url = '/api/v2/contact/' + this.activeContact.id;
-        this.$http.put(url, { contact: this.activeContact } );
-      },
-
-      changeContactDisplay(event, contactId) {
-        for(var i=0; i<this.contacts.length; i++) {
-          if(this.contacts[i].id === contactId) {
-            this.activeContact = this.contacts[i];
-            this.loadContactInfo();
-            break;
-          }
-        }
+        let url = '/api/v2/contact/' + this.contacts[this.activeContactIndex].id;
+        this.$http.put(url, { contact: this.contacts[this.activeContactIndex] } );
       },
 
       removeContact(contactId) {
         if(confirm('Are you sure?')) {
+          this.card.contactIds = window.Array.from(this.card.contactIds); // This eliminates duplicate contactids
           this.card.contactIds.splice(this.card.contactIds.indexOf(contactId), 1);
 
-          let url = '/api/v2/card/' + this.card.id;
+          let url = '/api/v2/card/' + this.cardId;
           this.$http.put(url, {card: { contactIds: this.card.contactIds}}).then(resp => {
             if(resp.data.errors && resp.data.errors.contactIds) {
               alert(resp.data.errors.contactIds);
@@ -374,12 +420,13 @@
                   break;
                 }
               }
+
               if(index !== -1) {
                 this.contacts.splice(index, 1);
-              }
 
-              if(this.activeContact.id === contactId && this.contacts.length>0)
-                this.changeContactDisplay(null, this.contacts[0].id);
+                if(this.activeContactIndex >= this.contacts.length)
+                  this.activeContactIndex = 0;
+              }
             }
           }, resp => {
             if(resp.data.errors.contactIds) {
@@ -390,47 +437,137 @@
       },
 
       archiveCard() {
-        let url = '/api/v2/card/' + this.card.id;
+        let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: { status: '1'} }).then(resp => {
-          $('.portlet[data-id=' + this.card.id + ']').hide();
-          this.$glmodal.$emit('close');
+          $('.portlet[data-id=' + this.cardId + ']').hide();
           this.card = resp.data.data;
         });
       },
 
       unarchiveCard() {
-        let url = '/api/v2/card/' + this.card.id;
+        let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: { status: '0'} }).then(resp => {
+          $('.portlet[data-id=' + this.cardId + ']').show();
           this.card = resp.data.data;
         });
       },
 
-      loadContactInfo() {
-        if (this.activeContact) {
-          this.$http.get('/api/v2/contact/' + this.activeContact.id).then(resp => {
-            this.activeContact.firstName = resp.data.contact.firstName;
-            this.activeContact.lastName = resp.data.contact.lastName;
-          });
+      refreshCard(payload){
+        if(payload.company) {
+          this.company = payload.company;
         }
+
+        if(payload.companyUsers) {
+          this.companyUsers = payload.companyUsers;
+        }
+
+        if (payload.activities) {
+          this.activities = payload.activities;
+        }
+
+        if (payload.board) {
+          this.board = payload.board;
+          this.boardColumns = payload.board_columns;
+        }
+
+        if (payload.events) {
+          this.events = payload.events;
+        }
+
+        if (payload.card) {
+          this.card = payload.card;
+        }
+        if (payload.cardContacts) {
+          this.contacts = payload.cardContacts;
+        }
+
+        if (payload.attachments) {
+          this.attachments = payload.attachments;
+        }
+        this.allowUpdate = true;
       },
 
-      initialize() {
-        this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
-          this.card = resp.data.card;
-          this.contacts = resp.data.cardContacts;
-          this.contactIds = resp.data.card.contactIds;
-          this.activeContact = this.contacts[0];
-          this.activities = resp.data.activities;
-          this.events = resp.data.events;
-          this.company = resp.data.company;
-          this.companyUsers = resp.data.companyUsers;
-
-          this.loadContactInfo();
+      subscribe() {
+        this.cardChannel.on('card:updated', payload => {
+          let _payload = this.camelCaseKeys(payload);
+          if (_payload.card) {
+            this.card = _payload.card;
+            this.cardContacts = _payload.cardContacts;
+          }
         });
+
+        this.cardChannel.on('card:added_attachment', payload => {
+          this.attachments.unshift(payload.attachment);
+        });
+
+        this.cardChannel.on('card:deleted_attachment', payload => {
+          if (payload.card) {
+            let cardIndex = this.attachments.findIndex(function(card){
+              return card.id === parseInt(payload.attachment_id);
+            });
+
+            this.attachments.splice(cardIndex, 1);
+          }
+        });
+
+        this.cardChannel.on('activity:created', payload => {
+          let _payload = this.camelCaseKeys(payload);
+          this.taskAddOrUpdate(_payload.activity);
+        });
+
+        this.cardChannel.on('activity:deleted', payload => {
+          let _payload = this.camelCaseKeys(payload);
+          this.taskDelete(_payload.activityId);
+        });
+
+        this.cardChannel.on('activity:updated', payload => {
+          let _payload = this.camelCaseKeys(payload);
+          this.taskAddOrUpdate(_payload.activity);
+        });
+
+        this.cardChannel.on('timeline_event:created', payload => {
+          let _payload = this.camelCaseKeys(payload);
+          if (_payload.event.eventName === 'comment') {
+            this.eventAddOrUpdate(_payload.event);
+          }
+        });
+
+        this.cardChannel.on('timeline_event:updated', payload => {
+          let _payload = this.camelCaseKeys(payload);
+          if (_payload.event.eventName === 'comment') {
+            this.eventAddOrUpdate(_payload.event);
+          }
+        });
+
+        this.cardChannel.on('timeline_event:deleted', payload => {
+          let _payload = this.camelCaseKeys(payload);
+          this.eventDelete(_payload.id);
+        });
+      },
+      leaveChannel() {
+        if (this.cardChannel) {
+          this.cardChannel.leave();
+        }
+      },
+      initChannel(){
+        this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
+        this.socket.connect();
+        let channelTopic = 'cards:' + this.cardId;
+        if (this.cardId) {
+          this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
+            this.refreshCard(resp.data);
+            this.activeContactIndex = 0;
+          });
+        }
+        this.cardChannel = this.socket.channel(channelTopic, {});
+        this.subscribe();
+        this.cardChannel.join()
+              .receive('ok', resp => { })
+              .receive('error', resp => {  });
       }
     },
     mounted(){
-      this.initialize();
+      this.initChannel();
     }
   };
 </script>

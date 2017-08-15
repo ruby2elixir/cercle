@@ -39,14 +39,19 @@
     },
     methods: {
       selectContact(con) {
-        if(typeof con!=='string') {
+        if(con && con.id) {
           this.isExistingContact = true;
           this.contact.id = con.id;
+          this.contact.name = con.name;
+          this.contact.firstName = con.firstName;
+          this.contact.lastName = con.lastName;
           this.contact.email = con.email;
           this.contact.phone = con.phone;
         } else {
           this.isExistingContact = false;
           this.contact.id = null;
+          this.contact.firstName = null;
+          this.contact.lastName = null;
           this.contact.name = con;
           this.contact.email = null;
           this.contact.phone = null;

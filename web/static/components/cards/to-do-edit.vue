@@ -104,11 +104,11 @@
             companyId: this.company.id,
             title: 'Call',
             currentUserTimeZone: this.timeZone
-          } }).then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
+          } }); //.then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
       },
       removeTask(task) {
         let url = '/api/v2/activity/' + task.id;
-        this.$http.delete(url).then( resp => { this.$emit('taskDelete', task.id); });
+        this.$http.delete(url); //.then( resp => { this.$emit('taskDelete', task.id); });
         false;
       },
       updateTask(task) {
@@ -123,7 +123,7 @@
             companyId: this.company.id,
             isDone: task.isDone
           }
-        }).then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
+        }); //.then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
       }
     },
     components: {
