@@ -1,7 +1,7 @@
 <script>
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../inline-common-edit.vue';
-  import ContactForm from '../contacts/edit.vue';
+  import ContactShow from '../contacts/show.vue';
   import ActivityItem from './item.vue';
 
   export default {
@@ -22,7 +22,7 @@
     components: {
       'inline-edit': InlineEdit,
       'modal': VueStrap.modal,
-      'contact-form': ContactForm,
+      'contact-show': ContactShow,
       'activity-item': ActivityItem
     },
     methods: {
@@ -41,7 +41,7 @@
         this.card = { id: cardId };
         this.$glmodal.$emit(
          'open', {
-           view: 'contact-form', class: 'contact-modal', data: { 'card_id': cardId, 'contact_id': contactId }
+           view: 'contact-show', class: 'contact-modal', data: { 'card_id': cardId, 'contact_id': contactId }
          });
 
       },

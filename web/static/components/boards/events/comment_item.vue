@@ -1,6 +1,6 @@
 <template>
   <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
-    about {{item.main_contact_name }}
+    about {{item.mainContactName }}
     <br />
     <div class="comment-message" >
      {{ item.content }}

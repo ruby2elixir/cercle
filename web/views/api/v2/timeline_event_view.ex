@@ -46,7 +46,7 @@ defmodule CercleApi.APIV2.TimelineEventView do
       profile_image_url: profile_url,
       event_name: timeline_event.event_name,
       card_id: timeline_event.card_id,
-      contact_id: timeline_event.contact_id,
+      contact: timeline_event.contact,
       content: timeline_event.content,
       user_name: user_name,
       main_contact_name: main_contact_name(timeline_event),

@@ -2,7 +2,7 @@
   <div class="tab-pane active" id="control-sidebar-home-tab" >
     <h3 class="control-sidebar-heading">Recent Activity</h3>
     <ul class="control-sidebar-menu">
-      <component v-bind:is="item.event_name" v-for="item in items" :item="item" v-on:clickByEvent="clickByEvent(item)" />
+      <component v-bind:is="item.eventName" v-for="item in items" :item="item" v-on:clickByEvent="clickByEvent(item)" />
     </ul>
     <!-- /.control-sidebar-menu -->
   </div>
@@ -13,7 +13,7 @@ import moment from 'moment';
 import CommentMessage from './events/comment_item.vue';
 import CardCreatedMessage from './events/card_created.vue';
 import CardUpdatedMessage from './events/card_updated.vue';
-import ContactForm from '../contacts/edit.vue';
+import ContactShow from '../contacts/show.vue';
 
 export default {
   props: ['board_id'],
@@ -31,14 +31,14 @@ export default {
     'card.created': CardCreatedMessage,
     'card.updated': CardUpdatedMessage,
     'modal': VueStrap.modal,
-    'contact-form': ContactForm
+    'contact-show': ContactShow
   },
   methods: {
     clickByEvent(event) {
-      if (event.contact_id) {
+      if (event.contact) {
         this.$glmodal.$emit(
           'open', {
-            view: 'contact-form', class: 'contact-modal', data: { 'card_id': event.card_id, 'contact_id': event.contact_id }
+            view: 'contact-show', class: 'contact-modal', data: { 'contact': event.contact }
           });
       }
     },
@@ -61,18 +61,22 @@ export default {
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
       this.channel.on('activities', payload => {
-        this.items = payload.recent;
+        var _payload = this.camelCaseKeys(payload);
+        this.items = _payload.recent;
       });
 
       this.channel.on('timeline_event:created', payload => {
-        this.eventAddOrUpdate(payload);
+        var _payload = this.camelCaseKeys(payload);
+        this.eventAddOrUpdate(_payload);
       });
       this.channel.on('timeline_event:updated', payload => {
-        this.eventAddOrUpdate(payload);
+        var _payload = this.camelCaseKeys(payload);
+        this.eventAddOrUpdate(_payload);
       });
       this.channel.on('timeline_event:deleted', payload => {
+        var _payload = this.camelCaseKeys(payload);
         let itemIndex = this.$data.items.findIndex(function(item){
-          return item.id === parseInt(payload.id);
+          return item.id === parseInt(_payload.id);
         });
         this.$data.items.splice(itemIndex, 1);
       });
