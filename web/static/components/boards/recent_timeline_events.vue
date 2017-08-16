@@ -35,10 +35,10 @@ export default {
   },
   methods: {
     clickByEvent(event) {
-      if (event.contact) {
+      if (event.cardId) {
         this.$glmodal.$emit(
           'open', {
-            view: 'contact-show', class: 'contact-modal', data: { 'contact': event.contact }
+            view: 'card-show', class: 'card-modal', data: { 'cardId': event.cardId }
           });
       }
     },
