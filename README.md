@@ -1,4 +1,4 @@
-# Cercle CRM for Trello lovers - Phoenix & Vuejs 
+# Cercle CRM - CRM for smart people - Phoenix & Vuejs 
 
 Cercle is a CRM for smart people who need to manage a database of contacts and get things done.
 
@@ -31,7 +31,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 ## Changelog
 
-### V1.1 (TBD)
+### V1.1 - August 2017
 #### New Features
 - UX improvements so we can use Card without contacts (Trello Clone feature)
 - Notification system for task due date & Card due date
