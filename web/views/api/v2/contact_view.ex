@@ -37,7 +37,8 @@ defmodule CercleApi.APIV2.ContactView do
       phone: contact.phone,
       updated_at: contact.updated_at,
       organization: contact.organization,
-      tags: contact.tags
+      tags: contact.tags,
+      description: contact.description
     }
   end
 

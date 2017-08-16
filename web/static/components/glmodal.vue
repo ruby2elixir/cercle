@@ -19,7 +19,7 @@
 
 </template>
 <script>
-import ContactForm from './contacts/edit.vue';
+import ContactShow from './contacts/show.vue';
 import CardShow from './cards/show.vue';
 import NewContact from './contacts/new.vue';
 import NewCard from './cards/new.vue';
@@ -45,7 +45,7 @@ export default {
   },
   components: {
     'modal': VueStrap.modal,
-    'contact-form': ContactForm,
+    'contact-show': ContactShow,
     'card-show': CardShow,
     'new-contact-form': NewContact,
     'new-card-form': NewCard

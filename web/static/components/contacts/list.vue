@@ -1,15 +1,11 @@
 <template>
   <div>
-
     <!-- Content Header (Page header) -->
     <section class="content-header" style="margin-top:20px;margin-bottom:20px;">
-
-
       <h2>People<br /> <span style="font-size:16px;color:grey;">{{contacts.length}} contacts</span></h2>
 
       <div class="row">
         <div class="col-xs-6">
-
           <form class="navbar-form" role="search" v-on:submit.prevent>
             <div class="input-group add-on">
               <input class="form-control" placeholder="Search" name="q" type="text" v-model="searchTerm" />
@@ -29,7 +25,6 @@
         </div>
       </div>
     </section>
-
 
     <!-- Main content -->
     <section class="content">
@@ -64,9 +59,9 @@
                          </el-checkbox-group>
                       </td>
                       <td v-on:click="contactShow(contact)">
-                        {{contact.first_name}} {{contact.last_name}}
+                        {{contact.firstName}} {{contact.lastName}}
                       </td>
-                      <td v-on:click="contactShow(contact)">{{contact.job_title}}</td>
+                      <td v-on:click="contactShow(contact)">{{contact.jobTitle}}</td>
                       <td v-on:click="contactShow(contact)">{{contact.organization && contact.organization.name}}</td>
                       <td v-on:click="contactShow(contact)">{{contact.email}}</td>
                       <td v-on:click="contactShow(contact)">{{contact.phone}}</td>
@@ -93,7 +88,6 @@
 <script>
   import {Socket, Presence} from 'phoenix';
   import moment from 'moment';
-  import ContactForm from './edit.vue';
   export default {
     props: ['company_id'],
     data() {
@@ -102,7 +96,6 @@
         contacts: [],
         socket: null,
         channel: null,
-        contact: {},
         searchTerm: ''
       };
     },
@@ -113,7 +106,6 @@
     },
     components: {
       'modal': VueStrap.modal,
-      'contact-form': ContactForm,
       'el-checkbox': ElementUi.Checkbox,
       'el-checkbox-group': ElementUi.CheckboxGroup
     },
@@ -163,12 +155,11 @@
         this.loadContacts(params);
       },
       contactShow(contact) {
-        this.contact = contact;
         this.$glmodal.$emit(
-            'open',
+          'open',
           {
-            view: 'contact-form', class: 'contact-modal',
-            data: { 'contact_id': contact.id }
+            view: 'contact-show', class: 'contact-modal',
+            data: { 'contact': contact }
           }
         );
       },

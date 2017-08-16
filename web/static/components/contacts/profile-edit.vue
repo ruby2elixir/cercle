@@ -3,10 +3,10 @@
     <div class="">
       <h3 class="profile-username" style="margin-right:30px;line-height: 30px;height: 30px;font-size:24px;font-weight:bold;color:rgb(99,99,99);">
         <i class="fa fa-user" style="color:#d8d8d8;"></i>
-        <name-input-modal :first-name="contact.first_name" :last-name="contact.last_name" v-on:input="nameInput"/>
+        <name-input-modal :first-name="contact.firstName" :last-name="contact.lastName" v-on:input="nameInput"/>
       </h3>
       <div>
-        <input-modal v-model="contact.job_title" v-on:input="updateContact" placeholder="Job Title" label="Job Title" />
+        <input-modal v-model="contact.jobTitle" v-on:input="updateContact" placeholder="Job Title" label="Job Title" />
       </div>
       <div>
         <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Email" label="Email" />
@@ -124,11 +124,11 @@ export default {
     updateTags() {
       if (this.tagIds.length === 0) {
         var url = '/api/v2/contact/' + this.contact.id + '/utags';
-        this.$http.put(url, { companyId: this.contact.company_id } );
+        this.$http.put(url, { companyId: this.contact.companyId } );
       } else {
         var url = '/api/v2/contact/' + this.contact.id + '/update_tags';
         this.$http.put(url,
-                           { tags: this.tagIds, companyId: this.contact.company_id }
+                           { tags: this.tagIds, companyId: this.contact.companyId }
                           );
       }
     },
@@ -137,8 +137,8 @@ export default {
       this.$http.put(url, { contact: this.contact } );
     },
     nameInput: function(data) {
-      this.$set(this.contact, 'first_name', data.firstName);
-      this.$set(this.contact, 'last_name', data.lastName);
+      this.$set(this.contact, 'firstName', data.firstName);
+      this.$set(this.contact, 'lastName', data.lastName);
       this.updateContact();
     }
   },
