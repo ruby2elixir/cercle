@@ -1,8 +1,7 @@
 <template>
   <div class="add-contact">
     <div class="form-group">
-      <v-select v-model="contact.name"
-                :debounce="250"
+      <v-select :debounce="250"
                 :on-change="selectContact"
                 :on-search="searchContacts"
                 :options="searchedContacts"
