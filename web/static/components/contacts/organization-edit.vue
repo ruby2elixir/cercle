@@ -49,7 +49,7 @@
     props: {
       organization: {type: Object, default: function() { return null; } },
       contact: Object,
-      company: Object
+      companyId: Number
     },
     data(){
       return {
@@ -92,7 +92,7 @@
       addOrganization(item, triggerSaveOrg) {
         let vm = this;
         let url = '/api/v2/organizations';
-        this.$http.post(url, { organization: { name: item, companyId: vm.company.id }}).then(resp => {
+        this.$http.post(url, { organization: { name: item, companyId: vm.companyId }}).then(resp => {
           this.getOrganizations(function(r){
             vm.organizations = r.data.data;
             vm.chooseOrganization = resp.data.data;
