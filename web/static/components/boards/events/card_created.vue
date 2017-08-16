@@ -1,7 +1,7 @@
 <template>
   <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
-    added <a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.first_name}} {{contact.last_name}}</a>
-    to <a :href="'/board/' + item.board_id">{{toName}}</a>
+    added <a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.firstName}} {{contact.lastName}}</a>
+    to <a :href="'/board/' + item.boardId">{{toName}}</a>
     <br />
   </event>
 
@@ -20,8 +20,8 @@ export default {
     },
     toName() {
       let bName = [];
-      if (this.meta && this.meta.board_column) {
-        bName.push(this.meta.board_column.name);
+      if (this.meta && this.meta.boardColumn) {
+        bName.push(this.meta.boardColumn.name);
       }
       return bName.join(' ');
     }

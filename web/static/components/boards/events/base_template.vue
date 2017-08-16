@@ -1,11 +1,11 @@
 <template>
   <li>
     <a href="#" @click="$emit('clickByEvent')">
-      <img :src="item.profile_image_url" style="max-width:40px;border-radius:40px;float:left;" />
+      <img :src="item.profileImageUrl" style="max-width:40px;border-radius:40px;float:left;" />
       <div class="menu-info" style="margin-left:55px;">
        <h4 class="control-sidebar-subheading" style="font-size:16px;">
          <span style="font-weight:600;">
-           {{item.user_name}}
+           {{item.userName}}
          </span>
          <slot></slot>
          <br />

@@ -1,7 +1,7 @@
 <script>
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../inline-common-edit.vue';
-  import ContactForm from '../contacts/edit.vue';
+  import ContactShow from '../contacts/show.vue';
   import NewContact from '../contacts/new.vue';
 
   export default {
@@ -16,7 +16,7 @@
     components: {
       'inline-edit': InlineEdit,
       'modal': VueStrap.modal,
-      'contact-form': ContactForm,
+      'contact-show': ContactShow,
       'new-contact': NewContact
     },
     methods: {

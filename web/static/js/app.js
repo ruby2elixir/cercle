@@ -65,7 +65,6 @@ Vue.use(VueResourceCaseConverter, {
 });
 
 
-import ContactAppEdit from '../components/contacts/edit.vue';
 import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
 import Activities from '../components/activities/list.vue';
@@ -111,7 +110,7 @@ Vue.mixin( {
               return chr ? chr.toUpperCase() : '';
             });
             value = o[origKey];
-            if (value !== null && value.constructor === Object) {
+            if (value !== null && (value.constructor === Object || value.constructor === Array)) {
               value = this.camelCaseKeys(value);
             }
             newO[newKey] = value;
@@ -147,20 +146,6 @@ if (document.querySelector('meta[name="guardian_token"]')) {
     token: document.querySelector('meta[name="guardian_token"]').content,
     timeZone: document.querySelector('meta[name="time_zone"]').content,
     userImage: document.querySelector('meta[name="user_image"]').content
-  });
-}
-
-if ($('#contact-app-edit').length > 0){
-  new Vue({
-    el: '#contact-app-edit',
-    components: {
-      'contact-app-edit' : ContactAppEdit
-    },
-    mounted() {
-      window.addEventListener('keyup', (event) => {
-        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
-      });
-    }
   });
 }
 

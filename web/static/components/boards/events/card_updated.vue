@@ -1,7 +1,7 @@
 <template>
   <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
      <span v-if="isMovedCard">
-         moved <a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.first_name}} {{contact.last_name}}</a>
+         moved <a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.firstName}} {{contact.lastName}}</a>
          from {{boardName(meta.previous) }} to {{boardName(meta)}}
          </span>
      <span v-else v-html="content">
@@ -22,13 +22,13 @@ export default {
     },
     boardName(boardMeta) {
       let names = [];
-      if (boardMeta && boardMeta.board_column) {
-        names.push(boardMeta.board_column.name);
+      if (boardMeta && boardMeta.boardColumn) {
+        names.push(boardMeta.boardColumn.name);
       }
       return names.join(' ');
     },
     mainContact() {
-      return this.item.main_contact_name;
+      return this.item.mainContactName;
     },
     diff() {
       let changes = [];
@@ -49,7 +49,7 @@ export default {
       return this.item.metadata;
     },
     isMovedCard() {
-      return this.meta && parseInt(this.meta.board_column.id) !== parseInt(this.meta.previous.board_column.id);
+      return this.meta && parseInt(this.meta.boardColumn.id) !== parseInt(this.meta.previous.boardColumn.id);
     },
     content() {
       return this.updatedCardMsg(this.meta);
