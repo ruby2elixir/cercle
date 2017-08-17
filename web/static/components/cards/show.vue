@@ -128,7 +128,7 @@
                 <div>{{attach.file_name}}</div>
                 <div>Added {{attach.insertedAt | moment('MMM DD [at] h:m A')}}</div>
                 <div class="attach-action">
-                 <a :href="attach.attachment_url" target="_blank" style="font-weight: 700;display: inline-block;padding: 0 3px 3px;margin-right: 7px;color: grey;text-decoration: underline;">
+                 <a :href="attach.attachmentUrl" target="_blank" style="font-weight: 700;display: inline-block;padding: 0 3px 3px;margin-right: 7px;color: grey;text-decoration: underline;">
                   <i class="fa fa-download" aria-hidden="true"></i>
                   Download</a>
                  <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
