@@ -1,7 +1,7 @@
 <script>
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../inline-common-edit.vue';
-  import ContactShow from '../contacts/show.vue';
+  import CardShow from '../cards/show.vue';
   import ActivityItem from './item.vue';
 
   export default {
@@ -22,7 +22,7 @@
     components: {
       'inline-edit': InlineEdit,
       'modal': VueStrap.modal,
-      'contact-show': ContactShow,
+      'card-show': CardShow,
       'activity-item': ActivityItem
     },
     methods: {
@@ -36,12 +36,11 @@
           return 'other';
         }
       },
-      contactShow(contactId, cardId) {
-        this.contact = {id: contactId};
+      cardShow(cardId) {
         this.card = { id: cardId };
         this.$glmodal.$emit(
          'open', {
-           view: 'contact-show', class: 'contact-modal', data: { 'card_id': cardId, 'contact_id': contactId }
+           view: 'card-show', class: 'card-modal', data: { 'cardId': cardId }
          });
 
       },
@@ -60,15 +59,18 @@
               .receive('error', resp => { console.log('Unable to join', resp); });
 
         this.channel.on('activity:deleted', payload => {
-          this.deleteItem(this.activities, payload.activity_id);
+          let _payload = this.camelCaseKeys(payload);
+          this.deleteItem(this.activities, _payload.activityId);
         });
 
         this.channel.on('activity:created', payload => {
-          this.$data.activities.push(payload.activity);
+          let _payload = this.camelCaseKeys(payload);
+          this.$data.activities.push(_payload.activity);
         });
 
         this.channel.on('activity:updated', payload => {
-          this.updateItem(this.activities, payload.activity);
+          let _payload = this.camelCaseKeys(payload);
+          this.updateItem(this.activities, _payload.activity);
         });
       },
       updateItem(collection, data) {

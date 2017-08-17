@@ -24,7 +24,7 @@
                       :key="item.id"
                       :class="itemClass(item)"
                       v-on:done="doneTask(item)"
-                      v-on:contact-show="contactShow(item.contact_id)"
+                      v-on:card-show="cardShow(item.cardId)"
                       ></tr>
                   </tbody>
                 </table>
