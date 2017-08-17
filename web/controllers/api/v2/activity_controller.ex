@@ -40,7 +40,7 @@ defmodule CercleApi.APIV2.ActivityController do
 
     activities = queryable
     |> Repo.all
-    |> Repo.preload([:user])
+    |> Repo.preload([:user, :card])
     render(conn, "list.json", activities: activities)
   end
 
@@ -53,7 +53,7 @@ defmodule CercleApi.APIV2.ActivityController do
     case Repo.insert(changeset) do
       {:ok, activity} ->
         activity = activity
-        |> Repo.preload([:user])
+        |> Repo.preload([:user, :card])
         CercleApi.ActivityService.add(activity)
         CercleApi.Endpoint.broadcast!(
           "cards:" <> to_string(activity.card_id),
@@ -76,14 +76,14 @@ defmodule CercleApi.APIV2.ActivityController do
     current_user = CercleApi.Plug.current_user(conn)
     activity = Activity
     |> Repo.get!(id)
-    |> Repo.preload(:user)
+    |> Repo.preload([:user, :card])
 
     changeset = Activity.changeset(activity, activity_params)
 
     case Repo.update(changeset) do
       {:ok, activity} ->
         activity = activity
-        |> Repo.preload([:user])
+        |> Repo.preload([:user, :card])
         CercleApi.ActivityService.add(activity)
         CercleApi.Endpoint.broadcast!(
           "cards:" <> to_string(activity.card_id),

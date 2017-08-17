@@ -36,7 +36,8 @@ defmodule CercleApi.APIV2.ActivityView do
       company_id: activity.company_id,
       user_id: activity.user_id,
       card_id: activity.card_id,
-      user: activity.user
+      user: activity.user,
+      card: activity.card
     }
   end
 end
