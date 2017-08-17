@@ -122,11 +122,11 @@
           <div v-if="attachments.length > 0">
             <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
               <div :class="['thumb', fileTypeClass(attach)]" >
-                <img :src="attach.thumb_url" v-if="attach.image" />
+                <img :src="attach.thumbUrl" v-if="attach.image" />
               </div>
               <div class="info">
                 <div>{{attach.file_name}}</div>
-                <div>Added {{attach.inserted_at | moment('MMM DD [at] h:m A')}}</div>
+                <div>Added {{attach.insertedAt | moment('MMM DD [at] h:m A')}}</div>
                 <div class="attach-action">
                  <a :href="attach.attachment_url" target="_blank">
                   <i class="fa fa-download" aria-hidden="true"></i>
