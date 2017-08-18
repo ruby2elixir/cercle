@@ -88,7 +88,9 @@ exports.config = {
       MarkdownIt: 'markdown-it',
       VueAutosize: 'vue-autosize',
       FileUpload: 'vue-upload-component',
-      onClickOutside: 'vue-on-click-outside'
+      onClickOutside: 'vue-on-click-outside',
+      VueDraggable: 'vuedraggable'
+
     },
     // Whitelist the npm deps to be pulled in as front-end assets.
     // All other deps in package.json will be excluded from the bundle.

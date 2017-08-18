@@ -63,7 +63,7 @@
         })[0];
 
         if (board)
-          this.columns = board.board_columns;
+          this.columns = board.board_columns || board.boardColumns;
         if (this.columns.length)
           this.columnId = this.columns[0].id;
       },

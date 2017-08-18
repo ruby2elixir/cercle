@@ -4,55 +4,81 @@
   <board board_id="<%= Poison.encode!(@board.id) %>"  inline-template >
     <div>
 
-      <section class="content-header clearfix" style="margin-bottom:20px;margin-left:20px;">
+      <section class="content-header clearfix">
         <h2 class="">
-          <span class='inline-editable' data-type='PUT' data-param-name="board[name]" data-inline-editurl="/api/v2/board/<%= @board.id %>" style="color:white;font-weight:bold;"><%= @board.name %></span>
+          <inline-edit v-model="board.name" v-on:input="updateBoard" placeholder="Board Name" class='board-name'></inline-edit>
         </h2>
-        <h2 class=' btn btn-default'>
-          <span @click="newCard(<%= Poison.encode!([@board]) %>, <%= @company.id %>)" style="font-weight:bold; font-size: 16px;">+ Add card</span>
+        <h2 class='btn btn-default'>
+          <span @click="newCard()" class="add-card">+ Add card</span>
         </h2>
       </section>
 
       <!-- Main content -->
-      <div data-pipeline_init=true id="columns-container" class="columns-container">
+      <div id="columns-container" class="columns-container">
         <div id="board_columns">
-          <%= for col <- @board.board_columns do %>
-              <div class="column_master" data-id="<%=col.id%>">
-                <div class="column_title" style="position:relative;">
-                  <form class='form-inline editableform'>
-                    <textarea class='textarea-inline-editable' data-type='PUT' data-param-name="board_column[name]" data-inline-editurl="/api/v2/board_column/<%= col.id %>" ><%=col.name%>
-                    </textarea>
-                  </form>
-                  <div id="actions" class="dropdown">
-                    <span class="fa fa-ellipsis-h" role="button" data-id="<%= col.id%>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-                    <ul class="dropdown-menu" aria-labelledby="dLabel">
-                      <li><a class="delete-column-link">Delete This Column..</a></li>
-                    </ul>
+          <vue-draggable v-model="board.boardColumns" element="span" @end="onEndMoveBoardColumn">
+            <transition-group name="flip-list"  class="list-group">
+            <div class="column_master" v-for="col in board.boardColumns" :key="col.id">
+              <div class="column_title" style="position:relative;">
+                <inline-text-edit
+                  v-model.trim="col.name"
+                  v-on:input="updateBoardColumn(col)"
+                  placeholder="Column Name"
+                  class='board-column-name textarea-inline-editable'>
+                </inline-text-edit>
+
+
+                <div id="actions" class="dropdown">
+                  <span
+                    class="fa fa-ellipsis-h"
+                    role="button"
+                    :data-id="col.id"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"></span>
+                  <ul class="dropdown-menu" aria-labelledby="dLabel">
+                    <li><a @click="deleteColumn(col)">Delete This Column..</a></li>
+                  </ul>
+                </div>
+
+              </div>
+              <br />
+
+              <div class="column" :data-id="col.id">
+                <vue-draggable v-model="col.cards"  :options="{group:'cards'}" @end="onEndMoveCard">
+                  <transition-group name="flip-list"  class="list-group">
+                  <div class="portlet"
+                       v-for="card in col.cards"
+                       :key="card.id" >
+                    <div class="portlet-content">
+                      <div v-on:click.stop="cardShow(card.id)">
+                        <span class='name'>
+                          {{card.name}}
+                          <span class="contacnt-name" v-if="card.mainContact">
+                            - {{card.mainContact.name}}
+                          </span>
+                        </span>
+                      </div>
+                      <div></div>
+
+                    </div>
                   </div>
-
-                </div>
-                <br />
-
-                <div class="column" data-id="<%=col.id%>">
-
-                  <%= for card <- @cards do %>
-                      <%=if (card.board_column_id == col.id) do %>
-                        <%= render "_card.html", card: card %>
-                      <%=end%>
-                  <%end%>
-                </div>
-
+                  </transition-group>
+                </vue-draggable>
               </div>
-              <%=end%>
 
-              <div class="column_master" id="add_new_column">
-                Add a new Column
-                <form id="new_board_column_form"><input type="text" id="board_column_name" name='board_column[name]'placeholder="Name of the Column" />
-                  <input type='hidden' name='board_column[board_id]' value='<%= @board.id %>' id="board_id" />
-                  <br />
-                  <input type="submit" value="Save" class="btn btn-success" />
-                </form>
-              </div>
+            </div>
+            </transition-group>
+          </vue-draggable>
+
+          <div class="column_master" id="add_new_column">
+            Add a new Column
+            <input type="text" v-model.trim="newColumn.name" placeholder="Name of the Column" />
+            <br />
+            <input type="submit" value="Save" class="btn btn-success" @click="addColumn"/>
+          </div>
+
         </div>
       </div><!-- /.content -->
 

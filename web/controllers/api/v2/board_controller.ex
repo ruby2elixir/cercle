@@ -2,9 +2,7 @@ defmodule CercleApi.APIV2.BoardController do
 
   require Logger
   use CercleApi.Web, :controller
-  alias CercleApi.Board
-  alias CercleApi.BoardColumn
-  alias CercleApi.Company
+  alias CercleApi.{ Board, Card, BoardColumn, Company}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -26,6 +24,29 @@ defmodule CercleApi.APIV2.BoardController do
     boards = Repo.all(query)
     render(conn, "index.json", boards: boards)
   end
+
+  def show(conn, %{"id" => id}) do
+    current_user = CercleApi.Plug.current_user(conn)
+    company_id  = current_user.company_id
+
+    query_cards = from p in Card,
+      where: p.status == 0,
+      order_by: [desc: p.updated_at]
+
+    query_columns = from(
+      BoardColumn, order_by: [asc: :order],
+      preload: [cards: ^query_cards]
+    )
+    query = from p in Board,
+      where: p.company_id == ^company_id,
+      where: p.id == ^id,
+      order_by: [desc: p.updated_at],
+      preload: [board_columns: ^query_columns]
+
+    board = Repo.one(query)
+    render(conn, "full_show.json", board: board)
+  end
+
 
   def create(conn, %{"board" => board_params}) do
     user = CercleApi.Plug.current_user(conn)
