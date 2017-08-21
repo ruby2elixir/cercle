@@ -18,6 +18,7 @@ module.exports = {
     'vSelect': true,
     'VueResource': true,
     'VueResourceCaseConverter': true,
+    'VueDraggable': true,
     'Moment': true,
     'ElementUi': true,
     'MarkdownIt': true,

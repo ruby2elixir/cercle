@@ -27,30 +27,22 @@
                   class='board-column-name textarea-inline-editable'>
                 </inline-text-edit>
 
-
-                <div id="actions" class="dropdown">
-                  <span
-                    class="fa fa-ellipsis-h"
-                    role="button"
-                    :data-id="col.id"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"></span>
-                  <ul class="dropdown-menu" aria-labelledby="dLabel">
-                    <li><a @click="deleteColumn(col)">Delete This Column..</a></li>
-                  </ul>
-                </div>
-
+                <el-dropdown>
+                  <span class="el-dropdown-link fa fa-ellipsis-h"></span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item><a @click="deleteColumn(col)">Delete This Column..</a></el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </div>
               <br />
 
               <div class="column" :data-id="col.id">
-                <vue-draggable v-model="col.cards"  :options="{group:'cards'}" @end="onEndMoveCard">
+                <vue-draggable v-model="col.cards"  :options="{group:'cards'}" @change="onEndMoveCard(col, $event)">
                   <transition-group name="flip-list"  class="list-group">
                   <div class="portlet"
                        v-for="card in col.cards"
-                       :key="card.id" >
+                       :key="card.id"
+                       :column_id="col.id">
                     <div class="portlet-content">
                       <div v-on:click.stop="cardShow(card.id)">
                         <span class='name'>

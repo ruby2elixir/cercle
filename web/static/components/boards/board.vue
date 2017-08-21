@@ -21,48 +21,69 @@
       'modal': VueStrap.modal,
       'contact-show': ContactShow,
       'new-contact': NewContact,
-      'vue-draggable': VueDraggable
+      'vue-draggable': VueDraggable,
+      'dropdown': VueStrap.dropdown
     },
     methods: {
-        addColumn() {
-            if (this.newColumn.name && this.newColumn.name !== "") {
-                let url = '/api/v2/board_column';
-                this.$http.post(url, {
-                    board_column: {
-                        board_id: this.board.id,
-                        name: this.newColumn.name
-                    }
-                }).then(resp => {
-                    let boardColumn = resp.data.data;
-                    boardColumn.cards = [];
-                    this.board.boardColumns.push(boardColumn);
-                })
-                this.newColumn = {}
+      addColumn() {
+        if (this.newColumn.name && this.newColumn.name !== '') {
+          let url = '/api/v2/board_column';
+          this.$http.post(url, {
+            boardColumn: {
+              boardId: this.board.id,
+              name: this.newColumn.name
             }
-        },
-        deleteColumn(column) {
-            if(confirm('Are you sure?')) {
-                let url = '/api/v2/board_column/' + column.id;
-                this.$http.delete(url).then(resp => {
-                    let itemIndex = this.board.boardColumns.findIndex(function(item){
-                        return item.id === parseInt(column.id);
-                    });
-                    if (itemIndex !== -1){ this.board.boardColumns.splice(itemIndex, 1); }
-                })
-            }
+          }).then(resp => {
+            let boardColumn = resp.data.data;
+            boardColumn.cards = [];
+            this.board.boardColumns.push(boardColumn);
+          });
+          this.newColumn = {};
+        }
       },
-      onEndMoveCard(e) {
-        console.log('end move card', e)
+      deleteColumn(column) {
+        if(confirm('Are you sure?')) {
+          let url = '/api/v2/board_column/' + column.id;
+          this.$http.delete(url).then(resp => {
+            let itemIndex = this.board.boardColumns.findIndex(function(item){
+              return item.id === parseInt(column.id);
+            });
+            if (itemIndex !== -1){ this.board.boardColumns.splice(itemIndex, 1); }
+          });
+        }
+      },
+      onEndMoveCard(column, event) {
+        if (event.added) {
+          let card = event.added.element;
+          let position = event.added.newIndex;
+          let url = '/api/v2/card/' + card.id;
+          this.$http.put(url, {
+              card: { position: position, boardColumnId: column.id}
+          }).then( resp => {
+              let url = '/api/v2/board_column/' + column.id + '/reorder_cards';
+              let cardIds = column.cards.map((v)=> v.id);
+              this.$http.put(url, { cardIds: cardIds });
+          });
+        } else if (event.removed) {
+
+        } else if (event.moved) {
+          let url = '/api/v2/board_column/' + column.id + '/reorder_cards';
+          let cardIds = column.cards.map((v)=> v.id);
+          this.$http.put(url, { cardIds: cardIds });
+
+        }
       },
       onEndMoveBoardColumn(e) {
-        console.log('end move border', e)
+        let url = '/api/v2/board/' + this.board.id + '/reorder_columns';
+        let columnIds = this.board.boardColumns.map((v)=> v.id);
+        this.$http.put(url, { orderColumnIds: columnIds });
       },
       updateBoardColumn(boardColumn) {
         let url = '/api/v2/board_column/' + boardColumn.id;
-        this.$http.put(url, {id: boardColumn.id, board_column: { name: boardColumn.name.trim() } })
+        this.$http.put(url, {id: boardColumn.id, boardColumn: { name: boardColumn.name.trim() } });
       },
       updateBoard() {
-        this.$http.put(this.boardUrl, {id: this.board.id, board: { name: this.board.name } })
+        this.$http.put(this.boardUrl, {id: this.board.id, board: { name: this.board.name } });
       },
       newCard() {
         this.$glmodal.$emit(
@@ -112,7 +133,7 @@
       },
       initComponent() {
         this.$http.get(this.boardUrl).then(resp => {
-            this.board = resp.data.data;
+          this.board = resp.data.data;
         });
       }
     },
@@ -122,12 +143,29 @@
       }
     },
     mounted() {
-      this.initComponent()
+      this.initComponent();
     }
   };
 </script>
 <style lang="sass">
+   .el-dropdown-menu {
+      border-radius: 4px !important;
+      padding-top: 1px !important;
+   padding-bottom: 1px !important;
+   a {     color: #333; }
+      }
+
 #board-app {
+  .el-dropdown {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 18px;
+    height: 18px;
+    color: grey;
+    font-size: 12px;
+    }
+
         .flip-list-move {
             transition: transform 1s;
         }

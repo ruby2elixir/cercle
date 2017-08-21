@@ -8,6 +8,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
   alias CercleApi.Company
   alias CercleApi.Organization
   alias CercleApi.User
+  alias CercleApi.Card
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -92,4 +93,16 @@ defmodule CercleApi.APIV2.BoardColumnController do
     json conn, %{status: 200}
   end
 
+  def reorder_cards(conn, %{"board_column_id" => id, "card_ids" => card_ids}) do
+    board_column = Repo.get!(BoardColumn, id)
+
+    card_ids
+    |> Enum.with_index
+    |> Enum.each(fn({x, i}) ->
+      card = Repo.get_by(Card, id: x)
+      changeset = Card.changeset(card, %{position: i})
+      Repo.update(changeset)
+    end)
+    render(conn, "show.json", board_column: board_column)
+  end
 end

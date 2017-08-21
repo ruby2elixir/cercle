@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.BoardController do
 
   require Logger
   use CercleApi.Web, :controller
-  alias CercleApi.{ Board, Card, BoardColumn, Company}
+  alias CercleApi.{ Board, Card, BoardColumn, Company }
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -31,7 +31,7 @@ defmodule CercleApi.APIV2.BoardController do
 
     query_cards = from p in Card,
       where: p.status == 0,
-      order_by: [desc: p.updated_at]
+      order_by: [asc: :position]
 
     query_columns = from(
       BoardColumn, order_by: [asc: :order],
@@ -46,7 +46,6 @@ defmodule CercleApi.APIV2.BoardController do
     board = Repo.one(query)
     render(conn, "full_show.json", board: board)
   end
-
 
   def create(conn, %{"board" => board_params}) do
     user = CercleApi.Plug.current_user(conn)
@@ -86,6 +85,19 @@ defmodule CercleApi.APIV2.BoardController do
         |> put_status(:unprocessable_entity)
         |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
     end
+  end
+
+  def reorder_columns(conn, %{"board_id" => board_id, "order_column_ids" => order_ids}) do
+    board = Repo.get!(Board, board_id)
+
+    order_ids
+    |> Enum.with_index
+    |> Enum.each(fn({x, i}) ->
+      changeset = BoardColumn.changeset(%BoardColumn{id: x, board_id: board.id}, %{order: i})
+      Repo.update(changeset)
+    end)
+
+    render(conn, "show.json", board: Repo.preload(board, [:board_columns]))
   end
 
   def delete(_conn, %{"id" => _id}) do

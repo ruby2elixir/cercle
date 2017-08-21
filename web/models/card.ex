@@ -13,6 +13,7 @@ defmodule CercleApi.Card do
     field :name, :string
     field :description, :string
     field :status, :integer, default: 0 #### 0 OPEN, 1 CLOSED
+    field :position, :integer, default:
     field :contacts, {:array, :map}, virtual: true
     field :main_contact, {:map, CercleApi.Contact}, virtual: true
     field :contact_ids, {:array, :integer}
@@ -38,7 +39,8 @@ defmodule CercleApi.Card do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids,
-                    :board_id, :board_column_id, :description, :due_date])
+                    :board_id, :board_column_id, :description, :due_date,
+                    :position])
     |> validate_required([:user_id, :company_id])
   end
 
