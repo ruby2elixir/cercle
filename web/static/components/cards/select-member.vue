@@ -34,8 +34,6 @@ export default {
       editMode: false
     };
   },
-  watch: {
-  },
   computed: {
     currentMember() {
       for(var i=0; i<this.users.length; i++) {
@@ -65,7 +63,6 @@ export default {
 
 <style lang="sass" scoped>
   .modal-body {
-
     ul.users-list {
       li {
         width: 100%;
