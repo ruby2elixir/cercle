@@ -9,11 +9,9 @@
           </div>
         </div>
 
-        <div class="managers" v-if="companyUsers.length > 0">
+        <div class="managers" v-if="card.userId">
           Managed by:
-          <select v-model.number="card.userId"  v-on:change="updateCard">
-            <option v-for="user in companyUsers" :value.number="user.id">{{user.userName}}</option>
-          </select>
+          <select-member v-model.number="card.userId" @change="updateCard" :users="companyUsers" />
 
         </div>
         <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.dueDate || showDueDatePicker" >
@@ -94,6 +92,10 @@
       </div>
 
       <div class="col-lg-3 card-actions">
+        <select-member class="btn btn-default btn-block" v-model.number="card.userId" @change="updateCard" :users="companyUsers">
+          ADD MEMBER
+        </select-member>
+
         <button type="button" class="btn btn-default btn-block" @click="openContactModal = true">ADD CONTACT</button>
         <button type="button" class="btn btn-default btn-block" @click="addTask">ADD TASK</button>
         <button type="button" class="btn btn-default btn-block " v-on:click="openDueDatePicker">ADD DUE DATE</button>
@@ -194,6 +196,7 @@
   import inputModal from '../shared/input-modal.vue';
   import nameInputModal from '../shared/name-input-modal.vue';
   import AddContact from './add-contact.vue';
+  import SelectMember from './select-member.vue';
 
   export default {
     props: ['cardId'],
@@ -258,7 +261,8 @@
       'el-date-picker': ElementUi.DatePicker,
       'name-input-modal': nameInputModal,
       'input-modal': inputModal,
-      'add-contact': AddContact
+      'add-contact': AddContact,
+      'select-member': SelectMember
     },
     methods: {
       userImage() {
