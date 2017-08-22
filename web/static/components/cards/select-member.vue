@@ -1,10 +1,10 @@
 <template>
   <span v-on-click-outside='cancel'>
     <span v-on:click="showModal">
-    <slot>
-      <img :src="currentMember.profileImageUrl" class='profile-image' />
-      {{currentMember.userName}}
-    </slot>
+      <slot v-if="currentMember">
+        <img :src="currentMember.profileImageUrl" class='profile-image' />
+        {{currentMember.userName}}
+      </slot>
     </span>
 
     <div v-show="editMode" class='input-modal'>
