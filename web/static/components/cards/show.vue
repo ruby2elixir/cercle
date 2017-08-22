@@ -159,7 +159,7 @@
   import inputModal from '../shared/input-modal.vue';
   import nameInputModal from '../shared/name-input-modal.vue';
   import AddContact from './add-contact.vue';
-  import SelectMember from './select-member.vue';
+  import SelectMember from '../shared/select-member.vue';
   import ContactDetails from '../contacts/contact-details.vue';
 
   export default {
