@@ -49,7 +49,7 @@
                         <div v-on:click.stop="cardShow(card.id)">
                           <span class='name'>
                             {{card.name}}
-                            <span class="contacnt-name" v-if="card.mainContact">
+                            <span class="contact-name" v-if="card.mainContact">
                               - {{card.mainContact.name}}
                             </span>
                           </span>
@@ -251,54 +251,55 @@ export default {
     a {     color: #333; }
     }
   #board-app {
-  .column {
-    .list-group {
-      min-height: 25px;
-      display: inline-block;
-      min-width: 100%;
+    .column {
+      .list-group {
+        min-height: 25px;
+        display: inline-block;
+        min-width: 100%;
       }
-        }
-          .el-dropdown {
-            position: absolute;
-            right: 2px;
-            top: 2px;
-            width: 18px;
-            height: 18px;
-            color: grey;
-            font-size: 12px;
-            }
-              .flip-list-move {
-                transition: transform 1s;
-                }
-                  .content-header {
-                    margin-bottom: 20px;
-                    margin-left: 20px;
-                    .board-name {
-                      color: white;
-                      font-weight: bold;
-                      }
-                        }
-                          .portlet {
-                            background-color: white;
-                            border-radius: 4px;
-                            font-size: 14px;
-                            font-weight: 800;
-                            padding-bottom: 10px;
-                            cursor: pointer;
-                            margin: 0 1em 1em 0;
-                            padding: .3em;
-                            }
-                              .portlet-content {
-                                font-size: 14px;
-                                font-weight: 800;
-                                padding-bottom: 10px;
-                                cursor: pointer;
-                                .name { color: #222222; }
-                                .contact-name { color: rgb(119, 119, 119); }
-                                }
-                                  .add-card {
-                                    font-weight: bold;
-                                    font-size: 16px;
-                                    }
-                                      }
+    }
+    .el-dropdown {
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      width: 18px;
+      height: 18px;
+      color: grey;
+      font-size: 12px;
+    }
+    .flip-list-move {
+      transition: transform 1s;
+    }
+    .content-header {
+      margin-bottom: 20px;
+      margin-left: 20px;
+      .board-name {
+        color: white;
+        font-weight: bold;
+      }
+    }
+    .portlet {
+      background-color: white;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 800;
+      padding-bottom: 10px;
+      cursor: pointer;
+      margin: 0 1em 1em 0;
+      padding: .3em;
+    }
+    .portlet-content {
+      font-family: Verdana,Arial,sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      padding-bottom: 10px;
+      cursor: pointer;
+      .name { color: #222222; }
+      .contact-name { color: rgb(119, 119, 119); }
+    }
+    .add-card {
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
 </style>
