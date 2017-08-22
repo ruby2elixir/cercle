@@ -49,43 +49,7 @@
             </div>
 
             <div class="active-contact-info" v-if="activeContact">
-              <div class="row contact-attributes">
-                <div class="col-lg-4">
-                  Name
-                  <br />
-                  <span class="attribute-value">
-                    <name-input-modal :first-name="activeContact.firstName" :last-name="activeContact.lastName" v-on:input="contactNameInput"/>
-                  </span>
-                </div>
-
-                <div class="col-lg-4">
-                  Title
-                  <br />
-                  <span class="attribute-value">
-                    <input-modal v-model="activeContact.jobTitle" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
-                  </span>
-                </div>
-
-                <div class="col-lg-4">
-                  Phone number
-                  <br />
-                  <span class="attribute-value">
-                    <input-modal v-model="activeContact.phone" v-on:input="updateContact"  placeholder="Click to add" label="Phone" />
-                  </span>
-                </div>
-
-                <div class="col-lg-4">
-                  Email
-                  <br />
-                  <span class="attribute-value">
-                    <input-modal v-model="activeContact.email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
-                  </span>
-                </div>
-              </div>
-
-              <div class="contact-description">
-                <markdown-text-edit v-model="activeContact.description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
-              </div>
+              <contact-details :contact="activeContact" />
             </div>
           </div>
         </div>
@@ -197,6 +161,7 @@
   import nameInputModal from '../shared/name-input-modal.vue';
   import AddContact from './add-contact.vue';
   import SelectMember from './select-member.vue';
+  import ContactDetails from '../contacts/contact-details.vue';
 
   export default {
     props: ['cardId'],
@@ -262,7 +227,8 @@
       'name-input-modal': nameInputModal,
       'input-modal': inputModal,
       'add-contact': AddContact,
-      'select-member': SelectMember
+      'select-member': SelectMember,
+      'contact-details': ContactDetails
     },
     methods: {
       userImage() {
@@ -274,11 +240,6 @@
           className += ' active';
         }
         return className;
-      },
-      contactNameInput: function(data) {
-        this.contacts[this.activeContactIndex].firstName = data.firstName;
-        this.contacts[this.activeContactIndex].lastName = data.lastName;
-        this.updateContact();
       },
       eventAddOrUpdate(event) {
         let itemIndex = this.events.findIndex(function(item){
@@ -400,11 +361,6 @@
       updateCard() {
         let url = '/api/v2/card/' + this.cardId;
         this.$http.put(url, { card: this.card });
-      },
-
-      updateContact: function(){
-        let url = '/api/v2/contact/' + this.contacts[this.activeContactIndex].id;
-        this.$http.put(url, { contact: this.contacts[this.activeContactIndex] } );
       },
 
       removeContact(contactId) {

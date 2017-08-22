@@ -10,8 +10,8 @@
         </h2>
         <h2 class=' btn btn-default'>
           <span @click="newCard(<%= Poison.encode!([@board]) %>, <%= @company.id %>)" style="font-weight:bold; font-size: 16px;">+ Add card</span>
-        </a>
-</section>
+        </h2>
+      </section>
 
       <!-- Main content -->
       <div data-pipeline_init=true id="columns-container" class="columns-container">
