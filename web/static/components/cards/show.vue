@@ -10,7 +10,6 @@
         </div>
 
         <div class="managers" v-if="card.userId">
-          Managed by:
           <select-member v-model.number="card.userId" @change="updateCard" :users="companyUsers" />
 
         </div>
