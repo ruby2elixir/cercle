@@ -54,7 +54,6 @@ export default {
       this.editMode = false;
     },
     cancel: function() {
-      this.v = this.value;
       this.editMode = false;
     }
   }
