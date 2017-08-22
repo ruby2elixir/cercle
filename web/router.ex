@@ -118,8 +118,11 @@ defmodule CercleApi.Router do
     resources "/api/v2/board", APIV2.BoardController do
       put "/archive", APIV2.BoardController, :archive, as: :archive
       put "/unarchive", APIV2.BoardController, :unarchive, as: :unarchive
+      put "/reorder_columns", APIV2.BoardController, :reorder_columns
     end
-    resources "/api/v2/board_column", APIV2.BoardColumnController
+    resources "/api/v2/board_column", APIV2.BoardColumnController do
+      put "/reorder_cards", APIV2.BoardColumnController, :reorder_cards
+    end
 
     resources "/api/v2/webhooks", APIV2.WebhookSubscriptionController
     #post "/api/v2/webhook", APIV2.WebhookController, :create

@@ -24,7 +24,8 @@
     "vue-select": "github:sagalbot/vue-select",
     "vue-strap": "^1.1.37",
     "vue-template-compiler": "2.4.2",
-    "vue-upload-component": "^2.3.1"
+    "vue-upload-component": "^2.3.1",
+    "vuedraggable": "^2.14.1"
   },
   "devDependencies": {
     "babel-brunch": "~6.0.0",

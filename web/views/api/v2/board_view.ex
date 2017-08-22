@@ -9,10 +9,28 @@ defmodule CercleApi.APIV2.BoardView do
     %{data: render_one(board, CercleApi.APIV2.BoardView, "board.json")}
   end
 
+  def render("full_show.json", %{board: board}) do
+    %{data: board_json(board)}
+  end
+
   def render("board.json", %{board: board}) do
     %{id: board.id,
       name: board.name,
       company_id: board.company_id,
-      board_columns: render_many(board.board_columns, CercleApi.APIV2.BoardColumnView, "board_column.json")}
+      board_columns: render_many(
+        board.board_columns,
+        CercleApi.APIV2.BoardColumnView,
+        "board_column.json")}
+  end
+
+  def board_json(board) do
+    %{id: board.id,
+      name: board.name,
+      company_id: board.company_id,
+      board_columns: render_many(
+        board.board_columns,
+        CercleApi.APIV2.BoardColumnView,
+        "board_column_with_cards.json")
+    }
   end
 end

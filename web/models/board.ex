@@ -25,4 +25,20 @@ defmodule CercleApi.Board do
     |> validate_required([:company_id])
   end
 
+  def preload_full_data(query \\ __MODULE__) do
+    from p in query,
+      preload: [board_columns: ^preload_query]
+  end
+
+  def preload_query do
+    query_cards = from p in CercleApi.Card,
+      where: p.status == 0,
+      order_by: [asc: :position]
+
+    from(
+      CercleApi.BoardColumn, order_by: [asc: :order],
+      preload: [cards: ^query_cards]
+    )
+  end
+
 end

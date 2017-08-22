@@ -24,12 +24,9 @@ import 'bootstrap-datepicker';
 import socket from './socket';
 import { Activity } from './activity';
 import inlineEdit from './inline_edit';
-import boardAdd from './board_add';
-import boardColumnAdd from './board_column_add';
 import contactAdd from './contact_add';
 import contactLive from './contact_live';
 import { Pipeline } from './opportunity_pipeline';
-import { BoardColumnPipeline } from './board_column_pipeline';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
@@ -42,7 +39,6 @@ export var App = {
   },
   pipelineInit: function(){
     Pipeline.start();
-    BoardColumnPipeline.start();
   },
   contactSocketInit: function(contactId){
     contactLive.init(socket, contactId );
