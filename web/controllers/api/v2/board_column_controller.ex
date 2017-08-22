@@ -49,6 +49,10 @@ defmodule CercleApi.APIV2.BoardColumnController do
         changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
         case Repo.insert(changeset) do
           {:ok, board_column} ->
+            Board
+            |> Repo.get(board_column.board_id)
+            |> Repo.preload([board_columns: Board.preload_query])
+            |> CercleApi.BoardNotificationService.update_notification
             render(conn, "show.json", board_column: board_column)
           {:error, changeset} ->
             conn
@@ -64,11 +68,16 @@ defmodule CercleApi.APIV2.BoardColumnController do
   end
 
   def update(conn, %{"id" => id, "board_column" => board_column_params}) do
-    board = Repo.get!(BoardColumn, id)
-    changeset = BoardColumn.changeset(board, board_column_params)
+    board_column = Repo.get!(BoardColumn, id)
+    changeset = BoardColumn.changeset(board_column, board_column_params)
 
     case Repo.update(changeset) do
       {:ok, board_column} ->
+        Board
+        |> Repo.get(board_column.board_id)
+        |> Repo.preload([board_columns: Board.preload_query])
+        |> CercleApi.BoardNotificationService.update_notification
+
         render(conn, "show.json", board_column: board_column)
       {:error, changeset} ->
         conn
@@ -89,7 +98,11 @@ defmodule CercleApi.APIV2.BoardColumnController do
     |> Repo.update_all([])
 
     Repo.delete!(board_column)
-    # send_resp(conn, :no_content, "") no method found to test this response
+
+    Board
+    |> Repo.get(board_column.board_id)
+    |> Repo.preload([board_columns: Board.preload_query])
+    |> CercleApi.BoardNotificationService.update_notification
     json conn, %{status: 200}
   end
 
@@ -103,6 +116,11 @@ defmodule CercleApi.APIV2.BoardColumnController do
       changeset = Card.changeset(card, %{position: i})
       Repo.update(changeset)
     end)
+
+    Board
+    |> Repo.get(board_column.board_id)
+    |> Repo.preload([board_columns: Board.preload_query])
+    |> CercleApi.BoardNotificationService.update_notification
     render(conn, "show.json", board_column: board_column)
   end
 end
