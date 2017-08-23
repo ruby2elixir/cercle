@@ -87,6 +87,11 @@ defmodule CercleApi.CardService do
          {event} <- Repo.preload(tm_event, [:card, :user]),
       do: CercleApi.TimelineEventService.create(tm_event)
 
+    Board
+    |> Repo.get(card.board_id)
+    |> Repo.preload([board_columns: Board.preload_query])
+    |> CercleApi.BoardNotificationService.update_notification
+
     if !is_nil(card.user_id) do
       for webhook <- get_subscriptions(card.user_id, event) do
         HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
@@ -122,6 +127,11 @@ defmodule CercleApi.CardService do
     with {:ok, tm_event} <- Repo.insert(changeset),
          event <- Repo.preload(tm_event, [:card, :user]),
       do: CercleApi.TimelineEventService.update(event)
+
+    Board
+    |> Repo.get(card.board_id)
+    |> Repo.preload([board_columns: Board.preload_query])
+    |> CercleApi.BoardNotificationService.update_notification
 
     if !is_nil(card.user_id) do
       for webhook <- get_subscriptions(card.user_id, event) do
