@@ -605,26 +605,6 @@
           line-height: 1;
         }
         /*-----End Contacts-------*/
-
-        .active-contact-info {
-          margin-top: 10px;
-
-          .attribute-value {
-             margin-right:7px;
-             border-radius: 5px;
-             display:inline-block;
-             padding: 0 3px;
-             background-color: lightgray;
-          }
-
-          .contact-attributes {
-            margin-bottom: 10px;
-          }
-
-          .contact-description {
-            min-height: 100px;
-          }
-        }
       }
     }
   }
