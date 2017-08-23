@@ -92,8 +92,10 @@ defmodule CercleApi.CardService do
     |> Repo.preload([board_columns: Board.preload_query])
     |> CercleApi.BoardNotificationService.update_notification
 
-    for webhook <- get_subscriptions(card.user_id, event) do
-      HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+    if !is_nil(card.user_id) do
+      for webhook <- get_subscriptions(card.user_id, event) do
+        HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+      end
     end
   end
 
@@ -131,9 +133,10 @@ defmodule CercleApi.CardService do
     |> Repo.preload([board_columns: Board.preload_query])
     |> CercleApi.BoardNotificationService.update_notification
 
-    ws = get_subscriptions(card.user_id, event)
-    for webhook <- get_subscriptions(card.user_id, event) do
-      HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+    if !is_nil(card.user_id) do
+      for webhook <- get_subscriptions(card.user_id, event) do
+        HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+      end
     end
   end
 

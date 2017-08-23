@@ -31,7 +31,7 @@
           </div>
 
           <div class="col-md-1">
-            <select-member v-model.number="task.userId" @change="updateTask(task)" :users="companyUsers" :display-short="true" :show-unassign="true" placeholder="N/A" />
+            <select-member v-model.number="task.userId" @change="updateTask(task)" :users="companyUsers" :display-short="true" placeholder="N/A" />
           </div>
 
           <div class="col-md-1 remove-task">

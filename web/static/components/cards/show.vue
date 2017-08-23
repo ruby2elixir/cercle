@@ -9,10 +9,12 @@
           </div>
         </div>
 
-        <div class="managers" v-if="card.userId">
-          <select-member v-model.number="card.userId" @change="updateCard" :users="companyUsers" />
-
+        <div class="manager" v-if="card.userId">
+          <label>
+            <select-member v-model.number="card.userId" @change="updateCard" :users="companyUsers" />
+          </label>
         </div>
+
         <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.dueDate || showDueDatePicker" >
           Due Date:
           <el-date-picker
@@ -56,7 +58,8 @@
 
       <div class="col-lg-3 card-actions">
         <select-member class="btn btn-default btn-block" v-model.number="card.userId" @change="updateCard" :users="companyUsers">
-          ADD MEMBER
+          <span v-if="card.userId">CHANGE MEMBER</span>
+          <span v-else>ADD MEMBER</span>
         </select-member>
 
         <button type="button" class="btn btn-default btn-block" @click="openContactModal = true">ADD CONTACT</button>
@@ -536,6 +539,10 @@
     padding: 20px;
     background-color: #edf0f5;
 
+    .profile-image {
+      border-radius: 50%;
+    }
+
     .modal-body {
       padding: 10px;
     }
@@ -546,6 +553,19 @@
 
     .file-uploads-title {
       font-weight: normal;
+    }
+
+    .manager {
+      label {
+        font-weight: normal;
+        background-color: lightgrey;
+        padding: 3px;
+        border-radius: 3px;
+
+        .fa {
+          color: #333333;
+        }
+      }
     }
 
     .card-title {
