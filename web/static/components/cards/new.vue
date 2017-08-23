@@ -72,7 +72,6 @@
         let url = '/api/v2/card/';
         this.$http.post(url,{
           card: {
-            userId: this.userId,
             companyId: this.companyId,
             contactIds: contactIds,
             boardId: this.boardId,

@@ -87,8 +87,10 @@ defmodule CercleApi.CardService do
          {event} <- Repo.preload(tm_event, [:card, :user]),
       do: CercleApi.TimelineEventService.create(tm_event)
 
-    for webhook <- get_subscriptions(card.user_id, event) do
-      HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+    if !is_nil(card.user_id) do
+      for webhook <- get_subscriptions(card.user_id, event) do
+        HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+      end
     end
   end
 
@@ -121,9 +123,10 @@ defmodule CercleApi.CardService do
          event <- Repo.preload(tm_event, [:card, :user]),
       do: CercleApi.TimelineEventService.update(event)
 
-    ws = get_subscriptions(card.user_id, event)
-    for webhook <- get_subscriptions(card.user_id, event) do
-      HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+    if !is_nil(card.user_id) do
+      for webhook <- get_subscriptions(card.user_id, event) do
+        HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
+      end
     end
   end
 

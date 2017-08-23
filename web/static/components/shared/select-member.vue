@@ -1,9 +1,11 @@
 <template>
   <span v-on-click-outside='cancel'>
     <span v-on:click="showModal">
-      <slot v-if="currentMember">
-        <img :src="currentMember.profileImageUrl" class='profile-image' />
-        {{currentMember.userName}}
+      <slot>
+        <span v-if="currentMember">
+          <img :src="currentMember.profileImageUrl" class='profile-image' />
+          {{currentMember.userName}}
+        </span>
       </slot>
     </span>
 
