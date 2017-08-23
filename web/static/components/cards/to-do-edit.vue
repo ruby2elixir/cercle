@@ -31,9 +31,7 @@
           </div>
 
           <div class="col-md-1">
-            <select v-model="task.userId" v-on:change="updateTask(task)">
-              <option v-for="user in companyUsers"  v-if="!!user.userName" :value="user.id">{{shortUserName(user)}}</option>
-            </select>
+            <select-member v-model.number="task.userId" @change="updateTask(task)" :users="companyUsers" :display-short="true" :show-unassign="true" placeholder="N/A" />
           </div>
 
           <div class="col-md-1 remove-task">
@@ -62,6 +60,7 @@
 
 <script>
   import InlineEdit from '../inline-common-edit.vue';
+  import SelectMember from '../shared/select-member.vue';
   export default {
     props: {
       timeZone: String,
@@ -70,9 +69,6 @@
       companyUsers: { type: Array, default: [] },
       card: Object,
       company: Object
-    },
-    computed: {
-
     },
     data() {
       return {
@@ -130,7 +126,8 @@
       'inline-edit': InlineEdit,
       'checkbox': VueStrap.checkbox,
       'el-date-picker': ElementUi.DatePicker,
-      'el-checkbox': ElementUi.Checkbox
+      'el-checkbox': ElementUi.Checkbox,
+      'select-member': SelectMember
     }
   };
 </script>

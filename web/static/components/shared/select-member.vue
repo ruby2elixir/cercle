@@ -3,9 +3,10 @@
     <span v-on:click="showModal">
       <slot>
         <span v-if="currentMember">
-          <img :src="currentMember.profileImageUrl" class='profile-image' />
-          {{currentMember.userName}}
+          <img :src="currentMember.profileImageUrl" class='profile-image' :title="currentMember.userName" />
+          <span v-if="!displayShort">{{currentMember.userName}}</span>
         </span>
+        <span v-else>{{ placeholder }}</span>
       </slot>
     </span>
 
@@ -17,6 +18,7 @@
 
       <div class='modal-body'>
         <ul class='users-list'>
+          <li class="text-center" v-if="showUnassign" @click="removeMember">-- Unassign --</li>
           <li v-for="user in users" @click="selectMember(user)">
             <img :src="user.profileImageUrl" class='profile-image' />
             {{ user.userName }}
@@ -30,7 +32,7 @@
 
 <script>
 export default {
-  props: ['value', 'users'],
+  props: ['value', 'users', 'displayShort', 'showUnassign', 'placeholder'],
   data() {
     return {
       editMode: false
@@ -47,6 +49,9 @@ export default {
   methods: {
     showModal: function() {
       this.editMode = true;
+    },
+    removeMember: function() {
+      this.selectMember({id: ''});
     },
     selectMember: function(user) {
       if(this.value !== user.id) {
