@@ -12,7 +12,6 @@
         <div class="manager" v-if="card.userId">
           <label>
             <select-member v-model.number="card.userId" @change="updateCard" :users="companyUsers" />
-            <a href="#" @click.stop="card.userId=''; updateCard()"><i class="fa fa-close" /></a>
           </label>
         </div>
 

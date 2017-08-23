@@ -18,8 +18,7 @@
 
       <div class='modal-body'>
         <ul class='users-list'>
-          <li class="text-center" v-if="showUnassign" @click="removeMember">-- Unassign --</li>
-          <li v-for="user in users" @click="selectMember(user)">
+          <li :class='memberClass(user)' v-for="user in users" @click="toggleMemberSelection(user)">
             <img :src="user.profileImageUrl" class='profile-image' />
             {{ user.userName }}
             <i class="fa fa-check" v-if="user.id == value" />
@@ -32,7 +31,7 @@
 
 <script>
 export default {
-  props: ['value', 'users', 'displayShort', 'showUnassign', 'placeholder'],
+  props: ['value', 'users', 'displayShort', 'placeholder'],
   data() {
     return {
       editMode: false
@@ -47,18 +46,20 @@ export default {
     }
   },
   methods: {
+    memberClass(user) {
+      if(this.value === user.id)
+        return 'active';
+    },
     showModal: function() {
       this.editMode = true;
     },
-    removeMember: function() {
-      this.selectMember({id: ''});
-    },
-    selectMember: function(user) {
-      if(this.value !== user.id) {
+    toggleMemberSelection: function(user) {
+      if(this.value === user.id) {
+        this.$emit('input', '');
+      } else {
         this.$emit('input', user.id);
-        this.$emit('change');
       }
-      this.editMode = false;
+      this.$emit('change');
     },
     cancel: function() {
       this.editMode = false;
@@ -76,8 +77,13 @@ export default {
         text-align: left;
         cursor: pointer;
         padding: 5px 10px;
+        border-radius: 0;
 
         &:hover {
+          background-color: lightblue;
+        }
+
+        &.active {
           background-color: #298FCA;
           color: white;
         }
