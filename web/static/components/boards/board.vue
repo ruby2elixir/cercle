@@ -48,6 +48,7 @@
                       <div class="portlet-content">
                         <div v-on:click.stop="cardShow(card.id)">
                           <span class='name'>
+                            <img :src="card.user.profileImageUrl" class='profile-image' :title="card.user.userName" v-if="card.user" />
                             {{card.name}}
                             <span class="contact-name" v-if="card.mainContact">
                               - {{card.mainContact.name}}
@@ -300,6 +301,11 @@ export default {
     .add-card {
       font-weight: bold;
       font-size: 16px;
+    }
+    .profile-image {
+      border-radius: 50%;
+      max-width: 20px;
+      max-height: 20px;
     }
   }
 </style>
