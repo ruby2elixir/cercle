@@ -65,11 +65,9 @@ defmodule CercleApi.Card do
   end
 
   def get_user(card) do
-    case card.user_id do
-        nil -> nil
-      user_id ->
-        CercleApi.User
-        |> CercleApi.Repo.get(user_id)
+    with user_id <- card.user_id, false <- is_nil(user_id) do
+      CercleApi.User
+      |> CercleApi.Repo.get(user_id)
     end
   end
 
