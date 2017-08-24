@@ -4,9 +4,9 @@
       <h2 class="">
         <inline-edit v-model="board.name" v-on:input="updateBoard" placeholder="Board Name" class='board-name'></inline-edit>
       </h2>
-      <h2 class='btn btn-default'>
-        <span @click="newCard()" class="add-card">+ Add card</span>
-      </h2>
+      <button class='btn btn-default' @click="newCard()">
+        <span class="add-card">+ Add card</span>
+      </button>
     </section>
 
     <!-- Main content -->
@@ -55,7 +55,7 @@
                             </span>
                             </div>
                             <img :src="card.user.profileImageUrl" class='profile-image' style="max-width:25px;max-height:30px;margin-top:10px;border-radius:4px;" :title="card.user.userName" v-if="card.user"  />
-                            
+
                           </span>
                         </div>
                         <div></div>

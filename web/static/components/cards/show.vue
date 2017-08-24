@@ -40,7 +40,7 @@
           <div class="title">
             <i class="fa fa-user"></i> Contacts
           </div>
-          
+
           <div class="card-contacts">
             <div class="card-contacts-list">
               <span v-for="(contact, index) in contacts" :class="contactClass(index)">
@@ -57,22 +57,24 @@
       </div>
 
       <div class="col-lg-3 card-actions">
-        <select-member class="btn btn-default btn-block" v-model.number="card.userId" @change="updateCard" :users="companyUsers">
+        <select-member class="card-select-member" :buttonClass="'btn btn-default btn-block'" v-model.number="card.userId" @change="updateCard" :users="companyUsers">
           <span v-if="card.userId">CHANGE MEMBER</span>
           <span v-else>ADD MEMBER</span>
         </select-member>
 
         <button type="button" class="btn btn-default btn-block" @click="openContactModal = true">ADD CONTACT</button>
         <button type="button" class="btn btn-default btn-block" @click="addTask">ADD TASK</button>
-        <button type="button" class="btn btn-default btn-block " v-on:click="openDueDatePicker">ADD DUE DATE</button>
-        <div class="upload-btn btn btn-default btn-block" style="height: 34px;font-weight:normal;">
+        <button type="button" class="btn btn-default btn-block" @click="openDueDatePicker">ADD DUE DATE</button>
+        <div class="upload-btn">
           <file-upload
             title="UPLOAD FILE"
             name="attachment"
             :post-action="'/api/v2/card/' + card.id + '/attachments'"
             :headers="uploadHeaders"
             :events="uploadEvents"
-            ref="attachment">
+            ref="attachment"
+            class="btn btn-default btn-block"
+            >
           </file-upload>
         </div>
         <button type="button" v-show="card.status === 0" class="btn btn-default btn-block" v-on:click="archiveCard">ARCHIVE</button>
@@ -131,7 +133,7 @@
             :events="events"
             v-on:eventDelete="eventDelete"
         />
-       
+
       </div>
     </div>
 
@@ -300,7 +302,7 @@
         } else {
           let url = '/api/v2/contact';
           let contact = this.addContactData.contact;
-          if(contact) {
+          if (contact) {
             let data = {
               name: contact.name,
               email: contact.email,
@@ -538,7 +540,17 @@
   .card-show {
     padding: 20px;
     background-color: #edf0f5;
-
+    .upload-btn {
+      height: 34px;
+      font-weight:normal;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    .card-select-member {
+      display: block;
+      width: 100%;
+      margin-bottom: 5px;
+    }
     .modal-body {
       padding: 10px;
     }
