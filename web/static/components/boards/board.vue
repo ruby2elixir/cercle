@@ -48,11 +48,14 @@
                       <div class="portlet-content">
                         <div v-on:click.stop="cardShow(card.id)">
                           <span class='name'>
-                            <img :src="card.user.profileImageUrl" class='profile-image' :title="card.user.userName" v-if="card.user" />
+                            <div>
                             {{card.name}}
                             <span class="contact-name" v-if="card.mainContact">
                               - {{card.mainContact.name}}
                             </span>
+                            </div>
+                            <img :src="card.user.profileImageUrl" class='profile-image' style="max-width:25px;max-height:30px;margin-top:10px;border-radius:4px;" :title="card.user.userName" v-if="card.user"  />
+                            
                           </span>
                         </div>
                         <div></div>
