@@ -1,6 +1,6 @@
 <template>
   <span v-on-click-outside='cancel'>
-    <span v-on:click="showModal">
+    <span v-on:click="showModal" :class="buttonClass">
       <slot>
         <span v-if="currentMember">
           <img :src="currentMember.profileImageUrl" class='profile-image' :title="currentMember.userName" />
@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  props: ['value', 'users', 'displayShort', 'placeholder'],
+  props: ['value', 'users', 'displayShort', 'placeholder', 'buttonClass'],
   data() {
     return {
       editMode: false
