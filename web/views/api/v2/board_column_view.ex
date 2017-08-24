@@ -20,7 +20,7 @@ defmodule CercleApi.APIV2.BoardColumnView do
     %{id: board_column.id,
       name: board_column.name,
       cards: Enum.map(
-        CercleApi.Card.preload_main_contact(board_column.cards),
+        CercleApi.Card.preload_main_contact_and_user(board_column.cards),
         fn (card) -> card_json(card) end
       )
     }
@@ -36,6 +36,7 @@ defmodule CercleApi.APIV2.BoardColumnView do
       status: card.status,
       contact_ids: card.contact_ids,
       user_id: card.user_id,
+      user: card.user,
       board: card.board_id,
       board_column: card.board_column_id,
       main_contact: card.main_contact

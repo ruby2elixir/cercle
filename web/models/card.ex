@@ -64,6 +64,13 @@ defmodule CercleApi.Card do
     end
   end
 
+  def get_user(card) do
+    with user_id <- card.user_id, false <- is_nil(user_id) do
+      CercleApi.User
+      |> CercleApi.Repo.get(user_id)
+    end
+  end
+
   def preload_data(query \\ %CercleApi.Card{}) do
     comments_query = from c in CercleApi.TimelineEvent,
       where: c.event_name == "comment",
@@ -84,6 +91,14 @@ defmodule CercleApi.Card do
 
   def preload_main_contact(card \\ %CercleApi.Card{}) do
     Map.merge(card, %{main_contact: __MODULE__.get_main_contact(card)})
+  end
+
+  def preload_main_contact_and_user(cards) when is_list(cards) do
+    Enum.map(cards, &preload_main_contact_and_user(&1))
+  end
+
+  def preload_main_contact_and_user(card \\ %CercleApi.Card{}) do
+    Map.merge(card, %{main_contact: __MODULE__.get_main_contact(card), user: __MODULE__.get_user(card)})
   end
 
   def preload_contacts(cards) when is_list(cards) do

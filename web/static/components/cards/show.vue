@@ -539,10 +539,6 @@
     padding: 20px;
     background-color: #edf0f5;
 
-    .profile-image {
-      border-radius: 50%;
-    }
-
     .modal-body {
       padding: 10px;
     }
