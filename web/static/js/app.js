@@ -33,6 +33,18 @@ import tagEdit from './tag_edit';
 import { directive as onClickOutside } from 'vue-on-click-outside';
 Vue.directive('on-click-outside', onClickOutside);
 
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('MM/DD/YYYY');
+  }
+});
+
+Vue.filter('formatDateTime', function(value) {
+  if (value) {
+    return moment(String(value)).format('MM/DD/YYYY hh:mm a');
+  }
+});
+
 export var App = {
   activityInit: function(){
     Activity.start();

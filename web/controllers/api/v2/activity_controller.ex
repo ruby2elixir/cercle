@@ -46,9 +46,7 @@ defmodule CercleApi.APIV2.ActivityController do
 
   def create(conn, %{"activity" => activity_params}) do
     current_user = CercleApi.Plug.current_user(conn)
-    changeset = current_user
-    |> build_assoc(:activities)
-    |> Activity.changeset(activity_params)
+    changeset = Activity.changeset(%Activity{}, activity_params)
 
     case Repo.insert(changeset) do
       {:ok, activity} ->
@@ -82,8 +80,10 @@ defmodule CercleApi.APIV2.ActivityController do
 
     case Repo.update(changeset) do
       {:ok, activity} ->
-        activity = activity
+        activity = Activity
+        |> Repo.get!(id)
         |> Repo.preload([:user, :card])
+
         CercleApi.ActivityService.add(activity)
         CercleApi.Endpoint.broadcast!(
           "cards:" <> to_string(activity.card_id),
