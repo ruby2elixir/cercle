@@ -125,6 +125,7 @@
             break;
           }
         }
+        task.user = null;
       }
     },
     components: {
