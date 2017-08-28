@@ -16,22 +16,17 @@
             <el-checkbox v-model="task.isDone" v-on:change="updateTask(task)"></el-checkbox>
           </div>
 
-          <div class="col-md-5">
+          <div class="col-md-6">
             <inline-edit v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" class="title-input"></inline-edit>
           </div>
           <div class="col-md-4">
-            <el-date-picker
-             v-on:change="updateTask(task)"
-             v-model="task.dueDate"
-             type="datetime"
-             :editable="false"
-             size="small"
-             placeholder="Select date and time">
-            </el-date-picker>
-          </div>
-
-          <div class="col-md-1">
-            <select-member v-model.number="task.userId" @change="updateTask(task)" :users="companyUsers" :display-short="true" placeholder="N/A" />
+            <todo-assignment :userId="task.userId" @change="assignment => {updateAssignment(task, assignment)}" :users="companyUsers" :date="task.dueDate">
+              <div v-if="task.user" class="text-right">
+                {{ task.dueDate|formatDate }}
+                <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.userName" />
+              </div>
+              <div class="text-right" v-else>Assign</div>
+            </todo-assignment>
           </div>
 
           <div class="col-md-1 remove-task">
@@ -61,6 +56,7 @@
 <script>
   import InlineEdit from '../inline-common-edit.vue';
   import SelectMember from '../shared/select-member.vue';
+  import TodoAssignment from '../shared/todo-assignment.vue';
   export default {
     props: {
       timeZone: String,
@@ -95,10 +91,8 @@
         this.$http.post(url, {
           activity: {
             cardId: this.card.id,
-            userId: this.currentUserId,
-            dueDate: new Date().toISOString(),
             companyId: this.company.id,
-            title: 'Call',
+            title: '',
             currentUserTimeZone: this.timeZone
           } }); //.then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
       },
@@ -120,14 +114,34 @@
             isDone: task.isDone
           }
         }); //.then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
+      },
+      updateAssignment(task, value) {
+        task.userId = value.userId;
+        task.dueDate = value.dueDate;
+        this.updateTask(task);
+        task.user = this.companyUsers.find(function(user){
+          return task.userId === user.id;
+        });
       }
     },
     components: {
       'inline-edit': InlineEdit,
       'checkbox': VueStrap.checkbox,
-      'el-date-picker': ElementUi.DatePicker,
       'el-checkbox': ElementUi.Checkbox,
-      'select-member': SelectMember
+      'select-member': SelectMember,
+      'todo-assignment': TodoAssignment
     }
   };
 </script>
+
+<style lang="sass" scoped>
+  .task {
+    margin-bottom: 10px;
+  }
+
+  .profile-image {
+    max-width: 30px;
+    max-height: 30px;
+    border-radius: 50%;
+  }
+</style>

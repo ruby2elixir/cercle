@@ -1,6 +1,6 @@
 <template>
   <span v-on-click-outside='cancel'>
-    <span v-on:click="showModal" :class="buttonClass">
+    <span v-on:click="showModal" v-if="!inline" :class="buttonClass">
       <slot>
         <span v-if="currentMember">
           <img :src="currentMember.profileImageUrl" class='profile-image' :title="currentMember.userName" />
@@ -10,10 +10,10 @@
       </slot>
     </span>
 
-    <div v-show="editMode" class='input-modal'>
+    <div v-show="editMode || inline" class='input-modal'>
       <div class='modal-header clearfix'>
         <span>Members</span>
-        <a class='close pull-right' v-on:click='cancel'>×</a>
+        <a class='close pull-right' v-on:click='cancel' v-if="!inline">×</a>
       </div>
 
       <div class='modal-body'>
@@ -21,7 +21,7 @@
           <li :class='memberClass(user)' v-for="user in users" @click="toggleMemberSelection(user)">
             <img :src="user.profileImageUrl" class='profile-image' />
             {{ user.userName }}
-            <i class="fa fa-check" v-if="user.id == value" />
+            <i class="fa fa-check" v-if="user.id == v" />
           </li>
         </ul>
       </div>
@@ -31,35 +31,42 @@
 
 <script>
 export default {
-  props: ['value', 'users', 'displayShort', 'placeholder', 'buttonClass'],
+  props: ['value', 'users', 'displayShort', 'placeholder', 'buttonClass', 'inline', 'disableUnselect'],
   data() {
     return {
+      v: this.value,
       editMode: false
     };
   },
   computed: {
     currentMember() {
       for(var i=0; i<this.users.length; i++) {
-        if(this.users[i].id === this.value)
+        if(this.users[i].id === this.v)
           return this.users[i];
       }
     }
   },
+  watch: {
+    'value': function() {
+      this.v = this.value;
+    }
+  },
   methods: {
     memberClass(user) {
-      if(this.value === user.id)
+      if(this.v === user.id)
         return 'active';
     },
     showModal: function() {
       this.editMode = true;
     },
     toggleMemberSelection: function(user) {
-      if(this.value === user.id) {
+      if(this.v === user.id && !this.disableUnselect) {
         this.$emit('input', '');
+        this.$emit('change', '');
       } else {
         this.$emit('input', user.id);
+        this.$emit('change', user.id);
       }
-      this.$emit('change');
     },
     cancel: function() {
       this.editMode = false;
@@ -69,6 +76,12 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+  .inline-mode {
+    .input-modal {
+      position: static;
+    }
+  }
+
   .modal-body {
     ul.users-list {
       li {
