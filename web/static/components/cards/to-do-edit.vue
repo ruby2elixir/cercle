@@ -23,7 +23,7 @@
             <todo-assignment :userId="task.userId" @change="assignment => {updateAssignment(task, assignment)}" :users="companyUsers" :date="task.dueDate">
               <div v-if="task.user" class="text-right">
                 {{ task.dueDate|formatDate }}
-                <img :src="task.user.profileImageUrl" class="profile-image" />
+                <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.userName" />
               </div>
               <div class="text-right" v-else>Assign</div>
             </todo-assignment>
@@ -92,7 +92,7 @@
           activity: {
             cardId: this.card.id,
             companyId: this.company.id,
-            title: 'Call',
+            title: '',
             currentUserTimeZone: this.timeZone
           } }); //.then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
       },
@@ -119,13 +119,9 @@
         task.userId = value.userId;
         task.dueDate = value.dueDate;
         this.updateTask(task);
-        for(var i=0; i<this.companyUsers.length; i++) {
-          if(this.companyUsers[i].id === task.userId) {
-            task.user = this.companyUsers[i];
-            break;
-          }
-        }
-        task.user = null;
+        task.user = this.companyUsers.find(function(user){
+          return task.userId === user.id;
+        });
       }
     },
     components: {

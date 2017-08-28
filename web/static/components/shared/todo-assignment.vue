@@ -7,7 +7,7 @@
     <div v-show="editMode" class='input-modal assignment-modal'>
       <div class="row">
         <div class="col-md-5">
-          <select-member class="inline-mode" v-model="uid" @change="userChanged" :users="users" :inline="true" />
+          <select-member class="inline-mode" v-model="uid" @change="userChanged" :users="users" :inline="true" :disableUnselect="true" />
         </div>
 
         <div class="col-md-7">
@@ -21,9 +21,12 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-4 col-md-offset-4 input-modal-footer">
+      <div class="row input-modal-footer">
+        <div class="col-md-3">
           <button class="btn btn-primary btn-block" @click="save">Save</button>
+        </div>
+        <div class="col-md-3 col-md-offset-6 text-right">
+          <button class="btn btn-default btn-block" @click="remove"><span class="text-danger">Remove</span></button>
         </div>
       </div>
     </div>
@@ -73,6 +76,12 @@
         let datetime = datetimeInputs[0].value + ' ' + datetimeInputs[1].value;
 
         this.$emit('change', {userId: this.uid, dueDate: datetime});
+        this.editMode = false;
+      },
+      remove() {
+        this.uid = '';
+        this.dt = '';
+        this.$emit('change', {userId: this.uid, dueDate: this.dt});
         this.editMode = false;
       }
     }

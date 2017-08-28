@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  props: ['value', 'users', 'displayShort', 'placeholder', 'buttonClass', 'inline'],
+  props: ['value', 'users', 'displayShort', 'placeholder', 'buttonClass', 'inline', 'disableUnselect'],
   data() {
     return {
       v: this.value,
@@ -60,7 +60,7 @@ export default {
       this.editMode = true;
     },
     toggleMemberSelection: function(user) {
-      if(this.v === user.id) {
+      if(this.v === user.id && !this.disableUnselect) {
         this.$emit('input', '');
         this.$emit('change', '');
       } else {
