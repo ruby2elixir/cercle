@@ -34,11 +34,7 @@
       }
     },
     mounted() {
-      console.log(this);
       this.$refs.dateTimePicker.showPicker();
-      this.$refs.dateTimePicker.handleClick = function(item) {
-        alert(1, item);
-      };
     }
   };
 </script>
