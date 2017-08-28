@@ -192,30 +192,4 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     timeline_event = Repo.get(TimelineEvent, timeline_event.id)
     assert timeline_event == nil
   end
-
-  test "deleting contact should delete associated activities", state do
-    changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
-    board = Repo.insert!(changeset)
-    contact = insert(:contact, user: state[:user], company: state[:company])
-
-    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
-    card = Repo.insert!(changeset)
-
-    changeset = Activity.changeset(%Activity{}, %{card_id: card.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, title: "test"})
-    activity = Repo.insert!(changeset)
-
-    old_count = Repo.one(from p in Activity, select: count("*"))
-
-    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
-    assert json_response(conn, 200)
-
-    # Test no of activities after delete
-    new_count = Repo.one(from p in Activity, select: count("*"))
-    assert old_count-1 == new_count
-
-    # Ensure activity is deleted
-    activity = Repo.get(Activity, activity.id)
-    assert activity == nil
-  end
-
 end

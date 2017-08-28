@@ -60,8 +60,7 @@ defmodule CercleApi.Factory do
       title: "Test Activity",
       user: build(:user),
       company: build(:company),
-      card: build(:card),
-      contact: build(:contact)
+      card: build(:card)
     }
   end
 
