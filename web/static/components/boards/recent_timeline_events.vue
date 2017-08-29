@@ -65,20 +65,20 @@ export default {
                 .receive('error', resp => { console.log('Unable to join', resp); });
 
       this.channel.on('activities', payload => {
-        var _payload = this.camelCaseKeys(payload);
+        let _payload = this.camelCaseKeys(payload);
         this.items = _payload.recent;
       });
 
       this.channel.on('timeline_event:created', payload => {
-        var _payload = this.camelCaseKeys(payload);
+        let _payload = this.camelCaseKeys(payload);
         this.eventAddOrUpdate(_payload);
       });
       this.channel.on('timeline_event:updated', payload => {
-        var _payload = this.camelCaseKeys(payload);
+        let _payload = this.camelCaseKeys(payload);
         this.eventAddOrUpdate(_payload);
       });
       this.channel.on('timeline_event:deleted', payload => {
-        var _payload = this.camelCaseKeys(payload);
+        let _payload = this.camelCaseKeys(payload);
         let itemIndex = this.$data.items.findIndex(function(item){
           return item.id === parseInt(_payload.id);
         });

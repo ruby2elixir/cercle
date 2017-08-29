@@ -1,10 +1,8 @@
 <template>
-  <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
-     <span v-if="isMovedCard">
-         moved <a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.firstName}} {{contact.lastName}}</a>
-         from {{boardName(meta.previous) }} to {{boardName(meta)}}
-         </span>
-     <span v-else v-html="content">
+  <event :item="item" v-on:clickByEvent="$emit('clickByEvent')" v-if="isMovedCard">
+     <span>
+       moved <b>{{item.cardName}}</b>
+       from {{boardName(meta.previous) }} to {{boardName(meta)}}
      </span>
   </event>
 </template>
@@ -18,14 +16,14 @@ export default {
     updatedCardMsg(meta) {
       let h = ['updated '];
       if (this.item.cardName) {
-        h.push(this.item.cardName + ' on ')
+        h.push(this.item.cardName + ' on ');
       }
-      h.push('<a href="' + this.item.boardId + '">'+this.boardName(meta)+'</a>')
-      h.push('<br/><i><small>Main contact: ')
-      h.push(this.mainContact())
-      h.push('</small></i>')
-      h.push(this.diff())
-      return h.join('')
+      h.push('<a href="' + this.item.boardId + '">'+this.boardName(meta)+'</a>');
+      h.push('<br/><i><small>Main contact: ');
+      h.push(this.mainContact());
+      h.push('</small></i>');
+      h.push(this.diff());
+      return h.join('');
     },
     boardName(boardMeta) {
       let names = [];
