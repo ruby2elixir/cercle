@@ -16,9 +16,16 @@ export default {
   components: { 'event': EventTemplate },
   methods: {
     updatedCardMsg(meta) {
-      return 'updated ' + this.boardName(meta) +
-            '<br/><i><small>Main contact: ' + this.mainContact() + '</small></i>' +
-            this.diff();
+      let h = ['updated '];
+      if (this.item.cardName) {
+        h.push(this.item.cardName + ' on ')
+      }
+      h.push('<a href="' + this.item.boardId + '">'+this.boardName(meta)+'</a>')
+      h.push('<br/><i><small>Main contact: ')
+      h.push(this.mainContact())
+      h.push('</small></i>')
+      h.push(this.diff())
+      return h.join('')
     },
     boardName(boardMeta) {
       let names = [];

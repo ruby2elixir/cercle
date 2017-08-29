@@ -76,6 +76,7 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
                    "current_user_time_zone" => "Europe",
                    "due_date" => "2017-04-19T10:45:14.609Z",
                    "card_id" => 59,
+                   "user_id" => state[:user].id,
                    "title" => "Call"}
 
     assert_receive %Phoenix.Socket.Broadcast{
@@ -83,7 +84,11 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
       payload: %{"activity" => _}
     }
 
-    activity = Repo.one(from x in CercleApi.Activity, order_by: [asc: x.id], limit: 1, preload: [:user, :contact])
+    activity =(from x in CercleApi.Activity,
+      order_by: [asc: x.id],
+      limit: 1,
+      preload: [:user, :card]
+    )|>Repo.one
     CercleApi.Endpoint.unsubscribe("users:#{state[:user].id}")
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.ActivityView,

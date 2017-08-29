@@ -1,6 +1,8 @@
 <template>
   <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
-    added <a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.firstName}} {{contact.lastName}}</a>
+
+    added {{item.cardName}} (<a :href="'/contact/' + contact.id" v-for="contact in meta.contacts">{{contact.firstName}} {{contact.lastName}}</a>)
+
     to <a :href="'/board/' + item.boardId">{{toName}}</a>
     <br />
   </event>

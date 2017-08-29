@@ -2,7 +2,11 @@
   <div class="tab-pane active" id="control-sidebar-home-tab" >
     <h3 class="control-sidebar-heading">Recent Activity</h3>
     <ul class="control-sidebar-menu">
-      <component v-bind:is="item.eventName" v-for="item in items" :item="item" v-on:clickByEvent="clickByEvent(item)" />
+      <component
+        v-bind:is="item.eventName"
+        v-for="item in items"
+        :item="item"
+        v-on:clickByEvent="clickByEvent(item)" />
     </ul>
     <!-- /.control-sidebar-menu -->
   </div>

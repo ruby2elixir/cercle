@@ -69,9 +69,10 @@ defmodule CercleApi.APIV2.BoardController do
     changeset = Board.changeset(board, board_params)
     case Repo.update(changeset) do
       {:ok, board} ->
-        board
+        board = board
         |> Repo.preload([board_columns: Board.preload_query])
-        |> CercleApi.BoardNotificationService.update_notification
+
+        CercleApi.BoardNotificationService.update_notification(board)
         render(conn, "show.json", board: board)
       {:error, changeset} ->
         conn
