@@ -2,9 +2,8 @@
   <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
     about {{item.mainContactName }}
     <template v-if="item.cardName">
-      on <a :href="'/board/' + item.boardId">{{item.cardName}}</a>
+      on <a v-on:click.stop="$emit('clickByEvent')">{{item.cardName}}</a>
     </template>
-    {{onCard}}
     <br />
     <div class="comment-message" >
      {{ item.content }}
