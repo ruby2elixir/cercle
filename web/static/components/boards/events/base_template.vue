@@ -22,7 +22,7 @@ export default {
   methods: { },
   computed: {
     timestamp: function() {
-      return Moment.utc(this.item.created_at).fromNow();
+      return Moment.utc(this.item.createdAt).fromNow();
     }
   },
   mounted() { }
