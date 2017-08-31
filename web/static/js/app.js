@@ -82,6 +82,7 @@ import ArchiveBoard from '../components/boards/archive.vue';
 import NotificationApp from '../components/notification.vue';
 import GlModalWindow from '../components/glmodal.vue';
 import GlAttachmentPreview from '../components/glpreview.vue';
+import UserNavBar from '../components/navbar.vue';
 import WebhooksApp from '../components/webhooks.vue';
 
 Vue.use(require('vue-autosize'));
@@ -165,6 +166,14 @@ if (document.querySelector('meta[name="guardian_token"]')) {
   });
 }
 
+if ($('#user-navbar').length > 0) {
+  new Vue({
+    el: '#user-navbar',
+    components: {
+      'navbar': UserNavBar
+    }
+  });
+}
 if ($('#contacts-app').length > 0) {
   new Vue({
     el: '#contacts-app',

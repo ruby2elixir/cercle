@@ -76,48 +76,10 @@
               </ul>
 
             </div><!-- /.navbar-collapse -->
+
             <!-- Navbar Right Menu -->
-            <div class="navbar-custom-menu">
-              <ul class="nav navbar-nav">
-                <!-- Messages: style can be found in dropdown.less-->
-                <!-- User Account Menu -->
-                <li class="dropdown user user-menu">
-                  <!-- Menu Toggle Button -->
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <!-- The user image in the navbar-->
-                    <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
-                    <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="user-image" alt="User Image">
-                    <%= end %>
-                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                    <span class="hidden-xs"><%= @conn.assigns[:current_user].user_name %></span>
-                  </a>
-
-                  <ul class="dropdown-menu">
-                    <!-- The user image in the menu -->
-                    <li class="user-header" style="background-color:#3C8DBC;">
-                      <%= if CercleApi.UserProfileImage.url({ @conn.assigns[:current_user].profile_image,  @conn.assigns[:current_user]}, :small) do %>
-                      <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="img-circle" alt="User Image">
-                      <%= end %>
-                      <p style="color:#FFFFFF;">
-                        <%= @conn.assigns[:current_user].user_name %>
-                        <small style="color:#FFFFFF;">
-                          (<%= @conn.assigns[:current_user].name %>)
-                        </small>
-                      </p>
-                    </li>
-                    <li class="user-footer">
-                      <div class="pull-left">
-                        <a href="/settings/profile" class="btn btn-default btn-flat">Settings</a>
-                      </div>
-                      <div class="pull-right">
-                        <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
-                      </div>
-                    </li>
-                  </ul>
-
-                </li>
-
-              </ul>
+            <div class="navbar-custom-menu" id="user-navbar">
+              <navbar :user=<%= Poison.encode! @conn.assigns[:current_user] %> />
             </div><!-- /.navbar-custom-menu -->
           </div><!-- /.container-fluid -->
         </nav>
