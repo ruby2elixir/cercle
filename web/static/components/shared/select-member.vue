@@ -53,7 +53,8 @@ export default {
   },
   methods: {
     memberClass(user) {
-      if(this.v === user.id)
+      let userId = this.v || parseInt(Vue.currentUser.userId);
+      if(userId === user.id)
         return 'active';
     },
     showModal: function() {

@@ -1,23 +1,30 @@
 <template>
   <span v-on-click-outside='cancel'>
     <span v-on:click="showModal" :class="buttonClass">
-      <slot>Assign</slot>
+      <slot>Add due date</slot>
     </span>
 
     <div v-show="editMode" class='input-modal assignment-modal'>
-      <div class="row">
-        <div class="col-md-5">
-          <select-member class="inline-mode" v-model="uid" @change="userChanged" :users="users" :inline="true" :disableUnselect="true" />
-        </div>
+      <div class='modal-header clearfix'>
+        <span>Add due date</span>
+        <a class='close pull-right' v-on:click='cancel' v-if="!inline">×</a>
+      </div>
 
-        <div class="col-md-7">
-          <inline-datetime-picker
-           v-on:change="dateChanged"
-           v-model="dt"
-           type="datetime"
-           :editable="false"
-           size="mini"
-           placeholder="Select date and time" />
+      <div class='modal-body'>
+        <div class="row">
+          <div class="col-md-5">
+            <select-member class="inline-mode" v-model="uid" @change="userChanged" :users="users" :inline="true" :disableUnselect="true" />
+          </div>
+
+          <div class="col-md-7">
+            <inline-datetime-picker
+             v-on:change="dateChanged"
+             v-model="dt"
+             type="datetime"
+             :editable="false"
+             size="mini"
+             placeholder="Select date and time" />
+          </div>
         </div>
       </div>
 
