@@ -10,7 +10,10 @@ defmodule CercleApi.Company do
   schema "companies" do
     field :title, :string
     field :logo_image, CercleApi.CompanyLogoImage.Type
-    has_many :users, CercleApi.User
+
+    has_many :user_companies, CercleApi.UserCompany
+    has_many :users, through: [:user_companies, :user]
+
     has_many :contacts, CercleApi.Contact
     has_many :organizations, CercleApi.Organization
     has_many :cards, CercleApi.Card

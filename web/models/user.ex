@@ -23,7 +23,9 @@ defmodule CercleApi.User do
     field :time_zone, :string, default: "America/New_York"
     timestamps
 
-    belongs_to :company, CercleApi.Company
+    has_many :user_companies, CercleApi.UserCompany
+    has_many :companies, through: [:user_companies, :company]
+
     has_many :activities, CercleApi.Activity, on_delete: :delete_all
     has_many :timeline_event, CercleApi.TimelineEvent
     has_many :cards, CercleApi.Card
