@@ -274,9 +274,7 @@
         let url = '/api/v2/activity/';
         this.$http.post(url, {
           activity: {
-            contactId: this.contacts[this.activeContactIndex].id,
             cardId: this.cardId,
-            userId: Vue.currentUser.userId,
             dueDate: new Date().toISOString(),
             companyId: this.company.id,
             title: 'Call',

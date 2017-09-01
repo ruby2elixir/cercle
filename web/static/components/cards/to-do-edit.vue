@@ -17,7 +17,7 @@
           </div>
 
           <div class="col-md-6">
-            <inline-edit v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" class="title-input"></inline-edit>
+            <todo-title-edit v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" />
           </div>
           <div class="col-md-4">
             <todo-assignment :userId="task.userId" @change="assignment => {updateAssignment(task, assignment)}" :users="companyUsers" :date="task.dueDate">
@@ -25,7 +25,7 @@
                 {{ task.dueDate|formatDate }}
                 <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.userName" />
               </div>
-              <div class="text-right" v-else>Assign</div>
+              <div class="todo-assigment-placeholder-text" v-else>Add due date</div>
             </todo-assignment>
           </div>
 
@@ -54,9 +54,10 @@
 </template>
 
 <script>
-  import InlineEdit from '../inline-common-edit.vue';
+  import InlineTextEdit from '../inline-textedit.vue';
   import SelectMember from '../shared/select-member.vue';
   import TodoAssignment from '../shared/todo-assignment.vue';
+  import TodoTitleEdit from '../shared/todo-title-edit.vue';
   export default {
     props: {
       timeZone: String,
@@ -125,11 +126,12 @@
       }
     },
     components: {
-      'inline-edit': InlineEdit,
+      'inline-text-edit': InlineTextEdit,
       'checkbox': VueStrap.checkbox,
       'el-checkbox': ElementUi.Checkbox,
       'select-member': SelectMember,
-      'todo-assignment': TodoAssignment
+      'todo-assignment': TodoAssignment,
+      'todo-title-edit': TodoTitleEdit
     }
   };
 </script>
@@ -143,5 +145,12 @@
     max-width: 30px;
     max-height: 30px;
     border-radius: 50%;
+  }
+
+  .todo-assigment-placeholder-text {
+    text-align: right;
+    text-decoration: underline;
+    color: grey;
+    cursor: pointer;
   }
 </style>
