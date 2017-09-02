@@ -17,13 +17,15 @@
           </div>
 
           <div class="col-md-6">
-            <todo-title-edit v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" />
+            <todo-title-edit :class="{'strike-through': task.isDone}" v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" />
           </div>
           <div class="col-md-4">
             <todo-assignment :userId="task.userId" @change="assignment => {updateAssignment(task, assignment)}" :users="companyUsers" :date="task.dueDate">
-              <div v-if="task.user" class="text-right">
-                {{ task.dueDate|formatDate }}
-                <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.userName" />
+              <div v-if="task.user" :class="{'strike-through': task.isDone, 'text-right': true}">
+                <span>
+                  {{ task.dueDate|formatDate }}
+                  <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.userName" />
+                </span>
               </div>
               <div class="todo-assigment-placeholder-text" v-else>Add due date</div>
             </todo-assignment>
@@ -136,7 +138,7 @@
   };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
   .task {
     margin-bottom: 10px;
   }
@@ -152,5 +154,12 @@
     text-decoration: underline;
     color: grey;
     cursor: pointer;
+  }
+
+  .strike-through {
+    & > span {
+      text-decoration: line-through;
+      color: #999;
+    }
   }
 </style>
