@@ -166,6 +166,7 @@
       </aside>
       <% end %>
       <glmodal id="global-modal-window"></glmodal>
+      <gl-attachment-preview id="global-attachment-preview"></gl-attachment-preview>
     </div><!-- ./wrapper -->
     <script>window.csrfToken = '<%= get_csrf_token() %>';</script>
     <script>window.userToken = "<%= assigns[:user_token] %>";</script>

@@ -89,22 +89,20 @@
             <i class="fa fa-fw fa-paperclip"></i>Attachments
           </h3>
 
-          <div v-if="attachments.length > 0">
-            <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
-              <div :class="['thumb', fileTypeClass(attach)]" >
-                <img :src="attach.thumbUrl" v-if="attach.image" />
-              </div>
-              <div class="info">
-                <div>{{attach.file_name}}</div>
-                <div>Added {{attach.insertedAt | moment('MMM DD [at] h:m A')}}</div>
-                <div class="attach-action">
-                 <a :href="attach.attachmentUrl" target="_blank" style="font-weight: 700;display: inline-block;padding: 0 3px 3px;margin-right: 7px;color: grey;text-decoration: underline;">
-                  <i class="fa fa-download" aria-hidden="true"></i>
-                  Download</a>
-                 <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
-                 <i class="fa fa-times" aria-hidden="true"></i>
-                  Delete</button>
-                </div>
+          <div v-for="attach in attachments" :class="['attach-item', attach.ext_file]">
+            <div :class="['thumb', fileTypeClass(attach)]" @click="showAttachmentPreview(attach)">
+              <img :src="attach.thumbUrl" v-if="attach.image" />
+            </div>
+            <div class="info">
+              <div>{{attach.file_name}}</div>
+              <div>Added {{attach.insertedAt | moment('MMM DD [at] h:m A')}}</div>
+              <div class="attach-action">
+               <a :href="attach.attachmentUrl" target="_blank" style="font-weight: 700;display: inline-block;padding: 0 3px 3px;margin-right: 7px;color: grey;text-decoration: underline;">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                Download</a>
+               <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
+               <i class="fa fa-times" aria-hidden="true"></i>
+                Delete</button>
               </div>
             </div>
           </div>
@@ -235,6 +233,14 @@
       'contact-details': ContactDetails
     },
     methods: {
+      showAttachmentPreview(attachment) {
+        this.$glAttachmentPreview.$emit(
+          'open', {
+            data: {
+              attachment: attachment
+            }
+          });
+      },
       userImage() {
         return Vue.currentUser.userImage;
       },

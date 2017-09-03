@@ -81,6 +81,7 @@ import BoardRecentActivities from '../components/boards/recent_timeline_events.v
 import ArchiveBoard from '../components/boards/archive.vue';
 import NotificationApp from '../components/notification.vue';
 import GlModalWindow from '../components/glmodal.vue';
+import GlAttachmentPreview from '../components/glpreview.vue';
 import WebhooksApp from '../components/webhooks.vue';
 
 Vue.use(require('vue-autosize'));
@@ -95,6 +96,12 @@ const GlobalModalWindow = new Vue();
 Object.defineProperty(Vue.prototype, '$glmodal', {
   get() {
     return GlobalModalWindow;
+  }
+});
+const GlobalAttachmentPreview = new Vue();
+Object.defineProperty(Vue.prototype, '$glAttachmentPreview', {
+  get() {
+    return GlobalAttachmentPreview;
   }
 });
 
@@ -247,10 +254,22 @@ if ($('#global-modal-window').length > 0) {
     components: { 'glmodal': GlModalWindow },
     mounted() {
       window.addEventListener('keyup', (event) => {
-        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+        if (event.keyCode === 27) { if(!$('#global-attachment-preview').is(':visible')){this.$emit('esc-keyup');} }
       });
     }
 
+  });
+}
+
+if ($('#global-attachment-preview').length > 0) {
+  new Vue({
+    el: '#global-attachment-preview',
+    components: { 'gl-attachment-preview': GlAttachmentPreview },
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
+    }
   });
 }
 
