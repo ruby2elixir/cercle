@@ -16,7 +16,7 @@ defmodule CercleApi.Factory do
       name: "name",
       password: "supersecret",
       user_name: "test",
-      company: build(:company)
+      companies: [build(:company)]
     }
   end
 

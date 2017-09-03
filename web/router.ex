@@ -22,6 +22,7 @@ defmodule CercleApi.Router do
     plug ExOauth2Provider.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
+    plug CercleApi.Plug.CurrentCompany
   end
 
   pipeline :api do
@@ -36,6 +37,7 @@ defmodule CercleApi.Router do
   pipeline :require_login do
     plug Guardian.Plug.EnsureAuthenticated, handler: CercleApi.GuardianErrorHandler
     plug CercleApi.Plug.CurrentUser
+    plug CercleApi.Plug.CurrentCompany
   end
 
   pipeline :already_authenticated do
@@ -62,6 +64,7 @@ defmodule CercleApi.Router do
     pipe_through [:browser, :browser_auth, :require_login]
 
     get "/logout", SessionController, :delete
+    get "/company/:id", CompanyController, :show, as: :set_company
     get "/settings/profile", Settings.ProfileController, :edit, as: :edit_profile
     put "/settings/profile", Settings.ProfileController, :update
     get "/settings/company", Settings.CompanyController, :edit, as: :edit_company

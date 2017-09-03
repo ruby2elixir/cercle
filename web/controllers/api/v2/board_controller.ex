@@ -13,9 +13,10 @@ defmodule CercleApi.APIV2.BoardController do
 
   def index(conn, _params) do
     current_user = CercleApi.Plug.current_user(conn)
-    company_id  = current_user.company_id
+    company = current_company(conn, current_user)
+
     query = from p in Board,
-      where: p.company_id == ^company_id,
+      where: p.company_id == ^company.id,
       order_by: [desc: p.updated_at],
       preload: [:board_columns]
 
@@ -25,9 +26,9 @@ defmodule CercleApi.APIV2.BoardController do
 
   def show(conn, %{"id" => id}) do
     current_user = CercleApi.Plug.current_user(conn)
-    company_id  = current_user.company_id
+    company = current_company(conn, current_user)
     board_query = from(p in Board,
-      where: p.company_id == ^company_id,
+      where: p.company_id == ^company.id,
       where: p.id == ^id,
       order_by: [desc: p.updated_at]
     )
@@ -39,7 +40,7 @@ defmodule CercleApi.APIV2.BoardController do
 
   def create(conn, %{"board" => board_params}) do
     user = CercleApi.Plug.current_user(conn)
-    company = Repo.get!(Company, user.company_id)
+    company = current_company(conn, user)
 
     changeset = company
       |> Ecto.build_assoc(:boards)

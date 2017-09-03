@@ -1,5 +1,11 @@
 <template>
   <ul class="nav navbar-nav user-navbar">
+    <li class="">
+      <a style="padding:10px;">
+        <img height=30 :src="company.logo_url" />
+        {{company.title}}
+        </a>
+    </li>
     <!-- Messages: style can be found in dropdown.less-->
     <!-- User Account Menu -->
     <li class="dropdown user user-menu">
@@ -26,9 +32,11 @@
         </li>
 
 
-        <li class="user-campany" v-for="company in user.companies">
-          <img height=100 :src="company.logo_url" />
+        <li class="user-company" v-for="c in list_companies" :key="c.id">
+          <a :href="'/company/' + c.id">
+          <img height=100 :src="c.logo_url" />
           <div class='company-title'>{{company.title}}</div>
+          </a>
         </li>
 
         <li class="user-footer">
@@ -47,13 +55,19 @@
 </template>
 <script>
   export default {
-  props: ['user'],
+  props: ['user', 'company', 'companies'],
   data() {
   return {}
   },
-  mounted(){
-  console.log('ttt', this.user)
-  }
+    methods: {
+
+    },
+    computed: {
+      list_companies() {
+        return this.companies.filter((v) => v.id !== this.company.id)
+        }
+      },
+  mounted(){ }
   }
 </script>
 

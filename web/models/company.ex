@@ -36,4 +36,21 @@ defmodule CercleApi.Company do
     |> validate_required([:title])
   end
 
+  def user_companies(user) do
+    CercleApi.Repo.all(
+      from c in __MODULE__,
+      join: p in assoc(c, :users),
+      where: p.id == ^user.id
+    )
+  end
+end
+
+
+defimpl Poison.Encoder, for: CercleApi.Company do
+  def encode(model, options) do
+    model
+    |> Map.take([:id, :title])
+    |> Map.put(:logo_url, CercleApi.CompanyLogoImage.url({model.logo_image, model}, :small))
+    |> Poison.Encoder.encode(options)
+  end
 end
