@@ -10,6 +10,7 @@
       </div>
       <div>
         <button class='btn btn-success' @click='save'>Save</button>
+        <a href="#" @click.stop="remove" class="pull-right">Delete</a>
         <a href="#" @click.stop="cancel">Cancel</a>
       </div>
     </div>
@@ -45,6 +46,11 @@ export default {
     cancel: function() {
       this.v = this.value;
       this.editMode = false;
+    },
+    remove() {
+      if(confirm('Are you sure?')) {
+        this.$emit('remove');
+      }
     }
   }
 };

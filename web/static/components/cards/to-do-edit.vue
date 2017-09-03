@@ -16,10 +16,10 @@
             <el-checkbox v-model="task.isDone" v-on:change="updateTask(task)"></el-checkbox>
           </div>
 
-          <div class="col-md-6">
-            <todo-title-edit :class="{'strike-through': task.isDone}" v-model.sync="task.title" v-on:input="updateTask(task)" placeholder="Title" />
+          <div class="col-md-8">
+            <todo-title-edit :class="{'strike-through': task.isDone}" v-model.sync="task.title" v-on:input="updateTask(task)" v-on:remove="removeTask(task)" placeholder="Title" />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <todo-assignment :userId="task.userId" @change="assignment => {updateAssignment(task, assignment)}" :users="companyUsers" :date="task.dueDate">
               <div v-if="task.user" :class="{'strike-through': task.isDone, 'text-right': true}">
                 <span>
@@ -29,10 +29,6 @@
               </div>
               <div class="todo-assigment-placeholder-text" v-else>Add due date</div>
             </todo-assignment>
-          </div>
-
-          <div class="col-md-1 remove-task">
-            <button class="btn btn-link" v-on:click="removeTask(task)"> <i class="fa fa-fw fa-close"></i></button>
           </div>
         </div>
 
