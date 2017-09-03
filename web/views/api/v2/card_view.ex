@@ -26,7 +26,9 @@ defmodule CercleApi.APIV2.CardView do
       company: card.company,
       company_users: card.company.users,
       board_columns: board.board_columns,
-      attachments: attachments
+      attachments: render_many(
+          attachments, CercleApi.APIV2.CardAttachmentView, "show.json"
+        )
       }
   end
 
