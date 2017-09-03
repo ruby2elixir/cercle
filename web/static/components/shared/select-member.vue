@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     memberClass(user) {
-      let userId = this.v || parseInt(Vue.currentUser.userId);
+      let userId = this.v;
       if(userId === user.id)
         return 'active';
     },

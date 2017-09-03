@@ -48,7 +48,7 @@
     data() {
       return {
         editMode: false,
-        uid: this.userId,
+        uid: this.userId || parseInt(Vue.currentUser.userId),
         dt: this.date
       };
     },
