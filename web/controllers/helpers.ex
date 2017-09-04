@@ -1,4 +1,7 @@
 defmodule CercleApi.Controllers.Helpers do
+  @moduledoc """
+  Controller helpers
+  """
   alias CercleApi.Repo
   import Plug.Conn
   import Phoenix.Controller

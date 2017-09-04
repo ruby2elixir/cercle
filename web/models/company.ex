@@ -4,7 +4,7 @@ defmodule CercleApi.Company do
   """
   use CercleApi.Web, :model
   use Arc.Ecto.Schema
-
+  alias CercleApi.Repo
   @derive {Poison.Encoder, only: [:id, :title, :logo_image, :data_fields]}
 
   schema "companies" do
@@ -37,14 +37,32 @@ defmodule CercleApi.Company do
   end
 
   def user_companies(user) do
-    CercleApi.Repo.all(
+    Repo.all(
       from c in __MODULE__,
       join: p in assoc(c, :users),
       where: p.id == ^user.id
     )
   end
-end
 
+  def get_company(user, company_id) when not is_nil(company_id) do
+    query = from c in __MODULE__,
+      join: p in assoc(c, :users),
+      where: p.id == ^user.id,
+      where: c.id == ^company_id
+    query
+    |> Ecto.Query.first
+    |> Repo.one
+  end
+
+  def get_company(user, company_id \\ nil) do
+    query = from c in __MODULE__,
+      join: p in assoc(c, :users),
+      where: p.id == ^user.id
+    query
+    |> Ecto.Query.first
+    |> Repo.one
+  end
+end
 
 defimpl Poison.Encoder, for: CercleApi.Company do
   def encode(model, options) do

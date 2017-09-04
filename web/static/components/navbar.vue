@@ -35,7 +35,7 @@
         <li class="user-company" v-for="c in list_companies" :key="c.id">
           <a :href="'/company/' + c.id">
           <img height=100 :src="c.logo_url" />
-          <div class='company-title'>{{company.title}}</div>
+          <div class='company-title'>{{c.title}}</div>
           </a>
         </li>
 
@@ -64,7 +64,7 @@
     },
     computed: {
       list_companies() {
-        return this.companies //.filter((v) => v.id !== this.company.id)
+        return this.companies.filter((v) => v.id !== this.company.id)
         }
       },
   mounted(){ }

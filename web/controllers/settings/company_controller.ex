@@ -3,7 +3,8 @@ defmodule CercleApi.Settings.CompanyController do
   alias CercleApi.Company
 
   def index(conn, _params) do
-    user = Guardian.Plug.current_resource(conn)
+    user = conn
+    |> Guardian.Plug.current_resource
     |> Repo.preload([:companies])
 
     conn

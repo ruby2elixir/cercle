@@ -45,6 +45,12 @@ defmodule CercleApi.Router do
   end
 
   scope "/", CercleApi do
+    pipe_through [:browser, :browser_auth]
+    get "/register/:register_values/join/", RegistrationController, :accept_team_invitation
+    get "/register/:register_values/join/:useless_gmail", RegistrationController, :accept_team_invitation
+  end
+
+  scope "/", CercleApi do
     pipe_through [:browser, :browser_auth, :already_authenticated]
     get "/", PageController, :index
     get "/login", SessionController, :new
@@ -56,8 +62,6 @@ defmodule CercleApi.Router do
     post "/reset-password", PasswordController, :reset_password
     get "/password/reset/:password_reset_code/confirm", PasswordController, :confirm
     post "/password/reset/:password_reset_code/confirm", PasswordController, :confirm_submit
-    get "/register/:register_values/join/", RegistrationController, :accept_team_invitation
-    get "/register/:register_values/join/:useless_gmail", RegistrationController, :accept_team_invitation
   end
 
   scope "/", CercleApi do

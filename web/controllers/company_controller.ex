@@ -4,10 +4,10 @@ defmodule CercleApi.CompanyController do
 
   def set(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
-    with company <- get_company(user, id),
-         false <- is_nil(company) do
+    with company <- get_company(user, id), false <- is_nil(company) do
+      claims = %{current_company_id: company.id}
       conn
-      |> Guardian.Plug.sign_in(user, :access, %{ current_company_id: company.id })
+      |> Guardian.Plug.sign_in(user, :access, claims)
       |> redirect(to:  "/board")
     else
       _ ->

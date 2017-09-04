@@ -31,7 +31,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
         CercleApi.TimelineEventService.create(timeline_event_reload)
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
-        company = current_company(conn)
+        company = conn
+        |> current_company
         |> Repo.preload [:users]
         users = company.users
 

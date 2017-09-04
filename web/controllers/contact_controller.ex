@@ -12,7 +12,8 @@ defmodule CercleApi.ContactController do
 
   def index(conn, params) do
     user = Guardian.Plug.current_resource(conn)
-    company = current_company(conn)
+    company = conn
+    |> current_company
     |> Repo.preload([:users])
 
     if params["tag_name"] do
@@ -33,7 +34,8 @@ defmodule CercleApi.ContactController do
         where: p.company_id == ^company.id,
         order_by: [desc: p.updated_at]
 
-      leads_pending = Repo.all(query)
+      leads_pending = query
+      |> Repo.all
       |> Repo.preload([
         :organization, :tags,
         timeline_event: from(TimelineEvent, order_by: [desc: :inserted_at])]
@@ -47,7 +49,8 @@ defmodule CercleApi.ContactController do
 
   def new(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company = current_company(conn)
+    company = conn
+    |> current_company
     |> Repo.preload([:users])
 
     query = from p in Board,
@@ -56,9 +59,7 @@ defmodule CercleApi.ContactController do
 
     boards = query
     |> Repo.all
-    |> Repo.preload(
-      board_columns: from(BoardColumn, order_by: [asc: :order])
-    )
+    |> Repo.preload(board_columns: from(BoardColumn, order_by: [asc: :order]))
 
     conn
     |> put_layout("adminlte.html")
@@ -67,7 +68,8 @@ defmodule CercleApi.ContactController do
 
   def show(conn, params) do
     user = Guardian.Plug.current_resource(conn)
-    company = current_company(conn)
+    company = conn
+    |> current_company
     |> Repo.preload([:users])
     contact = Repo.preload(Repo.get!(Contact, params["id"]), [:organization, :company, :tags])
     if contact.company_id != company.id do
@@ -118,7 +120,8 @@ defmodule CercleApi.ContactController do
       where: p.company_id == ^company.id,
       order_by: [desc: p.updated_at]
 
-    boards = Repo.all(query3)
+    boards = query3
+    |> Repo.all
     |> Repo.preload(board_columns: from(BoardColumn, order_by: [asc: :order]))
 
     query4 = from p in Tag,

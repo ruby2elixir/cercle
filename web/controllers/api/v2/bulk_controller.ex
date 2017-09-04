@@ -13,7 +13,9 @@ defmodule CercleApi.APIV2.BulkController do
       user = CercleApi.Plug.current_user(conn)
       company = current_company(conn, user)
       contacts = for item <- items do
-        contact_params = Map.put(item["contact"], "user_id", user.id) |> Map.put("company_id", company.id)
+        contact_params = item["contact"]
+        |> Map.put("user_id", user.id)
+        |> Map.put("company_id", company.id)
 
         if contact_params["full_name"] do
           [first_name|splits] = String.split(contact_params["full_name"], ~r/\s+/)

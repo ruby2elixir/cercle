@@ -26,7 +26,8 @@ defmodule CercleApi.BoardController do
 
   def new(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company = current_company(conn)
+    company = conn
+    |> current_company
     |> Repo.preload([:users])
 
     conn
@@ -36,10 +37,12 @@ defmodule CercleApi.BoardController do
 
   def show(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
-    board = Repo.get!(CercleApi.Board, id)
+    board = CercleApi.Board
+    |> Repo.get!(id)
     |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
     board_id = board.id
-    company = current_company(conn)
+    company = conn
+    |> current_company
     |> Repo.preload([:users])
 
     query_cards = from p in Card,
@@ -68,7 +71,8 @@ defmodule CercleApi.BoardController do
 
   def new(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company = current_company(conn)
+    company = conn
+    |> current_company
     |> Repo.preload([:users])
 
     conn
@@ -79,7 +83,8 @@ defmodule CercleApi.BoardController do
   def edit(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
     reward = Repo.get!(Contact, id) |> Repo.preload [:organization, :company]
-    company = current_company(conn)
+    company = conn
+    |> current_company
     |> Repo.preload([:users])
 
     query = from p in Organization,
