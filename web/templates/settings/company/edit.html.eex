@@ -17,7 +17,7 @@
          <!-- Horizontal Form -->
          <!-- general form elements disabled -->
          <div class="box box-primary">
-           <%= form_for @changeset, "/settings/company", [multipart: true], fn f -> %>
+           <%= form_for @changeset, settings_company_path(@conn, :update, @company), [multipart: true], fn f -> %>
               <%= if f.errors != [] do %>
                 <div class="alert alert-danger">
                   <p>Oops, something went wrong!<br> Please check the errors below:</p>

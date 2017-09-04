@@ -67,9 +67,10 @@ defmodule CercleApi.Router do
     get "/company/:id", CompanyController, :set, as: :set_company
     get "/settings/profile", Settings.ProfileController, :edit, as: :edit_profile
     put "/settings/profile", Settings.ProfileController, :update
-    get "/settings/company", Settings.CompanyController, :edit, as: :edit_company
-    put "/settings/company", Settings.CompanyController, :update
 
+    scope "/settings", Settings, as: :settings do
+      resources "/companies", CompanyController
+    end
     get "/settings/team_edit", SettingsController, :team_edit
     delete "/settings/remove_team_member/:user_id", SettingsController, :remove_team_member
     put "/settings/team_update", SettingsController, :team_update

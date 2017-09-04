@@ -1,8 +1,8 @@
 <template>
   <ul class="nav navbar-nav user-navbar">
-    <li class="">
+    <li class="current-company">
       <a style="" href='#'>
-        <img height=30 :src="company.logo_url" />
+        <img height=25 :src="company.logo_url" />
         {{company.title}}
         </a>
     </li>
@@ -73,6 +73,11 @@
 
 <style lang="sass">
   .user-navbar {
+    .current-company {
+      img {
+        margin-right:5px;
+        }
+   }
   .user-company {
     img {
       min-width: 50px;
@@ -80,7 +85,8 @@
       height: 50px;
     }
     }
-  .company-title {
+      .company-title {
+        margin-left: 25px;
   display: inline-block;
   }
   .user-header {

@@ -3,7 +3,7 @@
     <a href="/settings/profile"><i class="fa fa-edit"></i>Profile</a>
   </li>
   <li class="<%= assigns[:active] && (@active == :company) && "active" %>">
-    <a href="/settings/company"><i class="fa fa-edit"></i>Company</a>
+    <a href="/settings/companies"><i class="fa fa-edit"></i>Companies</a>
   </li>
   <li class="<%= assigns[:active] && (@active == :team) && "active" %>">
     <a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a>
