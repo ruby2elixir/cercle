@@ -6,13 +6,11 @@ defmodule CercleApi.ActivityController do
   require Logger
 
   def index(conn, _params) do
-    current_user = Repo.preload(Guardian.Plug.current_resource(conn), :company)
+    current_user = Guardian.Plug.current_resource(conn)
 
     current_user_id = current_user.id
     current_user_time_zone = current_user.time_zone
-    company_id = current_user.company.id
-
-    company = Repo.preload(Repo.get!(CercleApi.Company, company_id), [:users])
+    company = current_company(conn)
 
     conn
       |> put_layout("adminlte.html")

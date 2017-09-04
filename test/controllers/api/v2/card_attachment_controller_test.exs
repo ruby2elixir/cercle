@@ -5,6 +5,8 @@ defmodule CercleApi.APIV2.CardAttachmentControllerTest do
 
   setup %{conn: conn} do
     user = insert(:user)
+    company = insert(:company)
+    add_company_to_user(user, company)
     card = insert(:card, user: user)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")

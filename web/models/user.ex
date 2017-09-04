@@ -43,7 +43,7 @@ defmodule CercleApi.User do
   def changeset(model, params \\ :invalid) do
     model
     |> cast(params, [
-          :login, :user_name, :password_reset_code, :company_id,
+          :login, :user_name, :password_reset_code,
           :name, :time_zone, :notification])
     |> cast_attachments(params, [:profile_image])
     |> validate_required([:login])

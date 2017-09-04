@@ -64,7 +64,7 @@ defmodule CercleApi.Router do
     pipe_through [:browser, :browser_auth, :require_login]
 
     get "/logout", SessionController, :delete
-    get "/company/:id", CompanyController, :show, as: :set_company
+    get "/company/:id", CompanyController, :set, as: :set_company
     get "/settings/profile", Settings.ProfileController, :edit, as: :edit_profile
     put "/settings/profile", Settings.ProfileController, :update
     get "/settings/company", Settings.CompanyController, :edit, as: :edit_company

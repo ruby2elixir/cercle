@@ -1,7 +1,7 @@
 <template>
   <ul class="nav navbar-nav user-navbar">
     <li class="">
-      <a style="padding:10px;">
+      <a style="" href='#'>
         <img height=30 :src="company.logo_url" />
         {{company.title}}
         </a>
@@ -64,7 +64,7 @@
     },
     computed: {
       list_companies() {
-        return this.companies.filter((v) => v.id !== this.company.id)
+        return this.companies //.filter((v) => v.id !== this.company.id)
         }
       },
   mounted(){ }
@@ -73,6 +73,13 @@
 
 <style lang="sass">
   .user-navbar {
+  .user-company {
+    img {
+      min-width: 50px;
+      min-height: 50px;
+      height: 50px;
+    }
+    }
   .company-title {
   display: inline-block;
   }

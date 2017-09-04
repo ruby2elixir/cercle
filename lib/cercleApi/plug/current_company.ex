@@ -8,7 +8,6 @@ defmodule CercleApi.Plug.CurrentCompany do
 
   def call(conn, _opts) do
     user = CercleApi.Plug.current_user(conn)
-
     with {:ok, claims} <- Guardian.Plug.claims(conn),
          company_id <- Map.get(claims, "current_company_id"),
            company <- get_company(user, company_id),
@@ -16,14 +15,18 @@ defmodule CercleApi.Plug.CurrentCompany do
       assign(conn, :current_company, company)
     else
       _ ->
-        company = get_company(user)
-      conn
-      |> Guardian.Plug.sign_in(user, :access, %{ current_company_id: company.id })
-      |> assign(:current_company, company)
+        with company <- get_company(user),
+             false <- is_nil(company) do
+          conn
+          |> Guardian.Plug.sign_in(user, :access, %{ current_company_id: company.id })
+          |> assign(:current_company, company)
+        else
+          _ -> conn
+        end
     end
   end
 
-  defp get_company(user, company_id) do
+  defp get_company(user, company_id) when not is_nil(company_id) do
     Repo.one(
       from c in CercleApi.Company,
       join: p in assoc(c, :users),
@@ -32,7 +35,7 @@ defmodule CercleApi.Plug.CurrentCompany do
     )
   end
 
-  defp get_company(user) do
+  defp get_company(user, company_id \\ nil) do
     Repo.one(
       from c in CercleApi.Company,
       join: p in assoc(c, :users),

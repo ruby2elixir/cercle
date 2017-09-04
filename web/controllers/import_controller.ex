@@ -44,12 +44,13 @@ defmodule CercleApi.ImportController do
 
   def create_nested_data(conn, %{"mapping" => mapping, "temp_file" => temp_file}) do
     user = Guardian.Plug.current_resource(conn)
+    company = current_company(conn)
     import_file = Repo.get_by!(ImportContactFile, uuid: temp_file)
     [_|rows] = import_file.content["items"]
     header = ImportContactFile.header(import_file)
     total_rows = Enum.count(rows) - 1
     iterations = div(total_rows, 100)
-    str_tag_id = imported_tag_id(user)
+    str_tag_id = imported_tag_id(user, company.id)
     responses  = for n <- 0..iterations do
       lower..upper = (n * 100..(n + 1) * 100 -1)
       if upper > total_rows do
@@ -100,12 +101,12 @@ defmodule CercleApi.ImportController do
     }
   end
 
-  defp imported_tag_id(user) do
+  defp imported_tag_id(user, company_id) do
     datetime = Timezone.convert(Timex.now, user.time_zone)
     date = Timex.format!(datetime, "%m/%d/%Y", :strftime)
     time = Timex.format!(datetime, "%H:%M", :strftime)
     tag_name = "imported #{date} at #{time}"
-    tag = %Tag{name: tag_name, company_id: user.company_id}
+    tag = %Tag{name: tag_name, company_id: company_id}
     |> Repo.insert!
     Integer.to_string(tag.id)
   end

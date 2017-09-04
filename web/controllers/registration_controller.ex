@@ -14,13 +14,17 @@ defmodule CercleApi.RegistrationController do
     if company_changeset.valid? do
       user_changeset = User.registration_changeset(%User{}, registration_params)
       if user_changeset.valid? do
+
         if company_params["id"] != "" do
           company = Repo.get_by(Company, id: company_params["id"])
         else
           {:ok, company} = Repo.insert(company_changeset)
         end
-        registration_params = Map.put(registration_params, "company_id", company.id)
-        changeset = User.registration_changeset(%User{}, registration_params)
+
+        changeset = %User{}
+        |> User.registration_changeset(registration_params)
+        |> Ecto.Changeset.put_assoc(:companies, [company])
+
         case Repo.insert(changeset) do
           {:ok, user} ->
             changeset = Board.changeset(%Board{}, %{name: "Deals", company_id: company.id})

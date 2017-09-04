@@ -15,7 +15,8 @@ defmodule CercleApi.APIV2.CardController do
 
   def index(conn, %{"contact_id" => contact_id, "archived" => archived}) do
     current_user = CercleApi.Plug.current_user(conn)
-    contact = Repo.get_by!(Contact, id: contact_id, company_id: current_user.company_id)
+    company = current_company(conn, current_user)
+    contact = Repo.get_by!(Contact, id: contact_id, company_id: company.id)
 
     if archived == "true" do
       cards = Contact.all_cards(contact)
@@ -47,7 +48,7 @@ defmodule CercleApi.APIV2.CardController do
 
   def create(conn, %{"card" => card_params}) do
     current_user = CercleApi.Plug.current_user(conn)
-    company = Repo.get!(Company, current_user.company_id)
+    company = current_company(conn, current_user)
     board = Repo.get!(CercleApi.Board, card_params["board_id"])
 
     changeset = company

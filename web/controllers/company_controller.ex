@@ -1,11 +1,8 @@
 defmodule CercleApi.CompanyController do
   use CercleApi.Web, :controller
-
   alias CercleApi.Company
 
-  require Logger
-
-  def show(conn, %{"id" => id}) do
+  def set(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
     with company <- get_company(user, id),
          false <- is_nil(company) do
@@ -14,7 +11,7 @@ defmodule CercleApi.CompanyController do
       |> redirect(to:  "/board")
     else
       _ ->
-      redirect(conn, to:  "/board")
+        redirect(conn, to:  "/board")
     end
   end
 

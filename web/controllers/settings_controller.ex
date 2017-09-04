@@ -5,8 +5,7 @@ defmodule CercleApi.SettingsController do
 
   def team_edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = user.company_id
-    company = Repo.get!(Company, company_id) |> Repo.preload [:users]
+    company = Repo.preload(current_company(conn), [:users])
 
     conn
     |> put_layout("adminlte.html")
@@ -15,9 +14,10 @@ defmodule CercleApi.SettingsController do
 
   def remove_team_member(conn, %{"user_id" => user_id}) do
     user = Guardian.Plug.current_resource(conn)
+    company = current_company(conn)
 
     if user.id != String.to_integer(user_id) do
-      team_member = Repo.get_by(User, id: user_id, company_id: user.company_id)
+      team_member = Repo.get_by(User, id: user_id, company_id: company.id)
       changeset = User.changeset(team_member, %{company_id: nil})
       case Repo.update(changeset) do
         {:ok, team_member} ->
@@ -35,8 +35,7 @@ defmodule CercleApi.SettingsController do
 
   def fields_edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = user.company_id
-    company = Repo.get!(Company, company_id)
+    company = current_company(conn)
     changeset = Company.changeset(company)
 
     conn
@@ -46,7 +45,7 @@ defmodule CercleApi.SettingsController do
 
   def tags_edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company = Repo.get(Company, user.company_id)
+    company = current_company(conn)
     query = from t in Tag,
       where: t.company_id == ^company.id,
       order_by: [desc: t.inserted_at]
@@ -58,7 +57,7 @@ defmodule CercleApi.SettingsController do
 
   def api_key(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company = Repo.get(Company, user.company_id)
+    company = current_company(conn)
     conn
     |> put_layout("adminlte.html")
     |> render "api_key.html", company: company
@@ -66,7 +65,7 @@ defmodule CercleApi.SettingsController do
 
   def team_invitation(conn, %{"user" => user_params}) do
     user = Guardian.Plug.current_resource(conn)
-    company = Repo.get!(Company, user.company_id)
+    company = current_company(conn)
     receiver_email = user_params["email"]
     values = %{"company_id": "#{company.id}", "email": "#{receiver_email}"}
     encoded_values = URI.encode(Cipher.cipher(values))
@@ -87,15 +86,17 @@ defmodule CercleApi.SettingsController do
       subject: sender.user_name <> " invited to join " <> company_name,
       from: "referral@cercle.co",
       to: [receiver_email],
-      html: Phoenix.View.render_to_string(CercleApi.EmailView, "team_invitation.html", sender: sender, receiver_email: receiver_email, company_name: company_name, encoded_values: encoded_values)
+      html: Phoenix.View.render_to_string(
+        CercleApi.EmailView,
+        "team_invitation.html",
+        sender: sender, receiver_email: receiver_email,
+        company_name: company_name, encoded_values: encoded_values)
       }
   end
 
   def webhooks(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    if user.company_id do
-      company = Repo.get(Company, user.company_id)
-    end
+    company = current_company(conn)
 
     conn
     |> put_layout("adminlte.html")

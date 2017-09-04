@@ -5,10 +5,12 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
 
   setup %{conn: conn} do
     user = insert(:user)
-    board = insert(:board, company: user.company)
+    company = insert(:company)
+    add_company_to_user(user, company)
+    board = insert(:board, company: company)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
-    {:ok, conn: conn, company: user.company, user: user, board: board}
+    {:ok, conn: conn, company: company, user: user, board: board}
   end
 
   test "create authorized board column for board with valid params", state do

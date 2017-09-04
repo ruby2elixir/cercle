@@ -13,9 +13,10 @@ defmodule CercleApi.APIV2.OrganizationController do
 
   def index(conn, %{"user_id" => user_id}) do
     user = Repo.get(User, user_id)
+    company = current_company(conn)
 
     organizations = Organization
-    |> Organization.by_company(user.company_id)
+    |> Organization.by_company(company.id)
     |> Organization.order_by_date
     |> Repo.all
 
@@ -29,7 +30,7 @@ defmodule CercleApi.APIV2.OrganizationController do
 
   def create(conn, %{"organization" => organization_params}) do
     user = CercleApi.Plug.current_user(conn)
-    company = Repo.get!(Company, user.company_id)
+    company = current_company(conn)
 
     changeset = company
       |> Ecto.build_assoc(:organizations)

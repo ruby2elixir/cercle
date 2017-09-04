@@ -4,8 +4,7 @@ defmodule CercleApi.Settings.CompanyController do
 
   def edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = user.company_id
-    company = Repo.get!(Company, company_id)
+    company = current_company(conn)
     changeset = Company.changeset(company)
 
     conn
@@ -15,10 +14,8 @@ defmodule CercleApi.Settings.CompanyController do
 
   def update(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = user.company_id
+    company = current_company(conn)
     company_params = _params["company"]
-
-    company = Repo.get!(Company, company_id)
     changeset = Company.changeset(company, company_params)
 
     case Repo.update(changeset) do

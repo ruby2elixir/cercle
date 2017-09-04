@@ -72,7 +72,6 @@ defmodule CercleApi.APIV2.BulkController do
         tag = Repo.get(Tag, tag_id)
         if tag do
           user = CercleApi.Plug.current_user(conn)
-          company_id = user.company_id
           responses = for c <- contacts do
             if c do
               {contact_id, _rest} = Integer.parse(c)

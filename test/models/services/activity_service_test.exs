@@ -13,7 +13,9 @@ defmodule CercleApi.ActivityServiceTest do
 
   test "add activity to notification" do
     user = insert(:user)
-    activity = insert(:activity, user: user, company: user.company,
+    company = insert(:company)
+    add_company_to_user(user, company)
+    activity = insert(:activity, user: user, company: company,
       due_date: Timex.now()
     )
     ActivityService.add(activity)

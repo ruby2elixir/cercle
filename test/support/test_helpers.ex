@@ -1,5 +1,5 @@
 defmodule CercleApi.TestHelpers do
-
+  import CercleApi.Factory
   alias CercleApi.Repo
   use Phoenix.ConnTest
 
@@ -31,5 +31,13 @@ defmodule CercleApi.TestHelpers do
     rec
     |> model.changeset(attachment_attrs)
     |> Repo.update!
+  end
+
+  def add_company_to_user(user, company) do
+    insert(:user_company, company_id: company.id, user_id: user.id)
+  end
+
+  def add_company_to_user(user) do
+    insert(:user_company, company_id: insert(:company).id, user_id: user.id)
   end
 end

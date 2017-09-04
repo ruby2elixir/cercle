@@ -15,7 +15,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   def index(conn, params) do
     current_user = CercleApi.Plug.current_user(conn)
-    company = current_company(conn, current_user)
+    company = current_company(conn)
 
     if String.strip(params["board_id"]) != "" do
       board = Repo.get(Board, params["board_id"])
@@ -35,7 +35,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   def create(conn, %{"board_column" => board_column_params}) do
     user = CercleApi.Plug.current_user(conn)
-    company = current_company(conn, user)
+    company = current_company(conn)
     board = Repo.get(Board, board_column_params["board_id"])
     if board do
       if board.company_id == company.id do

@@ -5,9 +5,11 @@ defmodule CercleApi.APIV2.BulkControllerTest do
 
   setup %{conn: conn} do
     user = insert(:user)
+    company = insert(:company)
+    add_company_to_user(user, company)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
-    {:ok, conn: conn, user: user}
+    {:ok, conn: conn, user: user, company: company}
   end
 
   test "create bulk contact with contacts more than 100 records", %{conn: conn} do
@@ -49,7 +51,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
   end
 
   test "create bulk_tag_or_untag_contacts with invalid contact_id", state  do
-    company_id = state[:user].company_id
+    company_id = state[:company].id
     tag_id = Repo.insert!(%Tag{name: "Test Tag", company_id: company_id}).id
     str_tag_id = Integer.to_string(tag_id)
     untag = false
@@ -59,14 +61,13 @@ defmodule CercleApi.APIV2.BulkControllerTest do
   end
 
   test "create bulk_tag_or_untag_contacts with valid contact_id and tag_id", state  do
-    company_id = state[:user].company_id
-    company = Repo.get!(Company, company_id)
+    company = state[:company]
     changeset = company
       |> Ecto.build_assoc(:contacts)
       |> Contact.changeset(%{"first_name" => "Contact", "last_name" => "1"})
     contact_id = Repo.insert!(changeset).id
     contacts = [Integer.to_string(contact_id)]
-    tag_id = Repo.insert!(%Tag{name: "Test Tag", company_id: company_id}).id
+    tag_id = Repo.insert!(%Tag{name: "Test Tag", company_id: company.id}).id
     str_tag_id = Integer.to_string(tag_id)
     untag = false
     conn = post state[:conn], "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: str_tag_id, untag: untag, return: false

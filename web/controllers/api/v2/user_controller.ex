@@ -9,7 +9,7 @@ defmodule CercleApi.APIV2.UserController do
 
   def index(conn, _params) do
     current_user = CercleApi.Plug.current_user(conn)
-    company = current_company(conn, current_user)
+    company = current_company(conn)
     query = from u in User,
       where: u.company_id == ^company.id,
       order_by: [desc: u.updated_at]
