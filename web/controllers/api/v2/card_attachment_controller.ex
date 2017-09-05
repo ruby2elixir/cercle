@@ -35,7 +35,7 @@ defmodule CercleApi.APIV2.CardAttachmentController do
         attachment = Repo.get(CardAttachment, card_attachment.id)
         CercleApi.Endpoint.broadcast!(
           "cards:#{card.id}", "card:added_attachment", %{
-            "card" => card, "attachment" => attachment
+            "card" => card, "attachment" => CardAttachment.json_data(attachment)
           })
         render(conn, "show.json", card_attachment: attachment)
       {:error, changeset} ->

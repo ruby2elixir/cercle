@@ -465,13 +465,15 @@
         });
 
         this.cardChannel.on('card:added_attachment', payload => {
-          this.attachments.unshift(payload.attachment);
+          let _payload = this.camelCaseKeys(payload);
+          this.attachments.unshift(_payload.attachment);
         });
 
         this.cardChannel.on('card:deleted_attachment', payload => {
-          if (payload.card) {
+          let _payload = this.camelCaseKeys(payload);
+          if (_payload.card) {
             let cardIndex = this.attachments.findIndex(function(card){
-              return card.id === parseInt(payload.attachment_id);
+              return card.id === parseInt(_payload.attachmentId);
             });
 
             this.attachments.splice(cardIndex, 1);
