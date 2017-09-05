@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div @click="addMode=true" class="col-md-3 col-sm-6 col-xs-12 bg-black add-button" v-show="!addMode">
+    <div @click="showAddMode" class="col-md-3 col-sm-6 col-xs-12 bg-black add-button" v-show="!addMode">
       + Add a board
     </div>
     <div class="col-md-3 col-sm-6 col-xs-12 bg-primary board-box" v-show="addMode">
-      <inline-text-edit v-model="name" placeholder="Name" />
+      <inline-text-edit v-model="name" placeholder="Name" ref="inline-text-input" />
       <br />
       <button class="btn btn-success" @click="save">Save</button>
       <a href="#" class="cancel-link" @click.stop="cancel">Cancel</a>
@@ -26,6 +26,13 @@
       'inline-text-edit': InlineTextEdit
     },
     methods: {
+      showAddMode() {
+        this.addMode = true;
+        let vm = this;
+        Vue.nextTick(function(){
+          vm.$refs['inline-text-input'].$refs['input'].focus();
+        });
+      },
       cancel() {
         this.addMode = false;
       },
