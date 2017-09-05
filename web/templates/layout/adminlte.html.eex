@@ -80,9 +80,9 @@
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu" id="user-navbar">
               <navbar
-                :user=<%= Poison.encode! @conn.assigns[:current_user] %>
-                :company=<%= Poison.encode! @conn.assigns[:current_company] %>
-                :companies=<%= Poison.encode!(CercleApi.Company.user_companies(@conn.assigns[:current_user])) %>
+                :user="<%= Poison.encode! @conn.assigns[:current_user] %>"
+                :company="<%= Poison.encode! @conn.assigns[:current_company] %>"
+                :companies="<%= Poison.encode!(CercleApi.Company.user_companies(@conn.assigns[:current_user])) %>"
                 />
             </div><!-- /.navbar-custom-menu -->
           </div><!-- /.container-fluid -->
