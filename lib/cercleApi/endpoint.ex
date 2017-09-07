@@ -34,6 +34,6 @@ defmodule CercleApi.Endpoint do
     store: :cookie,
     key: "_cercleApi_key",
     signing_salt: "AnZWLL+M"
-
+  plug CercleApi.Plug.CompanyOverride
   plug CercleApi.Router
 end
