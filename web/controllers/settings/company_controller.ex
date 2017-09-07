@@ -1,6 +1,6 @@
 defmodule CercleApi.Settings.CompanyController do
   use CercleApi.Web, :controller
-  alias CercleApi.Company
+  alias CercleApi.{Company, UserCompany}
 
   def index(conn, _params) do
     user = conn
@@ -10,6 +10,31 @@ defmodule CercleApi.Settings.CompanyController do
     conn
     |> put_layout("adminlte.html")
     |> render "index.html", companies: user.companies, user: user
+  end
+
+  def new(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+    changeset = Company.changeset(%CercleApi.Company{})
+    conn
+    |> put_layout("adminlte.html")
+    |> render "new.html", changeset: changeset
+  end
+
+  def create(conn, %{"company" => company_params}) do
+    user = Guardian.Plug.current_resource(conn)
+    changeset = Company.changeset(%Company{}, company_params)
+    case Repo.insert(changeset) do
+      {:ok, company} ->
+        %UserCompany{}
+        |> UserCompany.changeset(%{user_id: user.id, company_id: company.id})
+        |> Repo.insert
+        conn
+        |> put_flash(:success, "Company created successfully.")
+        |> redirect(to: "/settings/companies")
+      {:error, changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
+
   end
 
   def edit(conn, %{"id" => id}) do
