@@ -32,15 +32,15 @@ export default {
   methods: {
     archive: function() {
       if(confirm('Are you sure?')) {
-        var url = '/api/v2/board/' + this.boardId + '/archive';
+        var url = '/api/v2/company/' + Vue.currentUser.companyId + '/board/' + this.boardId + '/archive';
         this.$http.put(url).then(resp => {
-          window.location.href = '/board';
+          window.location.href = '/company/' + Vue.currentUser.companyId + '/board';
         });
       }
     },
     unarchive: function() {
       if(confirm('Are you sure?')) {
-        var url = '/api/v2/board/' + this.boardId + '/unarchive';
+        var url = '/api/v2/company/' + Vue.currentUser.companyId + '/board/' + this.boardId + '/unarchive';
         this.$http.put(url).then(resp => {
           window.location.reload();
         });

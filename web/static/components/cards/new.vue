@@ -69,7 +69,7 @@
       },
 
       saveCard: function(contactIds = []){
-        let url = '/api/v2/card/';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/';
         this.$http.post(url,{
           card: {
             companyId: this.companyId,
@@ -80,7 +80,7 @@
             description: this.description
           }
         }).then(resp => {
-          window.location.href = '/board/' + resp.data.data.board.id;
+          window.location.href = '/company/' + Vue.currentUser.companyId + '/board/' + resp.data.data.board.id;
         });
       },
 
@@ -88,7 +88,7 @@
         if(this.existingContactId) {
           this.saveCard([this.existingContactId]);
         } else if(this.contact.name) {
-          let url = '/api/v2/contact';
+          let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact';
           this.$http.post(url,{
             contact: {
               userId: this.userId,

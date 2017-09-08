@@ -30,7 +30,7 @@ defmodule CercleApi.Settings.CompanyController do
         |> Repo.insert
         conn
         |> put_flash(:success, "Company created successfully.")
-        |> redirect(to: "/settings/companies")
+        |> redirect(to: settings_company_path(conn, :index, conn.assigns[:current_company]))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -66,7 +66,7 @@ defmodule CercleApi.Settings.CompanyController do
       {:ok, company} ->
         conn
         |> put_flash(:success, "Company updated successfully.")
-        |> redirect(to: "/settings/companies")
+        |> redirect(to: settings_company_path(conn, :index, conn.assigns[:current_company]))
       {:error, changeset} ->
         render(conn, "edit.html", company: company, changeset: changeset, settings: true)
     end

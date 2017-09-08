@@ -12,7 +12,7 @@ export default {
   methods: {
     deleteContact: function(){
       if(confirm('Are you sure do to delete "' + this.contact.name + '"?')) {
-        var url = '/api/v2/contact/'+this.contact.id;
+        var url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/'+this.contact.id;
         this.$http.delete(url).then(resp => {
           window.location.reload();
         });

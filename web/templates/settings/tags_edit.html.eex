@@ -25,9 +25,20 @@
               <h4>Tags</h4>
            	  <table class="table table-bordered" id="tag-edit-table">
              		<%= for tag <- @tags do %>
-          				<tr><td><form class='form-inline editableform'><textarea class='textarea-inline-editable' data-type='PUT' data-param-name="tag[name]" data-inline-editurl="/api/v2/tag/<%=tag.id%>" style="border:0px solid grey;resize: none;background-color:#f1e8e8;border-radius:3px;overflow:hidden;word-wrap: break-word;height:30px;min-width:180px;padding:3px;"><%=tag.name%></textarea></form></td>
-                    <td style="text-align: right"><a data-id="<%=tag.id%>" class="edit-link btn btn-sm btn-info" href="#">Edit</a></td>
-                    <td><a data-id="<%=tag.id%>" class="delete-link btn btn-sm btn-danger" href="#">Delete</a></td>
+          				  <tr><td>
+                        <form class='form-inline editableform'>
+                          <textarea class='textarea-inline-editable'
+                                    data-type='PUT' data-param-name="tag[name]"
+                                    data-inline-editurl="/api/v2/company/<%= @conn.assigns[:current_company].id %>/tag/<%=tag.id%>"
+                                    style="border:0px solid grey;resize: none;background-color:#f1e8e8;border-radius:3px;overflow:hidden;word-wrap: break-word;height:30px;min-width:180px;padding:3px;">
+                            <%=tag.name %>
+                      </textarea></form></td>
+                      <td style="text-align: right">
+                        <a data-id="<%=tag.id%>" class="edit-link btn btn-sm btn-info" href="#">Edit</a>
+                      </td>
+                      <td>
+                        <a data-id="<%=tag.id%>" class="delete-link btn btn-sm btn-danger" href="#">Delete</a>
+                      </td>
                   </tr>
                 <%end%>
               </table>

@@ -12,41 +12,41 @@ defmodule CercleApi.APIV2.BulkControllerTest do
     {:ok, conn: conn, user: user, company: company}
   end
 
-  test "create bulk contact with contacts more than 100 records", %{conn: conn} do
+  test "create bulk contact with contacts more than 100 records", %{conn: conn} = state do
     items = for i <- 0..150 do
       %{"contact" => %{"name" => "C#{i}", "email" => "c#{i}@test#{i}.com", "phone" => "00#{i}", "description" => "", "job_title" => ""}, "organization" => %{"name" => "org#{i}", "website" => "test#{i}.com", "description" => ""}}
     end
-    conn = post conn, "/api/v2/bulk_contact_create", items: items, return: false
+    conn = post conn, "/api/v2/company/#{state[:company].id}/bulk_contact_create", items: items, return: false
     assert json_response(conn, 200)["error_message"] == "Maximum 100 records are permitted per call"
   end
 
-  test "create bulk contact with contacts less than 100", %{conn: conn} do
+  test "create bulk contact with contacts less than 100", %{conn: conn} = state  do
     items = [%{"contact" => %{"first_name" => "C", "last_name" => "1", "email" => "c1@test.com", "phone" => "123", "description" => "", "job_title" => ""}, "organization" => %{"name" => "org1", "website" => "test.com","description" => ""}}]
-    conn = post conn, "/api/v2/bulk_contact_create", items: items, return: false
+    conn = post conn, "/api/v2/company/#{state[:company].id}/bulk_contact_create", items: items, return: false
     assert json_response(conn, 200)["contacts"]
   end
 
-  test "create bulk_tag_or_untag_contacts with more than 100 records", %{conn: conn} do
+  test "create bulk_tag_or_untag_contacts with more than 100 records", %{conn: conn} = state  do
     tag_id = "1"
     untag = false
     contacts = for i <- 0..150 do
       Integer.to_string i
     end
-    conn = post conn, "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: tag_id, untag: untag, return: false
+    conn = post conn, "/api/v2/company/#{state[:company].id}/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: tag_id, untag: untag, return: false
     assert json_response(conn, 200)["error_message"] == "Maximum 100 records are permitted per call"
   end
 
-  test "create bulk_tag_or_untag_contacts with less than 100 records but params missing", %{conn: conn} do
+  test "create bulk_tag_or_untag_contacts with less than 100 records but params missing", %{conn: conn} = state  do
     contacts = ["1"]
-    conn = post conn, "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: nil , untag: nil, return: false
+    conn = post conn, "/api/v2/company/#{state[:company].id}/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: nil , untag: nil, return: false
     assert json_response(conn, 200)["responses"]["errors"] == "Parameters missing"
   end
 
-  test "create bulk_tag_or_untag_contacts with invalid tag_id", %{conn: conn}  do
+  test "create bulk_tag_or_untag_contacts with invalid tag_id", %{conn: conn} = state   do
     untag = false
     tag_id = "1"
     contacts = ["1"]
-    conn = post conn, "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: tag_id, untag: untag, return: false
+    conn = post conn, "/api/v2/company/#{state[:company].id}/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: tag_id, untag: untag, return: false
     assert json_response(conn, 200)["responses"]["errors"] == "Tag id #{tag_id} not found"
   end
 
@@ -56,7 +56,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
     str_tag_id = Integer.to_string(tag_id)
     untag = false
     contacts = ["1111"]
-    conn = post state[:conn], "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: str_tag_id, untag: untag, return: false
+    conn = post state[:conn], "/api/v2/company/#{state[:company].id}/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: str_tag_id, untag: untag, return: false
     assert json_response(conn, 200)["responses"] == [%{"error" => "Contact id 1111 not found", "status" => 400}]
   end
 
@@ -70,7 +70,7 @@ defmodule CercleApi.APIV2.BulkControllerTest do
     tag_id = Repo.insert!(%Tag{name: "Test Tag", company_id: company.id}).id
     str_tag_id = Integer.to_string(tag_id)
     untag = false
-    conn = post state[:conn], "/api/v2/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: str_tag_id, untag: untag, return: false
+    conn = post state[:conn], "/api/v2/company/#{state[:company].id}/bulk_tag_or_untag_contacts", contacts: contacts, tag_id: str_tag_id, untag: untag, return: false
     assert json_response(conn, 200)["responses"] == [%{"status" => 200, "success" => "Contact id #{contact_id} tagged/untagged successfully"}]
   end
 

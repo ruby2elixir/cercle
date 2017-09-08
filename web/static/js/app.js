@@ -145,6 +145,7 @@ const VueCurrentUser = {
     Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
     Vue.currentUser =  {
       userId: options['userId'],
+      companyId: options['companyId'],
       token: options['token'],
       timeZone: options['timeZone'],
       userImage: options['userImage'],
@@ -160,6 +161,7 @@ if (document.querySelector('meta[name="guardian_token"]')) {
   window.jwtToken = document.querySelector('meta[name="guardian_token"]').content;
   Vue.use(VueCurrentUser, {
     userId: document.querySelector('meta[name="user_id"]').content,
+    companyId: document.querySelector('meta[name="company_id"]').content,
     token: document.querySelector('meta[name="guardian_token"]').content,
     timeZone: document.querySelector('meta[name="time_zone"]').content,
     userImage: document.querySelector('meta[name="user_image"]').content

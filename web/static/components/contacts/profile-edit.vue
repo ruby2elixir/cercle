@@ -93,7 +93,7 @@ export default {
       this.updateTags();
     },
     addNewTag(input){
-      this.$http.post('/api/v2/tag', {
+      this.$http.post('/api/v2/company/'+ Vue.currentUser.companyId +'/tag', {
         tags: { name: input }
       });
 
@@ -116,24 +116,24 @@ export default {
       this.openTagModal = true;
     },
     getTags() {
-      this.$http.get('/api/v2/tag').then(resp => {
+      this.$http.get('/api/v2/company/'+ Vue.currentUser.companyId +'/tag').then(resp => {
         this.availableTags = resp.data.data;
       });
     },
 
     updateTags() {
       if (this.tagIds.length === 0) {
-        var url = '/api/v2/contact/' + this.contact.id + '/utags';
+        var url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id + '/utags';
         this.$http.put(url, { companyId: this.contact.companyId } );
       } else {
-        var url = '/api/v2/contact/' + this.contact.id + '/update_tags';
+        var url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id + '/update_tags';
         this.$http.put(url,
                            { tags: this.tagIds, companyId: this.contact.companyId }
                           );
       }
     },
     updateContact: function(){
-      let url = '/api/v2/contact/' + this.contact.id;
+      let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
       this.$http.put(url, { contact: this.contact } );
     },
     nameInput: function(data) {

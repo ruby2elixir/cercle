@@ -14,7 +14,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
 
   test "timeline_event index with valid params", state do
     te = insert(:timeline_event) |> Repo.preload([:card, :user])
-    conn = get state[:conn], "/api/v2/timeline_events"
+    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/timeline_events"
 
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.TimelineEventView, "index.json", timeline_events: [te]
@@ -26,7 +26,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
     contact = insert(:contact, user: state[:user])
     response = state[:conn]
     |> post(
-      timeline_event_path(state[:conn], :create),
+      timeline_event_path(state[:conn], :create, state[:company].id),
     timeline_event: %{"content" => "Test Content",
                       "event_name" => "comment",
                       "contact_id" => contact.id,
@@ -44,7 +44,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
   test "PUT update/2", state do
     te = Repo.preload(insert(:timeline_event, metadata: %{}, user: state[:user]), [:card, :user])
     response = state[:conn]
-    |> put(timeline_event_path(state[:conn], :update, te),
+    |> put(timeline_event_path(state[:conn], :update, state[:company], te),
     timeline_event: %{"content" => "Test Content1" }
     )
     |> json_response(200)
@@ -61,7 +61,7 @@ defmodule CercleApi.APIV2.TimelineEventTest do
     card_channel = "cards:#{te.card_id}"
     CercleApi.Endpoint.subscribe(card_channel)
     response = state[:conn]
-    |> delete(timeline_event_path(state[:conn], :delete, event_id))
+    |> delete(timeline_event_path(state[:conn], :delete, state[:company].id, event_id))
     |> json_response(200)
 
     assert_receive %Phoenix.Socket.Broadcast{

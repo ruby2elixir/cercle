@@ -37,7 +37,8 @@
         this.addMode = false;
       },
       save() {
-        this.$http.post('/api/v2/board', {board: {name: this.name}}).then(resp => {
+        let url = '/api/v2/company/' + Vue.currentUser.companyId + '/board';
+        this.$http.post(url, {board: {name: this.name}}).then(resp => {
           window.location.reload();
         });
       }

@@ -2,12 +2,12 @@ defmodule CercleApi.Controllers.Helpers do
   @moduledoc """
   Controller helpers
   """
-  alias CercleApi.Repo
+  alias CercleApi.{Repo, Company}
   import Plug.Conn
   import Phoenix.Controller
 
-  def current_company(conn, _user) do
-    conn.assigns[:current_company]
+  def current_company(conn, user) do
+    conn.assigns[:current_company] || Company.get_company(user)
   end
 
   def current_company(conn) do

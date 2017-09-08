@@ -33,7 +33,7 @@
 
 
         <li class="user-company" v-for="c in list_companies" :key="c.id">
-          <a :href="'/company/' + c.id">
+          <a :href="'/company/' + c.id + '/board'">
           <img height=100 :src="c.logo_url" />
           <div class='company-title'>{{c.title}}</div>
           </a>
@@ -41,7 +41,7 @@
 
         <li class="user-footer">
           <div class="pull-left">
-            <a href="/settings/profile" class="btn btn-default btn-flat">Settings</a>
+            <a :href="settingsUrl()" class="btn btn-default btn-flat">Settings</a>
           </div>
           <div class="pull-right">
             <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
@@ -60,7 +60,9 @@
   return {}
   },
     methods: {
-
+      settingsUrl() {
+        return '/company/' + Vue.currentUser.companyId + '/settings/profile';
+      }
     },
     computed: {
       list_companies() {

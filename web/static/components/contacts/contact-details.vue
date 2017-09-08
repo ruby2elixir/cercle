@@ -64,7 +64,7 @@
         this.updateContact();
       },
       updateContact() {
-        let url = '/api/v2/contact/' + this.contact.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
         this.$http.put(url, { contact: this.contact } );
       }
     }

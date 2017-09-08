@@ -45,7 +45,7 @@
 
       },
       initConn() {
-        let url = '/api/v2/activity';
+        let url = '/api/v2/company/' + Vue.currentUser.companyId + '/activity';
         this.$http.get(url, { params: { userId: Vue.currentUser.userId }}).then(resp => {
           this.activities = resp.data.activities;
         });

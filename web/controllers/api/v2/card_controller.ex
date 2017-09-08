@@ -31,7 +31,7 @@ defmodule CercleApi.APIV2.CardController do
     card = Card
     |> Card.preload_data
     |> Repo.get(id)
-
+    |> Repo.preload([:attachments])
     card_contacts = Card.contacts(card)
 
     board = Board

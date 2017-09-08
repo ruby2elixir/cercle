@@ -86,7 +86,7 @@
         return shortName;
       },
       addTask() {
-        let url = '/api/v2/activity/';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/activity/';
         this.$http.post(url, {
           activity: {
             cardId: this.card.id,
@@ -96,12 +96,12 @@
           } }); //.then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
       },
       removeTask(task) {
-        let url = '/api/v2/activity/' + task.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/activity/' + task.id;
         this.$http.delete(url); //.then( resp => { this.$emit('taskDelete', task.id); });
         false;
       },
       updateTask(task) {
-        let url = '/api/v2/activity/' + task.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/activity/' + task.id;
 
         this.$http.put(url, {
           activity: {

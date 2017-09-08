@@ -4,11 +4,12 @@ defmodule CercleApi.ContactControllerTest do
 
   setup %{conn: conn} do
     user = insert(:user)
-    {:ok, conn: conn, user: user}
+    company = insert(:company)
+    {:ok, conn: conn, user: user, company: company}
   end
 
-  test "GET /contacts without Authentification", %{conn: conn} do
-    conn = get conn, "/contact"
+  test "GET /contacts without Authentification", %{conn: conn, company: company} do
+    conn = get conn, "/company/#{company.id}/contact"
     assert html_response(conn, 302) =~ "redirected"
   end
 end

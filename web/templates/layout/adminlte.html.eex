@@ -23,6 +23,8 @@
     <meta name="user_image", content="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" >
     <meta name="time_zone", content="<%= @conn.assigns[:current_user].time_zone %>" >
     <meta name="user_id", content="<%= @conn.assigns[:current_user].id %>" >
+    <meta name="company_id", content="<%= @conn.assigns[:current_company].id %>" >
+
     <% end %>
 
     <%= if Mix.env == :prod do %>
@@ -62,15 +64,15 @@
               <ul class="nav navbar-nav">
                 <%= if assigns[:current_company] do %>
                 <li>
-                  <a href="/activity">
+                  <a href="/company/<%= assigns[:current_company].id %>/activity">
                     <!--
                         <span class="label label-primary">4</span>
                         -->
                     Inbox
                   </a>
                 </li>
-                <li><a href="/board">Boards</a></li>
-                <li><a href="/contact">People</a></li>
+                <li><a href="/company/<%= assigns[:current_company].id %>/board">Boards</a></li>
+                <li><a href="/company/<%= assigns[:current_company].id %>/contact">People</a></li>
                 <li>
                   <%end%>
               </ul>

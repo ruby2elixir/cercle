@@ -20,7 +20,7 @@
           <div class="btn-group pull-right" role="group">
             <button v-if="contactList.length > 0" type="button" class="btn btn-danger" @click="deleteSelectContacts">Delete contacts</button>
             <button v-if="contactList.length > 0" type="button" class="btn btn-default" @click="exportSelectContacts">Export contacts</button>
-            <a href="/contact/new" class="pull-right btn btn-primary">+ Add a Contact</a>
+            <a :href="'/company/' + company_id + '/contact/new'" class="pull-right btn btn-primary">+ Add a Contact</a>
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@
                     <tr v-for="contact in contacts">
                       <td>
                          <el-checkbox-group v-model="contactList">
-                           <el-checkbox :label="contact.id" :key="contact"></el-checkbox>
+                           <el-checkbox :label="contact.id" :key="contact.id"></el-checkbox>
                          </el-checkbox-group>
                       </td>
                       <td v-on:click="contactShow(contact)">
@@ -113,7 +113,7 @@
     methods: {
       deleteSelectContacts() {
         if(confirm('Are you sure do to delete selected contacts?')) {
-          let url = '/api/v2/contact/multiple/delete';
+          let url = '/api/v2/company/' + this.company_id + '/contact/multiple/delete';
           this.$http.delete(
             url, {body: {contactIds: this.contactList}}
           ).then(resp => {
@@ -124,7 +124,7 @@
         }
       },
       exportSelectContacts() {
-        let url = '/api/v2/contact/export';
+        let url = '/api/v2/company/' + this.company_id + '/contact/export';
         this.$http.post(url, { contactIds: this.contactList })
               .then(resp => {
                 let headers = resp.headers;
@@ -164,7 +164,7 @@
         );
       },
       loadContacts(opts){
-        let url = '/api/v2/contact';
+        let url = '/api/v2/company/' + this.company_id + '/contact';
         let params = opts || {};
         this.$http.get(url, { params: params }).then(resp => {
           this.contacts = resp.data.data;

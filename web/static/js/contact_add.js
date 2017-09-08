@@ -6,7 +6,9 @@ $(function() {
       var user_id = $('#user_id').val();
       var company_id = $('#company_id').val();
       var board_column = $('#add_to_board').val();
-      $.ajax('/api/v2/contact', {
+      var urlPrefix = '/company/' + company_id;
+      var url = '/api/v2' + urlPrefix + '/contact';
+      $.ajax(url, {
         method: 'POST',
         data: new FormData(this),
         headers: {'Authorization': 'Bearer '+jwtToken},
@@ -15,7 +17,7 @@ $(function() {
         success: function(result){
           var contact_id = result.data.id;
           if ($('#add_to_card')[0].checked){
-            var url = '/api/v2/card/';
+            var url = '/api/v2' + urlPrefix + '/card/';
             $.ajax( url , {
               method: 'POST',
               headers: {'Authorization': 'Bearer '+jwtToken},
@@ -28,11 +30,11 @@ $(function() {
                 'card[name]': ''
               },
               complete: function(xhr, status){
-                window.location = '/contact/' + contact_id;
+                window.location = urlPrefix + '/contact/' + contact_id;
               }
             });
           }else{
-            window.location = '/contact/' + contact_id;
+            window.location = urlPrefix + '/contact/' + contact_id;
           }
         }
       });
