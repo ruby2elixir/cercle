@@ -5,7 +5,7 @@
       <button class="btn btn-success" v-on:click="updateValue">Save</button>
       <a @click="cancelEdit">Cancel</a>
     </div>
-    <div v-html="compiledMarkdown" v-show="!editMode" @click="editMode=true" class="card-description-rendering"></div>
+    <div v-html="compiledMarkdown" v-show="!editMode" @click="setEditMode" class="card-description-rendering" v-linkified></div>
   </div>
 </template>
 
@@ -25,6 +25,12 @@ export default {
     }
   },
   methods: {
+    setEditMode(event) {
+      if(event.target.className.match(/\blinkified\b/))
+        return;
+
+      this.editMode = true;
+    },
     updateValue: function(){
       this.$emit('input', this.rawText);
       this.editMode=false;
