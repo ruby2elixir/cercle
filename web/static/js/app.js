@@ -26,7 +26,6 @@ import { Activity } from './activity';
 import inlineEdit from './inline_edit';
 import contactAdd from './contact_add';
 import contactLive from './contact_live';
-import { Pipeline } from './opportunity_pipeline';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
@@ -48,9 +47,6 @@ Vue.filter('formatDateTime', function(value) {
 export var App = {
   activityInit: function(){
     Activity.start();
-  },
-  pipelineInit: function(){
-    Pipeline.start();
   },
   contactSocketInit: function(contactId){
     contactLive.init(socket, contactId );
@@ -293,14 +289,6 @@ if ($('#webhooks-app').length > 0) {
   });
 }
 
-
-
-if (
-  $('#opportunity_pipeline').length > 0 ||
-    $('[data-pipeline_init]').length > 0
-){
-  App.pipelineInit();
-}
 
 $('#toggle-activity-panel').on('click', function(){
   $('.control-sidebar-light').toggleClass('open');
