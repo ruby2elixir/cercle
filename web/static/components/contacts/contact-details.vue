@@ -59,8 +59,9 @@
     },
     methods: {
       contactNameInput: function(data) {
-        this.contacts[this.activeContactIndex].firstName = data.firstName;
-        this.contacts[this.activeContactIndex].lastName = data.lastName;
+        let cIndex = this.$parent.contacts.findIndex((c) => c.id === this.contact.id );
+        this.$parent.contacts[cIndex].firstName = data.firstName;
+        this.$parent.contacts[cIndex].lastName = data.lastName;
         this.updateContact();
       },
       updateContact() {

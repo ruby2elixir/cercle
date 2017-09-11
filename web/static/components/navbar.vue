@@ -57,7 +57,7 @@
   export default {
   props: ['user', 'company', 'companies'],
   data() {
-  return {}
+  return {};
   },
     methods: {
       settingsUrl() {
@@ -66,11 +66,11 @@
     },
     computed: {
       list_companies() {
-        return this.companies.filter((v) => v.id !== this.company.id)
-        }
-      },
+        return this.companies.filter((v) => v.id !== this.company.id);
+      }
+    },
   mounted(){ }
-  }
+  };
 </script>
 
 <style lang="sass">

@@ -207,7 +207,7 @@
     },
     computed: {
       currentCompanyId() {
-        return Vue.currentUser.companyId
+        return Vue.currentUser.companyId;
       },
       activeContact() {
         return this.contacts[this.activeContactIndex];
