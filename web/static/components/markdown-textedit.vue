@@ -12,7 +12,11 @@
 <script>
 
 export default {
-  props: ['value', 'placeholder'],
+  props: {
+    value: null,
+    placeholder: null,
+    editable: true
+  },
   data: function() {
     return {
       editMode: false,
@@ -26,6 +30,9 @@ export default {
   },
   methods: {
     setEditMode(event) {
+      if(!this.editable)
+        return;
+
       if(event.target.className.match(/\blinkified\b/))
         return;
 
