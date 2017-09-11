@@ -13,7 +13,7 @@
           <span class="description"> {{event.eventName}} </span>
         </div>
         <div class="well">
-          <markdown-text-edit v-model="event.content" v-on:input="updateEvent(event)" ></markdown-text-edit>
+          <markdown-text-edit v-model="event.content" v-on:input="updateEvent(event)" :editable="canManage(event)" ></markdown-text-edit>
         </div>
         <div  class="description" style="color:grey;">
           {{timestamp(event.insertedAt)}}

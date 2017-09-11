@@ -1,8 +1,8 @@
 <template>
   <div v-on-click-outside='cancel'>
-    <span v-on:click="setEditMode" v-show="!editMode">
+    <div v-on:click="setEditMode" v-show="!editMode" v-linkified>
       {{value || placeholder}}
-    </span>
+    </div>
 
     <div v-show="editMode">
       <div class="form-group">
@@ -32,7 +32,10 @@ export default {
     }
   },
   methods: {
-    setEditMode: function() {
+    setEditMode: function(event) {
+      if(event.target.className.match(/\blinkified\b/))
+        return;
+
       this.editMode = true;
       var vue = this;
       Vue.nextTick(function () {

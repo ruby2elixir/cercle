@@ -31,6 +31,9 @@ import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
 import { directive as onClickOutside } from 'vue-on-click-outside';
+import linkify from 'vue-linkify';
+
+Vue.directive('linkified', linkify);
 Vue.directive('on-click-outside', onClickOutside);
 
 Vue.filter('formatDate', function(value) {
