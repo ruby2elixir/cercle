@@ -24,7 +24,7 @@
         </div><!-- /.box-header -->
         <div class="box-body">
           <div class="row">
-            <%= form_for @conn, settings_path(@conn, :team_invitation), [as: :user], fn f -> %>
+            <%= form_for @conn, settings_path(@conn, :team_invitation, assigns[:current_company]), [as: :user], fn f -> %>
               <div class="col-md-9">
                 <div class="form-group">
                   <%= text_input f, :email, placeholder: "Type an email address", class: "form-control" %>
@@ -37,7 +37,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <h4>Members</h4>
+              <h4>Members of <%= @company.title %></h4>
            	  <table class="table table-bordered">
              		<%= for u <- @company.users do %>
           				<tr>

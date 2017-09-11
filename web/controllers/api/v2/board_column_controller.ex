@@ -2,12 +2,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   require Logger
   use CercleApi.Web, :controller
-  alias CercleApi.Board
-  alias CercleApi.BoardColumn
-  alias CercleApi.Contact
-  alias CercleApi.Company
-  alias CercleApi.Organization
-  alias CercleApi.User
+  alias CercleApi.{Board, BoardColumn, Contact, Company, Organization, User}
   alias CercleApi.Card
 
   plug CercleApi.Plug.EnsureAuthenticated
@@ -20,7 +15,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   def index(conn, params) do
     current_user = CercleApi.Plug.current_user(conn)
-    company_id  = current_user.company_id
+    company = current_company(conn)
 
     if String.strip(params["board_id"]) != "" do
       board = Repo.get(Board, params["board_id"])
@@ -40,7 +35,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   def create(conn, %{"board_column" => board_column_params}) do
     user = CercleApi.Plug.current_user(conn)
-    company = Repo.get!(Company, user.company_id)
+    company = current_company(conn)
     board = Repo.get(Board, board_column_params["board_id"])
     if board do
       if board.company_id == company.id do

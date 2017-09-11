@@ -26,7 +26,7 @@
 
     methods: {
       sendMessage(){
-        let url = '/api/v2/timeline_events';
+        let url = '/api/v2/company/' + Vue.currentUser.companyId + '/timeline_events';
         this.$http.post(url, {
           timelineEvent: {
             content: this.message,

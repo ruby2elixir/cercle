@@ -77,22 +77,22 @@ defmodule CercleApi.Activity do
       where: p.due_date <= ^from_time
   end
 
-  def list(user) do
+  def list(user, company_id) do
     __MODULE__
     |> in_progress
     |> by_user(user.id)
-    |> by_company(user.company_id)
+    |> by_company(company_id)
     |> order_by_date
   end
 
-  def today(user) do
+  def today(user, company_id) do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
     to_time = user.time_zone |> Timex.now |> Timex.end_of_day
 
     query = from p in __MODULE__,
       where: p.is_done == false,
       where: p.user_id == ^user.id,
-      where: p.company_id == ^user.company_id,
+      where: p.company_id == ^company_id,
       where: p.due_date  >= ^from_time,
       where: p.due_date <= ^to_time,
       order_by: [asc: p.due_date]
@@ -102,13 +102,13 @@ defmodule CercleApi.Activity do
     |> CercleApi.Repo.preload([:user])
   end
 
-  def overdue(user) do
+  def overdue(user, company_id) do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
 
     query = from p in __MODULE__,
       where: p.is_done == false,
       where: p.user_id == ^user.id,
-      where: p.company_id == ^user.company_id,
+      where: p.company_id == ^company_id,
       where: p.due_date  <= ^from_time,
       order_by: [asc: p.due_date]
 
@@ -117,14 +117,14 @@ defmodule CercleApi.Activity do
     |> CercleApi.Repo.preload([:user])
   end
 
-  def later(user) do
+  def later(user, company_id) do
     from_time = user.time_zone |> Timex.now |> Timex.beginning_of_day
     to_time = user.time_zone |> Timex.now |> Timex.end_of_day
 
     query = from p in __MODULE__,
       where: p.is_done == false,
       where: p.user_id == ^user.id,
-      where: p.company_id == ^user.company_id,
+      where: p.company_id == ^company_id,
       where: p.due_date >= ^to_time,
       order_by: [asc: p.due_date]
 

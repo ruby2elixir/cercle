@@ -75,7 +75,7 @@
     methods: {
       saveOrganization(){
         if (this.chooseOrganization) {
-          let url = '/api/v2/contact/' + this.contact.id;
+          let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
           this.$http.put(url, { contact: { organizationId: this.chooseOrganization.id }}).then(resp => {
             this.$emit('updateOrganization', resp.data.data.organization);
           });
@@ -91,7 +91,7 @@
 
       addOrganization(item, triggerSaveOrg) {
         let vm = this;
-        let url = '/api/v2/organizations';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/organizations';
         this.$http.post(url, { organization: { name: item, companyId: vm.companyId }}).then(resp => {
           this.getOrganizations(function(r){
             vm.organizations = r.data.data;
@@ -104,21 +104,21 @@
       },
       removeOrganization() {
         this.menuModal = false;
-        let url = '/api/v2/contact/' + this.contact.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
         this.$http.put(url, { contact: {organizationId: '' }}).then(resp => {
           this.$emit('updateOrganization', null);
         });
       },
       buildOrganization(event) {
         event.preventDefault();
-        let url = '/api/v2/organizations';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/organizations';
         this.$http.get(url, { params: { userId: Vue.currentUser.userId }}).then(resp => {
           this.organizations = resp.data.data;
           this.openModal = true;
         });
       },
       getOrganizations(callback) {
-        let url = '/api/v2/organizations';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/organizations';
 
         this.$http.get(url, { params: { userId: Vue.currentUser.userId }}).then(resp => {
           callback(resp);
@@ -126,7 +126,7 @@
       },
       update(){
         let vm = this;
-        let url = '/api/v2/organizations/' + this.organization.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/organizations/' + this.organization.id;
         this.$http.put(url, {
           contactId: this.contact.id,
           organization: this.organization

@@ -4,13 +4,16 @@ defmodule CercleApi.Company do
   """
   use CercleApi.Web, :model
   use Arc.Ecto.Schema
-
+  alias CercleApi.Repo
   @derive {Poison.Encoder, only: [:id, :title, :logo_image, :data_fields]}
 
   schema "companies" do
     field :title, :string
     field :logo_image, CercleApi.CompanyLogoImage.Type
-    has_many :users, CercleApi.User
+
+    has_many :user_companies, CercleApi.UserCompany
+    has_many :users, through: [:user_companies, :user]
+
     has_many :contacts, CercleApi.Contact
     has_many :organizations, CercleApi.Organization
     has_many :cards, CercleApi.Card
@@ -33,4 +36,39 @@ defmodule CercleApi.Company do
     |> validate_required([:title])
   end
 
+  def user_companies(user) do
+    Repo.all(
+      from c in __MODULE__,
+      join: p in assoc(c, :users),
+      where: p.id == ^user.id
+    )
+  end
+
+  def get_company(user, company_id) when not is_nil(company_id) do
+    query = from c in __MODULE__,
+      join: p in assoc(c, :users),
+      where: p.id == ^user.id,
+      where: c.id == ^company_id
+    query
+    |> Ecto.Query.first
+    |> Repo.one
+  end
+
+  def get_company(user, company_id \\ nil) do
+    query = from c in __MODULE__,
+      join: p in assoc(c, :users),
+      where: p.id == ^user.id
+    query
+    |> Ecto.Query.first
+    |> Repo.one
+  end
+end
+
+defimpl Poison.Encoder, for: CercleApi.Company do
+  def encode(model, options) do
+    model
+    |> Map.take([:id, :title])
+    |> Map.put(:logo_url, CercleApi.CompanyLogoImage.url({model.logo_image, model}, :small))
+    |> Poison.Encoder.encode(options)
+  end
 end

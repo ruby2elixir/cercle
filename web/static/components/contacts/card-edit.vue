@@ -8,7 +8,7 @@
         <file-upload
           title="UPLOAD FILE"
           name="attachment"
-          :post-action="'/api/v2/card/' + card.id + '/attachments'"
+          :post-action="'/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + card.id + '/attachments'"
           :headers="uploadHeaders"
           :events="uploadEvents"
           ref="attachment">
@@ -272,7 +272,7 @@
         return cssClass;
       },
       deleteAttachment(attachId) {
-        let url = '/api/v2/card/'+this.item.id+'/attachments/' + attachId;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/'+this.item.id+'/attachments/' + attachId;
         this.$http.delete(url, {  });
       },
       browse(){
@@ -280,7 +280,7 @@
         this.$emit('browse');
       },
       addContact(){
-        let url = '/api/v2/contact';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact';
         let data = {
           name: this.NewContactName,
           userId: this.card.user_id
@@ -292,7 +292,7 @@
           data['organization_id'] = this.organization.id;
         }
         this.$http.post(url, { contact: data }).then(resp => {
-          let urlOpp = '/api/v2/card/'+ this.card.id;
+          let urlOpp = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/'+ this.card.id;
           let contactIds = [];
           this.cardContacts.push(resp.data.data);
           this.item.contact_ids.push(resp.data.data.id);
@@ -306,7 +306,7 @@
         if(confirm('Are you sure?')) {
           this.item.contact_ids.splice(this.item.contact_ids.indexOf(contactId), 1);
 
-          let url = '/api/v2/card/' + this.item.id;
+          let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.item.id;
           this.$http.put(url, {card: { contactIds: this.item.contact_ids}}).then(resp => {
             if(resp.data.errors && resp.data.errors.contact_ids) {
               alert(resp.data.errors.contact_ids);
@@ -330,16 +330,16 @@
         }
       },
       archiveCard() {
-        let url = '/api/v2/card/' + this.item.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.item.id;
         this.$http.put(url, { card: { status: '1'} });
       },
       unarchiveCard() {
-        let url = '/api/v2/card/' + this.item.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.item.id;
         this.$http.put(url, { card: { status: '0'} });
       },
       updateCard(){
         if (this.allowUpdate) {
-          let url = '/api/v2/card/' + this.item.id;
+          let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.item.id;
           this.$http.put(url, { card: this.item });
         }
       },
@@ -470,7 +470,7 @@
       initChannel(){
         let channelTopic = 'cards:' + this.card.id;
         if (this.card.id) {
-          this.$http.get('/api/v2/card/' + this.card.id).then(resp => {
+          this.$http.get('/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.card.id).then(resp => {
             this.refreshCard(resp.data);
           });
         }

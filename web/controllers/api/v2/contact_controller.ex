@@ -18,9 +18,9 @@ defmodule CercleApi.APIV2.ContactController do
   def index(conn, params) do
     q = params["q"]
     current_user = CercleApi.Plug.current_user(conn)
-    company_id  = current_user.company_id
+    company = current_company(conn)
     query = from p in Contact,
-      where: p.company_id == ^company_id,
+      where: p.company_id == ^company.id,
       where: ilike(p.first_name, ^("%#{q}%")) or ilike(p.last_name, ^("%#{q}%")),
       order_by: [desc: p.updated_at]
 
@@ -37,7 +37,7 @@ defmodule CercleApi.APIV2.ContactController do
 
   def create(conn, %{"contact" => contact_params}) do
     user = CercleApi.Plug.current_user(conn)
-    company = Repo.get!(Company, user.company_id)
+    company = current_company(conn)
     contact_params = Map.merge(contact_params, split_name(contact_params))
     contact_params = Map.put(contact_params, "user_id", user.id)
 
@@ -180,10 +180,10 @@ defmodule CercleApi.APIV2.ContactController do
   #
   def multiple_delete(conn, %{"contact_ids" => contact_ids}) do
     current_user = CercleApi.Plug.current_user(conn)
-    company_id  = current_user.company_id
+    company = current_company(conn)
 
     query = from c in Contact,
-      where: c.company_id == ^company_id,
+      where: c.company_id == ^company.id,
       where: c.id in ^contact_ids
     contacts = Repo.all(query)
 

@@ -90,7 +90,7 @@ export default {
     }
   },
   mounted() {
-    this.$http.get('/api/v2/board/').then(resp => {
+    this.$http.get('/api/v2/company/'+ Vue.currentUser.companyId +'/board/').then(resp => {
       this.boards = resp.data.data;
     });
   }

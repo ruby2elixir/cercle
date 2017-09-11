@@ -11,9 +11,11 @@ defmodule CercleApi.APIV2.BulkController do
       json conn, %{status: 422, error_message: "Maximum 100 records are permitted per call"}
     else
       user = CercleApi.Plug.current_user(conn)
-      company_id = user.company_id
+      company = current_company(conn, user)
       contacts = for item <- items do
-        contact_params = Map.put(item["contact"], "user_id", user.id) |> Map.put("company_id", company_id)
+        contact_params = item["contact"]
+        |> Map.put("user_id", user.id)
+        |> Map.put("company_id", company.id)
 
         if contact_params["full_name"] do
           [first_name|splits] = String.split(contact_params["full_name"], ~r/\s+/)
@@ -24,10 +26,10 @@ defmodule CercleApi.APIV2.BulkController do
           |> Map.put("last_name", last_name)
         end
 
-        organization_params = Map.put(item["organization"], "company_id", company_id)
+        organization_params = Map.put(item["organization"], "company_id", company.id)
 
         if organization_params["id"] do
-          ext_org = Repo.get_by(Organization, id: organization_params["id"], company_id: company_id)
+          ext_org = Repo.get_by(Organization, id: organization_params["id"], company_id: company.id)
         end
 
         if ext_org do
@@ -39,9 +41,9 @@ defmodule CercleApi.APIV2.BulkController do
         end
 
         if contact_params["id"] do
-          ext_contact = Repo.get_by(Contact, id: contact_params["id"], company_id: company_id)
+          ext_contact = Repo.get_by(Contact, id: contact_params["id"], company_id: company.id)
         else contact_params["email"]
-          ext_contact = Repo.get_by(Contact, email: contact_params["email"], company_id: company_id)
+          ext_contact = Repo.get_by(Contact, email: contact_params["email"], company_id: company.id)
         end
 
         if ext_contact do
@@ -72,7 +74,6 @@ defmodule CercleApi.APIV2.BulkController do
         tag = Repo.get(Tag, tag_id)
         if tag do
           user = CercleApi.Plug.current_user(conn)
-          company_id = user.company_id
           responses = for c <- contacts do
             if c do
               {contact_id, _rest} = Integer.parse(c)

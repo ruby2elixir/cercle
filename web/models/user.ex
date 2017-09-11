@@ -23,7 +23,9 @@ defmodule CercleApi.User do
     field :time_zone, :string, default: "America/New_York"
     timestamps
 
-    belongs_to :company, CercleApi.Company
+    has_many :user_companies, CercleApi.UserCompany
+    has_many :companies, through: [:user_companies, :company]
+
     has_many :activities, CercleApi.Activity, on_delete: :delete_all
     has_many :timeline_event, CercleApi.TimelineEvent
     has_many :cards, CercleApi.Card
@@ -41,7 +43,7 @@ defmodule CercleApi.User do
   def changeset(model, params \\ :invalid) do
     model
     |> cast(params, [
-          :login, :user_name, :password_reset_code, :company_id,
+          :login, :user_name, :password_reset_code,
           :name, :time_zone, :notification])
     |> cast_attachments(params, [:profile_image])
     |> validate_required([:login])
@@ -81,7 +83,7 @@ end
 defimpl Poison.Encoder, for: CercleApi.User do
   def encode(model, options) do
     model
-    |> Map.take([:id, :user_name, :profile_image])
+    |> Map.take([:id, :user_name, :name, :profile_image])
     |> Map.put(:profile_image_url, CercleApi.UserProfileImage.url({model.profile_image, model}, :small))
     |> Poison.Encoder.encode(options)
   end

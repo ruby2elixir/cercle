@@ -71,7 +71,7 @@ export default {
     },
 
     addContactToBoard: function(userId, companyId, contactId, boardId, columnId) {
-      let url = '/api/v2/card/';
+      let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/';
       this.$http.post(url,{
         card: {
           contactIds: [contactId],
@@ -95,7 +95,7 @@ export default {
         this.addContactToBoard(userId, companyId, this.existingContactId, boardId, columnId);
       } else if(this.name) {
         var addToBoard = this.addToBoard;
-        let url = '/api/v2/contact';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact';
         this.$http.post(url,{
           contact: {
             userId: userId,
@@ -134,7 +134,7 @@ export default {
 
     searchContacts(search, loading) {
       loading(true);
-      this.$http.get('/api/v2/contact', { params: { q: search }}).then(resp => {
+      this.$http.get('/api/v2/company/'+ Vue.currentUser.companyId +'/contact', { params: { q: search }}).then(resp => {
         this.contacts = resp.data.data;
         loading(false);
       });

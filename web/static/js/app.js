@@ -26,7 +26,6 @@ import { Activity } from './activity';
 import inlineEdit from './inline_edit';
 import contactAdd from './contact_add';
 import contactLive from './contact_live';
-import { Pipeline } from './opportunity_pipeline';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
@@ -51,9 +50,6 @@ Vue.filter('formatDateTime', function(value) {
 export var App = {
   activityInit: function(){
     Activity.start();
-  },
-  pipelineInit: function(){
-    Pipeline.start();
   },
   contactSocketInit: function(contactId){
     contactLive.init(socket, contactId );
@@ -85,6 +81,7 @@ import ArchiveBoard from '../components/boards/archive.vue';
 import NotificationApp from '../components/notification.vue';
 import GlModalWindow from '../components/glmodal.vue';
 import GlAttachmentPreview from '../components/glpreview.vue';
+import UserNavBar from '../components/navbar.vue';
 import WebhooksApp from '../components/webhooks.vue';
 
 Vue.use(require('vue-autosize'));
@@ -147,6 +144,7 @@ const VueCurrentUser = {
     Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
     Vue.currentUser =  {
       userId: options['userId'],
+      companyId: options['companyId'],
       token: options['token'],
       timeZone: options['timeZone'],
       userImage: options['userImage'],
@@ -162,12 +160,21 @@ if (document.querySelector('meta[name="guardian_token"]')) {
   window.jwtToken = document.querySelector('meta[name="guardian_token"]').content;
   Vue.use(VueCurrentUser, {
     userId: document.querySelector('meta[name="user_id"]').content,
+    companyId: document.querySelector('meta[name="company_id"]').content,
     token: document.querySelector('meta[name="guardian_token"]').content,
     timeZone: document.querySelector('meta[name="time_zone"]').content,
     userImage: document.querySelector('meta[name="user_image"]').content
   });
 }
 
+if ($('#user-navbar').length > 0) {
+  new Vue({
+    el: '#user-navbar',
+    components: {
+      'navbar': UserNavBar
+    }
+  });
+}
 if ($('#contacts-app').length > 0) {
   new Vue({
     el: '#contacts-app',
@@ -285,14 +292,6 @@ if ($('#webhooks-app').length > 0) {
   });
 }
 
-
-
-if (
-  $('#opportunity_pipeline').length > 0 ||
-    $('[data-pipeline_init]').length > 0
-){
-  App.pipelineInit();
-}
 
 $('#toggle-activity-panel').on('click', function(){
   $('.control-sidebar-light').toggleClass('open');

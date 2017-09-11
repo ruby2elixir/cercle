@@ -31,9 +31,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
         CercleApi.TimelineEventService.create(timeline_event_reload)
 
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
-        user = current_user
-        |> Repo.preload [:company]
-        company = user.company
+        company = conn
+        |> current_company
         |> Repo.preload [:users]
         users = company.users
 
@@ -43,7 +42,9 @@ defmodule CercleApi.APIV2.TimelineEventController do
         Enum.each parts, fn x ->
           Enum.each users, fn u ->
             if x == ("@" <> to_string(u.name)) do
-              CercleApi.Mailer.deliver notification_email(u.login, timeline_event_reload.card, true, comment, company, user , u)
+              CercleApi.Mailer.deliver(
+                notification_email(u.login, timeline_event_reload.card, true, comment, company, current_user , u)
+              )
             end
           end
         end

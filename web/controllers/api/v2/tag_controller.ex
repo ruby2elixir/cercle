@@ -9,14 +9,14 @@ defmodule CercleApi.APIV2.TagController do
 
   def index(conn, params) do
     user = CercleApi.Plug.current_user(conn)
-    company_id = user.company_id
+    company = current_company(conn)
 
     q = Map.get(params, "q")
     query = Tag
 
     if q do
       query = from tag in query,
-        where: tag.company_id == ^company_id,
+        where: tag.company_id == ^company.id,
         where: like(tag.name, ^"#{q}%")
     end
 
@@ -26,10 +26,10 @@ defmodule CercleApi.APIV2.TagController do
 
   def create(conn, %{"id" => id, "name" => tag_name}) do
   	user = CercleApi.Plug.current_user(conn)
-    company_id = user.company_id
+    company = current_company(conn)
 
-    tag = Repo.get_by(Tag, name: tag_name, company_id: company_id) ||
-      Repo.insert!(%Tag{name: tag_name, company_id: company_id})
+    tag = Repo.get_by(Tag, name: tag_name, company_id: company.d) ||
+      Repo.insert!(%Tag{name: tag_name, company_id: company.id})
     render(conn, "show.json", tag: tag)
   end
 

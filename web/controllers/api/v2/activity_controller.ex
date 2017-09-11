@@ -12,9 +12,10 @@ defmodule CercleApi.APIV2.ActivityController do
   def index(conn, params) do
     current_user = params["user_id"] && Repo.get(User, params["user_id"])
     if current_user do
+      company = current_company(conn)
       query = Activity
       |> Activity.by_user(current_user.id)
-      |> Activity.by_company(current_user.company_id)
+      |> Activity.by_company(company.id)
     else
       query = Activity
     end

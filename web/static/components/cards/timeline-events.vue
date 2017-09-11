@@ -42,11 +42,11 @@
         return Vue.currentUser.eq(event.userId);
       },
       deleteEvent(event) {
-        let url = '/api/v2/timeline_events/' + event.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/timeline_events/' + event.id;
         this.$http.delete(url).then(resp => { this.$emit('eventDelete', event.id);});
       },
       updateEvent(event) {
-        let url = '/api/v2/timeline_events/' + event.id;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/timeline_events/' + event.id;
         this.$http.put(url, { timelineEvent: { content: event.content } });
       }
     },

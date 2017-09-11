@@ -6,9 +6,7 @@ defmodule CercleApi.Settings.ProfileController do
   def edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
     changeset = User.changeset(user)
-    if user.company_id do
-      company = Repo.get(Company, user.company_id)
-    end
+    company = current_company(conn)
 
     conn
     |> put_layout("adminlte.html")
@@ -18,15 +16,13 @@ defmodule CercleApi.Settings.ProfileController do
   def update(conn, %{"user" => user_params}) do
     user = Guardian.Plug.current_resource(conn)
     changeset = User.update_changeset(user, user_params)
-    if user.company_id do
-      company = Repo.get(Company, user.company_id)
-    end
+    company = current_company(conn)
 
     case Repo.update(changeset) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: "/settings/profile")
+        |> redirect(to: edit_profile_path(conn, :edit, company))
       {:error, changeset} ->
         conn
         |> put_layout("adminlte.html")

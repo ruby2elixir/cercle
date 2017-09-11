@@ -1,15 +1,15 @@
 <ul class="nav nav-pills nav-stacked">
   <li class="<%= assigns[:active] && (@active == :profile) && "active" %>">
-    <a href="/settings/profile"><i class="fa fa-edit"></i>Profile</a>
+    <a href="<%= edit_profile_path(@conn, :edit, @conn.assigns[:current_company].id) %>"><i class="fa fa-edit"></i>Profile</a>
   </li>
   <li class="<%= assigns[:active] && (@active == :company) && "active" %>">
-    <a href="/settings/company"><i class="fa fa-edit"></i>Company</a>
+    <a href="<%= settings_company_path(@conn, :index, @conn.assigns[:current_company].id) %>"><i class="fa fa-edit"></i>Companies</a>
   </li>
   <li class="<%= assigns[:active] && (@active == :team) && "active" %>">
-    <a href="/settings/team_edit"><i class="fa fa-edit"></i>Team</a>
+    <a href="<%= settings_path(@conn, :team_edit, @conn.assigns[:current_company].id)%>"><i class="fa fa-edit"></i>Team</a>
   </li>
-  <li><a href="/import"><i class="fa fa-edit"></i>Import CSV</a></li>
-  <li><a href="/settings/tags_edit"><i class="fa fa-edit"></i>Edit Tags</a></li>
-  <li><a href="/settings/api_key"><i class="fa fa-edit"></i>Third Party</a></li>
-  <li><a href="/settings/webhooks"><i class="fa fa-edit"></i>Webhooks</a></li>
+  <li><a href="/company/<%= @conn.assigns[:current_company].id %>/import"><i class="fa fa-edit"></i>Import CSV</a></li>
+  <li><a href="/company/<%= @conn.assigns[:current_company].id %>/settings/tags_edit"><i class="fa fa-edit"></i>Edit Tags</a></li>
+  <li><a href="/company/<%= @conn.assigns[:current_company].id %>/settings/api_key"><i class="fa fa-edit"></i>Third Party</a></li>
+  <li><a href="/company/<%= @conn.assigns[:current_company].id %>/settings/webhooks"><i class="fa fa-edit"></i>Webhooks</a></li>
 </ul>

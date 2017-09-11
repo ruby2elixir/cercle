@@ -112,7 +112,7 @@ export default {
   methods: {
     addColumn() {
       if (this.newColumn.name && this.newColumn.name !== '') {
-        let url = '/api/v2/board_column';
+        let url = this.buildApiUrl('/board_column');
         this.$http.post(url, {
           boardColumn: {
             boardId: this.board.id,
@@ -128,7 +128,7 @@ export default {
     },
     deleteColumn(column) {
       if(confirm('Are you sure?')) {
-        let url = '/api/v2/board_column/' + column.id;
+        let url = this.buildApiUrl('/board_column/' + column.id);
         this.$http.delete(url).then(resp => {
           let itemIndex = this.board.boardColumns.findIndex(function(item){
             return item.id === parseInt(column.id);
@@ -141,30 +141,30 @@ export default {
       if (event.added) {
         let card = event.added.element;
         let position = event.added.newIndex;
-        let url = '/api/v2/card/' + card.id;
+        let url = this.buildApiUrl('/card/' + card.id);
         this.$http.put(url, {
           card: { position: position, boardColumnId: column.id}
         }).then( resp => {
-          let reorderUrl = '/api/v2/board_column/' + column.id + '/reorder_cards';
+          let reorderUrl = this.buildApiUrl('/board_column/' + column.id + '/reorder_cards');
           let cardIds = column.cards.map((v)=> v.id);
           this.$http.put(reorderUrl, { cardIds: cardIds });
         });
       } else if (event.removed) {
 
       } else if (event.moved) {
-        let url = '/api/v2/board_column/' + column.id + '/reorder_cards';
+        let url = this.buildApiUrl('/board_column/' + column.id + '/reorder_cards');
         let cardIds = column.cards.map((v)=> v.id);
         this.$http.put(url, { cardIds: cardIds });
 
       }
     },
     onEndMoveBoardColumn(e) {
-      let url = '/api/v2/board/' + this.board.id + '/reorder_columns';
+      let url = this.buildApiUrl('/board/' + this.board.id + '/reorder_columns');
       let columnIds = this.board.boardColumns.map((v)=> v.id);
       this.$http.put(url, { orderColumnIds: columnIds });
     },
     updateBoardColumn(boardColumn) {
-      let url = '/api/v2/board_column/' + boardColumn.id;
+      let url = this.buildApiUrl('/board_column/' + boardColumn.id);
       this.$http.put(url, {id: boardColumn.id, boardColumn: { name: boardColumn.name.trim() } });
     },
     updateBoard() {
@@ -234,11 +234,12 @@ export default {
       this.$http.get(this.boardUrl).then(resp => {
         this.board = resp.data.data;
       });
-    }
+    },
+    buildApiUrl(path) { return '/api/v2/company/' + Vue.currentUser.companyId + path; }
   },
   computed: {
     boardUrl() {
-      return '/api/v2/board/' + this.board_id;
+      return this.buildApiUrl('/board/' + this.board_id);
     }
   },
   mounted() {

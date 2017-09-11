@@ -71,7 +71,7 @@
 
       searchContacts(search, loading) {
         loading(true);
-        this.$http.get('/api/v2/contact', { params: { q: search }}).then(resp => {
+        this.$http.get('/api/v2/company/' + Vue.currentUser.companyId + '/contact', { params: { q: search }}).then(resp => {
           this.searchedContacts = resp.data.data;
           loading(false);
         });

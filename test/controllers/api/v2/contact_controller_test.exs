@@ -8,9 +8,11 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
   setup %{conn: conn} do
     user = insert(:user)
+    company = insert(:company)
+    add_company_to_user(user, company)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
-    {:ok, conn: conn, user: user, company: user.company}
+    {:ok, conn: conn, user: user, company: company}
   end
 
   test "index/2 responds with all Contacts", state do
@@ -30,7 +32,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
       ]
     )
 
-    response = get(state[:conn], "/api/v2/contact")
+    response = get(state[:conn], "/api/v2/company/#{state[:company].id}/contact")
     |> json_response(200)
 
 
@@ -39,63 +41,63 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     )
   end
 
-  test "create contact with valid params", %{conn: conn} do
-    conn = post conn, "/api/v2/contact", contact: @valid_attrs
+  test "create contact with valid params", %{conn: conn} = state do
+    conn = post conn, "/api/v2/company/#{state[:company].id}/contact", contact: @valid_attrs
     assert json_response(conn, 201)["data"]["id"]
   end
 
-  test "create contact with name instead of fist_name and last_name", %{conn: conn} do
-    conn = post conn, "/api/v2/contact", contact: %{name: "John Doe"}
+  test "create contact with name instead of fist_name and last_name", %{conn: conn} = state do
+    conn = post conn, "/api/v2/company/#{state[:company].id}/contact", contact: %{name: "John Doe"}
     assert json_response(conn, 201)["data"]["id"]
     assert json_response(conn, 201)["data"]["first_name"]
     assert json_response(conn, 201)["data"]["last_name"]
   end
 
-  test "create contact with invalid params", %{conn: conn} do
-    conn = post conn, "/api/v2/contact", contact: @invalid_attrs
+  test "create contact with invalid params", %{conn: conn} = state do
+    conn = post conn, "/api/v2/company/#{state[:company].id}/contact", contact: @invalid_attrs
     assert json_response(conn, 422)["errors"]["last_name"] == ["can't be blank"]
   end
 
   test "try to update authorized contact with valid params", state do
     contact = insert(:contact, user: state[:user], company: state[:company])
-    conn = put state[:conn], "/api/v2/contact/#{contact.id}", contact: %{name: "Modified Contact"}
+    conn = put state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}", contact: %{name: "Modified Contact"}
     assert json_response(conn, 200)["data"]["id"]
   end
 
   test "try to update unauthorized contact", state do
     contact = insert(:contact)
-    conn = put state[:conn], "/api/v2/contact/#{contact.id}", contact: %{name: "Modified Contact"}
+    conn = put state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}", contact: %{name: "Modified Contact"}
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to show authorized contact", state do
     contact = insert(:contact, user: state[:user], company: state[:company])
-    conn = get state[:conn], "/api/v2/contact/#{contact.id}", user_id: state[:user].id, company_id: state[:company].id
+    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}", user_id: state[:user].id, company_id: state[:company].id
     assert json_response(conn, 200)["data"]
   end
 
   test "try to show unauthorized contact", state do
     contact = insert(:contact)
-    conn = get state[:conn], "/api/v2/contact/#{contact.id}", user_id: state[:user].id, company_id: state[:company].id
+    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}", user_id: state[:user].id, company_id: state[:company].id
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to delete unauthorized contact", state do
     contact = insert(:contact)
-    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}"
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to delete authorized contact", state do
     contact = insert(:contact, user: state[:user], company: state[:company])
-    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}"
     assert json_response(conn, 200)
   end
 
   test "multiple_delete", state do
     contact = insert(:contact, user: state[:user], company: state[:company])
     contact1 = insert(:contact)
-    conn = delete state[:conn], "/api/v2/contact/multiple/delete", contact_ids: [contact.id, contact1.id]
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/contact/multiple/delete", contact_ids: [contact.id, contact1.id]
     assert Repo.get(Contact, contact.id) == nil
     assert Repo.get(Contact, contact1.id).id == contact1.id
     assert json_response(conn, 200)
@@ -111,7 +113,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
     old_count = Repo.one(from p in Card, select: count("*"))
 
-    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}"
     assert json_response(conn, 200)
 
     # Test no of cards after delete
@@ -137,7 +139,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
     old_count = Repo.one(from p in Card, select: count("*"))
 
-    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}"
     assert json_response(conn, 200)
 
     # Test no of cards after delete
@@ -161,7 +163,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
     assert card.contact_ids == [contact.id, contact2.id]
 
-    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}"
     assert json_response(conn, 200)
 
     card = Repo.get(Card, card.id)
@@ -181,7 +183,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
     old_count = Repo.one(from p in TimelineEvent, select: count("*"))
 
-    conn = delete state[:conn], "/api/v2/contact/#{contact.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}"
     assert json_response(conn, 200)
 
     # Test no of timeline events after delete

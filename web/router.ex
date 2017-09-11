@@ -22,6 +22,7 @@ defmodule CercleApi.Router do
     plug ExOauth2Provider.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
+    plug CercleApi.Plug.CurrentCompany
   end
 
   pipeline :api do
@@ -36,10 +37,17 @@ defmodule CercleApi.Router do
   pipeline :require_login do
     plug Guardian.Plug.EnsureAuthenticated, handler: CercleApi.GuardianErrorHandler
     plug CercleApi.Plug.CurrentUser
+    plug CercleApi.Plug.CurrentCompany
   end
 
   pipeline :already_authenticated do
     plug Guardian.Plug.EnsureNotAuthenticated, handler: CercleApi.GuardianAlreadyAuthenticatedHandler
+  end
+
+  scope "/", CercleApi do
+    pipe_through [:browser, :browser_auth]
+    get "/register/:register_values/join/", RegistrationController, :accept_team_invitation
+    get "/register/:register_values/join/:useless_gmail", RegistrationController, :accept_team_invitation
   end
 
   scope "/", CercleApi do
@@ -54,19 +62,36 @@ defmodule CercleApi.Router do
     post "/reset-password", PasswordController, :reset_password
     get "/password/reset/:password_reset_code/confirm", PasswordController, :confirm
     post "/password/reset/:password_reset_code/confirm", PasswordController, :confirm_submit
-    get "/register/:register_values/join/", RegistrationController, :accept_team_invitation
-    get "/register/:register_values/join/:useless_gmail", RegistrationController, :accept_team_invitation
   end
 
   scope "/", CercleApi do
     pipe_through [:browser, :browser_auth, :require_login]
 
     get "/logout", SessionController, :delete
+
+  end
+
+  scope "/company/:company_id", CercleApi do
+    pipe_through [:browser, :browser_auth, :require_login]
+    resources "/board", BoardController
+    get "/contact", ContactController, :index
+    get "/contact/new", ContactController, :new
+    get "/contact/:id", ContactController, :show
+    get "/contact/:id/card/:card_id", ContactController, :show
+
+    get "/activity", ActivityController, :index
+
+    get "/import", ImportController, :import
+    post "/import_data", ImportController, :import_data
+    post "/view_uploaded_data", ImportController, :view_uploaded_data
+    post "/create_nested_data", ImportController, :create_nested_data
+
     get "/settings/profile", Settings.ProfileController, :edit, as: :edit_profile
     put "/settings/profile", Settings.ProfileController, :update
-    get "/settings/company", Settings.CompanyController, :edit, as: :edit_company
-    put "/settings/company", Settings.CompanyController, :update
 
+    scope "/settings", Settings, as: :settings do
+      resources "/companies", CompanyController
+    end
     get "/settings/team_edit", SettingsController, :team_edit
     delete "/settings/remove_team_member/:user_id", SettingsController, :remove_team_member
     put "/settings/team_update", SettingsController, :team_update
@@ -77,59 +102,45 @@ defmodule CercleApi.Router do
     get "/settings/api_key", SettingsController, :api_key
     get "/settings/webhooks", SettingsController, :webhooks
 
-    get "/contact", ContactController, :index
-    get "/contact/new", ContactController, :new
-    get "/contact/:id", ContactController, :show
-    get "/contact/:id/card/:card_id", ContactController, :show
-
-    resources "/board", BoardController
-    get "/activity", ActivityController, :index
-
-    get "/import", ImportController, :import
-    post "/import_data", ImportController, :import_data
-    post "/view_uploaded_data", ImportController, :view_uploaded_data
-    post "/create_nested_data", ImportController, :create_nested_data
-
   end
 
-  scope "/", CercleApi do
+  scope "/api/v2", CercleApi.APIV2 do
     pipe_through [:api, :api_auth]
 
-    post "/api/v2/register", APIV2.UserController, :create
-    post "/api/v2/login", APIV2.SessionController, :create
+    post "/register", UserController, :create
+    post "/login", SessionController, :create
+    resources "/companies", CompanyController
+    resources "/organizations", OrganizationController
+    resources "/webhooks", WebhookSubscriptionController
+  end
 
-    post "/api/v2/contact/export", APIV2.ContactExportController, :export
-    resources "/api/v2/contact", APIV2.ContactController
-    put "/api/v2/contact/:id/update_tags", APIV2.ContactController, :update_tags
-    put "/api/v2/contact/:id/utags", APIV2.ContactController, :utags
-    delete "/api/v2/contact/multiple/delete", APIV2.ContactController, :multiple_delete
+  scope "/api/v2/company/:company_id", CercleApi.APIV2 do
+    pipe_through [:api, :api_auth]
+    post "/contact/export", ContactExportController, :export
+    resources "/contact", ContactController
+    put "/contact/:id/update_tags", ContactController, :update_tags
+    put "/contact/:id/utags", ContactController, :utags
+    delete "/contact/multiple/delete", ContactController, :multiple_delete
 
-    resources "/api/v2/tag", APIV2.TagController, only: [:index, :create]
-
-    resources "/api/v2/companies", APIV2.CompanyController
-    resources "/api/v2/organizations", APIV2.OrganizationController
-    resources "/api/v2/activity", APIV2.ActivityController
-    resources "/api/v2/timeline_events", APIV2.TimelineEventController
-    resources "/api/v2/card", APIV2.CardController do
-      resources "/attachments", APIV2.CardAttachmentController,
+    resources "/card", CardController do
+      resources "/attachments", CardAttachmentController,
         only: [:index, :create, :delete]
     end
-    resources "/api/v2/tag", APIV2.TagController
-    resources "/api/v2/board", APIV2.BoardController do
-      put "/archive", APIV2.BoardController, :archive, as: :archive
-      put "/unarchive", APIV2.BoardController, :unarchive, as: :unarchive
-      put "/reorder_columns", APIV2.BoardController, :reorder_columns
-    end
-    resources "/api/v2/board_column", APIV2.BoardColumnController do
-      put "/reorder_cards", APIV2.BoardColumnController, :reorder_cards
-    end
+    resources "/tag", TagController, only: [:index, :create, :update, :delete]
 
-    resources "/api/v2/webhooks", APIV2.WebhookSubscriptionController
-    #post "/api/v2/webhook", APIV2.WebhookController, :create
-    post "/api/v2/bulk_contact_create", APIV2.BulkController, :bulk_contact_create
-    post "/api/v2/bulk_tag_or_untag_contacts", APIV2.BulkController, :bulk_tag_or_untag_contacts
-
-    get "/api/v2/user", APIV2.UserController, :index
+    resources "/activity", ActivityController
+    resources "/board", BoardController do
+      put "/archive", BoardController, :archive, as: :archive
+      put "/unarchive", BoardController, :unarchive, as: :unarchive
+      put "/reorder_columns", BoardController, :reorder_columns
+    end
+    resources "/board_column", BoardColumnController do
+      put "/reorder_cards", BoardColumnController, :reorder_cards
+    end
+    post "/bulk_contact_create", BulkController, :bulk_contact_create
+    post "/bulk_tag_or_untag_contacts", BulkController, :bulk_tag_or_untag_contacts
+    get "/user", UserController, :index
+    resources "/timeline_events", TimelineEventController
   end
 
   scope "/admin" , CercleApi.Admin, as: :admin do

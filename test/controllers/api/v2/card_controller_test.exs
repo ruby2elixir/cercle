@@ -5,20 +5,22 @@ defmodule CercleApi.APIV2.CardControllerTest do
 
   setup %{conn: conn} do
     user = insert(:user)
+    company = insert(:company)
+    add_company_to_user(user, company)
     organization = insert(:organization,
-      company: user.company, user: user
+      company: company, user: user
     )
     contact = insert(:contact,
-      company: user.company, organization: organization, user: user
+      company: company, organization: organization, user: user
     )
-    board = insert(:board, company: user.company)
+    board = insert(:board, company: company)
     board_column = insert(:board_column, board: board)
     {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
     conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
     {
       :ok, conn: conn,
       user: user, organization: organization,
-      contact: contact, company: user.company,
+      contact: contact, company: company,
       board: board, board_column: board_column
     }
   end
@@ -33,7 +35,7 @@ defmodule CercleApi.APIV2.CardControllerTest do
     )
     |> Repo.preload([:board_column, board: [:board_columns]])
 
-    conn = get state[:conn], "/api/v2/card", contact_id: state[:contact].id, archived: "true"
+    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/card", contact_id: state[:contact].id, archived: "true"
 
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.CardView, "index.json", %{cards: [card_closed, card_open]}
@@ -50,7 +52,7 @@ defmodule CercleApi.APIV2.CardControllerTest do
     )
     |> Repo.preload([:board_column, board: [:board_columns]])
 
-    conn = get state[:conn], "/api/v2/card", contact_id: state[:contact].id, archived: "false"
+    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/card", contact_id: state[:contact].id, archived: "false"
 
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.CardView, "index.json", %{ cards: [card_open] }
@@ -59,25 +61,25 @@ defmodule CercleApi.APIV2.CardControllerTest do
 
   test "try to delete authorized Card", state do
     card = insert(:card, user: state[:user], company: state[:company])
-    conn = delete state[:conn], "/api/v2/card/#{card.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/card/#{card.id}"
     assert json_response(conn, 200)
   end
 
   test "try to delete unauthorized Card", state do
     card = insert(:card, user: state[:user], contact_ids: [state[:contact].id])
-    conn = delete state[:conn], "/api/v2/card/#{card.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/card/#{card.id}"
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
   test "try to update authorized Card", state do
     card = insert(:card, user: state[:user], contact_ids: [state[:contact].id], company: state[:company])
-    conn = put state[:conn], "/api/v2/card/#{card.id}", card: %{name: "Modified Card"}
+    conn = put state[:conn], "/api/v2/company/#{state[:company].id}/card/#{card.id}", card: %{name: "Modified Card"}
     assert json_response(conn, 200)["data"]["id"]
   end
 
   test "try to update unauthorized Card", state do
     card = insert(:card, user: state[:user])
-    conn = delete state[:conn], "/api/v2/card/#{card.id}", card: %{name: "Modified Card"}
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/card/#{card.id}", card: %{name: "Modified Card"}
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
@@ -87,7 +89,7 @@ defmodule CercleApi.APIV2.CardControllerTest do
     |> attach_file(insert(:card_attachment, card: card),
     :attachment, "test/fixtures/logo.png")
 
-    conn = delete state[:conn], "/api/v2/card/#{card.id}"
+    conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/card/#{card.id}"
     assert json_response(conn, 200)
 
     # Ensure attachment is deleted
@@ -100,7 +102,7 @@ defmodule CercleApi.APIV2.CardControllerTest do
 
     response = state[:conn]
     |> post(
-      card_path(state[:conn], :create), card: %{
+      card_path(state[:conn], :create, state[:company].id), card: %{
         board_id: state[:board].id,
         board_column_id: state[:board_column].id,
         name: "", status: 0, company: state[:company].id,
@@ -134,7 +136,7 @@ defmodule CercleApi.APIV2.CardControllerTest do
     board_column = insert(:board_column, board: state[:board])
     response = state[:conn]
     |> put(
-      card_path(state[:conn], :update, card), card: %{
+      card_path(state[:conn], :update, state[:company].id, card), card: %{
         board_column_id: board_column.id
       }
     )

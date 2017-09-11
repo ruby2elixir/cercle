@@ -17,7 +17,7 @@
          <!-- Horizontal Form -->
          <!-- general form elements disabled -->
          <div class="box box-primary">
-           <%= form_for @changeset, settings_company_path(@conn, :update, assigns[:current_company], @company), [multipart: true], fn f -> %>
+           <%= form_for @changeset, settings_company_path(@conn, :create, assigns[:current_company]), [multipart: true], fn f -> %>
               <%= if f.errors != [] do %>
                 <div class="alert alert-danger">
                   <p>Oops, something went wrong!<br> Please check the errors below:</p>
@@ -29,7 +29,7 @@
                 </div>
               <% end %>
              <div class="box-header with-border">
-               <h3 class="box-title">Company</h3>
+               <h3 class="box-title">New Company</h3>
              </div><!-- /.box-header -->
              <div class="box-body">
                <!-- text input -->

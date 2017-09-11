@@ -11,10 +11,10 @@ defmodule CercleApi.BoardController do
 
   def index(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = Repo.get!(Company, user.company_id).id
+    company = current_company(conn)
 
     query = from p in Board,
-      where: p.company_id == ^company_id,
+      where: p.company_id == ^company.id,
       order_by: [desc: p.updated_at]
 
     boards = Repo.all(query)
@@ -26,8 +26,9 @@ defmodule CercleApi.BoardController do
 
   def new(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = Repo.get!(Company, user.company_id).id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+    company = conn
+    |> current_company
+    |> Repo.preload([:users])
 
     conn
       |> put_layout("adminlte.html")
@@ -35,13 +36,17 @@ defmodule CercleApi.BoardController do
   end
 
   def show(conn, %{"id" => id}) do
-    board = Repo.get!(CercleApi.Board, id)  |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
+    user = Guardian.Plug.current_resource(conn)
+    board = CercleApi.Board
+    |> Repo.get!(id)
+    |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
     board_id = board.id
-    company_id = conn.assigns[:current_user].company_id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+    company = conn
+    |> current_company
+    |> Repo.preload([:users])
 
     query_cards = from p in Card,
-        where: p.company_id == ^company_id,
+        where: p.company_id == ^company.id,
         where: p.board_id == ^board_id,
         where: p.status == 0,
         order_by: [desc: p.updated_at]
@@ -66,8 +71,9 @@ defmodule CercleApi.BoardController do
 
   def new(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = Repo.get!(Company, user.company_id).id
-    company = Repo.get!(CercleApi.Company, company_id) |> Repo.preload [:users]
+    company = conn
+    |> current_company
+    |> Repo.preload([:users])
 
     conn
       |> put_layout("app2.html")
@@ -76,9 +82,10 @@ defmodule CercleApi.BoardController do
 
   def edit(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
-    company_id = Repo.get!(Company, user.company_id).id
     reward = Repo.get!(Contact, id) |> Repo.preload [:organization, :company]
-    company = Repo.get!(CercleApi.Company, reward.company_id) |> Repo.preload [:users]
+    company = conn
+    |> current_company
+    |> Repo.preload([:users])
 
     query = from p in Organization,
       order_by: [desc: p.inserted_at]

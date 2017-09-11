@@ -37,6 +37,7 @@ defmodule CercleApi.Web do
       import CercleApi.Router.Helpers
       import CercleApi.Gettext
       import Canary.Plugs
+      import CercleApi.Controllers.Helpers
     end
   end
 

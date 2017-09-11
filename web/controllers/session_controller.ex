@@ -10,7 +10,9 @@ defmodule CercleApi.SessionController do
   def create(conn, %{"login" => login, "password" => pass, "time_zone" => time_zone}) do
     case CercleApi.Session.authenticate(login, pass, time_zone) do
       {:ok, user} ->
-        path = get_session(conn, :redirect_url) || "/board"
+        company = current_company(conn, user)
+        path = get_session(conn, :redirect_url) || "/company/#{company.id}/board"
+
         conn
         |> put_flash(:info, "Welcome back!")
         |> Guardian.Plug.sign_in(user)

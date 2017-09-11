@@ -38,7 +38,7 @@
       },
       methods: {
         updateTask(task) {
-          let url = '/api/v2/activity/' + task.id;
+          let url = '/api/v2/company/' + Vue.currentUser.companyId + '/activity/' + task.id;
 
           this.$http.put(url, {
             activity: { isDone: task.isDone }

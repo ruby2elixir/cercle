@@ -3,9 +3,15 @@ defmodule CercleApi.Factory do
 
   alias CercleApi.{User, Company, Activity, Organization, Contact,
                    Board, BoardColumn, Card, CardAttachment,
-                   TimelineEvent}
+                   TimelineEvent, UserCompany}
   alias ExOauth2Provider.OauthApplications.OauthApplication
   alias ExOauth2Provider.OauthAccessTokens.OauthAccessToken
+
+  def user_company_factory do
+    %UserCompany{ user_id: "", company_id: "" }
+  end
+
+
   def company_factory do
     %Company{ title: "Coca-Cola Inc." }
   end
@@ -15,8 +21,7 @@ defmodule CercleApi.Factory do
       login: sequence(:login, &"email-#{&1}@foo.com"),
       name: "name",
       password: "supersecret",
-      user_name: "test",
-      company: build(:company)
+      user_name: "test"
     }
   end
 

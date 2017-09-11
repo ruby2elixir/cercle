@@ -69,7 +69,7 @@
           <file-upload
             title="UPLOAD FILE"
             name="attachment"
-            :post-action="'/api/v2/card/' + card.id + '/attachments'"
+            :post-action="'/api/v2/company/'+ currentCompanyId +'/card/' + card.id + '/attachments'"
             :headers="uploadHeaders"
             :events="uploadEvents"
             ref="attachment"
@@ -206,6 +206,9 @@
       }
     },
     computed: {
+      currentCompanyId() {
+        return Vue.currentUser.companyId;
+      },
       activeContact() {
         return this.contacts[this.activeContactIndex];
       },
@@ -277,7 +280,7 @@
         vm.$refs.dueDatePicker.showPicker();
       },
       addTask() {
-        let url = '/api/v2/activity/';
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/activity/';
         this.$http.post(url, {
           activity: {
             cardId: this.cardId,
@@ -291,7 +294,7 @@
         this.addContactData = data;
       },
       addExistingContact(contact) {
-        let cardUrl = '/api/v2/card/'+ this.cardId;
+        let cardUrl = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/'+ this.cardId;
         this.contacts.push(contact);
         this.card.contactIds = this.card.contactIds || [];
         this.card.contactIds.push(contact.id);
@@ -304,7 +307,7 @@
         if(this.addContactData.isExistingContact) {
           this.addExistingContact(this.addContactData.contact);
         } else {
-          let url = '/api/v2/contact';
+          let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact';
           let contact = this.addContactData.contact;
           if (contact) {
             let data = {
@@ -362,12 +365,12 @@
         return cssClass;
       },
       deleteAttachment(attachId) {
-        let url = '/api/v2/card/'+this.cardId+'/attachments/' + attachId;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/'+this.cardId+'/attachments/' + attachId;
         this.$http.delete(url, {  });
       },
 
       updateCard() {
-        let url = '/api/v2/card/' + this.cardId;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.cardId;
         this.$http.put(url, { card: this.card });
       },
 
@@ -376,7 +379,7 @@
           this.card.contactIds = window.Array.from(this.card.contactIds); // This eliminates duplicate contactids
           this.card.contactIds.splice(this.card.contactIds.indexOf(contactId), 1);
 
-          let url = '/api/v2/card/' + this.cardId;
+          let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.cardId;
           this.$http.put(url, {card: { contactIds: this.card.contactIds}}).then(resp => {
             if(resp.data.errors && resp.data.errors.contactIds) {
               alert(resp.data.errors.contactIds);
@@ -405,7 +408,7 @@
       },
 
       archiveCard() {
-        let url = '/api/v2/card/' + this.cardId;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.cardId;
         this.$http.put(url, { card: { status: '1'} }).then(resp => {
           $('.portlet[data-id=' + this.cardId + ']').hide();
           this.card = resp.data.data;
@@ -413,7 +416,7 @@
       },
 
       unarchiveCard() {
-        let url = '/api/v2/card/' + this.cardId;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.cardId;
         this.$http.put(url, { card: { status: '0'} }).then(resp => {
           $('.portlet[data-id=' + this.cardId + ']').show();
           this.card = resp.data.data;
@@ -524,7 +527,7 @@
         this.socket.connect();
         let channelTopic = 'cards:' + this.cardId;
         if (this.cardId) {
-          this.$http.get('/api/v2/card/' + this.cardId).then(resp => {
+          this.$http.get('/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.cardId).then(resp => {
             this.refreshCard(resp.data);
             this.activeContactIndex = 0;
           });
