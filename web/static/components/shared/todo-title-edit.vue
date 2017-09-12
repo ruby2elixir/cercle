@@ -1,12 +1,16 @@
 <template>
   <div v-on-click-outside='cancel'>
-    <div v-on:click="setEditMode" v-show="!editMode" v-linkified>
-      {{value || placeholder}}
+    <div v-on:click="setEditMode" v-show="!editMode" v-linkified v-html="v || placeholder">
     </div>
 
     <div v-show="editMode">
       <div class="form-group">
-        <textarea type='text' v-model='v' class='form-control' :placeholder='placeholder' v-on:keydown.enter.stop="save" v-on:keyup.esc.stop="cancel" ref='input' v-autosize="rawText" rows="1" />
+        <textarea type='text'
+                  v-model='v' class='form-control'
+                  :placeholder='placeholder'
+                  v-on:keydown.enter.stop="save"
+                  v-on:keyup.esc.stop="cancel"
+                  ref='input' v-autosize="rawText" rows="1" />
       </div>
       <div>
         <button class='btn btn-success' @click='save'>Save</button>
