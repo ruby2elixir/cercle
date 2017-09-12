@@ -11,16 +11,24 @@
       </h3>
 
       <div style="padding:15px;">
-        <div  v-for="task in tasks" class="task row" v-if="showDoneTasks || !task.isDone">
+        <div  v-for="task in tasks" :key="task.id" class="task row" v-if="showDoneTasks || !task.isDone">
           <div class="col-md-1 task-is-done">
             <el-checkbox v-model="task.isDone" v-on:change="updateTask(task)"></el-checkbox>
           </div>
 
           <div class="col-md-8">
-            <todo-title-edit :class="{'strike-through': task.isDone}" v-model.sync="task.title" v-on:input="updateTask(task)" v-on:remove="removeTask(task)" placeholder="Title" />
+            <todo-title-edit
+              class="{'strike-through': task.isDone}"
+              v-model.sync="task.title"
+              v-on:input="updateTask(task)"
+              v-on:remove="removeTask(task)"
+              placeholder="Title" />
           </div>
           <div class="col-md-3">
-            <todo-assignment :userId="task.userId" @change="assignment => {updateAssignment(task, assignment)}" :users="companyUsers" :date="task.dueDate">
+            <todo-assignment :userId="task.userId"
+                             @change="assignment => {updateAssignment(task, assignment)}"
+                             :users="companyUsers"
+                             :date="task.dueDate">
               <div v-if="task.user" :class="{'strike-through': task.isDone, 'text-right': true}">
                 <span>
                   {{ task.dueDate|formatDate }}

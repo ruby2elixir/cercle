@@ -1,6 +1,6 @@
 defmodule CercleApi.SessionController do
   use CercleApi.Web, :controller
-  alias CercleApi.User
+  alias CercleApi.{User, UserCompany, Company}
 
   def new(conn, _) do
     conn
@@ -10,8 +10,21 @@ defmodule CercleApi.SessionController do
   def create(conn, %{"login" => login, "password" => pass, "time_zone" => time_zone}) do
     case CercleApi.Session.authenticate(login, pass, time_zone) do
       {:ok, user} ->
-        company = current_company(conn, user)
-        path = get_session(conn, :redirect_url) || "/company/#{company.id}/board"
+
+        invite_values = get_session(conn, :invite_values)
+        delete_session(conn, :invite_values)
+
+         case Cipher.parse(invite_values) do
+           {:ok,
+            %{"company_id" => company_id, "email" => email}
+           } when email == login ->
+             company = Repo.get_by!(Company, id: company_id)
+             Company.add_user_to_company(user, company)
+           _ ->
+             company = current_company(conn, user)
+         end
+
+        path = get_session(conn, :redirect_url) || board_path(conn, :index, company)
 
         conn
         |> put_flash(:info, "Welcome back!")
@@ -31,4 +44,5 @@ defmodule CercleApi.SessionController do
     |> put_flash(:info, "You have been logged out")
     |> redirect(to: session_path(conn, :new))
   end
+
 end

@@ -14,19 +14,25 @@ defmodule CercleApi.RegistrationController do
     if company_changeset.valid? do
       user_changeset = User.registration_changeset(%User{}, registration_params)
       if user_changeset.valid? do
-
-        if company_params["id"] != "" do
-          company = Repo.get_by(Company, id: company_params["id"])
-        else
-          {:ok, company} = Repo.insert(company_changeset)
+        invite_values = get_session(conn, :invite_values)
+        if invite_values do
+          delete_session(conn, :invite_values)
+          user_login = registration_params["login"]
+          case Cipher.parse(invite_values) do
+            {:ok,
+             %{"company_id" => company_id, "email" => email}
+            } when email == user_login ->
+              company = Repo.get_by(Company, id: company_id)
+            _ ->
+              {:ok, company} = Repo.insert(company_changeset)
+          end
         end
-
         changeset = %User{}
         |> User.registration_changeset(registration_params)
 
         case Repo.insert(changeset) do
           {:ok, user} ->
-            join_to_company(user, company)
+            Company.add_user_to_company(user, company)
             changeset = Board.changeset(%Board{}, %{name: "Deals", company_id: company.id})
             board = Repo.insert!(changeset)
             steps = ["Lead in", "Contact Made", "Needs Defined", "Proposal Made", "Negotiation Started"]
@@ -40,7 +46,7 @@ defmodule CercleApi.RegistrationController do
             |> Guardian.Plug.sign_in(user)
             |> configure_session(renew: true)
             |> put_flash(:info, "Account created!")
-            |> redirect(to: "/board")
+            |> redirect(to: board_path(conn, :index, company))
           {:error, changeset} ->
             conn
             |> render(:new, changeset: changeset,
@@ -68,17 +74,15 @@ defmodule CercleApi.RegistrationController do
   end
 
   def accept_team_invitation(conn, params) do
-
     register_values = params["register_values"]
     case Cipher.parse register_values do
-      {:ok, decoded_values} ->
-        if decoded_values["company_id"] do company_id = decoded_values["company_id"] end
-        if decoded_values["email"] do email = decoded_values["email"] end
+      {:ok, %{"company_id" => company_id, "email" => email}} ->
         company = Repo.get(Company, company_id)
         current_user = CercleApi.Plug.current_user(conn)
+
         if current_user do
           if current_user.login == email do
-            join_to_company(current_user, company)
+            Company.add_user_to_company(current_user, company)
             conn
             |> put_flash(:info, "Successfully!")
             |> redirect(to: "/")
@@ -90,18 +94,14 @@ defmodule CercleApi.RegistrationController do
         else
           changeset = User.changeset(%CercleApi.User{})
           conn
-          |> render(:new, changeset: changeset, company_id: company.id, company_title: company.title, user_login: email)
+          |> put_session(:invite_values, params["register_values"])
+          |> render(:new, changeset: changeset,  company_title: company.title, user_login: email)
         end
+
       {:error, _error} ->
         conn
         |> put_flash(:error, "Invalid link!")
         |> redirect(to: "/")
     end
-  end
-
-  defp join_to_company(user, company) do
-    %UserCompany{}
-    |> UserCompany.changeset(%{user_id: user.id, company_id: company.id})
-    |> Repo.insert
   end
 end

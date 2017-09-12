@@ -4,7 +4,7 @@ defmodule CercleApi.Company do
   """
   use CercleApi.Web, :model
   use Arc.Ecto.Schema
-  alias CercleApi.Repo
+  alias CercleApi.{Repo, UserCompany}
   @derive {Poison.Encoder, only: [:id, :title, :logo_image, :data_fields]}
 
   schema "companies" do
@@ -34,6 +34,12 @@ defmodule CercleApi.Company do
     |> cast(params, [:title])
     |> cast_attachments(params, [:logo_image])
     |> validate_required([:title])
+  end
+
+  def add_user_to_company(user, company) do
+    %UserCompany{}
+    |> UserCompany.changeset(%{user_id: user.id, company_id: company.id})
+    |> Repo.insert
   end
 
   def user_companies(user) do
