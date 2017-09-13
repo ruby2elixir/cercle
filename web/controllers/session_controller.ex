@@ -23,9 +23,12 @@ defmodule CercleApi.SessionController do
               company = current_company(conn, user)
           end
         else
-          user_company = UserCompany
-                         |> Repo.get_by!(user_id: user.id)
-                         |> Repo.preload([:company])
+          query = from uc in UserCompany,
+            where: uc.user_id == ^user.id
+          user_company = query
+          |> Ecto.Query.first
+          |> Repo.one
+          |> Repo.preload([:company])
           company = user_company.company
         end
         path = get_session(conn, :redirect_url) || board_path(conn, :index, company)
