@@ -12,18 +12,18 @@ defmodule CercleApi.SessionController do
       {:ok, user} ->
 
         invite_values = get_session(conn, :invite_values)
-        delete_session(conn, :invite_values)
-
-         case Cipher.parse(invite_values) do
-           {:ok,
-            %{"company_id" => company_id, "email" => email}
-           } when email == login ->
-             company = Repo.get_by!(Company, id: company_id)
-             Company.add_user_to_company(user, company)
-           _ ->
-             company = current_company(conn, user)
-         end
-
+        if invite_values do
+          delete_session(conn, :invite_values)
+          case Cipher.parse(invite_values) do
+            {:ok,
+             %{"company_id" => company_id, "email" => email}
+            } when email == login ->
+              company = Repo.get_by!(Company, id: company_id)
+              Company.add_user_to_company(user, company)
+            _ ->
+              company = current_company(conn, user)
+          end
+        end
         path = get_session(conn, :redirect_url) || board_path(conn, :index, company)
 
         conn
