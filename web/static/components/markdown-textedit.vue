@@ -15,7 +15,9 @@ export default {
   props: {
     value: null,
     placeholder: null,
-    editable: true
+    editable: {
+      default: true
+    }
   },
   data: function() {
     return {
