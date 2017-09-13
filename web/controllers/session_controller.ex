@@ -10,7 +10,6 @@ defmodule CercleApi.SessionController do
   def create(conn, %{"login" => login, "password" => pass, "time_zone" => time_zone}) do
     case CercleApi.Session.authenticate(login, pass, time_zone) do
       {:ok, user} ->
-
         invite_values = get_session(conn, :invite_values)
         if invite_values do
           delete_session(conn, :invite_values)
@@ -23,6 +22,11 @@ defmodule CercleApi.SessionController do
             _ ->
               company = current_company(conn, user)
           end
+        else
+          user_company = UserCompany
+                         |> Repo.get_by!(user_id: user.id)
+                         |> Repo.preload([:company])
+          company = user_company.company
         end
         path = get_session(conn, :redirect_url) || board_path(conn, :index, company)
 
