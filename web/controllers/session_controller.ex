@@ -29,7 +29,13 @@ defmodule CercleApi.SessionController do
           |> Ecto.Query.first
           |> Repo.one
           |> Repo.preload([:company])
-          company = user_company.company
+          if user_company do
+            company = user_company.company
+          else
+            company_changeset = Company.changeset(%Company{}, %{title: "My company"})
+            {:ok, company} = Repo.insert(company_changeset)
+            Company.add_user_to_company(user, company)
+          end
         end
         path = get_session(conn, :redirect_url) || board_path(conn, :index, company)
 

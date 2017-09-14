@@ -23,9 +23,10 @@ defmodule CercleApi.RegistrationController do
              %{"company_id" => company_id, "email" => email}
             } when email == user_login ->
               company = Repo.get_by(Company, id: company_id)
-            _ ->
-              {:ok, company} = Repo.insert(company_changeset)
           end
+        end
+        if !company do
+          {:ok, company} = Repo.insert(company_changeset)
         end
         changeset = %User{}
         |> User.registration_changeset(registration_params)
