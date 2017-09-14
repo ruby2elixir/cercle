@@ -118,10 +118,6 @@ export default {
             boardId: this.board.id,
             name: this.newColumn.name
           }
-        }).then(resp => {
-          let boardColumn = resp.data.data;
-          boardColumn.cards = [];
-          this.board.boardColumns.push(boardColumn);
         });
         this.newColumn = {};
       }
@@ -227,8 +223,6 @@ export default {
         let _payload = this.camelCaseKeys(payload);
         this.board = _payload.board;
       });
-
-
     },
     initComponent() {
       this.$http.get(this.boardUrl).then(resp => {
