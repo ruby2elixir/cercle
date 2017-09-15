@@ -18,7 +18,7 @@
 
           <div class="col-md-8">
             <todo-title-edit
-              class="{'strike-through': task.isDone}"
+              :class="{'strike-through': task.isDone}"
               v-model.sync="task.title"
               v-on:input="updateTask(task)"
               v-on:remove="removeTask(task)"
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-  import InlineTextEdit from '../inline-textedit.vue';
+  import InlineTextEdit from '../shared/inline-textedit.vue';
   import SelectMember from '../shared/select-member.vue';
   import TodoAssignment from '../shared/todo-assignment.vue';
   import TodoTitleEdit from '../shared/todo-title-edit.vue';
@@ -161,9 +161,7 @@
   }
 
   .strike-through {
-    & > span {
-      text-decoration: line-through;
-      color: #999;
-    }
+    text-decoration: line-through;
+    color: #999;
   }
 </style>

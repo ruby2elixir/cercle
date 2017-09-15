@@ -31,7 +31,7 @@
 
 <script>
   import moment from 'moment';
-  import MarkdownTextEdit from '../markdown-textedit.vue';
+  import MarkdownTextEdit from '../shared/markdown-textedit.vue';
   export default {
     props: ['events'],
     methods: {

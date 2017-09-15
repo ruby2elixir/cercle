@@ -1,6 +1,6 @@
 <script>
   import {Socket, Presence} from 'phoenix';
-  import InlineEdit from '../inline-common-edit.vue';
+  import InlineEdit from '../shared/inline-common-edit.vue';
   import CardShow from '../cards/show.vue';
   import ActivityItem from './item.vue';
 

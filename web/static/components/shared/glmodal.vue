@@ -19,10 +19,10 @@
 
 </template>
 <script>
-import ContactShow from './contacts/show.vue';
-import CardShow from './cards/show.vue';
-import NewContact from './contacts/new.vue';
-import NewCard from './cards/new.vue';
+import ContactShow from '../contacts/show.vue';
+import CardShow from '../cards/show.vue';
+import NewContact from '../contacts/new.vue';
+import NewCard from '../cards/new.vue';
 export default {
   data() {
     return {

@@ -84,8 +84,8 @@
 </template>
 <script>
 import {Socket, Presence} from 'phoenix';
-import InlineEdit from '../inline-common-edit.vue';
-import InlineTextEdit from '../inline-textedit.vue';
+import InlineEdit from '../shared/inline-common-edit.vue';
+import InlineTextEdit from '../shared/inline-textedit.vue';
 import ContactShow from '../contacts/show.vue';
 import NewContact from '../contacts/new.vue';
 
