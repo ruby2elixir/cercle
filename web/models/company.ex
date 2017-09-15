@@ -37,9 +37,17 @@ defmodule CercleApi.Company do
   end
 
   def add_user_to_company(user, company) do
-    %UserCompany{}
-    |> UserCompany.changeset(%{user_id: user.id, company_id: company.id})
-    |> Repo.insert
+    query = from uc in UserCompany,
+      where: uc.user_id == ^user.id and uc.company_id == ^company.id
+    user_company = query
+    |> Ecto.Query.first
+    |> Repo.one
+
+    if !user_company do
+      %UserCompany{}
+      |> UserCompany.changeset(%{user_id: user.id, company_id: company.id})
+      |> Repo.insert
+    end
   end
 
   def user_companies(user) do
