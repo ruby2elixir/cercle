@@ -1,8 +1,6 @@
 defmodule CercleApi.ActivityController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User, Contact, Activity, Organization, TimelineEvent, Company}
-
   require Logger
 
   def index(conn, _params) do
