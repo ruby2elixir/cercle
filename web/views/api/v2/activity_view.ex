@@ -42,10 +42,11 @@ defmodule CercleApi.APIV2.ActivityView do
   end
 
   defp time_zone(activity) do
-    with user <- activity.user, false <- is_nil(user) do
+    with user <- activity.user,
+         false <- is_nil(user), false <- is_nil(user.time_zone) do
       user.time_zone
     else
-      _ -> nil
+      _ -> "America/New_York"
     end
   end
 end
