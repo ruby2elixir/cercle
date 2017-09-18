@@ -8,6 +8,7 @@ defmodule CercleApi.SessionController do
   end
 
   def create(conn, %{"login" => login, "password" => pass, "time_zone" => time_zone}) do
+
     case CercleApi.Session.authenticate(login, pass, time_zone) do
       {:ok, user} ->
         invite_values = get_session(conn, :invite_values)
@@ -23,19 +24,7 @@ defmodule CercleApi.SessionController do
               company = current_company(conn, user)
           end
         else
-          query = from uc in UserCompany,
-            where: uc.user_id == ^user.id
-          user_company = query
-          |> Ecto.Query.first
-          |> Repo.one
-          |> Repo.preload([:company])
-          if user_company do
-            company = user_company.company
-          else
-            company_changeset = Company.changeset(%Company{}, %{title: "My company"})
-            {:ok, company} = Repo.insert(company_changeset)
-            Company.add_user_to_company(user, company)
-          end
+          company = Company.get_company(user) || default_company(user)
         end
         path = get_session(conn, :redirect_url) || board_path(conn, :index, company)
 
@@ -58,4 +47,11 @@ defmodule CercleApi.SessionController do
     |> redirect(to: session_path(conn, :new))
   end
 
+  defp default_company(user) do
+    company_changeset = Company.changeset(%Company{}, %{title: "My company"})
+    {:ok, company} = Repo.insert(company_changeset)
+    Company.add_user_to_company(user, company)
+
+    company
+  end
 end
