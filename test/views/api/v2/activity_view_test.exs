@@ -10,13 +10,20 @@ defmodule CercleApi.APIV2.ActivityViewTest do
     activity = insert(:activity,
       user: user, company: company, due_date: Timex.now()
     )
+
+    activity1 = insert(:activity,
+      company: company, due_date: Timex.now()
+    )
     rendered_activities = ActivityView.render("list.json",
       %{
-        activities: [activity]
+        activities: [activity, activity1]
       })
 
     assert rendered_activities == %{
-      activities: [ActivityView.activity_json(activity)]
+      activities: [
+        ActivityView.activity_json(activity),
+        ActivityView.activity_json(activity1)
+      ]
     }
   end
 end

@@ -24,7 +24,7 @@ defmodule CercleApi.APIV2.ActivityView do
         due_date ->
           "#{Ecto.DateTime.to_iso8601(due_date)}Z"
           |> Timex.parse!("{ISO:Extended}")
-          |> Timex.Timezone.convert(activity.user.time_zone)
+          |> Timex.Timezone.convert(time_zone(activity))
       end
 
     %{
@@ -39,5 +39,13 @@ defmodule CercleApi.APIV2.ActivityView do
       user: activity.user,
       card: activity.card
     }
+  end
+
+  defp time_zone(activity) do
+    with user <- activity.user, false <- is_nil(user) do
+      user.time_zone
+    else
+      _ -> nil
+    end
   end
 end
