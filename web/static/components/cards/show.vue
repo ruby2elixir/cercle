@@ -18,7 +18,7 @@
         <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.dueDate || showDueDatePicker" >
           Due Date:
           <el-date-picker
-            class="card-due-date"
+            :class="dueDateClass"
             v-on:change="updateCard"
             v-model="card.dueDate"
             type="datetime"
@@ -206,6 +206,17 @@
       }
     },
     computed: {
+      dueDateClass() {
+        let className = 'card-due-date';
+        if(this.card.dueDate) {
+          if(new Date(this.card.dueDate) < new Date()) {
+            className += ' past-due-date';
+          } else {
+            className += ' future-due-date';
+          }
+        }
+        return className;
+      },
       currentCompanyId() {
         return Vue.currentUser.companyId;
       },
@@ -642,6 +653,33 @@
           line-height: 1;
         }
         /*-----End Contacts-------*/
+      }
+    }
+
+    .card-due-date {
+      &.past-due-date {
+        input.el-input__inner {
+          background-color: #DF998D;
+          color: white;
+        }
+      }
+
+      &.future-due-date {
+        input.el-input__inner {
+          background-color: #E2E4E6;
+        }
+      }
+
+      &.past-due-date, &.future-due-date {
+        input.el-input__inner {
+          cursor: pointer;
+          border: none;
+          font-weight: bold;
+          padding: 5px 35px 5px 5px;
+          height: inherit;
+          text-align: center;
+          text-decoration: underline;
+        }
       }
     }
   }

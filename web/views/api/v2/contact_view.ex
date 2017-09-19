@@ -18,7 +18,7 @@ defmodule CercleApi.APIV2.ContactView do
       organization: contact.organization,
       cards: Enum.map(
         CercleApi.Contact.involved_in_cards(contact),
-        &card_json(&1)
+        &CercleApi.CardView.card_json(&1)
       ),
       boards: contact.company.boards
     }
@@ -39,21 +39,6 @@ defmodule CercleApi.APIV2.ContactView do
       organization: contact.organization,
       tags: contact.tags,
       description: contact.description
-    }
-  end
-
-  def card_json(card) do
-    %{
-      id: card.id,
-      name: card.name,
-      description: card.description,
-      status: card.status,
-      contact_ids: card.contact_ids,
-      user_id: card.user_id,
-      board: card.board,
-      board_column: card.board_column,
-      board_id: card.board_id,
-      board_column_id: card.board_column_id
     }
   end
 end
