@@ -28,17 +28,6 @@
           <input class='form-control' name='contact[organization_id]' type='hidden'  />
         </div>
         <br />
-         <div class='referral-form-title'>
-           <input checked="checked"  id="add_to_card" name="add_to_card" type="checkbox" value="1"> Add into a board
-           <Br />
-           <select name="select" id="add_to_board" style="margin-top:10px;">
-              <%= for board <- @boards do %>
-                <option value="<%=board.id%>--<%= Enum.at(board.board_columns,0).id%>" id="board_column" name="board_column" ><%=board.name%> </option>
-              <%end%>
-            </select>
-        </div>
-        <br />
-        <Br />
         <div class='referral-form-footer'>
           <input type='submit' value='CREATE' class="btn btn-primary">
         </div>
