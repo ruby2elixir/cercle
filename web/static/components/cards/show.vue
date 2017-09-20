@@ -17,19 +17,11 @@
 
         <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.dueDate || showDueDatePicker" >
           Due Date:
-          <el-date-picker
+          <due-date-modal
             :class="dueDateClass"
             v-on:change="updateCard"
             v-model="card.dueDate"
-            type="datetime"
-            size="mini"
-            format="yyyy-MM-dd HH:mm"
-            :editable="false"
-            :min_date="new Date()"
-            :clearable="true"
-            ref="dueDatePicker"
-            >
-          </el-date-picker>
+            ref="dueDatePicker" />
         </div>
 
         <div class="card-description">
@@ -164,6 +156,7 @@
   import AddContact from './add-contact.vue';
   import SelectMember from '../shared/select-member.vue';
   import ContactDetails from '../contacts/contact-details.vue';
+  import DueDateModal from '../shared/due-date-modal.vue';
 
   export default {
     props: ['cardId'],
@@ -244,7 +237,8 @@
       'input-modal': inputModal,
       'add-contact': AddContact,
       'select-member': SelectMember,
-      'contact-details': ContactDetails
+      'contact-details': ContactDetails,
+      'due-date-modal': DueDateModal
     },
     methods: {
       showAttachmentPreview(attachment) {
@@ -284,11 +278,10 @@
       openDueDatePicker() {
         let vm = this;
         vm.showDueDatePicker = true;
+        vm.$refs.dueDatePicker.showModal();
         vm.$refs.dueDatePicker.handleClose = function() {
           vm.showDueDatePicker = false;
-          this.pickerVisible = false;
         };
-        vm.$refs.dueDatePicker.showPicker();
       },
       addTask() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/activity/';
@@ -658,26 +651,24 @@
 
     .card-due-date {
       &.past-due-date {
-        input.el-input__inner {
+        .date-display {
           background-color: #DF998D;
           color: white;
         }
       }
 
       &.future-due-date {
-        input.el-input__inner {
+        .date-display {
           background-color: #E2E4E6;
         }
       }
 
       &.past-due-date, &.future-due-date {
-        input.el-input__inner {
+        .date-display {
           cursor: pointer;
-          border: none;
           font-weight: bold;
-          padding: 5px 35px 5px 5px;
-          height: inherit;
-          text-align: center;
+          padding: 5px;
+          border-radius: 3px;
           text-decoration: underline;
         }
       }
