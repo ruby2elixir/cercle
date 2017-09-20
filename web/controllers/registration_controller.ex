@@ -36,8 +36,8 @@ defmodule CercleApi.RegistrationController do
             Company.add_user_to_company(user, company)
             changeset = Board.changeset(%Board{}, %{name: "Deals", company_id: company.id})
             board = Repo.insert!(changeset)
-            steps = ["Lead in", "Contact Made", "Needs Defined", "Proposal Made", "Negotiation Started"]
-            Enum.each [0, 1, 2, 3, 4], fn (index) ->
+            steps = ["New Lead", "Interested in", "Proposition sent"]
+            Enum.each [0, 1, 2], fn (index) ->
               boardcol_params = %{:board_id => board.id, :order => index, :name => Enum.at(steps, index)}
               changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
               CercleApi.Repo.insert!(changeset)
