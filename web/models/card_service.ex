@@ -75,7 +75,7 @@ defmodule CercleApi.CardService do
       with channel <- "contacts:"  <> to_string(List.first(card.contact_ids)),
         do: CercleApi.Endpoint.broadcast!(
               channel, "card:created", %{
-                "card" => CercleApi.APIV2.ContactView.card_json(card)
+                "card" => CercleApi.APIV2.CardView.card_json(card)
               }
             )
     end
@@ -111,7 +111,7 @@ defmodule CercleApi.CardService do
          card_contacts <- CercleApi.Card.contacts(card),
       do: CercleApi.Endpoint.broadcast!(
             channel, "card:updated", %{
-              "card" => CercleApi.APIV2.ContactView.card_json(card),
+              "card" => CercleApi.APIV2.CardView.card_json(card),
               "card_contacts" => card_contacts,
               "board" => card.board,
               "board_columns" => card.board.board_columns

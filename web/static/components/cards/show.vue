@@ -17,19 +17,11 @@
 
         <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.dueDate || showDueDatePicker" >
           Due Date:
-          <el-date-picker
-            class="card-due-date"
+          <due-date-modal
+            :class="dueDateClass"
             v-on:change="updateCard"
             v-model="card.dueDate"
-            type="datetime"
-            size="mini"
-            format="yyyy-MM-dd HH:mm"
-            :editable="false"
-            :min_date="new Date()"
-            :clearable="true"
-            ref="dueDatePicker"
-            >
-          </el-date-picker>
+            ref="dueDatePicker" />
         </div>
 
         <div class="card-description">
@@ -164,6 +156,7 @@
   import AddContact from './add-contact.vue';
   import SelectMember from '../shared/select-member.vue';
   import ContactDetails from '../contacts/contact-details.vue';
+  import DueDateModal from '../shared/due-date-modal.vue';
 
   export default {
     props: ['cardId'],
@@ -206,6 +199,17 @@
       }
     },
     computed: {
+      dueDateClass() {
+        let className = 'card-due-date';
+        if(this.card.dueDate) {
+          if(new Date(this.card.dueDate) < new Date()) {
+            className += ' past-due-date';
+          } else {
+            className += ' future-due-date';
+          }
+        }
+        return className;
+      },
       currentCompanyId() {
         return Vue.currentUser.companyId;
       },
@@ -233,7 +237,8 @@
       'input-modal': inputModal,
       'add-contact': AddContact,
       'select-member': SelectMember,
-      'contact-details': ContactDetails
+      'contact-details': ContactDetails,
+      'due-date-modal': DueDateModal
     },
     methods: {
       showAttachmentPreview(attachment) {
@@ -273,11 +278,10 @@
       openDueDatePicker() {
         let vm = this;
         vm.showDueDatePicker = true;
+        vm.$refs.dueDatePicker.showModal();
         vm.$refs.dueDatePicker.handleClose = function() {
           vm.showDueDatePicker = false;
-          this.pickerVisible = false;
         };
-        vm.$refs.dueDatePicker.showPicker();
       },
       addTask() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/activity/';
@@ -642,6 +646,31 @@
           line-height: 1;
         }
         /*-----End Contacts-------*/
+      }
+    }
+
+    .card-due-date {
+      &.past-due-date {
+        .date-display {
+          background-color: #DF998D;
+          color: white;
+        }
+      }
+
+      &.future-due-date {
+        .date-display {
+          background-color: #E2E4E6;
+        }
+      }
+
+      &.past-due-date, &.future-due-date {
+        .date-display {
+          cursor: pointer;
+          font-weight: bold;
+          padding: 5px;
+          border-radius: 3px;
+          text-decoration: underline;
+        }
       }
     }
   }
