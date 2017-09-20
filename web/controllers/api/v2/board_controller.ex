@@ -48,8 +48,8 @@ defmodule CercleApi.APIV2.BoardController do
 
     case Repo.insert(changeset) do
       {:ok, board} ->
-        steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"]
-        Enum.each [0, 1, 2, 3, 4], fn (index) ->
+        steps = ["Step 1", "Step 2", "Step 3"]
+        Enum.each [0, 1, 2], fn (index) ->
           boardcol_params = %{:board_id => board.id, :order => index, :name => Enum.at(steps, index)}
           changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
           CercleApi.Repo.insert!(changeset)
