@@ -91,6 +91,7 @@
   .due-date-modal {
     width: 400px;
     padding: 10px;
+    z-index: 10;
 
     .input-modal-footer {
       margin-top: 10px;
