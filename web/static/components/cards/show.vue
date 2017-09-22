@@ -53,10 +53,9 @@
           <span v-if="card.userId">CHANGE MEMBER</span>
           <span v-else>ADD MEMBER</span>
         </select-member>
-
-        <button type="button" class="btn btn-default btn-block" @click="openContactModal = true">ADD CONTACT</button>
-        <button type="button" class="btn btn-default btn-block" @click="addTask">ADD TASK</button>
         <button type="button" class="btn btn-default btn-block" @click="openDueDatePicker">ADD DUE DATE</button>
+        <button type="button" class="btn btn-default btn-block" @click="addTask">ADD TASK</button>
+        <button type="button" class="btn btn-default btn-block" @click="openContactModal = true">ADD CONTACT</button>
         <div class="upload-btn">
           <file-upload
             title="UPLOAD FILE"
