@@ -49,11 +49,3 @@
     </div>
 
   </div><!-- /.login-box -->
-<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-<script>
-  $(function () {
-    // $('#session_time_zone').val((new Date).toString().split('(')[1].slice(0, -1));
-    $('#session_time_zone').val(Intl.DateTimeFormat().resolvedOptions().timeZone);
-  });
-
-</script>

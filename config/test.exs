@@ -4,7 +4,8 @@ use Mix.Config
 # you can enable the server option below.
 config :cercleApi, CercleApi.Endpoint,
   http: [port: 4001],
-  server: false
+  server: true
+config :cercleApi, :sql_sandbox, true
 
 # Print only warnings and errors during test
 config :logger, level: :warn
@@ -43,3 +44,7 @@ config :excov,
 config :excov, ExCov.Reporter.Console,
   show_summary: true,
   show_detail: false
+
+config :wallaby,
+  screenshot_on_failure: true,
+  phantomjs_args: "--webdriver-logfile=phantomjs.log"

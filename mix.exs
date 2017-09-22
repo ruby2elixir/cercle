@@ -50,9 +50,8 @@ defmodule CercleApi.Mixfile do
      {:mailman, "~> 0.3.0"},
      {:arc, "~> 0.8.0"},
      {:ex_aws, "~> 1.1"},
-     {:httpoison, "~> 0.7"},
+     {:httpoison, "~> 0.12.0"},
      {:poison, "~> 2.2"},
-     {:hackney, "~> 1.7.0"},
      {:sweet_xml, "~> 0.6.5"},
      {:arc_ecto, "~> 0.7.0"},
      {:timex, "~> 3.1.8"},
@@ -81,7 +80,8 @@ defmodule CercleApi.Mixfile do
      {:credo, "~> 0.5", only: [:dev, :test]},
      {:ex_machina, "~> 2.0", only: [:test]},
      {:excov, "~> 0.1", only: :test},
-     {:excov_reporter_console, "~> 0.1", only: :test}
+     {:excov_reporter_console, "~> 0.1", only: :test},
+     {:wallaby, "~> 0.19.1", only: :test}
     ]
   end
 
