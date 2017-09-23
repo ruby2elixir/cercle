@@ -21,19 +21,14 @@ defmodule CercleApi.SignInTest do
   end
 
   test "Sign in with existing email/password", %{session: session} do
-    user = CercleApi.Factory.insert(:user,
-      login: "testuser",
-      password: "1234",
-      password_hash: "$2b$12$uYVXG6Fm6Tl/1zLMKW1u0uFnM41HB96imoOyxzKHfeyFB69zeAD8W")
+    user = create_user()
     company = CercleApi.Factory.insert(:company)
-    CercleApi.Factory.insert(:user_company,
-      company_id: company.id,
-      user_id: user.id)
+    add_company_to_user(user, company)
     session
     |> visit("/login")
     |> find(css("form"), fn(form) ->
       form
-      |> fill_in(text_field("login"), with: "testuser")
+      |> fill_in(text_field("login"), with: "test@test.com")
       |> fill_in(text_field("password"), with: "1234")
       |> click(button("Sign In"))
 

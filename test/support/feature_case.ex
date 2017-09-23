@@ -15,6 +15,7 @@ defmodule CercleApi.FeatureCase do
       import CercleApi.Router.Helpers
       import CercleApi.Factory
       import CercleApi.Repo
+      import CercleApi.TestHelpers
     end
   end
 

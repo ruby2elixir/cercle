@@ -44,7 +44,7 @@ defmodule CercleApi.Mixfile do
      {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_ecto, ">= 3.0.0"},
-     {:db_connection, ">= 0.0.0"},
+     {:db_connection, "~> 1.1"},
      {:phoenix_html, "~> 2.9.2"},
      {:cowboy, "~> 1.0"},
      {:mailman, "~> 0.3.0"},

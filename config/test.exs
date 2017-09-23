@@ -17,6 +17,9 @@ config :cercleApi, CercleApi.Repo,
   password: "postgres",
   database: "cercleapi_test",
   hostname: "localhost",
+  ownership_timeout: 60_000,
+  timeout: 60_000,
+  pool_timeout: 60_000,
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Guardian configuration
@@ -45,6 +48,11 @@ config :excov, ExCov.Reporter.Console,
   show_summary: true,
   show_detail: false
 
+config :httpoison, timeout: 6000
 config :wallaby,
-  screenshot_on_failure: true,
-  phantomjs_args: "--webdriver-logfile=phantomjs.log"
+  driver: Wallaby.Experimental.Chrome,
+  hackney_options: [timeout: :infinity, recv_timeout: :infinity],
+  chrome: [
+    headless: true
+  ],
+  screenshot_on_failure: true

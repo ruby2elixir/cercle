@@ -25,15 +25,9 @@ defmodule CercleApi.SignUpTest do
 
 
   test "Siginig up with incorrect data", %{session: session} do
-
-    user = CercleApi.Factory.insert(:user,
-      login: "testuser",
-      password: "1234",
-      password_hash: "$2b$12$uYVXG6Fm6Tl/1zLMKW1u0uFnM41HB96imoOyxzKHfeyFB69zeAD8W")
+    user = create_user()
     company = CercleApi.Factory.insert(:company)
-    CercleApi.Factory.insert(:user_company,
-      company_id: company.id,
-      user_id: user.id)
+    add_company_to_user(user, company)
 
     session
     |> visit("/register")
@@ -41,7 +35,7 @@ defmodule CercleApi.SignUpTest do
       form
       |> fill_in(text_field("Your Name"), with: "Jimm")
       |> fill_in(text_field("Name of your Company"), with: "Pequod")
-      |> fill_in(text_field("Email"), with: "testuser")
+      |> fill_in(text_field("Email"), with: "test@test.com")
       |> fill_in(text_field("Password"), with: "123456")
       |> click(button("Sign Up"))
     end)

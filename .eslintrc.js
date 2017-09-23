@@ -23,7 +23,8 @@ module.exports = {
     'ElementUi': true,
     'MarkdownIt': true,
     'FileUpload': true,
-    'jwtToken': true
+    'jwtToken': true,
+    'jsTz': true
   },
   'ecmaFeatures': {
     'modules': true
