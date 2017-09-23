@@ -5,6 +5,7 @@ defmodule CercleApi.FeatureCase do
   using do
     quote do
       use Wallaby.DSL
+      import Wallaby.Query
 
       alias CercleApi.Repo
       import Ecto

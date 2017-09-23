@@ -1,8 +1,6 @@
 defmodule CercleApi.SignInTest do
   use CercleApi.FeatureCase, async: true
 
-  import Wallaby.Query#, only: [css: 2, css: 1]
-
   test "GET /login", %{session: session} do
     session
     |> visit("/login")
