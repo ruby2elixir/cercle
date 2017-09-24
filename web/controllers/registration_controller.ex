@@ -76,7 +76,7 @@ defmodule CercleApi.RegistrationController do
 
   def accept_team_invitation(conn, params) do
     register_values = params["register_values"]
-    case Cipher.parse register_values do
+    case Cipher.parse(register_values) do
       {:ok, %{"company_id" => company_id, "email" => email}} ->
         company = Repo.get(Company, company_id)
         current_user = CercleApi.Plug.current_user(conn)

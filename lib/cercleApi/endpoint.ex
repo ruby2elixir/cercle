@@ -1,5 +1,8 @@
 defmodule CercleApi.Endpoint do
   use Phoenix.Endpoint, otp_app: :cercleApi
+  if Application.get_env(:cercleApi, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
 
   socket "/socket", CercleApi.UserSocket
 

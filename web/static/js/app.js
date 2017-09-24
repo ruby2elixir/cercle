@@ -316,3 +316,8 @@ $('.hide-archived-boards').on('click', function(e){
   $(this).hide();
   $('.show-archived-boards').show();
 });
+
+// Login page
+if ($('#session_time_zone').length > 0) {
+  $('#session_time_zone').val(jsTz.determine().name());
+}

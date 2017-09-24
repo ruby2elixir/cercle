@@ -4,7 +4,8 @@ use Mix.Config
 # you can enable the server option below.
 config :cercleApi, CercleApi.Endpoint,
   http: [port: 4001],
-  server: false
+  server: true
+config :cercleApi, :sql_sandbox, true
 
 # Print only warnings and errors during test
 config :logger, level: :warn
@@ -16,6 +17,9 @@ config :cercleApi, CercleApi.Repo,
   password: "postgres",
   database: "cercleapi_test",
   hostname: "localhost",
+  ownership_timeout: 60_000,
+  timeout: 60_000,
+  pool_timeout: 60_000,
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Guardian configuration
@@ -43,3 +47,12 @@ config :excov,
 config :excov, ExCov.Reporter.Console,
   show_summary: true,
   show_detail: false
+
+config :httpoison, timeout: 6000
+config :wallaby,
+  driver: Wallaby.Experimental.Chrome,
+  hackney_options: [timeout: :infinity, recv_timeout: :infinity],
+  chrome: [
+    headless: true
+  ],
+  screenshot_on_failure: true

@@ -79,6 +79,7 @@ exports.config = {
       $: 'jquery',
       jQuery: 'jquery',
       Vue: 'vue/dist/vue.common.js',
+      jsTz: 'jstz',
       vSelect: 'vue-select/dist/vue-select.js',
       VueResource: 'vue-resource',
       VueResourceCaseConverter: 'vue-resource-case-converter',
