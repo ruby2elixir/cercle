@@ -53,10 +53,11 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 You need to setup a postgresql DB version 9.5
 
-1. Rename to dev.secret_example.exs to dev.secret.exs
-2. Fill out the parameters
-3. Run the migration
-4. You're good to go!
+1. Rename the file dev.secret_example.exs to dev.secret.exs
+2. Fill out the parameters of dev.secret.exs
+3. mix ecto.create (Create the DB)
+4. mix ecto.migrate (Run the migration)
+5. mix phoenix.server (You're good to go!)
 
 ## To Install Cercle into heroku
 1. mix phoenix.gen.secret
