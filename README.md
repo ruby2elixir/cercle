@@ -31,8 +31,15 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 ## Changelog
 
-### V1.1 - August 2017
+### V1.2 - September 2017
 #### New Features
+- Multi Company (User can switch between several companies)
+- URL are now clickable in description
+- Minor Bug Fixes
+- Improvement of the test suite
+
+### V1.1 - August 2017
+
 - UX improvements so we can use Card without contacts
 - Notification system for task due date & Card due date
 
