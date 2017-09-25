@@ -1,11 +1,5 @@
 <template>
   <ul class="nav navbar-nav user-navbar">
-    <li class="current-company">
-      <a style="" href='#'>
-        <img height=25 :src="company.logo_url" />
-        {{company.title}}
-        </a>
-    </li>
     <!-- Messages: style can be found in dropdown.less-->
     <!-- User Account Menu -->
     <li class="dropdown user user-menu">
@@ -15,7 +9,7 @@
         <img v-if="user.profile_image_url" :src="user.profile_image_url" class="user-image">
         <img v-else class="user-image" src="/images/pp_2.png">
         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-        <span class="hidden-xs">{{user.user_name}}</span>
+        <span class="hidden-xs">{{user.user_name}} (<span class="current-company">{{company.title}}</span>)</span>
       </a>
 
       <ul class="dropdown-menu">
@@ -26,7 +20,7 @@
           <p>
             {{user.user_name}}
             <small>
-              ({{user.name}})
+              Company: {{company.title}}
             </small>
           </p>
         </li>
@@ -66,7 +60,7 @@
     },
     computed: {
       listCompanies() {
-        return this.companies.filter((v) => v.id !== this.company.id);
+        return this.companies;
       }
     },
     mounted(){ }
