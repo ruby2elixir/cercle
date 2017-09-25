@@ -45,7 +45,7 @@
 <script>
   import inputModal from '../shared/input-modal.vue';
   import nameInputModal from '../shared/name-input-modal.vue';
-  import MarkdownTextEdit from '../markdown-textedit.vue';
+  import MarkdownTextEdit from '../shared/markdown-textedit.vue';
 
   export default {
     props: ['contact'],

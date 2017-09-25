@@ -32,7 +32,7 @@
         </li>
 
 
-        <li class="user-company" v-for="c in list_companies" :key="c.id">
+        <li class="user-company" v-for="c in listCompanies" :key="c.id">
           <a :href="'/company/' + c.id + '/board'">
           <img height=100 :src="c.logo_url" />
           <div class='company-title'>{{c.title}}</div>
@@ -55,21 +55,21 @@
 </template>
 <script>
   export default {
-  props: ['user', 'company', 'companies'],
-  data() {
-  return {};
-  },
+    props: ['user', 'company', 'companies'],
+    data() {
+      return {};
+    },
     methods: {
       settingsUrl() {
         return '/company/' + Vue.currentUser.companyId + '/settings/profile';
       }
     },
     computed: {
-      list_companies() {
+      listCompanies() {
         return this.companies.filter((v) => v.id !== this.company.id);
       }
     },
-  mounted(){ }
+    mounted(){ }
   };
 </script>
 

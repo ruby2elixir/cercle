@@ -144,9 +144,9 @@
 
 <script>
   import {Socket, Presence} from 'phoenix';
-  import InlineEdit from '../inline-common-edit.vue';
-  import InlineTextEdit from '../inline-textedit.vue';
-  import MarkdownTextEdit from '../markdown-textedit.vue';
+  import InlineEdit from '../shared/inline-common-edit.vue';
+  import InlineTextEdit from '../shared/inline-textedit.vue';
+  import MarkdownTextEdit from '../shared/markdown-textedit.vue';
   import ToDo from './to-do-edit.vue';
   import CommentForm from './comment-form.vue';
   import TimelineEvents from './timeline-events.vue';

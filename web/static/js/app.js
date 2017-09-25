@@ -78,11 +78,11 @@ import NewBoard from '../components/boards/new.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
 import ArchiveBoard from '../components/boards/archive.vue';
-import NotificationApp from '../components/notification.vue';
-import GlModalWindow from '../components/glmodal.vue';
-import GlAttachmentPreview from '../components/glpreview.vue';
-import UserNavBar from '../components/navbar.vue';
-import WebhooksApp from '../components/webhooks.vue';
+import NotificationApp from '../components/shared/notification.vue';
+import GlModalWindow from '../components/shared/glmodal.vue';
+import GlAttachmentPreview from '../components/shared/glpreview.vue';
+import UserNavBar from '../components/shared/navbar.vue';
+import WebhooksApp from '../components/shared/webhooks.vue';
 
 Vue.use(require('vue-autosize'));
 const NotificationBus = new Vue();

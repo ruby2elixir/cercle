@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import InlineTextEdit from '../inline-textedit.vue';
+  import InlineTextEdit from '../shared/inline-textedit.vue';
   export default {
     props: [],
     data: function() {
