@@ -33,7 +33,7 @@ defmodule CercleApi.Board do
   def preload_query do
     query_cards = from p in CercleApi.Card,
       where: p.status == 0,
-      order_by: [asc: :position]
+      order_by: [asc: :position, desc: :inserted_at]
 
     from(
       CercleApi.BoardColumn, order_by: [asc: :order],
