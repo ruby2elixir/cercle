@@ -19,7 +19,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 - Card Contact Tags
 - Card Contact Organization
 - Card Attachements
-- Card Tasks
+- Card Tasks (with optional due date)
 - Card Comments
 - Card Email Notification System for team member
 - Import CSV
