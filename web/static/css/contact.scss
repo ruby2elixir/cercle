@@ -562,3 +562,34 @@ li.completed span.arrow:after {
     white-space:pre;
     max-width: none;
 }
+
+.attachments {
+  margin-bottom: 20px;
+  .attach-item {
+    position: relative;
+    padding-bottom:10px;
+    border-bottom: 0.1em solid #e4e4e4;
+
+    .thumb {
+      height: 75px;
+      width: 75px;
+      img {
+        max-height: 75px;
+        max-width: 75px;
+      }
+      &.file {
+        font-size: 55px;
+        &:before {
+          position: absolute;
+          top: 8px;
+          left: 8px;
+        }
+      }
+    }
+    .info {
+      position:absolute;
+      left: 105px;
+      top: 0px;
+    }
+  }
+}
