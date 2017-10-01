@@ -10,10 +10,20 @@
                 label="name"><span slot="no-options"></span></v-select>
     </div>
     <div class="form-group">
-      <input type="email" v-model="contact.email" placeholder="Email" class="form-control" :disabled="isExistingContact" @change="contactChange" />
+      <input type="email"
+             v-model="contact.email"
+             placeholder="Email"
+             class="form-control"
+             :disabled="isExistingContact"
+             @change="contactChange" />
     </div>
     <div class="form-group">
-      <input type="phone" v-model="contact.phone" placeholder="Phone" class="form-control" :disabled="isExistingContact" @change="contactChange" />
+      <input type="phone"
+             v-model="contact.phone"
+             placeholder="Phone"
+             class="form-control"
+             :disabled="isExistingContact"
+             @change="contactChange" />
     </div>
   </div>
 </template>
