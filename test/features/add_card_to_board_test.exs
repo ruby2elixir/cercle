@@ -1,5 +1,5 @@
 defmodule CercleApi.AddCardToBoardTest do
-  use CercleApi.FeatureCase, async: true
+  use CercleApi.FeatureCase
   setup %{session: session} do
     user = create_user()
     company = CercleApi.Factory.insert(:company)

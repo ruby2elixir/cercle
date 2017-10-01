@@ -42,11 +42,11 @@ defmodule CercleApi.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2.4"},
      {:phoenix_pubsub, "~> 1.0"},
-     {:postgrex, ">= 0.0.0"},
+     {:postgrex, "~> 0.13.3"},
      {:phoenix_ecto, ">= 3.0.0"},
      {:db_connection, "~> 1.1"},
      {:phoenix_html, "~> 2.9.2"},
-     {:cowboy, "~> 1.0"},
+     {:cowboy, "~> 1.1"},
      {:mailman, "~> 0.3.0"},
      {:arc, "~> 0.8.0"},
      {:ex_aws, "~> 1.1"},

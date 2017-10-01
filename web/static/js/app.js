@@ -71,11 +71,11 @@ Vue.use(VueResourceCaseConverter, {
   }
 });
 Vue.http.interceptors.push((request, next) => {
-  localStorage.setItem('http_req', (parseInt((localStorage.getItem('http_req') || 0)) + 1) );
+  localStorage.setItem('http_req', parseInt(localStorage.getItem('http_req') || 0) + 1 );
   document.querySelector('body').classList.remove('async-ready');
   next((response) => {
-    localStorage.setItem('http_req', (parseInt((localStorage.getItem('http_req') || 0)) - 1) );
-    if (parseInt((localStorage.getItem('http_req') || 0)) <= 0) {
+    localStorage.setItem('http_req', parseInt(localStorage.getItem('http_req') || 0) - 1 );
+    if (parseInt(localStorage.getItem('http_req') || 0) <= 0) {
       document.querySelector('body').classList.add('async-ready');
     }
     return response;
