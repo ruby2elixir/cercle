@@ -11,16 +11,6 @@ defmodule CercleApi.APIV2.CompanyView do
 
   def render("company.json", %{company: company}) do
     %{id: company.id,
-      title: company.title,
-      admin_email: company.admin_email,
-      image_url: CercleApi.CompanyLogoImage.url({company.image, company}),
-      subtitle1: company.subtitle1,
-      description1: company.description1,
-      subtitle2: company.subtitle2,
-      description2: company.description2,
-      reward: company.reward,
-      individual: company.individual,
-      default_language: company.default_language,
-      authentication_required: company.authentication_required}
+      title: company.title}
   end
 end
