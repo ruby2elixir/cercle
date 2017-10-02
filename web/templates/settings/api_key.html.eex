@@ -23,8 +23,15 @@
           <div class="row">
             <div class="col-md-12" style="font-size:20px;">
               <h4>Integration</h4>
-                <a href="http://www.zapier.com">Zapier</a>
-           	    Cercle CRM is fully compatible with Zapier.
+           	    Cercle CRM is fully compatible with <a href="http://www.zapier.com">Zapier</a>.
+                <Br />
+                <Br />
+                
+                You can also use this API KEY to use the Cercle API:
+                <%= if Guardian.Plug.current_token(@conn) do %>
+                <Br />
+              <textarea style="width:800px;height:400px; word-wrap:break-word;"><%= Guardian.Plug.current_token(@conn) %></textarea>
+              <%=end%>
             </div>
           </div>
         </div>

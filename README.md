@@ -59,6 +59,16 @@ You need to setup a postgresql DB version 9.5
 4. mix ecto.migrate (Run the migration)
 5. mix phoenix.server (You're good to go!)
 
+## To use Cercle CRM API
+
+- make sure to include into your header: authorization Bearer TOKEN_FOUND_IN_YOUR_SETTINGS
+- you can get the list of boards, contacts by using the API like
+/api/v2/company/:id_of_your_company/board
+/api/v2/company/:id_of_your_company/contact
+- you can create or edit board, card also.
+
+More Documentation about API is coming soon.
+
 ## To Install Cercle into heroku
 1. mix phoenix.gen.secret
 2. heroku config:set SECRET_KEY_BASE="your_key_here"
