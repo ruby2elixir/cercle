@@ -1,7 +1,7 @@
 <template>
   <div class="new-card-form">
     <div class="form-group">
-      <input type="text" v-model="name" placeholder="Name of the Card" class="form-control" />
+      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control" />
     </div>
 
     <div class="form-group" v-show="defaultBoardId==null">

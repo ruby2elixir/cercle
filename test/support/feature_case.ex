@@ -16,6 +16,7 @@ defmodule CercleApi.FeatureCase do
       import CercleApi.Factory
       import CercleApi.Repo
       import CercleApi.TestHelpers
+      import CercleApi.IntegrationHelpers
     end
   end
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div @click="showAddMode" class="col-md-3 col-sm-6 col-xs-12 bg-black add-button" v-show="!addMode">
+    <div @click="showAddMode" class="col-md-3 col-sm-6 col-xs-12 bg-black add-button add-board" v-show="!addMode">
       + Add a board
     </div>
     <div class="col-md-3 col-sm-6 col-xs-12 bg-primary board-box" v-show="addMode">

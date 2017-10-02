@@ -43,9 +43,21 @@ defmodule CercleApi.TestHelpers do
 
   def create_user do
     CercleApi.Factory.insert(:user,
+      user_name: "Test User",
       login: "test@test.com",
       password: "1234",
       password_hash: "$2b$12$uYVXG6Fm6Tl/1zLMKW1u0uFnM41HB96imoOyxzKHfeyFB69zeAD8W"
     )
+  end
+
+  def create_user_with_company(company) do
+    user = create_user()
+    add_company_to_user(user, company)
+    {user, company}
+  end
+
+  def create_user_with_company do
+    company = CercleApi.Factory.insert(:company)
+    create_user_with_company(company)
   end
 end
