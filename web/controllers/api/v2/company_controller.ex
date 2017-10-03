@@ -8,7 +8,8 @@ defmodule CercleApi.APIV2.CompanyController do
   plug :scrub_params, "company" when action in [:create, :update]
 
   def index(conn, _params) do
-    companies = Repo.all(Company)
+    current_user = CercleApi.Plug.current_user(conn)
+    companies = CercleApi.Company.user_companies(current_user)
     render(conn, "index.json", companies: companies)
   end
 
