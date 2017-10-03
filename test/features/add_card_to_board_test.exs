@@ -17,7 +17,6 @@ defmodule CercleApi.AddCardToBoardTest do
     |> fill_in(text_field("Name of the Card"), with: "Test Card")
     |> find(css(".new-card-form"), fn(form) -> click(form, button("Save")) end)
     |> assert_has(css("body.async-ready"))
-    |> refute_has(css(".new-card-form"))
     |> assert_has(css("#board_columns", text: "Test Card"))
   end
 
@@ -39,8 +38,6 @@ defmodule CercleApi.AddCardToBoardTest do
     end)
     |> find(css(".new-card-form"), fn(form) -> click(form, button("Save")) end)
     |> assert_has(css("body.async-ready"))
-    |> refute_has(css(".new-card-form"))
     |> assert_has(css("#board_columns", text: "Test Card - Test Contact"))
   end
-
 end

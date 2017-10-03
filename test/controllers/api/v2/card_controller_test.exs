@@ -1,7 +1,7 @@
 defmodule CercleApi.APIV2.CardControllerTest do
   use CercleApi.ConnCase
   import CercleApi.Factory
-  alias CercleApi.{Contact,Card, CardAttachment}
+  alias CercleApi.{Card, CardAttachment}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -47,7 +47,7 @@ defmodule CercleApi.APIV2.CardControllerTest do
       contact_ids: [state[:contact].id], company: state[:company]
     )
     |> Repo.preload([:board_column, board: [:board_columns]])
-    card_closed = insert(:card, status: 1, user: state[:user],
+    _card_closed = insert(:card, status: 1, user: state[:user],
       contact_ids: [state[:contact].id], company: state[:company]
     )
     |> Repo.preload([:board_column, board: [:board_columns]])
@@ -105,7 +105,7 @@ defmodule CercleApi.APIV2.CardControllerTest do
       card_path(state[:conn], :create, state[:company].id), card: %{
         board_id: state[:board].id,
         board_column_id: state[:board_column].id,
-        name: "", status: 0, company: state[:company].id,
+        name: "Test Card", status: 0, company: state[:company].id,
         user_id: state[:user].id,
         contact_ids: [1]
       }

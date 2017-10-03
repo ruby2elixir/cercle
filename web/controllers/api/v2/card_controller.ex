@@ -49,7 +49,6 @@ defmodule CercleApi.APIV2.CardController do
   def create(conn, %{"card" => card_params}) do
     current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn, current_user)
-    board = Repo.get!(CercleApi.Board, card_params["board_id"])
 
     changeset = company
     |> build_assoc(:cards)
