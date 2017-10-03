@@ -2,8 +2,8 @@
   <%= for b <- @boards do %>
       <div
         onclick="location='/company/<%= assigns[:current_company].id %>/board/<%=b.id%>';"
-        class="col-md-3 col-sm-6 col-xs-12 bg-primary board-archived-<%= b.archived %>"
-        style="height:100px;font-size:23px;font-weight:bold;padding:10px;padding-left:10px;margin:20px;cursor:pointer;">
+        class="col-md-3 col-sm-6 col-xs-12  board-archived-<%= b.archived %>"
+        style="background-color:#151148;color:white;height:100px;font-size:23px;font-weight:bold;padding:10px;padding-left:10px;margin:20px;cursor:pointer;">
        <%=b.name%>
       <!-- /.info-box -->
     </div>
