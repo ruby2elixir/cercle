@@ -1,0 +1,25 @@
+FORMAT: 1A
+HOST: https://api.cercle.co
+
+# API Reference
+
+# Group Authentication
+
+## JSON Web Token exchange [/api/v2/login]
+Exchange login, password and time_zone for `token`
+
+### Exchange login, password and time_zone for `token` [POST]
++ Request
+
+    + Attributes
+
+        + login: `user@cercle.co` (string, required) - The user's email adress.
+        + password: `password` (string, required)
+        + time_zone: `timezone` (string, required)
+
+    + Headers
+        Content-Type: application/vnd.api+json
+
+
+
+## Register Endpoint [/api/v2/register]
