@@ -108,8 +108,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     board = Repo.insert!(changeset)
 
     contact = insert(:contact, user: state[:user], company: state[:company])
-    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
-    card = Repo.insert!(changeset)
+    card = insert(:card, contact_ids: [contact.id], user: state[:user], company: state[:company], board: board)
 
     old_count = Repo.one(from p in Card, select: count("*"))
 
@@ -130,8 +129,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
-    card = Repo.insert!(changeset)
+    card = insert(:card, contact_ids: [contact.id], user: state[:user], company: state[:company], board: board)
 
     attachment =  CardAttachment
     |> attach_file(insert(:card_attachment, card: card),
@@ -158,8 +156,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   test "deleting contact should update card if it has other contacts", state do
     contact = insert(:contact, user: state[:user], company: state[:company])
     contact2 = insert(:contact, user: state[:user], company: state[:company])
-    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id, contact2.id], user_id: state[:user].id, company_id: state[:company].id})
-    card = Repo.insert!(changeset)
+    card = insert(:card, company: state[:company], contact_ids: [contact.id, contact2.id], user: state[:user])
 
     assert card.contact_ids == [contact.id, contact2.id]
 
@@ -175,7 +172,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id})
+    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id, name: "Test Card"})
     card = Repo.insert!(changeset)
 
     changeset = TimelineEvent.changeset(%TimelineEvent{}, %{card_id: card.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, event_name: "test", content: "test"})

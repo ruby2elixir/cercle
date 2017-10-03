@@ -2,12 +2,11 @@
   <div class="new-card-form">
     <div class="form-group">
       <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control" />
+      <span class='error' v-show="errors.name" v-for="msg in errors.name">{{msg}}</span>
     </div>
 
     <div class="form-group" v-show="defaultBoardId==null">
-      <label>
-        Board
-      </label>
+      <label>Board</label>
     </div>
     <div class="form-group">
       <select v-model="boardId" class="form-control" v-on:change="loadColumns">
@@ -49,7 +48,8 @@
           name: '',
           email: '',
           phone: ''
-        }
+        },
+        errors: {}
       };
     },
     components: {
@@ -79,9 +79,10 @@
             name: this.name,
             description: this.description
           }
-        }).then(resp => {
-          window.location.href = '/company/' + Vue.currentUser.companyId + '/board/' + resp.data.data.board.id;
-        });
+        }).then(
+          resp => { this.$emit('close'); },
+          resp => { this.errors = resp.body.errors }
+        );
       },
 
       saveData: function() {
@@ -129,7 +130,11 @@
 <style lang="sass">
   .new-card-form {
     padding: 15px;
-
+    .error {
+      color: red;
+      font-size: 80%;
+      padding-left: 2px;
+      }
     .card-description-rendering {
       min-height: 100px;
     }
