@@ -32,6 +32,25 @@
           <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
         </span>
       </div>
+
+      <div class="col-lg-4">
+        <label>Company</label>
+        <br />
+        <span class="attribute-value">
+          <organization-select :organization="contact.organization" @change="changeOrganization">
+            <input-modal v-model="contact.organization.name" v-on:input="updateOrganization"  placeholder="Click to add" label="Company name" v-if="contact.organization" />
+            <a @click="removeOrganization" class="remove-organization">×</a>
+          </organization-select>
+        </span>
+      </div>
+
+      <div class="col-lg-4" v-if="contact.organization">
+        <label>Company website</label>
+        <br />
+        <span class="attribute-value">
+          <input-modal v-model="contact.organization.website" v-on:input="updateOrganization"  placeholder="Click to add" label="Website" />
+        </span>
+      </div>
     </div>
 
     <div class="row">
@@ -39,8 +58,6 @@
         <markdown-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
       </div>
     </div>
-
-    <organization-select :organization="contact.organization" @update="updateOrganization"/>
   </div>
 </template>
 
@@ -72,10 +89,23 @@
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
         this.$http.put(url, { contact: this.contact } );
       },
-      updateOrganization(organization) {
+      changeOrganization(organization) {
         this.contact.organization = organization;
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
         this.$http.put(url, { contact: { organizationId: organization.id }});
+      },
+      removeOrganization() {
+        this.contact.organization = null;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
+        this.$http.put(url, { contact: { organizationId: '' }});
+      },
+      updateOrganization() {
+        let vm = this;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/organizations/' + this.contact.organization.id;
+        this.$http.put(url, {
+          contactId: this.contact.id,
+          organization: this.contact.organization
+        });
       }
     }
   };
@@ -103,6 +133,12 @@
 
     .contact-description {
       margin-top: 10px;
+    }
+
+    .remove-organization {
+      cursor: pointer;
+      font-weight: bold;
+      color: #333;
     }
   }
 </style>

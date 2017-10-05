@@ -1,16 +1,11 @@
 <template>
   <div v-on-click-outside='close'>
-    <div class="box-body box-profile" v-if="organization">
-      <div>
-        Working at <inline-edit v-model="organization.name" v-on:input="update" placeholder="Organization Name"></inline-edit>
-        <button v-on:click="removeOrganization" class="btn btn-link removeOrg">Remove</button>
-      </div>
-      <inline-edit v-model="organization.website" v-on:input="update" placeholder="Website"></inline-edit>
-      <inline-text-edit v-model="organization.description" v-on:input="update" placeholder="Note about the organization"></inline-text-edit>
-    </div><!-- /.box-body -->
+    <span v-if="organization">
+      <slot>{{ organization.name }}</slot>
+    </span>
 
-    <span v-on:click="selectMode=true" v-else>
-      Add organization
+    <span v-on:click="showModal" v-else>
+      Click to add
     </span>
 
     <div v-show="selectMode" class='input-modal'>
@@ -20,28 +15,22 @@
       </div>
 
       <div class='modal-body'>
-        <input type="text" class="form-control" v-model='search' @keyup="searchOrganizations" placeholder="Search organization..." />
-        <div v-if="addNew">
-          <inline-edit class="form-control" v-model="name" v-on:input="update" placeholder="Organization Name" ref="newname"></inline-edit>
-          <inline-edit class="form-control" v-model="website" v-on:input="update" placeholder="Website"></inline-edit>
-          <inline-text-edit class="form-control" v-model="description" v-on:input="update" placeholder="Note about the organization"></inline-text-edit>
+        <input type="text" class="form-control" v-model='search' @keyup="searchOrganizations" placeholder="Search organization..." ref='search' />
 
-          <div>
-            <button class='btn btn-primary btn-block' @click='addOrganization'>Add</button>
-          </div>
-        </div>
-        <div v-else>
-          <ul class='search-list'>
-            <li v-for="organization in organizations" @click="selectOrganization(organization)">
-              <h4>{{ organization.name }}</h4>
-              <div><small>{{ organization.website }}</small></div>
-              <div><small>{{ organization.description }}</small></div>
-            </li>
+        <ul class='search-list'>
+          <li v-for="organization in organizations" @click="selectedOrganization=organization.id" :class="{selected: organization.id == selectedOrganization}">
+            <h4>{{ organization.name }}</h4>
+            <div><small>{{ organization.website }}</small></div>
+            <div><small>{{ organization.description }}</small></div>
+          </li>
 
-            <li>
-              <a class='add-new' @click="showAddNew">Add new</a>
-            </li>
-          </ul>
+          <li @click="selectedOrganization='addNew'" :class="{selected: selectedOrganization == 'addNew'}" v-if="search">Add: {{ search }}</li>
+        </ul>
+      </div>
+
+      <div class="input-modal-footer">
+        <div class="text-right">
+          <button class="btn btn-primary" @click="save" :disabled="selectedOrganization == ''">Save</button>
         </div>
       </div>
     </div>
@@ -58,9 +47,8 @@
       return {
         search: '',
         name: '',
-        website: '',
-        description: '',
         organizations: [],
+        selectedOrganization: '',
         addNew: false,
         selectMode: false
       };
@@ -72,8 +60,16 @@
     watch: {
     },
     methods: {
+      showModal() {
+        this.selectMode = true;
+        let vm = this;
+        Vue.nextTick(function(){
+          vm.$refs.search.focus();
+        });
+      },
       searchOrganizations() {
         this.addNew = false;
+        this.selectedOrganization = '';
 
         if(this.search === '') {
           this.organizations = [];
@@ -86,29 +82,31 @@
       close: function() {
         this.selectMode = false;
       },
-      showAddNew() {
-        this.addNew = true;
-        let vm = this;
-        Vue.nextTick(function(){
-          vm.name = vm.search;
-          vm.search = '';
-          vm.$refs.newname.$refs.input.focus();
-        });
+      getOrganizationSelection() {
+        for(var i=0; i<this.organizations.length; i++) {
+          if(this.organizations[i].id === this.selectedOrganization)
+            return this.organizations[i];
+        }
       },
       addOrganization() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/organizations';
         this.$http.post(url, { organization: { name: this.name, website: this.website, description: this.description }}).then(resp => {
           this.organizations.push(resp.data.data);
           this.selectOrganization(resp.data.data);
-          this.addNew = false;
         });
       },
       selectOrganization(organization) {
-        this.$emit('update', organization);
+        this.selectedOrganization = organization.id;
+        this.$emit('change', organization);
         this.close();
       },
-      removeOrganization() {
-        this.$emit('update', null);
+      save() {
+        if(this.selectedOrganization === 'addNew') {
+          this.name = this.search;
+          this.addOrganization();
+        } else {
+          this.selectOrganization(this.getOrganizationSelection());
+        }
       }
     }
   };
@@ -125,13 +123,20 @@
       padding: 0;
       border-left: 1px solid lightgray;
       border-right: 1px solid lightgray;
+      border-bottom: 1px solid lightgray;
+      min-width: 200px;
+      min-height: 200px;
 
       li {
         padding: 5px;
         border-bottom: 1px solid lightgray;
         cursor: pointer;
 
-        &:hover {
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover, &.selected {
           background-color: dodgerblue;
           color: white;
 
@@ -150,6 +155,10 @@
           font-weight: bold;
         }
       }
+    }
+
+    .input-modal-footer {
+      padding: 0 10px 5px;
     }
   }
 </style>
