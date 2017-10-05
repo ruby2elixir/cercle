@@ -39,6 +39,8 @@
         <markdown-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
       </div>
     </div>
+
+    <organization-select :organization="contact.organization" @update="updateOrganization"/>
   </div>
 </template>
 
@@ -46,6 +48,7 @@
   import inputModal from '../shared/input-modal.vue';
   import nameInputModal from '../shared/name-input-modal.vue';
   import MarkdownTextEdit from '../shared/markdown-textedit.vue';
+  import OrganizationSelect from '../shared/organization-select.vue';
 
   export default {
     props: ['contact'],
@@ -55,7 +58,8 @@
     components: {
       'name-input-modal': nameInputModal,
       'input-modal': inputModal,
-      'markdown-text-edit': MarkdownTextEdit
+      'markdown-text-edit': MarkdownTextEdit,
+      'organization-select': OrganizationSelect
     },
     methods: {
       contactNameInput: function(data) {
@@ -67,6 +71,11 @@
       updateContact() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
         this.$http.put(url, { contact: this.contact } );
+      },
+      updateOrganization(organization) {
+        this.contact.organization = organization;
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
+        this.$http.put(url, { contact: { organizationId: organization.id }});
       }
     }
   };

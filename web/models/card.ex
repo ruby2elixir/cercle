@@ -47,7 +47,7 @@ defmodule CercleApi.Card do
   def contacts(card) do
     if card.contact_ids do
       card_contacts = from contact in CercleApi.Contact,
-        where: contact.id in ^card.contact_ids
+        where: contact.id in ^card.contact_ids, preload: [:organization, :tags]
       resp = CercleApi.Repo.all(card_contacts)
     else
       []
