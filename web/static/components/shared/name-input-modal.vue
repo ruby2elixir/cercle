@@ -1,6 +1,6 @@
 <template>
   <span v-on-click-outside='cancel'>
-    <span v-on:click="showModal">
+    <span v-on:click="showModal" class="full-name">
       {{firstName}} {{lastName}}
     </span>
 
@@ -10,14 +10,22 @@
         <a class='close pull-right' v-on:click='cancel'>×</a>
       </div>
 
-      <div class='modal-body'>
+      <div class='modal-body name-edit-modal'>
         <div class="form-group">
           <label>First name</label>
-          <input type='text' v-model='fname' class='form-control' placeholder='First name' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" ref='fname' />
+          <input type='text' v-model='fname'
+                 class='form-control fname'
+                 placeholder='First name'
+                 v-on:keyup.enter="save"
+                 v-on:keyup.esc.stop="cancel" ref='fname' />
         </div>
         <div class="form-group">
           <label>Last name</label>
-          <input type='text' v-model='lname' class='form-control' placeholder='Last name' v-on:keyup.enter="save" v-on:keyup.esc.stop="cancel" />
+          <input type='text' v-model='lname'
+                 class='form-control lname'
+                 placeholder='Last name'
+                 v-on:keyup.enter="save"
+                 v-on:keyup.esc.stop="cancel" />
         </div>
         <div>
           <button class='btn btn-primary btn-block' @click='save'>Save</button>
