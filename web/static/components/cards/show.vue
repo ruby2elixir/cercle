@@ -7,7 +7,7 @@
           <div class="card-title-input-block">
             <inline-text-edit v-model="card.name"
                               v-on:input="updateCard"
-                              placeholder="Card Name"></inline-text-edit>
+                              placeholder=""></inline-text-edit>
           </div>
         </div>
 
