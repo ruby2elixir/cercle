@@ -21,7 +21,7 @@
 <script>
     export default {
       props: {
-        'timeFormat': { type: String, default: 'ddd DD MMM @ HH:mm' },
+        'timeFormat': { type: String, default: 'ddd DD MMM HH:mm' },
         item: {
           type: Object,
           default: function() { return {}; }
