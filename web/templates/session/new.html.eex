@@ -1,19 +1,15 @@
-  <div class="login-box">
+  <div class="login-box" style="width:500px;font-size:16px;">
     <div class="login-logo">
       <img src="/images/logo_cercle3.png" style="width:106px;">
     </div><!-- /.login-logo -->
 
 
-    <div class="nav-tabs-custom">
-      <ul class="nav nav-tabs logintabs">
-         <li  class="active"  style="width: 50%; margin: 0; text-align: center;"><a href="/login" >Login</a></li>
-        <li style="width: 50%; margin: 0; text-align: center;"><a href="/register" >Signup</a></li>
-      </ul>
+    <div class="">
       <div class="tab-content no-padding">
         <div id="login-tab-content" class='tab-pane  active'>
 
           <div class="login-box-body">
-            <p class="login-box-msg">Please type your credentials</p>
+            <p class="login-box-msg">Sign in to Cercle</p>
             <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f -> %>
               <%= if get_flash(@conn, :info) do %>
                 <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
@@ -38,11 +34,15 @@
                   </div>
                 </div><!-- /.col -->
                 <div class="col-xs-4">
-                  <button type="submit" class="btn btn-primary btn-block btn-flat login-button pull-right" style="background-color:#00ADFF;border:0px solid grey;">Sign In</button>
                 </div><!-- /.col -->
               </div>
+              <div class="row" style="margin-bottom:10px;">
+                <div class="col-xs-12">
+                  <button type="submit" class="btn btn-primary btn-block btn-flat login-button pull-right" style="background-color:#00ADFF;border:0px solid grey;">Sign In</button>
+                </div>
+              </div>
             <% end %>
-            <a href="/forget-password">I forgot my password</a><br>
+            <a href="/forget-password" style="font-size:13px;color:grey;">I forgot my password</a><br>
           </div><!-- /.login-box-body -->
         </div>
       </div>
