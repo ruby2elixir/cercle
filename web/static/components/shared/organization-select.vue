@@ -67,6 +67,10 @@
           vm.$refs.search.focus();
         });
       },
+      reset() {
+        this.organizations = [];
+        this.search = '';
+      },
       searchOrganizations() {
         this.addNew = false;
         this.selectedOrganization = '';
@@ -81,6 +85,7 @@
       },
       close: function() {
         this.selectMode = false;
+        this.reset();
       },
       getOrganizationSelection() {
         for(var i=0; i<this.organizations.length; i++) {
@@ -91,7 +96,6 @@
       addOrganization() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/organizations';
         this.$http.post(url, { organization: { name: this.name, website: this.website, description: this.description }}).then(resp => {
-          this.organizations.push(resp.data.data);
           this.selectOrganization(resp.data.data);
         });
       },
@@ -107,6 +111,7 @@
         } else {
           this.selectOrganization(this.getOrganizationSelection());
         }
+        this.reset();
       }
     }
   };
