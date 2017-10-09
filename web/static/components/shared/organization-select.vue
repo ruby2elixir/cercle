@@ -24,7 +24,7 @@
             <div><small>{{ organization.description }}</small></div>
           </li>
 
-          <li @click="selectedOrganization='addNew'" :class="{selected: selectedOrganization == 'addNew', 'add-new': true}" v-if="search">Add: {{ search }}</li>
+          <li @click="selectedOrganization='addNew'" :class="{selected: selectedOrganization == 'addNew', 'add-new': true}" v-if="search">Create: {{ search }}</li>
         </ul>
       </div>
 
