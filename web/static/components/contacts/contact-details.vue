@@ -36,7 +36,7 @@
       <div class="col-lg-4">
         <label>Company</label>
         <br />
-        <span class="attribute-value">
+        <span class="attribute-value organization-name">
           <organization-select :organization="contact.organization" @change="changeOrganization">
             <input-modal v-model="contact.organization.name" v-on:input="updateOrganization"  placeholder="Click to add" label="Company name" v-if="contact.organization" />
             <a @click="removeOrganization" class="remove-organization">×</a>
@@ -47,7 +47,7 @@
       <div class="col-lg-4" v-if="contact.organization">
         <label>Company website</label>
         <br />
-        <span class="attribute-value">
+        <span class="attribute-value organization-website">
           <input-modal v-model="contact.organization.website" v-on:input="updateOrganization"  placeholder="Click to add" label="Website" />
         </span>
       </div>
