@@ -32,20 +32,13 @@ defmodule CercleApi.APIV2.OrganizationControllerTest do
     org = insert(:organization,
       name: "Abc Org", data: %{}, user: state[:user], company: state[:company]
     )
-    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/organizations/search", user_id: state[:user].id, q: "abc"
+    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/organizations", q: "abc"
     assert json_response(conn, 200) == render_json(
       CercleApi.APIV2.OrganizationView, "index.json", %{ organizations: [org] }
     )
   end
 
-  test "#search organization without query should return empty array", state  do
-    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/organizations/search/", user_id: state[:user].id
-    assert json_response(conn, 200) == render_json(
-      CercleApi.APIV2.OrganizationView, "index.json", %{ organizations: [] }
-    )
-  end
-
-   test "try to show authorized Organization", state do
+  test "try to show authorized Organization", state do
     organization = insert(:organization,
       name: "Org1", user: state[:user], company: state[:company]
     )

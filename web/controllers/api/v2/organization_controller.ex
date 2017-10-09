@@ -23,12 +23,7 @@ defmodule CercleApi.APIV2.OrganizationController do
     render(conn, "index.json", organizations: organizations)
   end
 
-  def index(conn, _params) do
-    organizations = Repo.all(Organization)
-    render(conn, "index.json", organizations: organizations)
-  end
-
-  def search(conn, %{"q" => q}) do
+  def index(conn, %{"q" => q}) do
     company = current_company(conn)
 
     query = from o in Organization,
@@ -40,8 +35,9 @@ defmodule CercleApi.APIV2.OrganizationController do
     render(conn, "index.json", organizations: organizations)
   end
 
-  def search(conn, %{}) do
-    render(conn, "index.json", organizations: [])
+  def index(conn, _params) do
+    organizations = Repo.all(Organization)
+    render(conn, "index.json", organizations: organizations)
   end
 
   def create(conn, %{"organization" => organization_params}) do

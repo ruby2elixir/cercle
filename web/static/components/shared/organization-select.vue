@@ -74,7 +74,7 @@
         if(this.search === '') {
           this.organizations = [];
         } else {
-          this.$http.get('/api/v2/company/'+ Vue.currentUser.companyId +'/organizations/search?q=' + this.search).then(resp => {
+          this.$http.get('/api/v2/company/'+ Vue.currentUser.companyId +'/organizations?q=' + this.search).then(resp => {
             this.organizations = resp.data.data;
           });
         }
