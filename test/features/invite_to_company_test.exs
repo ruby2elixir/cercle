@@ -33,7 +33,7 @@ defmodule CercleApi.InviteToCompanyTest do
       form
       |> fill_in(text_field("Your Name"), with: "Jimm")
       |> fill_in(text_field("Password"), with: "123456")
-      |> click(button("Sign Up"))
+      |> click(button("Sign up"))
     end)
     |> assert_has(css(".current-company", text: company.title))
   end
@@ -50,7 +50,7 @@ defmodule CercleApi.InviteToCompanyTest do
       |> fill_in(text_field("Your Name"), with: "Jimm")
       |> fill_in(text_field("Email"), with: "test1@test.com")
       |> fill_in(text_field("Password"), with: "123456")
-      |> click(button("Sign Up"))
+      |> click(button("Sign up"))
     end)
     |> assert_has(css(".current-company", text: company.title))
 
@@ -68,11 +68,11 @@ defmodule CercleApi.InviteToCompanyTest do
 
     session
     |> visit("/register/#{code}/join/")
-    |> click(link("Login"))
+    |> visit("/login")
     |> find(css("form"), fn(form) ->
       form
-      |> fill_in(text_field("login"), with: "test@test.com")
-      |> fill_in(text_field("password"), with: "1234")
+      |> fill_in(text_field("Email"), with: "test@test.com")
+      |> fill_in(text_field("Password"), with: "1234")
       |> click(button("Sign In"))
     end)
     |> assert_has(css(".current-company", text: company.title))
