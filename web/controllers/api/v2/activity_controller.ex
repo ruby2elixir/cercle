@@ -111,7 +111,7 @@ defmodule CercleApi.APIV2.ActivityController do
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
     Repo.delete!(activity)
-
+    CercleApi.ActivityService.delete("activity", id)
     CercleApi.Endpoint.broadcast!(
       channel, "activity:deleted", %{"activity_id" => id}
     )

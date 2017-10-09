@@ -2,7 +2,7 @@ defmodule CercleApi.Tasks.ActivityNotification do
   @moduledoc false
 
   require Logger
-  import Ecto.Query, only: [from: 1, from: 2]
+  import Ecto.Query, only: [from: 2]
   use Timex
 
   alias CercleApi.{Repo, Activity, Card, Notification, Mailer}
@@ -10,32 +10,35 @@ defmodule CercleApi.Tasks.ActivityNotification do
   def run do
     IO.puts "run ActivityNotification"
     Enum.each(
-      get_items,
+      get_items(),
       fn (item) -> send_email(item) end
     )
   end
+
   def send_email(%CercleApi.Notification{notification_type: "start"} = item) do
-    target = load_item(item)
-    if target.user.notification do
+    with target <- load_item(item),
+         false <- is_nil(target), false <- is_nil(target.user),
+           true <- target.user.notification  do
       mail = %Mailman.Email{
         subject: "Start Notification",
-        from: "referral@cercle.co",
-        to: [target.user.login],
+        from: "referral@cercle.co", to: [target.user.login],
         html: email_html(target, item, "start")
       }
       Mailer.deliver(mail)
       item
       |> Notification.changeset(%{sent: true})
       |> Repo.update
+
     end
   end
+
   def send_email(%CercleApi.Notification{notification_type: "prestart"} = item) do
-    target = load_item(item)
-    if target.user.notification do
+    with target <- load_item(item),
+         false <- is_nil(target), false <- is_nil(target.user),
+           true <- target.user.notification do
       mail = %Mailman.Email{
         subject: "PreStart Notification",
-        from: "referral@cercle.co",
-        to: [target.user.login],
+        from: "referral@cercle.co", to: [target.user.login],
         html: email_html(target, item, "prestart")
       }
       Mailer.deliver(mail)
@@ -65,7 +68,8 @@ defmodule CercleApi.Tasks.ActivityNotification do
   def target_name(%CercleApi.Activity{} = activity), do: activity.title
 
   def contact_id(%CercleApi.Card{} = card), do:  List.first(card.contact_ids || [])
-  def contact_id(%CercleApi.Activity{} = activity), do: activity.contact_id
+  def contact_id(%CercleApi.Activity{} = activity), do: contact_id(activity.card)
+  def contact_id(_), do: []
 
   def load_item(%{target_type: "card"} = item) do
     Card
@@ -76,7 +80,7 @@ defmodule CercleApi.Tasks.ActivityNotification do
   def load_item(%{target_type: "activity"} = item) do
     Activity
     |> Repo.get_by(id: item.target_id)
-    |> Repo.preload([:user])
+    |> Repo.preload([:user, :card])
   end
 
   def get_items do

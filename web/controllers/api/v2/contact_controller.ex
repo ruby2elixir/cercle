@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card,
+  alias CercleApi.{Repo, Contact, Tag, ContactTag, TimelineEvent, Card,
                    CardService, ContactService}
 
   plug CercleApi.Plug.EnsureAuthenticated
@@ -17,7 +17,6 @@ defmodule CercleApi.APIV2.ContactController do
 
   def index(conn, params) do
     q = params["q"]
-    current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn)
     query = from p in Contact,
       where: p.company_id == ^company.id,
@@ -180,7 +179,6 @@ defmodule CercleApi.APIV2.ContactController do
   # multiple delete contacts
   #
   def multiple_delete(conn, %{"contact_ids" => contact_ids}) do
-    current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn)
 
     query = from c in Contact,

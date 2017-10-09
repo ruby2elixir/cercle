@@ -97,6 +97,17 @@ defmodule CercleApi.APIV2.CardControllerTest do
     assert attachment == nil
   end
 
+
+  test "deleting card with notification", %{user: user, company: company} = state do
+    card = insert(:card, due_date: Timex.now(), user: user, company: company)
+    CercleApi.ActivityService.add(card)
+    assert Repo.aggregate(CercleApi.Notification, :count, :id) == 2
+    conn = delete state[:conn], "/api/v2/company/#{company.id}/card/#{card.id}"
+    assert json_response(conn, 200)
+
+    assert Repo.aggregate(CercleApi.Notification, :count, :id) == 0
+  end
+
   test "POST/2 create card", state do
     CercleApi.Endpoint.subscribe("contacts:1")
 
