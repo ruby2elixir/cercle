@@ -1,9 +1,11 @@
 defmodule CercleApi.Factory do
   use ExMachina.Ecto, repo: CercleApi.Repo
 
-  alias CercleApi.{User, Company, Activity, Organization, Contact,
-                   Board, BoardColumn, Card, CardAttachment,
-                   TimelineEvent, UserCompany}
+  alias CercleApi.{
+    User, Company, Activity, Organization, Contact,
+    Board, BoardColumn, Card, CardAttachment,
+    TimelineEvent, UserCompany, Notification
+  }
   alias ExOauth2Provider.OauthApplications.OauthApplication
   alias ExOauth2Provider.OauthAccessTokens.OauthAccessToken
 
@@ -115,6 +117,13 @@ defmodule CercleApi.Factory do
       application: build(:oauth_application),
       token: "77345dc3a5a0e7bb9409b3e7c811c2464dc2107126353360f851924f072b3512",
       expires_in: 7200
+    }
+  end
+
+  def notification_factory do
+    %Notification{
+      sent: false,
+      notification_type: "start"
     }
   end
 end
