@@ -4,18 +4,18 @@
       <slot>{{ organization.name }}</slot>
     </span>
 
-    <span v-on:click="showModal" v-else>
+    <span class='add-organization' v-on:click="showModal" v-else>
       Click to add
     </span>
 
-    <div v-show="selectMode" class='input-modal'>
+    <div v-show="selectMode" class='input-modal organization-select-modal'>
       <div class='modal-header clearfix'>
         <span>Select/Add organization</span>
         <a class='close pull-right' v-on:click='close' v-if="!inline">×</a>
       </div>
 
       <div class='modal-body'>
-        <input type="text" class="form-control" v-model='search' @keyup="searchOrganizations" placeholder="Search organization..." ref='search' />
+        <input type="search" class="form-control" v-model='search' @keyup="searchOrganizations" placeholder="Search organization..." ref='search' />
 
         <ul class='search-list'>
           <li v-for="organization in organizations" @click="selectedOrganization=organization.id" :class="{selected: organization.id == selectedOrganization}">
@@ -24,13 +24,13 @@
             <div><small>{{ organization.description }}</small></div>
           </li>
 
-          <li @click="selectedOrganization='addNew'" :class="{selected: selectedOrganization == 'addNew'}" v-if="search">Add: {{ search }}</li>
+          <li @click="selectedOrganization='addNew'" :class="{selected: selectedOrganization == 'addNew', 'add-new': true}" v-if="search">Add: {{ search }}</li>
         </ul>
       </div>
 
       <div class="input-modal-footer">
         <div class="text-right">
-          <button class="btn btn-primary" @click="save" :disabled="selectedOrganization == ''">Save</button>
+          <button class="btn btn-primary save" @click="save" :disabled="!selectedOrganization">Save</button>
         </div>
       </div>
     </div>
