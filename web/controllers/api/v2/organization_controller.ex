@@ -23,6 +23,18 @@ defmodule CercleApi.APIV2.OrganizationController do
     render(conn, "index.json", organizations: organizations)
   end
 
+  def index(conn, %{"q" => q}) do
+    company = current_company(conn)
+
+    query = from o in Organization,
+      where: o.company_id == ^company.id,
+      where: ilike(o.name, ^"#{q}%"),
+      order_by: o.name
+    organizations = Repo.all(query)
+
+    render(conn, "index.json", organizations: organizations)
+  end
+
   def index(conn, _params) do
     organizations = Repo.all(Organization)
     render(conn, "index.json", organizations: organizations)

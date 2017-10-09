@@ -1,5 +1,5 @@
 e<template>
-  <input type="text" v-bind:value="value"  v-on:blur="updateValue($event.target.value)" class="inline-input"  />
+  <input type="text" v-bind:value="value"  v-on:blur="updateValue($event.target.value)" class="inline-input" ref="input"  />
 </template>
 
 <script>

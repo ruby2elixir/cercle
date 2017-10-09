@@ -21,7 +21,9 @@ defmodule CercleApi.APIV2.CardView do
       card: card,
       activities:  card.activities,
       events: card.timeline_event,
-      card_contacts: card_contacts,
+      card_contacts: render_many(
+        card_contacts, CercleApi.APIV2.ContactView, "contact.json"
+      ),
       board: board,
       company: card.company,
       company_users: card.company.users,
