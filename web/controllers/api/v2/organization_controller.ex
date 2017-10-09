@@ -28,21 +28,20 @@ defmodule CercleApi.APIV2.OrganizationController do
     render(conn, "index.json", organizations: organizations)
   end
 
-  def search(conn, _params) do
+  def search(conn, %{"q" => q}) do
     company = current_company(conn)
-    q = _params["q"]
 
-    if q do
-      query = from o in Organization,
-        where: o.company_id == ^company.id,
-        where: ilike(o.name, ^"#{q}%"),
-        order_by: o.name
-      organizations = Repo.all(query)
-    else
-      organizations = []
-    end
+    query = from o in Organization,
+      where: o.company_id == ^company.id,
+      where: ilike(o.name, ^"#{q}%"),
+      order_by: o.name
+    organizations = Repo.all(query)
 
     render(conn, "index.json", organizations: organizations)
+  end
+
+  def search(conn, %{}) do
+    render(conn, "index.json", organizations: [])
   end
 
   def create(conn, %{"organization" => organization_params}) do

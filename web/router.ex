@@ -141,8 +141,8 @@ defmodule CercleApi.Router do
     post "/bulk_tag_or_untag_contacts", BulkController, :bulk_tag_or_untag_contacts
     get "/user", UserController, :index
     resources "/timeline_events", TimelineEventController
+    get "/organizations/search", OrganizationController, :search
     resources "/organizations", OrganizationController
-    get "/organizations/search/:q", OrganizationController, :search
   end
 
   scope "/admin" , CercleApi.Admin, as: :admin do
