@@ -3,6 +3,6 @@ defmodule CercleApi.RegistrationControllerTest do
 
   test "GET /register", %{conn: conn} do
     conn = get conn, "/register"
-    assert html_response(conn, 200) =~ "Sign Up"
+    assert html_response(conn, 200) =~ "Sign up"
   end
 end

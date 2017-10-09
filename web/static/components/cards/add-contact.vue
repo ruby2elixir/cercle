@@ -61,7 +61,7 @@
           this.contact.id = null;
           this.contact.firstName = null;
           this.contact.lastName = null;
-          this.contact.name = con;
+          this.contact.name = con.name || con;
           this.contact.email = null;
           this.contact.phone = null;
         }

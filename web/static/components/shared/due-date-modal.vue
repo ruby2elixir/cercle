@@ -26,10 +26,10 @@
 
       <div class="row input-modal-footer">
         <div class="col-md-3">
-          <button class="btn btn-primary btn-block" @click="save">Save</button>
+          <button class="btn btn-default btn-block" @click="remove"><span class="text-danger">Remove</span></button>
         </div>
         <div class="col-md-3 col-md-offset-6 text-right">
-          <button class="btn btn-default btn-block" @click="remove"><span class="text-danger">Remove</span></button>
+          <button class="btn btn-primary btn-block" @click="save">Save</button>
         </div>
       </div>
     </div>

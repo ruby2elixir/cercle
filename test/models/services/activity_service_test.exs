@@ -39,4 +39,20 @@ defmodule CercleApi.ActivityServiceTest do
     assert item_due_date == Timex.to_unix(due_date)
   end
 
+  test "delete notification" do
+    user = insert(:user, notification: true)
+    card = insert(:card, user: user, due_date: Timex.shift(Timex.now(), minutes: -10))
+
+    activity = insert(:activity, user: user, due_date: Timex.shift(Timex.now(), minutes: -10))
+
+    nc = insert(:notification, target_type: "card", target_id: card.id,
+      delivery_time: Timex.shift(Timex.now(), minutes: -10))
+    na = insert(:notification, target_type: "activity", target_id: activity.id,
+      delivery_time: Timex.shift(Timex.now(), minutes: -10))
+
+    assert Repo.aggregate(CercleApi.Notification, :count, :id) == 2
+    ActivityService.delete("card", card.id)
+    ActivityService.delete("activity", activity.id)
+    assert Repo.aggregate(CercleApi.Notification, :count, :id) == 0
+  end
 end

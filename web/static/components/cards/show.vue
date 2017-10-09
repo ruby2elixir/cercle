@@ -5,17 +5,23 @@
         <div class="card-title">
           <i class="fa fa-rocket"></i>
           <div class="card-title-input-block">
-            <inline-text-edit v-model="card.name" v-on:input="updateCard" placeholder="Card Name"></inline-text-edit>
+            <inline-text-edit v-model="card.name"
+                              v-on:input="updateCard"
+                              placeholder=""></inline-text-edit>
           </div>
         </div>
 
         <div class="manager" v-if="card.userId">
           <label>
-            <select-member v-model.number="card.userId" @change="updateCard" :users="companyUsers" />
+            <select-member v-model.number="card.userId"
+                           @change="updateCard"
+                           :users="companyUsers" />
           </label>
         </div>
 
-        <div class="mt-1 mb-1" :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }" v-show="card.dueDate || showDueDatePicker" >
+        <div class="mt-1 mb-1"
+             :class="{ 'is-due-past': !isDueFuture, 'is-due-future': isDueFuture }"
+             v-show="card.dueDate || showDueDatePicker" >
           Due Date:
           <due-date-modal
             :class="dueDateClass"
@@ -25,7 +31,9 @@
         </div>
 
         <div class="card-description">
-          <markdown-text-edit v-model="card.description" v-on:input="updateCard" placeholder="Write a description" ></markdown-text-edit>
+          <markdown-text-edit v-model="card.description"
+                              v-on:input="updateCard"
+                              placeholder="Write a description"></markdown-text-edit>
         </div>
 
         <div class="card-contacts-container" v-if="contacts.length > 0">
@@ -49,7 +57,10 @@
       </div>
 
       <div class="col-lg-3 card-actions">
-        <select-member class="card-select-member" :buttonClass="'btn btn-default btn-block'" v-model.number="card.userId" @change="updateCard" :users="companyUsers">
+        <select-member class="card-select-member"
+                       :buttonClass="'btn btn-default btn-block'"
+                       v-model.number="card.userId" @change="updateCard"
+                       :users="companyUsers">
           <span v-if="card.userId">CHANGE MEMBER</span>
           <span v-else>ADD MEMBER</span>
         </select-member>
@@ -136,7 +147,10 @@
         </div>
 
         <div slot="modal-footer" class="modal-footer">
-         <button type="button" class="btn btn-success" v-on:click="addContact">Add Contact</button>
+          <button type="button" class="btn btn-success"
+                  v-on:click="addContact">
+            Add Contact
+          </button>
         </div>
     </modal>
   </div>

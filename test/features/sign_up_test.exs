@@ -4,7 +4,7 @@ defmodule CercleApi.SignUpTest do
   test "GET /register", %{session: session} do
     session
     |> visit("/register")
-    |> assert_has(css(".login-box-msg", text: "Welcome to Cercle!"))
+    |> assert_has(css(".login-box-msg", text: "Get started free"))
     |> assert_has(css("form", action: "/register"))
   end
 
@@ -17,7 +17,7 @@ defmodule CercleApi.SignUpTest do
       |> fill_in(text_field("Name of your Company"), with: "Pequod")
       |> fill_in(text_field("Email"), with: "jimm@test.com")
       |> fill_in(text_field("Password"), with: "123456")
-      |> click(button("Sign Up"))
+      |> click(button("Sign up"))
     end)
 
     assert current_url(session)  =~ ~r/\/company\/\d+\/board/
@@ -37,7 +37,7 @@ defmodule CercleApi.SignUpTest do
       |> fill_in(text_field("Name of your Company"), with: "Pequod")
       |> fill_in(text_field("Email"), with: "test@test.com")
       |> fill_in(text_field("Password"), with: "123456")
-      |> click(button("Sign Up"))
+      |> click(button("Sign up"))
     end)
 
     assert current_url(session) == "http://localhost:4001/register"

@@ -4,7 +4,7 @@ defmodule CercleApi.SignInTest do
   test "GET /login", %{session: session} do
     session
     |> visit("/login")
-    |> assert_has(css(".login-box-msg", text: "Please type your credentials"))
+    |> assert_has(css(".login-box-msg", text: "Sign in to Cercle"))
     |> assert_has(css("form", action: "/login"))
   end
 

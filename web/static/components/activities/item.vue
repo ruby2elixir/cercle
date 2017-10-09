@@ -10,7 +10,7 @@
   <a v-on:click.stop="$emit('card-show')" style="color: #565656;"> <span style=""> {{item.title}}</span> </a><br />
   </td>
   <td style="width:150px;">
-    {{item.due_date_with_current_timezone| moment(timeFormat) }}
+    {{item.dueDateWithCurrentTimezone| moment(timeFormat) }}
   </td>
   <td style="width:30px;">
   <el-checkbox v-model="item.isDone" v-on:change="updateTask(item)"></el-checkbox>
@@ -21,7 +21,7 @@
 <script>
     export default {
       props: {
-        'timeFormat': { type: String, default: 'ddd DD MMM @ HH:mm' },
+        'timeFormat': { type: String, default: 'ddd DD MMM HH:mm' },
         item: {
           type: Object,
           default: function() { return {}; }

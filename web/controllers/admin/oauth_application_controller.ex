@@ -41,7 +41,7 @@ defmodule CercleApi.Admin.OauthApplicationController do
       {:ok, oauth_application} ->
         conn
         |> put_flash(:info, "Oauth application updated successfully.")
-        |> redirect(to: admin_oauth_application_path(conn, :show, oauth_application))
+        |> redirect(to: admin_oauth_application_path(conn, :index))
       {:error, changeset} ->
         render(conn, "edit.html", oauth_application: oauth_application, changeset: changeset)
     end

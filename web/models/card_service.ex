@@ -147,7 +147,7 @@ defmodule CercleApi.CardService do
       event: event,
       data: payload_data(card)
     }
-
+    CercleApi.ActivityService.delete("card", card.id)
     for webhook <- get_subscriptions(card.user_id, event) do
       HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
     end

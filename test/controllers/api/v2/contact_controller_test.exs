@@ -58,6 +58,14 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     assert json_response(conn, 422)["errors"]["last_name"] == ["can't be blank"]
   end
 
+  test "create contact with invalid name", %{conn: conn, company: company} do
+    conn = post(conn,
+      "/api/v2/company/#{company.id}/contact",
+      contact: %{"company_id" => 5,  "name" => %{"name" => " "}, "user_id" => 623}
+    )
+    assert json_response(conn, 422)["errors"]["last_name"] == ["can't be blank"]
+  end
+
   test "try to update authorized contact with valid params", state do
     contact = insert(:contact, user: state[:user], company: state[:company])
     conn = put state[:conn], "/api/v2/company/#{state[:company].id}/contact/#{contact.id}", contact: %{name: "Modified Contact"}

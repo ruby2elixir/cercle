@@ -3,7 +3,7 @@ defmodule CercleApi.APIV2.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Repo, Contact, Company, Tag, ContactTag, TimelineEvent, Card,
+  alias CercleApi.{Repo, Contact, Tag, ContactTag, TimelineEvent, Card,
                    CardService, ContactService}
 
   plug CercleApi.Plug.EnsureAuthenticated
@@ -17,7 +17,6 @@ defmodule CercleApi.APIV2.ContactController do
 
   def index(conn, params) do
     q = params["q"]
-    current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn)
     query = from p in Contact,
       where: p.company_id == ^company.id,
@@ -38,8 +37,9 @@ defmodule CercleApi.APIV2.ContactController do
   def create(conn, %{"contact" => contact_params}) do
     user = CercleApi.Plug.current_user(conn)
     company = current_company(conn)
-    contact_params = Map.merge(contact_params, split_name(contact_params))
-    contact_params = Map.put(contact_params, "user_id", user.id)
+    contact_params = contact_params
+    |> Map.merge(split_name(contact_params))
+    |> Map.put("user_id", user.id)
 
     changeset = company
       |> Ecto.build_assoc(:contacts)
@@ -179,7 +179,6 @@ defmodule CercleApi.APIV2.ContactController do
   # multiple delete contacts
   #
   def multiple_delete(conn, %{"contact_ids" => contact_ids}) do
-    current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn)
 
     query = from c in Contact,
@@ -191,9 +190,9 @@ defmodule CercleApi.APIV2.ContactController do
     json conn, %{status: 200}
   end
 
-  defp split_name(contact_params) do
-    if contact_params["name"] && String.trim(to_string(contact_params["last_name"])) == "" do
-      name_splits = String.split(contact_params["name"], ~r/\s+/)
+  defp split_name(%{"name" => name} = contact_params) when is_binary(name) do
+    if String.trim(to_string(contact_params["last_name"])) == "" do
+      name_splits = String.split(name, ~r/\s+/)
       if length(name_splits) == 1 do
         [last_name] = name_splits
         %{"last_name" => last_name}
@@ -206,6 +205,7 @@ defmodule CercleApi.APIV2.ContactController do
       %{}
     end
   end
+  defp split_name(_contact_params), do: %{}
 
   defp delete_contact(contact) do
 

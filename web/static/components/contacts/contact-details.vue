@@ -5,7 +5,9 @@
         <label>Name</label>
         <br />
         <span class="attribute-value">
-          <name-input-modal :first-name="contact.firstName" :last-name="contact.lastName" v-on:input="contactNameInput"/>
+          <name-input-modal :first-name="contact.firstName"
+                            :last-name="contact.lastName"
+                            v-on:input="contactNameInput"/>
         </span>
       </div>
 
@@ -13,7 +15,9 @@
         <label>Title</label>
         <br />
         <span class="attribute-value">
-          <input-modal v-model="contact.jobTitle" v-on:input="updateContact"  placeholder="Click to add" label="Title" />
+          <input-modal v-model="contact.jobTitle"
+                       v-on:input="updateContact"
+                       placeholder="Click to add" label="Title" />
         </span>
       </div>
 
@@ -21,7 +25,9 @@
         <label>Phone number</label>
         <br />
         <span class="attribute-value">
-          <input-modal v-model="contact.phone" v-on:input="updateContact"  placeholder="Click to add" label="Phone" />
+          <input-modal v-model="contact.phone"
+                       v-on:input="updateContact"
+                       placeholder="Click to add" label="Phone" />
         </span>
       </div>
 
@@ -29,7 +35,9 @@
         <label>Email</label>
         <br />
         <span class="attribute-value">
-          <input-modal v-model="contact.email" v-on:input="updateContact"  placeholder="Click to add" label="Email" />
+          <input-modal v-model="contact.email"
+                       v-on:input="updateContact"
+                       placeholder="Click to add" label="Email" />
         </span>
       </div>
 
@@ -55,7 +63,10 @@
 
     <div class="row">
       <div class="contact-description col-lg-12">
-        <markdown-text-edit v-model="contact.description" v-on:input="updateContact" placeholder="Write a description" ></markdown-text-edit>
+        <markdown-text-edit v-model="contact.description"
+                            v-on:input="updateContact"
+                            placeholder="Write a description" >
+        </markdown-text-edit>
       </div>
     </div>
   </div>
@@ -80,9 +91,8 @@
     },
     methods: {
       contactNameInput: function(data) {
-        let cIndex = this.$parent.contacts.findIndex((c) => c.id === this.contact.id );
-        this.$parent.contacts[cIndex].firstName = data.firstName;
-        this.$parent.contacts[cIndex].lastName = data.lastName;
+        this.contact.firstName = data.firstName;
+        this.contact.lastName = data.lastName;
         this.updateContact();
       },
       updateContact() {
