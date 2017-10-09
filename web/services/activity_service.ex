@@ -3,6 +3,7 @@ defmodule CercleApi.ActivityService do
 
   require Logger
   import Ecto.Query, only: [from: 1, from: 2]
+
   use Timex
 
   alias CercleApi.{Repo, Notificaton}
@@ -15,6 +16,12 @@ defmodule CercleApi.ActivityService do
       _ ->
         create_notification(item)
     end
+  end
+
+  def delete(object_type, id) do
+    CercleApi.Notification
+    |> Ecto.Query.where(target_type: ^object_type, target_id: ^id)
+    |> Repo.delete_all
   end
 
   defp create_notification(item) do
