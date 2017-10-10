@@ -312,9 +312,18 @@
       },
       addExistingContact(contact) {
         let cardUrl = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/'+ this.cardId;
-        this.contacts.push(contact);
+        let listContacts = this.contacts
+        listContacts.push(contact);
+        this.contacts = listContacts.reduce(
+          function(x, y) {
+            if (x.findIndex(e => e.id == y.id) < 0) { x.push(y);  }
+            return x;
+          }, []);
+
         this.card.contactIds = this.card.contactIds || [];
-        this.card.contactIds.push(contact.id);
+        if (!this.card.contactIds.includes(contact.id)) {
+          this.card.contactIds.push(contact.id);
+        }
         this.$http.put(cardUrl,{ card: { contactIds: this.card.contactIds  } }).then(resp2 => {
           this.activeContactIndex = this.contacts.length-1;
           this.openContactModal = false;

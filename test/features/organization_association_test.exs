@@ -23,7 +23,7 @@ defmodule CercleApi.OrganizationAssociationTest do
 
     |> click(css(".add-organization", text: "Click to add" ))
     |> fill_in(css(".organization-select-modal input[type='search']"), with: "New Company" )
-    |> click(css(".organization-select-modal .search-list .add-new", text: "Add: New Company" ))
+    |> click(css(".organization-select-modal .search-list .add-new", text: "Create: New Company" ))
     |> click(css(".organization-select-modal .save", text: "Save" ))
     |> assert_has(css(".attribute-value", text: "New Company"))
   end
@@ -83,7 +83,7 @@ defmodule CercleApi.OrganizationAssociationTest do
     |> click(css(".active-contact-info .remove-organization"))
     |> click(css(".add-organization", text: "Click to add" ))
     |> fill_in(css(".organization-select-modal input[type='search']"), with: "New Company" )
-    |> click(css(".organization-select-modal .search-list .add-new", text: "Add: New Company" ))
+    |> click(css(".organization-select-modal .search-list .add-new", text: "Create: New Company" ))
     |> click(css(".organization-select-modal .save", text: "Save" ))
     |> assert_has(css(".attribute-value", text: "New Company"))
   end
