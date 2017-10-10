@@ -53,9 +53,9 @@
                     </tr>
 
                     <tr v-for="contact in contacts">
-                      <td>
+                      <td v-bind:class="'contact-delete-' + contact.id">
                          <el-checkbox-group v-model="contactList">
-                           <el-checkbox :label="contact.id" :key="contact.id"></el-checkbox>
+                           <el-checkbox :label="contact.id" :key="contact.id" ></el-checkbox>
                          </el-checkbox-group>
                       </td>
                       <td v-on:click="contactShow(contact)">
