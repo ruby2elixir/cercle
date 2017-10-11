@@ -55,9 +55,7 @@ export default {
       this.editMode = false;
     },
     remove() {
-      if(confirm('Are you sure?')) {
-        this.$emit('remove');
-      }
+      this.$emit('remove');
     }
   }
 };
