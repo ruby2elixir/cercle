@@ -99,6 +99,7 @@
   .assignment-modal {
     min-width: 750px;
     margin-left: -50%;
+    margin-top: -50%;
     padding: 10px;
 
     .input-modal-footer {
