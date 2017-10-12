@@ -1,7 +1,7 @@
 <template>
   <div class="new-card-form">
     <div class="form-group">
-      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control" />
+      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control" ref="name" />
       <span class='error' v-show="errors.name" v-for="msg in errors.name">{{msg}}</span>
     </div>
 
@@ -81,7 +81,7 @@
           }
         }).then(
           resp => { this.$emit('close'); },
-          resp => { this.errors = resp.body.errors }
+          resp => { this.errors = resp.body.errors; }
         );
       },
 
@@ -123,6 +123,9 @@
     },
     mounted: function() {
       this.loadColumns();
+      this.$on('autofocus', function(options){
+        this.$refs.name.focus();
+      });
     }
   };
 </script>
