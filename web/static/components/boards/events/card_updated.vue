@@ -1,9 +1,6 @@
 <template>
-  <event :item="item" v-on:clickByEvent="$emit('clickByEvent')" v-if="isMovedCard">
-     <span>
-       moved <b>{{item.cardName}}</b>
-       from {{boardName(meta.previous) }} to {{boardName(meta)}}
-     </span>
+  <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
+     <span v-html="content"></span>
   </event>
 </template>
 <script>
@@ -19,9 +16,6 @@ export default {
         h.push(this.item.cardName + ' on ');
       }
       h.push('<a href="' + this.item.boardId + '">'+this.boardName(meta)+'</a>');
-      h.push('<br/><i><small>Main contact: ');
-      h.push(this.mainContact());
-      h.push('</small></i>');
       h.push(this.diff());
       return h.join('');
     },
@@ -58,7 +52,6 @@ export default {
     },
     content() {
       return this.updatedCardMsg(this.meta);
-
     }
 
   }
