@@ -35,7 +35,13 @@ export default {
   },
   methods: {
     sizeModal() { return this.options.size || 'large'; },
-    close() { this.open = false;  }
+    close() {
+      let vm = this;
+      vm.open = false;
+      Vue.nextTick(function(){
+        vm.$refs.view.$emit('onClose');
+      });
+    }
 
   },
   computed: {
@@ -59,15 +65,13 @@ export default {
       vm.options = options;
       vm.open = true;
 
-      if(options.autofocus) {
-        Vue.nextTick(function(){
-          vm.$refs.view.$emit('autofocus');
-        });
-      }
+      Vue.nextTick(function(){
+        vm.$refs.view.$emit('onOpen');
+      });
     });
-    vm.$root.$on('esc-keyup', () => { this.open = false; });
+    vm.$root.$on('esc-keyup', () => { vm.close(); });
     vm.$glmodal.$on('close', function(options){
-      vm.open = false;
+      vm.close();
     });
   }
 };
