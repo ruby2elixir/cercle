@@ -61,7 +61,6 @@
         this.name = null;
         this.description = null;
         this.columnId = null;
-        this.columns = [];
         this.boardId = this.defaultBoardId;
         this.existingContactId = false;
         this.searchedContacts = [];
