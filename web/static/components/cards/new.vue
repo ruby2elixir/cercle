@@ -1,7 +1,7 @@
 <template>
-  <div class="new-card-form" v-on:keydown.enter="saveData">
+  <div class="new-card-form">
     <div class="form-group">
-      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control card-name" ref="name" />
+      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control" />
       <span class='error' v-show="errors.name" v-for="msg in errors.name">{{msg}}</span>
     </div>
 
@@ -57,20 +57,6 @@
       'add-contact': AddContact
     },
     methods: {
-      reset: function() {
-        this.name = null;
-        this.description = null;
-        this.columnId = null;
-        this.boardId = this.defaultBoardId;
-        this.existingContactId = false;
-        this.searchedContacts = [];
-        this.contact = {
-          name: '',
-          email: '',
-          phone: ''
-        };
-        this.errors = {};
-      },
       loadColumns: function() {
         let board = this.boards.filter( (b)  => {
           return b.id === parseInt(this.boardId);
@@ -94,8 +80,8 @@
             description: this.description
           }
         }).then(
-          resp => { this.$emit('close'); this.reset(); },
-          resp => { this.errors = resp.body.errors; }
+          resp => { this.$emit('close'); },
+          resp => { this.errors = resp.body.errors }
         );
       },
 
@@ -122,7 +108,6 @@
 
       cancel: function() {
         this.$emit('close');
-        this.reset();
       },
 
       selectContact(data) {
@@ -138,12 +123,6 @@
     },
     mounted: function() {
       this.loadColumns();
-      this.$on('onOpen', function(options){
-        this.$refs.name.focus();
-      });
-      this.$on('onClose', function(options){
-        this.reset();
-      });
     }
   };
 </script>
