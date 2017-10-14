@@ -40,4 +40,22 @@ defmodule CercleApi.AddCardToBoardTest do
     |> assert_has(css("body.async-ready"))
     |> assert_has(css("#board_columns", text: "Test Contact - Test Card"))
   end
+
+  test "Cancel should reset new card", %{
+    session: session, user: user, company: company, board: board} do
+    session
+    |> sign_in(user.login, "1234")
+    |> visit("/company/#{company.id}/board/#{board.id}")
+    |> click(css(".add-card"))
+    |> fill_in(text_field("Name of the Card"), with: "Test Card")
+    |> fill_in(css("input[type='search']"), with: "New contact")
+    |> click(css(".dropdown-menu a", text: "New contact" ))
+    |> fill_in(css("input[type=email]"), with: "abc@xyz.com")
+    |> fill_in(css("input[type=phone]"), with: "123456789")
+    |> click(css(".new-card-form .btn-link", text: "Cancel" ))
+    |> click(css(".add-card"))
+    |> assert_has(css("input.card-name", with: ""))
+    |> assert_has(css("input[type=email]", with: ""))
+    |> assert_has(css("input[type=phone]", with: ""))
+  end
 end
