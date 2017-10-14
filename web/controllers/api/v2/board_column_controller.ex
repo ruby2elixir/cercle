@@ -62,6 +62,13 @@ defmodule CercleApi.APIV2.BoardColumnController do
     end
   end
 
+  def show(conn, %{"id" => id}) do
+    board_column = Repo.get!(BoardColumn, id)
+    |> Repo.preload([:cards])
+
+    render(conn, "board_column_with_cards.json", board_column: board_column)
+  end
+
   def update(conn, %{"id" => id, "board_column" => board_column_params}) do
     board_column = Repo.get!(BoardColumn, id)
     changeset = BoardColumn.changeset(board_column, board_column_params)
