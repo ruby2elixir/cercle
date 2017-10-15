@@ -1,7 +1,7 @@
 <template>
   <div class="new-card-form" v-on:keydown.enter="saveData">
     <div class="form-group">
-      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control" ref="name" />
+      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control card-name" ref="name" />
       <span class='error' v-show="errors.name" v-for="msg in errors.name">{{msg}}</span>
     </div>
 
