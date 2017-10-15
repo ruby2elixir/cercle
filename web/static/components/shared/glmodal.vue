@@ -11,7 +11,7 @@
       <button type="button" class="close" @click="close()"  v-if="!options.closed_in_header" style="padding:6px;">
         <span>&times;</span>
       </button>
-      <component keep-alive v-bind:is="view" v-bind="modalData" v-on:close="close()">
+      <component keep-alive v-bind:is="view" v-bind="modalData" v-on:close="close()" ref="view">
       </component>
     </div>
     <span slot="modal-footer"></span>
@@ -35,7 +35,13 @@ export default {
   },
   methods: {
     sizeModal() { return this.options.size || 'large'; },
-    close() { this.open = false;  }
+    close() {
+      let vm = this;
+      vm.open = false;
+      Vue.nextTick(function(){
+        vm.$refs.view.$emit('onClose');
+      });
+    }
 
   },
   computed: {
@@ -58,10 +64,14 @@ export default {
       vm.windowClass = options['class'];
       vm.options = options;
       vm.open = true;
+
+      Vue.nextTick(function(){
+        vm.$refs.view.$emit('onOpen');
+      });
     });
-    vm.$root.$on('esc-keyup', () => { this.open = false; });
+    vm.$root.$on('esc-keyup', () => { vm.close(); });
     vm.$glmodal.$on('close', function(options){
-      vm.open = false;
+      vm.close();
     });
   }
 };
