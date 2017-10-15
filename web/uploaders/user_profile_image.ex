@@ -35,7 +35,7 @@ defmodule CercleApi.UserProfileImage do
 
   #Provide a default URL if there hasn't been a file uploaded
   def default_url(version, scope) do
-    "http://www.cercle.co/images/pp_2.png"
+    "/images/pp_2.png"
   end
 
   # Provide a default URL if there hasn't been a file uploaded

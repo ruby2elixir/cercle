@@ -40,7 +40,7 @@ defmodule CercleApi.CompanyLogoImage do
 
   #Provide a default URL if there hasn't been a file uploaded
   def default_url(version, scope) do
-    "http://www.cercle.co/images/pp_1.png"
+    "/images/pp_1.png"
   end
 
   # Specify custom headers for s3 objects
