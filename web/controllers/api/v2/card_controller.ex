@@ -4,7 +4,7 @@ defmodule CercleApi.APIV2.CardController do
 
   alias CercleApi.{Card, Contact, Company, Organization, User, Board, CardService, BoardColumn}
 
-  #plug CercleApi.Plug.EnsureAuthenticated
+  plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
 
   plug :scrub_params, "card" when action in [:create, :update]
