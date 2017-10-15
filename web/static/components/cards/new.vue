@@ -5,13 +5,8 @@
       <span class='error' v-show="errors.name" v-for="msg in errors.name">{{msg}}</span>
     </div>
 
-    <div class="form-group" v-show="defaultBoardId==null">
-      <label>Board</label>
-    </div>
     <div class="form-group">
-      <select v-model="boardId" class="form-control" v-on:change="loadColumns">
-        <option v-for="board in boards" :value="board.id">{{ board.name }}</option>
-      </select>
+      <label>Column</label>
     </div>
     <div class="form-group">
       <select v-model="columnId" class="form-control">
@@ -21,7 +16,7 @@
     <i>Include a contact into the card (optional)</i>
     <Br />
     <Br />
-    <add-contact @select-contact="selectContact" />
+    <add-contact @select-contact="selectContact" ref='addContact' />
 
 
     <div class="form-group">
@@ -34,16 +29,13 @@
 <script>
   import AddContact from './add-contact.vue';
   export default {
-    props: ['userId', 'companyId', 'boards', 'defaultBoardId'],
+    props: ['userId', 'companyId', 'boardId', 'columns'],
     data: function() {
       return {
         name: null,
         description: null,
-        columnId: null,
-        columns: [],
-        boardId: this.defaultBoardId,
+        columnId: this.columns[0].id,
         existingContactId: false,
-        searchedContacts: [],
         contact: {
           name: '',
           email: '',
@@ -60,26 +52,15 @@
       reset: function() {
         this.name = null;
         this.description = null;
-        this.columnId = null;
-        this.boardId = this.defaultBoardId;
+        this.columnId = this.columns[0].id;
         this.existingContactId = false;
-        this.searchedContacts = [];
         this.contact = {
           name: '',
           email: '',
           phone: ''
         };
         this.errors = {};
-      },
-      loadColumns: function() {
-        let board = this.boards.filter( (b)  => {
-          return b.id === parseInt(this.boardId);
-        })[0];
-
-        if (board)
-          this.columns = board.board_columns || board.boardColumns;
-        if (this.columns.length)
-          this.columnId = this.columns[0].id;
+        this.$refs.addContact.$emit('reset');
       },
 
       saveCard: function(contactIds = []){
@@ -137,7 +118,7 @@
       }
     },
     mounted: function() {
-      this.loadColumns();
+      console.log(this);
       this.$on('onOpen', function(options){
         this.$refs.name.focus();
       });

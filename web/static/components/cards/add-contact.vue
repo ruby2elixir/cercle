@@ -47,6 +47,11 @@
       'v-select': vSelect.VueSelect
     },
     methods: {
+      reset: function() {
+        this.contact = {};
+        this.searchedContacts = [];
+        this.isExistingContact = false;
+      },
       selectContact(con) {
         if(con && con.id) {
           this.isExistingContact = true;
@@ -88,6 +93,9 @@
       }
     },
     mounted: function() {
+      this.$on('reset', function(options){
+        this.reset();
+      });
     }
   };
 </script>

@@ -180,11 +180,10 @@ export default {
           'display_header': true,
           'autofocus': true,
           data: {
-            'board_id': this.board.id,
-            'default-board-id': this.board.id,
+            'board-id': this.board.id,
+            'columns': this.board.boardColumns,
             'user-id': Vue.currentUser.userId,
-            'company-id': this.board.companyId,
-            boards: [this.board]
+            'company-id': this.board.companyId
           }
         });
     },
