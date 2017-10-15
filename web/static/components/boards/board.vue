@@ -178,6 +178,7 @@ export default {
           'closed_in_header': true,
           size: 'medium',
           'display_header': true,
+          'autofocus': true,
           data: {
             'board_id': this.board.id,
             'default-board-id': this.board.id,
