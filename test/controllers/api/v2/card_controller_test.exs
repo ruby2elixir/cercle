@@ -59,6 +59,19 @@ defmodule CercleApi.APIV2.CardControllerTest do
     )
   end
 
+  test "index/2 cards with a specific board_column_id", state do
+    card = insert(:card, status: 0, user: state[:user],
+      contact_ids: [state[:contact].id], company: state[:company]
+    )
+    |> Repo.preload([:board_column, board: [:board_columns]])
+
+    conn = get state[:conn], "/api/v2/company/#{state[:company].id}/card", board_column_id: card.board_column_id
+
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.CardView, "cards_with_main_contact.json", %{ cards: [card] }
+    )
+  end
+
   test "try to delete authorized Card", state do
     card = insert(:card, user: state[:user], company: state[:company])
     conn = delete state[:conn], "/api/v2/company/#{state[:company].id}/card/#{card.id}"
