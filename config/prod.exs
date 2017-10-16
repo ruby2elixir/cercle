@@ -16,7 +16,8 @@ config :cercleApi, CercleApi.Endpoint,
   #url: [scheme: "https", host: "calm-river-78332.herokuapp.com", port: 443],
   #force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/manifest.json",
-  secret_key_base: System.get_env("SECRET_KEY_BASE")
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  check_origin: false
 
 # Configure your database
 config :cercleApi, CercleApi.Repo,
