@@ -17,7 +17,7 @@
     <link href="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
 
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//unpkg.com/element-ui/lib/theme-default/index.css">
     <%= if Guardian.Plug.current_token(@conn) do %>
     <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
