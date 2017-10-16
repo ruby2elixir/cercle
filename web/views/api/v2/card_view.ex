@@ -5,6 +5,13 @@ defmodule CercleApi.APIV2.CardView do
     %{data: render_many(cards, CercleApi.APIV2.CardView, "card.json")}
   end
 
+  def render("cards_with_main_contact.json", %{cards: cards}) do
+    Enum.map(
+        CercleApi.Card.preload_main_contact_and_user(cards),
+        fn (card) -> card_with_main_contact(card) end
+      )
+  end
+
   def render("show.json", %{card: card}) do
     %{data: render_one(card, CercleApi.APIV2.CardView, "card.json")}
   end
@@ -46,6 +53,23 @@ defmodule CercleApi.APIV2.CardView do
       user_id: card.user_id,
       board: card.board,
       board_column: card.board_column
+    }
+  end
+
+  def card_with_main_contact(card) do
+    %{
+      id: card.id,
+      company_id: card.company_id,
+      name: card.name,
+      description: card.description,
+      due_date: card.due_date,
+      status: card.status,
+      contact_ids: card.contact_ids,
+      user_id: card.user_id,
+      user: card.user,
+      board: card.board_id,
+      board_column: card.board_column_id,
+      main_contact: card.main_contact
     }
   end
 end
