@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.CardController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.{Card, Contact, Company, Organization, User, Board, CardService}
+  alias CercleApi.{Card, Contact, Company, Organization, User, Board, CardService, BoardColumn}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -25,6 +25,13 @@ defmodule CercleApi.APIV2.CardController do
     end
 
     render(conn, "index.json", cards: cards)
+  end
+
+  def index(conn, %{"board_column_id" => board_column_id}) do
+    board_column = Repo.get!(BoardColumn, board_column_id)
+    |> Repo.preload([:cards])
+
+    render(conn, "cards_with_main_contact.json", cards: board_column.cards)
   end
 
   def show(conn, %{"id" => id}) do
