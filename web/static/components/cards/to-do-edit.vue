@@ -110,17 +110,19 @@
       },
       updateTask(task) {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/activity/' + task.id;
+        let activityParams = {
+          title: task.title,
+          dueDate: task.dueDate,
+          cardId: this.card.id,
+          userId: task.userId,
+          companyId: this.company.id,
+          isDone: task.isDone
+        }
 
-        this.$http.put(url, {
-          activity: {
-            title: task.title,
-            dueDate: task.dueDate,
-            cardId: this.card.id,
-            userId: task.userId,
-            companyId: this.company.id,
-            isDone: task.isDone
-          }
-        }); //.then( resp => { this.$emit('taskAddOrUpdate', resp.data.data); });
+        if (activityParams.dueDate) {
+          activityParams.dueDate = Moment(activityParams.dueDate).tz('UTC').format('');
+        }
+        this.$http.put(url, { activity: activityParams });
       },
       updateAssignment(task, value) {
         task.userId = value.userId;

@@ -37,13 +37,13 @@ Vue.directive('on-click-outside', onClickOutside);
 
 Vue.filter('formatDate', function(value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY');
+    return moment(String(value) + 'Z').format('MM/DD/YYYY');
   }
 });
 
 Vue.filter('formatDateTime', function(value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY hh:mm a');
+    return moment(String(value) + 'Z').format('MM/DD/YYYY hh:mm a');
   }
 });
 
@@ -60,7 +60,7 @@ import elementLang from 'element-ui/lib/locale/lang/en';
 import elementLocale from 'element-ui/lib/locale';
 elementLocale.use(elementLang);
 
-Vue.use(require('vue-moment-jalaali'));
+Vue.use(require('vue-moment'));
 Vue.use(VueResource);
 Vue.use(VueResourceCaseConverter, {
   responseUrlFilter(url) {
@@ -152,6 +152,7 @@ const VueCurrentUser = {
   install(Vue, options) {
     localStorage.setItem('auth_token', options['token']);
     Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
+    moment.tz.setDefault(options['timeZone']);
     Vue.currentUser =  {
       userId: options['userId'],
       companyId: options['companyId'],
