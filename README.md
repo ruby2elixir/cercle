@@ -7,12 +7,12 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 [Try Cercle Today. Click here: http://www.cercle.co/register](http://www.cercle.co/register)
 
 ## Why Cercle?
-- realtime
 - visual like Trello
-- simple
+- simple to manage your contacts
+- simple to manage your projects
+- realtime
 - API ready
 - open source
-- free
 
 ## Features
 - Board for Projects
