@@ -50,7 +50,7 @@ defmodule CercleApi.RegistrationController do
             |> Guardian.Plug.sign_in(user)
             |> configure_session(renew: true)
             |> put_flash(:info, "Account created!")
-            |> redirect(to: board_path(conn, :index, company))
+            |> redirect(to: front_board_path(conn, :index, company))
           {:error, changeset} ->
             conn
             |> render(:new, changeset: changeset,

@@ -26,7 +26,7 @@ defmodule CercleApi.SessionController do
         else
           company = Company.get_company(user) || default_company(user)
         end
-        path = get_session(conn, :redirect_url) || board_path(conn, :index, company)
+        path = get_session(conn, :redirect_url) || front_board_path(conn, :index, company)
 
         conn
         |> put_flash(:info, "Welcome back!")
