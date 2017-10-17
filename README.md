@@ -28,6 +28,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 - Export CSV 
 - Board Timeline on a sidebar
 - Board Archive/Unarchive
+- Multi company
 - API Ready
 - Integration with Zapier
 
