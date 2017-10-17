@@ -35,6 +35,9 @@ import linkify from 'vue-linkify';
 Vue.directive('linkified', linkify);
 Vue.directive('on-click-outside', onClickOutside);
 
+var VueTruncate = require('vue-truncate-filter');
+Vue.use(VueTruncate);
+
 Vue.filter('formatDate', function(value) {
   if (value) {
     return moment(String(value)).format('MM/DD/YYYY');

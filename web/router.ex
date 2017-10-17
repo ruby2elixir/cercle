@@ -142,6 +142,9 @@ defmodule CercleApi.Router do
     get "/user", UserController, :index
     resources "/timeline_events", TimelineEventController
     resources "/organizations", OrganizationController
+
+    post "email/webhook", EmailController, :webhook
+    resources "/email", EmailController
   end
 
   scope "/admin" , CercleApi.Admin, as: :admin do

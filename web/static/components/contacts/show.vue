@@ -5,6 +5,22 @@
         <contact-details :contact="contact" />
       </div>
     </div>
+
+    <div class="row" v-if="emails.length">
+      <div class="col-md-12">
+        <h4>Emails</h4>
+        <table class="table table-striped">
+          <tbody>
+            <tr v-for="email in emails" @click="showEmail(email)">
+              <td :title="email.fromEmail">{{ email.fromEmail | truncate(25) }}</td>
+              <td>{{ email.subject }}</td>
+              <td>{{ renderText(email.body) }}</td>
+              <td>{{ email.date|formatDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,14 +31,32 @@ export default {
   props: ['contact'],
   data() {
     return {
+      emails: []
     };
-  },
-  watch: {
   },
   components: {
     'contact-details': ContactDetails
   },
   methods: {
+    renderText(html) {
+      return '';
+    },
+
+    showEmail(email) {
+      this.$glmodal.$emit(
+        'open',
+        {
+          view: 'email-show', class: 'email-modal',
+          data: { 'email': email }
+        }
+      );
+    }
+  },
+  mounted() {
+    let url = '/api/v2/company/' + Vue.currentUser.companyId + '/email?from_email=' + this.contact.email;
+    this.$http.get(url).then(resp => {
+      this.emails = resp.data.data;
+    });
   }
 };
 </script>
