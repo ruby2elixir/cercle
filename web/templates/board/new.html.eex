@@ -12,6 +12,13 @@
     </div>
 
     <div class='referral-form-content'>
+      <%= form_for @changeset, front_board_path(@conn, :create, assigns[:current_company]), fn f -> %>
+        <label>
+          Name: <%= text_input f, :name %>
+        </label>
+      <%= submit "Submit" %>
+      <% end %>
+
       <form id='board-form'>
         <input type='hidden' name='board[company_id]' value='<%= @company.id %>' id="company_id" />
         <input type='hidden' name='board[user_id]' value='<%=assigns[:current_user].id%>' id="user_id" />
