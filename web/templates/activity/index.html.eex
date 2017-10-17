@@ -1,13 +1,11 @@
 <div id="activities-app" class="inbox-list">
   <activities inline-template>
     <div>
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h2 style="padding-left:15px;">Inbox<br /></h2>
-      </section>
-
       <!-- Main content -->
       <section class="content">
+        <div class="row">
+          <h2 style="padding-left:15px;font-size:22px;margin-bottom:30px;">Tasks with due date</h2>
+        </div>
         <div class="row" v-if="activities.length > 0">
           <div class="col-xs-12">
             <div class="box" style="border:0px solid grey;">
@@ -38,7 +36,9 @@
             <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
           </div>
         </div>
-
+        <div class="row">
+          <h2 style="padding-left:15px;font-size:22px;margin-bottom:30px;">Cards assigned to me</h2>
+        </div>
       </section><!-- /.content -->
     </div>
   </activities>

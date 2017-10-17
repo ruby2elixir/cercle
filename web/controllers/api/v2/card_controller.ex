@@ -34,6 +34,20 @@ defmodule CercleApi.APIV2.CardController do
     render(conn, "cards_with_main_contact.json", cards: board_column.cards)
   end
 
+  def index(conn, %{"user_id" => user_id}) do
+    current_user = CercleApi.Plug.current_user(conn)
+    company = current_company(conn, current_user)
+
+    cards_query = from c in Card,
+      where: c.company_id == ^company.id,
+      where: c.user_id == ^user_id,
+      order_by: [desc: c.inserted_at],
+      preload: [:board_column, board: [:board_columns]]
+    cards = CercleApi.Repo.all(cards_query)
+
+    render(conn, "index.json", cards: cards)
+  end
+
   def show(conn, %{"id" => id}) do
     card = Card
     |> Card.preload_data
