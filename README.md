@@ -1,4 +1,4 @@
-# Cercle CRM - A visual % simple CRM to manage contacts & projects - Phoenix & Vuejs 
+# Cercle CRM - A visual & simple CRM to manage contacts & projects - Phoenix & Vuejs 
 
 Cercle is a CRM for smart people who need to manage a database of contacts and get things done.
 
