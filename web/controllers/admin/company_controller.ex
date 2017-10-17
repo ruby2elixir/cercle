@@ -15,7 +15,7 @@ defmodule CercleApi.Admin.CompanyController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"company" => company_params, "code" => code_params}) do
+  def create(conn, %{"company" => company_params}) do
     changeset = Company.changeset(%Company{}, company_params)
 
     case Repo.insert(changeset) do
