@@ -30,9 +30,29 @@ defmodule CercleApi.BoardController do
     |> current_company
     |> Repo.preload([:users])
 
+    changeset = Board.changeset(%Board{}, %{name: "", company_id: company.id, archived: false})
+
     conn
       |> put_layout("adminlte.html")
-      |> render "new.html", company: company
+      |> render "new.html", company: company, changeset: changeset
+  end
+
+  def create(conn, params) do
+    user = Guardian.Plug.current_resource(conn)
+    company = conn
+    |> current_company
+    |> Repo.preload([:users])
+
+    changeset = Board.changeset(%Company{}, params)
+
+    case Repo.insert(changeset) do
+      {:ok, _company} ->
+        conn
+        |> put_flash(:info, "Board created successfully.")
+        |> redirect(to: front_board_path(conn, :show, company.id))
+      {:error, changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
   end
 
   def show(conn, %{"id" => id}) do
@@ -45,28 +65,9 @@ defmodule CercleApi.BoardController do
     |> current_company
     |> Repo.preload([:users])
 
-    query_cards = from p in Card,
-        where: p.company_id == ^company.id,
-        where: p.board_id == ^board_id,
-        where: p.status == 0,
-        order_by: [desc: p.updated_at]
-
-    #order_by: [desc: p.rating]
-    #from(CercleApi.TimelineEvent], order_by: [desc: :inserted_at])
-    query = from a in CercleApi.Activity,
-    where: a.is_done == false,
-      preload: :user
-    cards = query_cards
-    |> Repo.all
-    |> Repo.preload([
-      :user, activities: query,
-      timeline_event: from(CercleApi.TimelineEvent, order_by: [desc: :inserted_at])
-    ])
-    |> CercleApi.Card.preload_main_contact
-
     conn
       |> put_layout("adminlte.html")
-      |> render "show.html",  company: company, cards: cards, board: board, no_container: true
+      |> render "show.html",  company: company, board: board, no_container: true, show_board: true
   end
 
   def new(conn, _params) do
@@ -82,24 +83,17 @@ defmodule CercleApi.BoardController do
 
   def edit(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
-    reward = Repo.get!(Contact, id) |> Repo.preload [:organization, :company]
+    board = CercleApi.Board
+    |> Repo.get!(id)
+    |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
+    board_id = board.id
     company = conn
     |> current_company
     |> Repo.preload([:users])
 
-    query = from p in Organization,
-      order_by: [desc: p.inserted_at]
-    organizations = Repo.all(query)
-
-    query1 = from reward_status_history in CercleApi.TimelineEvent,
-      where: reward_status_history.contact_id == ^reward.id,
-      order_by: [desc: reward_status_history.inserted_at]
-    reward_status_history = Repo.all(query1) |> Repo.preload [:user]
-
-    changeset = Contact.changeset(reward)
     conn
       |> put_layout("adminlte.html")
-      |> render "edit.html", reward: reward, changeset: changeset, company: company, reward_status_history: reward_status_history, organizations: organizations
+      |> render "edit.html", board: board
   end
 
 end
