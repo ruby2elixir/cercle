@@ -15,18 +15,21 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 - free
 
 ## Features
+- Board for Projects
+- Board for contacts
 - Each Card can be linked to several contacts
 - Card Contact Tags
 - Card Contact Organization
 - Card Attachements
 - Card Tasks (with optional due date)
 - Card Comments
-- Card Email Notification System for team member
+- Card Email Notification Reminder
 - Import CSV
 - Export CSV 
 - Board Timeline on a sidebar
 - Board Archive/Unarchive
-- Oauth for API in Zapier
+- API Ready
+- Integration with Zapier
 
 
 ## Changelog
