@@ -15,7 +15,7 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 - open source
 
 ## Features
-- Board for Projects
+- Board for projects
 - Board for contacts
 - Each Card can be linked to several contacts
 - Card Contact Tags
