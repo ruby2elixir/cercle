@@ -2,11 +2,12 @@ defmodule CercleApi.Board do
   use CercleApi.Web, :model
 
   @derive {Poison.Encoder, only: [
-              :id, :name, :company_id, :board_columns
+              :id, :name, :type_of_card, :company_id, :board_columns
             ]}
 
   schema "boards" do
     field :name, :string
+    field :type_of_card, :integer
     belongs_to :company, CercleApi.Company
     has_many :board_columns, CercleApi.BoardColumn
     field :archived, :boolean
@@ -21,7 +22,7 @@ defmodule CercleApi.Board do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, [:company_id, :name, :archived])
+    |> cast(params, [:company_id, :name, :archived, :type_of_card])
     |> validate_required([:company_id])
   end
 

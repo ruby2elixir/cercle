@@ -9,9 +9,8 @@ defmodule CercleApi.NewBoardTest do
     session
     |> sign_in(user.login, "1234")
     |> click(css(".add-board"))
-    |> fill_in(css("textarea"), with: "Test Board")
-    |> click(button("Save"))
-    |> assert_has(css("body.async-ready"))
+    |> fill_in(css(".board_name"), with: "Test Board")
+    |> click(button("CREATE"))
     |> visit("/company/#{user_company.id}/board")
     |> assert_has(css("#board-list-app", text: "Test Board"))
   end

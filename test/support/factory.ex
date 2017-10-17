@@ -48,6 +48,7 @@ defmodule CercleApi.Factory do
   def board_factory do
     %Board{
       name: "TestBoard1",
+      type_of_card: 0,
       company: build(:company)
     }
   end

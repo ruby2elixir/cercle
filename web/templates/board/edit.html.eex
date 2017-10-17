@@ -1,1 +1,30 @@
-ok
+<div class='board-container'>
+  <div class='board-header' >
+      <h2 style="margin-bottom:20px;font-size:24px;">Edit board
+      </h2>
+  </div>
+
+  <div class='board-form-container' style="min-height:800px;">
+    <div class='board-form-content'>
+      <%= form_for @changeset, front_board_path(@conn, :update, assigns[:current_company]), fn f -> %>
+        <div style="margin-bottom:10px;">
+          <%= text_input f, :name, placeholder: "Name of the board", style: "padding:5px;width:200px;" %>
+        </div>
+        <%= hidden_input f, :company_id %>
+        
+        <Br />
+        <div style="font-size:17px;">Type of board
+        </div>
+         <Br />
+        <div style="font-size:15px;">
+        <%= radio_button(f, :type_of_card, "0") %>&nbsp;&nbsp;Project Board (to track tasks and manage projects)
+        <br />
+        <%= radio_button(f, :type_of_card, "1") %>&nbsp;&nbsp;People Board (to track business deals or manage clients)
+        </div>
+        <Br />
+         </div>
+      <%= submit "CREATE", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+</div>

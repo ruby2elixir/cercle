@@ -30,26 +30,28 @@ defmodule CercleApi.BoardController do
     |> current_company
     |> Repo.preload([:users])
 
-    changeset = Board.changeset(%Board{}, %{name: "", company_id: company.id, archived: false})
+    changeset = Board.changeset(%Board{}, %{name: "", company_id: company.id, archived: false, type_of_card: 0})
 
     conn
       |> put_layout("adminlte.html")
       |> render "new.html", company: company, changeset: changeset
   end
 
-  def create(conn, params) do
+  def create(conn, %{"board" => board_params}) do
     user = Guardian.Plug.current_resource(conn)
     company = conn
     |> current_company
     |> Repo.preload([:users])
 
-    changeset = Board.changeset(%Company{}, params)
+    changeset = company
+      |> Ecto.build_assoc(:boards)
+      |> Board.changeset(board_params)
 
     case Repo.insert(changeset) do
-      {:ok, _company} ->
+      {:ok, board} ->
         conn
         |> put_flash(:info, "Board created successfully.")
-        |> redirect(to: front_board_path(conn, :show, company.id))
+        |> redirect(to: front_board_path(conn, :show, company.id, board.id))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -83,17 +85,19 @@ defmodule CercleApi.BoardController do
 
   def edit(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
+    
     board = CercleApi.Board
     |> Repo.get!(id)
-    |> Repo.preload(board_columns: from(CercleApi.BoardColumn, order_by: [asc: :order]))
-    board_id = board.id
+    
     company = conn
     |> current_company
     |> Repo.preload([:users])
 
+    changeset = Board.changeset(board)
+
     conn
       |> put_layout("adminlte.html")
-      |> render "edit.html", board: board
+      |> render "edit.html", board: board, changeset: changeset
   end
 
 end
