@@ -1,9 +1,9 @@
 <h2>
-  <a href="/admin/users">User</a>
+  <a href="/admin/users">User</a> ·
   <a href="/admin/companies">Companies</a> ·
-  <a href="/admin/contacts">Contacts</a> ·
-  <a href="/admin/organizations">Organizations</a> ·
+  <a href="/admin/oauth_application">Oauth Applications</a> ·
 </h2>
+
 <br />
 <%= link "New company", to: admin_company_path(@conn, :new) , class: "btn btn-default" %>
 <br />
@@ -11,6 +11,7 @@
 <table class="table" style="background-color:white;">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Name</th>
       <th></th>
     </tr>
@@ -18,6 +19,7 @@
   <tbody>
 <%= for company <- @companies do %>
     <tr>
+      <td><%= company.id %></td>
       <td><%= company.title %></td>
       <td class="text-right">
         <%= link "Edit", to: admin_company_path(@conn, :edit, company), class: "btn btn-default btn-xs" %>

@@ -13,8 +13,7 @@ defmodule CercleApi.Admin.UserController do
 
   def new(conn, _params) do
     changeset = User.changeset(%User{})
-    companies = Enum.map(Repo.all(Company), fn {k, v} -> {k.title, v.id} end)
-    render(conn, "new.html", changeset: changeset, companies: companies)
+    render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"user" => user_params}) do

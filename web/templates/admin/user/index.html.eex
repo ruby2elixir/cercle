@@ -1,12 +1,13 @@
 <h2>
-  <a href="/admin/users">User</a>
+  <a href="/admin/users">User</a> ·
   <a href="/admin/companies">Companies</a> ·
-  <a href="/admin/contacts">Contacts</a> ·
-  <a href="/admin/organizations">Organizations</a> ·
   <a href="/admin/oauth_application">Oauth Applications</a> ·
 </h2>
 
 <br />
+<br />
+<%= link "New user", to: admin_user_path(@conn, :new) , class: "btn btn-default" %>
+
 <table class="table" style="background-color:white;">
   <thead>
     <tr>
