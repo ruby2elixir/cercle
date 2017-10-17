@@ -158,10 +158,11 @@ defmodule CercleApi.APIV2.CardControllerTest do
     card_channel = "cards:#{card.id}"
     CercleApi.Endpoint.subscribe(card_channel)
     board_column = insert(:board_column, board: state[:board])
+    due_date = Timex.format!(Timex.today, "%F 21:00:00", :strftime)
     response = state[:conn]
     |> put(
       card_path(state[:conn], :update, state[:company].id, card), card: %{
-        board_column_id: board_column.id
+        board_column_id: board_column.id, due_date: due_date
       }
     )
     |> json_response(200)
@@ -178,5 +179,6 @@ defmodule CercleApi.APIV2.CardControllerTest do
     assert response == render_json(
       CercleApi.APIV2.CardView, "show.json", card: updated_card
     )
+    assert Timex.format!(updated_card.due_date, "%F %T", :strftime) == due_date
   end
 end

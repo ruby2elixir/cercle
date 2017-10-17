@@ -18,6 +18,5 @@ defmodule CercleApi.EditContactTest do
     |> click(button("Save"))
     |> assert_has(css(".contact-modal span.full-name", text: "Jimi Hendrix"))
     |> assert_has(css("td", text: "Jimi Hendrix"))
-    |> take_screenshot
   end
 end

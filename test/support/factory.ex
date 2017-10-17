@@ -10,7 +10,7 @@ defmodule CercleApi.Factory do
   alias ExOauth2Provider.OauthAccessTokens.OauthAccessToken
 
   def user_company_factory do
-    %UserCompany{ user_id: "", company_id: "" }
+    %UserCompany{user_id: "", company_id: "" }
   end
 
 

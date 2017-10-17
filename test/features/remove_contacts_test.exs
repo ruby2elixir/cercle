@@ -24,6 +24,5 @@ defmodule CercleApi.RemoveContactsTest do
     |> assert_has(css("body.async-ready"))
     |> refute_has(css("td", text: "Jime Hendrix"))
     |> assert_has(css("td", text: "Tim Burton"))
-    |> take_screenshot
   end
 end

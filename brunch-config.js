@@ -84,7 +84,7 @@ exports.config = {
       VueResource: 'vue-resource',
       VueResourceCaseConverter: 'vue-resource-case-converter',
       VueStrap: 'vue-strap',
-      Moment: 'moment',
+      Moment: 'moment-timezone',
       ElementUi: 'element-ui',
       MarkdownIt: 'markdown-it',
       VueAutosize: 'vue-autosize',

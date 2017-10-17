@@ -397,7 +397,11 @@
 
       updateCard() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.cardId;
-        this.$http.put(url, { card: this.card });
+        let cardParams = this.card;
+        if (cardParams.dueDate) {
+          cardParams.dueDate = Moment(cardParams.dueDate).tz('UTC').format('');
+        }
+        this.$http.put(url, { card: cardParams });
       },
 
       removeContact(contactId) {
