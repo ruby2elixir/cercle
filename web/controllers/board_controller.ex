@@ -72,28 +72,16 @@ defmodule CercleApi.BoardController do
       |> render "show.html",  company: company, board: board, no_container: true, show_board: true
   end
 
-  def new(conn, _params) do
-    user = Guardian.Plug.current_resource(conn)
-    company = conn
-    |> current_company
-    |> Repo.preload([:users])
-
-    conn
-      |> put_layout("app2.html")
-      |> render "new.html", company: company
-  end
-
   def edit(conn, %{"id" => id}) do
     user = Guardian.Plug.current_resource(conn)
     
-    board = CercleApi.Board
-    |> Repo.get!(id)
-    
     company = conn
     |> current_company
     |> Repo.preload([:users])
 
-    changeset = Board.changeset(board)
+    board = Repo.get!(CercleApi.Board, id)
+
+    changeset = Board.changeset(board, %{})
 
     conn
       |> put_layout("adminlte.html")
