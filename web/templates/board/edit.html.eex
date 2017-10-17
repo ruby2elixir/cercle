@@ -6,7 +6,7 @@
 
   <div class='board-form-container' style="min-height:800px;">
     <div class='board-form-content'>
-      <%= form_for @changeset, front_board_path(@conn, :update, assigns[:current_company]), fn f -> %>
+      <%= form_for @changeset, front_board_path(@conn, :update, assigns[:current_company], @board.id), fn f -> %>
         <div style="margin-bottom:10px;">
           <%= text_input f, :name, placeholder: "Name of the board", style: "padding:5px;width:200px;" %>
         </div>
@@ -23,7 +23,7 @@
         </div>
         <Br />
          </div>
-      <%= submit "CREATE", class: "btn btn-primary" %>
+      <%= submit "UPDATE", class: "btn btn-primary" %>
       <% end %>
     </div>
   </div>
