@@ -11,13 +11,13 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/components.css") %>">
     <!-- ICONS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
-    <link href="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
+    <link href="//cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script src="//cdn.rawgit.com/josdejong/jsoneditor/master/dist/jsoneditor.min.js"></script>
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//unpkg.com/element-ui/lib/theme-default/index.css">
     <%= if Guardian.Plug.current_token(@conn) do %>
     <meta name="guardian_token"  content="<%= Guardian.Plug.current_token(@conn) %>">
