@@ -9,7 +9,7 @@
              <h3 class="box-title" style="">Settings</h3>
            </div>
            <div class="box-body no-padding">
-             <%= render CercleApi.SharedView, "settings_nav.html", conn: @conn, active: :webhooks %>
+             <%= render CercleApi.SharedView, "settings_nav.html", conn: @conn, active: :webhook %>
            </div><!-- /.box-body -->
          </div><!-- /. box -->
        </div><!-- /.col -->

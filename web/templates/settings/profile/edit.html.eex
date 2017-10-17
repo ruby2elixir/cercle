@@ -51,7 +51,7 @@
 
                 <div class="form-group">
                   <%= checkbox f, :notification %>
-                  <%= label f, :notification, "Notification", class: "control-label" %>
+                  <%= label f, :notification, "Receive email notifications", class: "control-label" %>
                 </div>
                 <br />
 
