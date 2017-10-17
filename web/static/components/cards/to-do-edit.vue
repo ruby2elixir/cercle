@@ -16,7 +16,7 @@
             <el-checkbox v-model="task.isDone" v-on:change="updateTask(task)"></el-checkbox>
           </div>
 
-          <div class="col-md-8">
+          <div class="col-md-8 todo-title">
             <todo-title-edit
               :class="{'strike-through': task.isDone}"
               v-model.sync="task.title"
@@ -43,7 +43,7 @@
 
       </div>
       <div class="add-to-do">
-        <button  class="btn btn-link" v-on:click="addTask"><i class="fa fa-fw fa-plus"></i> Add a task...</button>
+        <button class="btn btn-link" v-on:click="addTask"><i class="fa fa-fw fa-plus"></i> Add a task...</button>
       </div>
       <br />
       <slot name="attachments"></slot>

@@ -53,6 +53,8 @@ defmodule CercleApi.AddCardToBoardTest do
     |> fill_in(css("input[type=email]"), with: "abc@xyz.com")
     |> fill_in(css("input[type=phone]"), with: "123456789")
     |> click(css(".new-card-form .btn-link", text: "Cancel" ))
+    |> assert_has(css("body.async-ready"))
+    |> take_screenshot
     |> click(css(".add-card"))
     |> assert_has(css("input.card-name", with: ""))
     |> assert_has(css("input[type=email]", with: ""))

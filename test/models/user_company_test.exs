@@ -1,7 +1,7 @@
 defmodule CercleApi.UserCompanyTest do
   use CercleApi.ModelCase
 
-  alias CercleApi.UserCompany
+  #alias CercleApi.UserCompany
 
   @valid_attrs %{}
   @invalid_attrs %{}

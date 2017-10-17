@@ -2,6 +2,7 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
   use CercleApi.ConnCase
   use Timex
   import CercleApi.Factory
+  alias CercleApi.Activity
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -96,5 +97,20 @@ defmodule CercleApi.APIV2.ActivityControllerTest do
       CercleApi.APIV2.ActivityView,
       "show.json", activity: activity
     )
+  end
+
+  test "update activity", state do
+    activity = insert(:activity)
+    due_date = Timex.format!(Timex.today, "%F 21:00:00", :strftime)
+    conn = put state[:conn], "/api/v2/company/#{state[:company].id}/activity/#{activity.id}",
+      activity: %{ "due_date" => due_date }
+    updated_activity = Activity
+    |> Repo.get(activity.id)
+    |> Repo.preload([:user, :card])
+    assert json_response(conn, 200) == render_json(
+      CercleApi.APIV2.ActivityView,
+      "show.json", activity: updated_activity
+    )
+    assert Timex.format!(updated_activity.due_date, "%F %T", :strftime) == due_date
   end
 end

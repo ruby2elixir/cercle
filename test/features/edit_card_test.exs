@@ -1,11 +1,15 @@
 defmodule CercleApi.EditCardTest do
   use CercleApi.FeatureCase
-
+  alias CercleApi.Card
   setup %{session: session} do
-    {user, company} = create_user_with_company()
+    {user_with_company, company} = create_user_with_company()
+
+    user = user_with_company
+    |> Ecto.Changeset.change(time_zone: "Europe/Paris")
+    |> Repo.update!
     board = CercleApi.Factory.insert(:board, company: company)
     board_column = CercleApi.Factory.insert(:board_column, board: board)
-    CercleApi.Factory.insert(:card,
+    card = CercleApi.Factory.insert(:card,
       name: "Test Card",
       user: user, company: company, board: board, board_column: board_column
     )
@@ -15,7 +19,7 @@ defmodule CercleApi.EditCardTest do
     |> sign_in(user.login, "1234")
     {:ok,
      session: session, user: user, company: company,
-     board: board, url: url
+     board: board, url: url, card: card
     }
   end
 
@@ -44,7 +48,7 @@ defmodule CercleApi.EditCardTest do
     |> assert_has(css(".card-description", text: "Update Card Desc"))
   end
 
-  test "Add due date to card", %{session: session, url: url} do
+  test "Add due date to card", %{session: session, url: url, card: card} do
     session
     |> visit_to_card(url)
     |> refute_has(css(".card-due-date"))
@@ -53,10 +57,16 @@ defmodule CercleApi.EditCardTest do
     |> find(css(".due-date-modal"), fn(modal) ->
       modal
       |> click(css("td", text: "Today"))
+      |> click(css("[placeholder='Select time']"))
+      |> fill_in(css("[placeholder='Select time']"), with: "23:00:00")
       |> click(button("Save"))
     end)
     |> assert_has(css("body.async-ready"))
     |> assert_has(css(".card-due-date"))
+
+    refresh_card = Repo.get(Card, card.id)
+    assert Timex.format!(refresh_card.due_date, "%F %T", :strftime) ==
+      Timex.format!(Timex.today, "%F 21:00:00", :strftime)
   end
 
   defp visit_to_card(session, url) do
