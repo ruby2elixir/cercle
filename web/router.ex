@@ -71,7 +71,7 @@ defmodule CercleApi.Router do
 
   end
 
-  scope "/company/:company_id", CercleApi do
+  scope "/company/:company_id", CercleApi, as: :front do
     pipe_through [:browser, :browser_auth, :require_login]
     resources "/board", BoardController
     get "/contact", ContactController, :index

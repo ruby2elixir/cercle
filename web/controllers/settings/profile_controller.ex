@@ -22,7 +22,7 @@ defmodule CercleApi.Settings.ProfileController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: edit_profile_path(conn, :edit, company))
+        |> redirect(to: front_edit_profile_path(conn, :edit, company))
       {:error, changeset} ->
         conn
         |> put_layout("adminlte.html")

@@ -24,11 +24,11 @@ defmodule CercleApi.SettingsController do
         {:ok, _} ->
           conn
           |> put_flash(:success, "Team member removed successfully")
-          |> redirect(to: settings_path(conn, :team_edit, company))
+          |> redirect(to: front_settings_path(conn, :team_edit, company))
         {:error, _} ->
           conn
           |> put_flash(:error, "Unable to remove team member")
-          |> redirect(to: settings_path(conn, :team_edit, company))
+          |> redirect(to: front_settings_path(conn, :team_edit, company))
       end
     end
   end
@@ -67,7 +67,7 @@ defmodule CercleApi.SettingsController do
     company = current_company(conn)
     conn
     |> put_flash(:error, "Unable to send invitation link due to some error!")
-    |> redirect(to: settings_path(conn, :team_edit, company))
+    |> redirect(to: front_settings_path(conn, :team_edit, company))
   end
 
   def team_invitation(conn, %{"user" => %{"email" => receiver_email}}) do
@@ -82,11 +82,11 @@ defmodule CercleApi.SettingsController do
       |> CercleApi.Mailer.deliver
       conn
       |> put_flash(:success, "Invitation link sent successfully!")
-      |> redirect(to: settings_path(conn, :team_edit, company))
+      |> redirect(to: front_settings_path(conn, :team_edit, company))
     rescue RuntimeError ->
       conn
       |> put_flash(:error, "Unable to send invitation link due to some error!")
-      |> redirect(to: settings_path(conn, :team_edit, company))
+      |> redirect(to: front_settings_path(conn, :team_edit, company))
     end
   end
 
