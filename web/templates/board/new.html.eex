@@ -1,37 +1,18 @@
-<div class='referral-container'>
-  <div class='referral-header'>
-    <div class='company-title'>
-      <h1>New Board
-      </h1>
-    </div>
+<div class='board-container'>
+  <div class='board-header' style="margin-bottom:10px;">
+      <h2>New Board
+      </h2>
   </div>
 
-  <div class='referral-form-container' style="min-height:800px;">
-    <div class='referral-form-header'>
-      <div class='line2'></div>
-    </div>
-
-    <div class='referral-form-content'>
+  <div class='board-form-container' style="min-height:800px;">
+    <div class='board-form-content'>
       <%= form_for @changeset, front_board_path(@conn, :create, assigns[:current_company]), fn f -> %>
-        <label>
-          Name: <%= text_input f, :name %>
-        </label>
-      <%= submit "Submit" %>
+        <div style="margin-bottom:10px;">
+          <%= text_input f, :name, placeholder: "Name of the board", style: "padding:5px;width:200px;" %>
+        </div>
+
+      <%= submit "CREATE", class: "btn btn-primary" %>
       <% end %>
-
-      <form id='board-form'>
-        <input type='hidden' name='board[company_id]' value='<%= @company.id %>' id="company_id" />
-        <input type='hidden' name='board[user_id]' value='<%=assigns[:current_user].id%>' id="user_id" />
-
-        <Br />
-        <div class='referral-form-body'>
-          <input class='form-control' name='board[name]' type='text' placeholder='Name of the Board' class='user_name'  style="max-width:300px;margin-bottom:10px;" id="contact_name"/>
-        </div>
-        <br />
-        <div class='referral-form-footer'>
-          <input type='submit' value='CREATE' class="btn btn-primary"
-        </div>
-      </form>
     </div>
   </div>
 </div>
