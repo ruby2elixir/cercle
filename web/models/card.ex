@@ -41,7 +41,7 @@ defmodule CercleApi.Card do
     |> cast(params, [:user_id, :company_id, :name, :status, :contact_ids,
                     :board_id, :board_column_id, :description, :due_date,
                     :position])
-    |> validate_required([:company_id, :board_id])
+    |> validate_required([:company_id, :board_id, :board_column_id])
   end
 
   def contacts(card) do
