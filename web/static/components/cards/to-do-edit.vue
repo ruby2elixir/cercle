@@ -117,7 +117,7 @@
           userId: task.userId,
           companyId: this.company.id,
           isDone: task.isDone
-        }
+        };
 
         if (activityParams.dueDate) {
           activityParams.dueDate = Moment(activityParams.dueDate).tz('UTC').format('');

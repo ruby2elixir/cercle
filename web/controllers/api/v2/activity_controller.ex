@@ -4,7 +4,7 @@ defmodule CercleApi.APIV2.ActivityController do
   use CercleApi.Web, :controller
   use Timex
   alias CercleApi.{User, Activity, Repo}
-
+  alias CercleApi.APIV2.ActivityView, as: ActivityView
   plug CercleApi.Plug.EnsureAuthenticated
 
   plug :scrub_params, "activity" when action in [:create, :update]
@@ -54,14 +54,15 @@ defmodule CercleApi.APIV2.ActivityController do
         activity = activity
         |> Repo.preload([:user, :card])
         CercleApi.ActivityService.add(activity)
+        activity_json = %{"activity" => ActivityView.activity_json(activity)}
         CercleApi.Endpoint.broadcast!(
           "cards:" <> to_string(activity.card_id),
-          "activity:created", %{"activity" => activity}
+          "activity:created", activity_json
         )
 
         CercleApi.Endpoint.broadcast!(
           "users:" <> to_string(current_user.id),
-          "activity:created", %{"activity" => activity}
+          "activity:created", activity_json
         )
         render(conn, "show.json", activity: activity)
       {:error, changeset} ->
@@ -84,16 +85,16 @@ defmodule CercleApi.APIV2.ActivityController do
         activity = Activity
         |> Repo.get!(id)
         |> Repo.preload([:user, :card])
-
+        activity_json = %{"activity" => ActivityView.activity_json(activity)}
         CercleApi.ActivityService.add(activity)
         CercleApi.Endpoint.broadcast!(
           "cards:" <> to_string(activity.card_id),
-          "activity:updated", %{"activity" => activity}
+          "activity:updated", activity_json
         )
 
         CercleApi.Endpoint.broadcast!(
           "users:" <> to_string(current_user.id),
-          "activity:updated", %{"activity" => activity}
+          "activity:updated", activity_json
         )
         render(conn, "show.json", activity: activity)
       {:error, changeset} ->

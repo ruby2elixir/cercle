@@ -4,7 +4,7 @@ defmodule CercleApi.AddCardToBoardTest do
     {user, company} = create_user_with_company()
     board = CercleApi.Factory.insert(:board,
       name: "Test Board", company: company)
-    board_column = CercleApi.Factory.insert(:board_column, board: board)
+    CercleApi.Factory.insert(:board_column, board: board)
     {:ok, session: session, user: user, company: company, board: board}
   end
 
@@ -21,13 +21,13 @@ defmodule CercleApi.AddCardToBoardTest do
   end
 
   test "Add new card with contact", %{
-    session: session, user: user, company: company, board: board} do
+    session: session, user: user, company: company} do
     CercleApi.Factory.insert(:contact,
       first_name: "John", last_name: "Doe",
       user: user, company: company)
     board = CercleApi.Factory.insert(:board, type_of_card: 1,
       name: "Test Board", company: company)
-    board_column = CercleApi.Factory.insert(:board_column, board: board)
+    CercleApi.Factory.insert(:board_column, board: board)
 
     session
     |> sign_in(user.login, "1234")
@@ -58,7 +58,7 @@ defmodule CercleApi.AddCardToBoardTest do
   end
 
   test "Cancel should reset new card People Board", %{
-    session: session, user: user, company: company, board: board} do
+    session: session, user: user, company: company} do
     board = CercleApi.Factory.insert(:board, type_of_card: 1,
       name: "Test Board", company: company)
     session

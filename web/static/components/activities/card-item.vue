@@ -1,6 +1,11 @@
 <template>
   <tr>
-    <td><span>{{item.name}}</span></td>
+    <td>
+      <a v-on:click.stop="$emit('card-show')" style="color: #565656;">
+        <span class="card-name">{{item.name}}</span>
+      </a>
+    </td>
+
     <td style="width:150px;" class="text-right">{{columnName}}</td>
   </tr>
 </template>
@@ -15,7 +20,7 @@
     },
     computed: {
       columnName() {
-        return this.item.boardColumn && this.item.boardColumn.name
+        return this.item.boardColumn && this.item.boardColumn.name;
       }
     },
     methods: {

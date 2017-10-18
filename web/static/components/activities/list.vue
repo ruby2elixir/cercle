@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="inbox-list">
     <!-- Main content -->
     <section class="content">
 
@@ -9,10 +9,10 @@
         </div>
       </div>
 
-      <div class="row" v-if="activities.length > 0">
+      <div class="row activity-list" v-if="activities.length > 0">
         <div class="col-xs-12">
-          <div v-for="(activities_list, card_name) in groupBy(activities, 'card')" class="panel" style="margin-bottom: 5px;" >
-            <div class="panel-heading" style="padding: 5px 10px;">
+          <div v-for="(activities_list, card_name) in groupBy(activities, 'card')" class="panel">
+            <div class="panel-heading">
               <h5>{{card_name}}</h5>
             </div>
             <div class="panel-body">
@@ -47,15 +47,15 @@
         <div class="col-xs-12"><h3>Cards assigned to me</h3></div>
       </div>
 
-      <div class="row" v-if="cards.length > 0">
+      <div class="row card-list" v-if="cards.length > 0">
         <div class="col-xs-12">
 
-          <div v-for="(card_list, board_name) in card_items" class="panel" style="margin-bottom: 5px;">
-            <div class="panel-heading"  style="padding: 5px 10px;">
+          <div v-for="(card_list, board_name) in cardItems" class="panel">
+            <div class="panel-heading">
               <h4>{{board_name}}</h4>
             </div>
             <div class="panel-body">
-              <div class="nav-tabs-custom ">
+              <div class="nav-tabs-custom">
                 <table class="table table-responsive table-hover">
                   <tbody>
                     <tr
@@ -63,6 +63,7 @@
                       v-for="card in card_list"
                       :item="card"
                       :key="card.id"
+                      v-on:card-show="cardShow(card.id)"
                       ></tr>
                   </tbody>
                 </table>
@@ -101,11 +102,11 @@
         socket: null,
         channel: null,
         userId: null,
-        cards: [],
+        cards: []
       };
     },
     computed: {
-      card_items() {
+      cardItems() {
         return this.groupBy(this.cards, 'board');
       }
     },
@@ -181,7 +182,11 @@
         let itemIndex = collection.findIndex(function(item){
           return item.id === parseInt(data.id);
         });
-        if (itemIndex >= 0) { collection.splice(itemIndex, 1, data); }
+        if (itemIndex >= 0) {
+          collection.splice(itemIndex, 1, data);
+        } else {
+          this.$data.activities.push(data);
+        }
       },
       deleteItem(collection, id) {
         let itemIndex = collection.findIndex(function(item){
@@ -199,5 +204,22 @@
   };
 </script>
 <style lang="sass">
-
+  .inbox-list {
+    .activity-list {
+      .panel {
+        margin-bottom: 5px;
+        .panel-heading {
+          padding: 5px 10px;
+        }
+      }
+    }
+    .card-list {
+      .panel {
+        margin-bottom: 5px;
+        .panel-heading {
+          padding: 5px 10px;
+        }
+      }
+    }
+  }
 </style>
