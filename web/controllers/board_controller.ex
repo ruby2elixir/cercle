@@ -88,4 +88,27 @@ defmodule CercleApi.BoardController do
       |> render "edit.html", board: board, changeset: changeset
   end
 
+  def update(conn, %{"id" => id, "board" => board_params}) do
+    user = Guardian.Plug.current_resource(conn)
+    
+    company = conn
+    |> current_company
+    |> Repo.preload([:users])
+
+    board = Repo.get!(Board, id)
+    changeset = Board.changeset(board, board_params)
+
+    case Repo.update(changeset) do
+      {:ok, board} ->
+        board = board
+        |> Repo.preload([board_columns: Board.preload_query])
+        CercleApi.BoardNotificationService.update_notification(board)
+        conn
+        |> put_flash(:info, "Board updated successfully.")
+        |> redirect(to: front_board_path(conn, :show, company.id, board.id))
+      {:error, changeset} ->
+        render(conn, "edit.html", board: board, changeset: changeset)
+    end
+  end
+
 end
