@@ -117,3 +117,7 @@ config :logger, Rollbax.Logger,
 # Smartlook configs.
 config :smartlook,
   key: System.get_env("SMARTLOOK_KEY")
+
+# Smartlook configs.
+config :inbound_hook,
+  token: System.get_env("INBOUND_HOOK_TOKEN")

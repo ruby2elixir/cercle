@@ -4,7 +4,18 @@ defmodule CercleApi.APIV2.EmailController do
   use Timex
   alias CercleApi.{Email, Repo}
 
-  #plug CercleApi.Plug.EnsureAuthenticated when not action in [:webhook]
+  plug CercleApi.Plug.EnsureAuthenticated when not action in [:webhook]
+  plug :token_authenticate when action in [:webhook]
+
+  defp token_authenticate(conn, params) do
+    if conn.params["token"] == Application.get_env(:inbound_hook, :token) do
+      conn
+    else
+      conn
+      |> send_resp(403, "Not allowed")
+      |> halt()
+    end
+  end
 
   def webhook(conn, _params) do
     date = _params["Date"]
