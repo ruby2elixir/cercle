@@ -3,17 +3,17 @@
   <td style="width:30px;">
     <img :src="letterUrl" style="border-radius:14px;" />
   </td>
-  <td style="width:150px;">
-    <a v-on:click.stop="$emit('card-show')" href='#' style="color: #565656;"> {{item.card && item.card.name}} </a>
-  </td>
   <td style="font-size:16px;">
-  <a v-on:click.stop="$emit('card-show')" style="color: #565656;"> <span style=""> {{item.title}}</span> </a><br />
+    <a v-on:click.stop="$emit('card-show')" style="color: #565656;">
+      <span class="activity-name"> {{item.title || ('Task#' + item.id) }}</span>
+    </a>
   </td>
   <td style="width:150px;">
     {{item.dueDateWithCurrentTimezone| moment(timeFormat) }}
   </td>
   <td style="width:30px;">
-  <el-checkbox v-model="item.isDone" v-on:change="updateTask(item)"></el-checkbox>
+    <el-checkbox v-model="item.isDone"
+                 v-on:change="updateTask(item)"></el-checkbox>
   </td>
 </tr>
 </template>

@@ -312,11 +312,11 @@
       },
       addExistingContact(contact) {
         let cardUrl = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/'+ this.cardId;
-        let listContacts = this.contacts
+        let listContacts = this.contacts;
         listContacts.push(contact);
         this.contacts = listContacts.reduce(
           function(x, y) {
-            if (x.findIndex(e => e.id == y.id) < 0) { x.push(y);  }
+            if (x.findIndex(e => e.id === y.id) < 0) { x.push(y);  }
             return x;
           }, []);
 
