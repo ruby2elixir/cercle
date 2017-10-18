@@ -1,17 +1,11 @@
 <h2>Show user</h2>
-
 <ul>
-  
   <li>
-    <strong>User Login:</strong>
     <%= @user.login %>
   </li>
-  
   <li>
-    <strong>User name:</strong>
     <%= @user.user_name %>
   </li>
 </ul>
-
-<%= link "Edit", to: admin_user_path(@conn, :edit, @user) %>
+<%= link "Edit", to: admin_user_path(@conn, :edit, @user) %> | 
 <%= link "Back", to: admin_user_path(@conn, :index) %>
