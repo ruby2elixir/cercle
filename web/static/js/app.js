@@ -84,7 +84,6 @@ Vue.http.interceptors.push((request, next) => {
 
 import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
-import NewBoard from '../components/boards/new.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
 import ArchiveBoard from '../components/boards/archive.vue';
@@ -210,15 +209,6 @@ if ($('#board-app').length > 0) {
       window.addEventListener('keyup', (event) => {
         if (event.keyCode === 27) { this.$emit('esc-keyup'); }
       });
-    }
-  });
-}
-
-if ($('#board-list-app').length > 0) {
-  new Vue({
-    el: '#board-list-app',
-    components: {
-      'new-board': NewBoard
     }
   });
 }
