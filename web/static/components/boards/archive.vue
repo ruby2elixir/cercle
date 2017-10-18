@@ -2,11 +2,12 @@
   a.archive, a.unarchive {
     display: block;
     text-align: center;
-    background: lightgray;
+    background: white;
     padding: 5px 20px;
     border-radius: 3px;
     color: #333;
     cursor: pointer;
+    border:1px solid #e2e2e2;
   }
 
   a.archive:hover, a.unarchive:hover {
@@ -16,8 +17,8 @@
 
 <template>
   <div>
-    <a v-show="archived == 'false'" class="archive" @click="archive">Archive this board</a>
-    <a v-show="archived == 'true'" class="unarchive" @click="unarchive">Restore this board</a>
+    <a v-show="archived == 'false'" class="archive" @click="archive">Archive board</a>
+    <a v-show="archived == 'true'" class="unarchive" @click="unarchive">Restore board</a>
   </div>
 </template>
 
