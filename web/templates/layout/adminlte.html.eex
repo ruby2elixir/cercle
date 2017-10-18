@@ -118,9 +118,13 @@
         <!-- Tab panes -->
         <div class="tab-content">
           <h3>
-            Menu
             <button type="button" class="close" aria-label="Close" id="close-sidebar" ><span aria-hidden="true">&times;</span></button>
           </h3>
+          <Br/>
+          <Br/>
+          <div style="margin-bottom:10px;">
+            <a href="/company/<%= assigns[:current_company].id %>/board/<%= assigns[:board].id %>/edit" style="display: block;text-align: center;background: white;padding: 5px 20px;border-radius: 3px;color: #333;cursor: pointer;border:1px solid #e2e2e2;">Edit Board</a>
+          </div>
           <div id="archive-board">
             <archive-board board-id="<%= assigns[:board].id %>" archived="<%= assigns[:board].archived %>" />
           </div>
