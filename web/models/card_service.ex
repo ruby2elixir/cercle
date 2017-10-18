@@ -124,10 +124,12 @@ defmodule CercleApi.CardService do
       event_payload(card, event_dataset)
     )
 
-    with {:ok, tm_event} <- Repo.insert(changeset),
-         event <- Repo.preload(tm_event, [:card, :user]),
-      do: CercleApi.TimelineEventService.update(event)
-
+    if card.board_column_id != previous_card.board_column_id do
+      with {:ok, tm_event} <- Repo.insert(changeset),
+          event <- Repo.preload(tm_event, [:card, :user]),
+        do: CercleApi.TimelineEventService.update(event)
+    end
+    
     Board
     |> Repo.get(card.board_id)
     |> Repo.preload([board_columns: Board.preload_query])
