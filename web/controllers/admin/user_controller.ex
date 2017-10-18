@@ -42,7 +42,6 @@ defmodule CercleApi.Admin.UserController do
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Repo.get!(User, id)
-    companies = Enum.map(Repo.all(Company), fn {k, v} -> {k.title, v.id} end)
     changeset = User.update_changeset(user, user_params)
     case Repo.update(changeset) do
       {:ok, user} ->

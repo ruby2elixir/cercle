@@ -22,12 +22,6 @@
     <%= text_input f, :login, class: "form-control" %>
     <%= error_tag f, :login %>
   </div>
-  
-  <div class="form-group">
-    <%= label f, :password, "Password", class: "control-label" %>
-    <%= password_input f, :password, class: "form-control", placeholder: "Password" %>
-    <%= error_tag f, :password %>
-  </div>
 
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
