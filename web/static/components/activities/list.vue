@@ -1,92 +1,8 @@
-<template>
-  <div>
-    <!-- Main content -->
-    <section class="content">
-
-      <div class="row">
-        <div class="col-xs-12">
-          <h3>Tasks with due date</h3>
-        </div>
-      </div>
-
-      <div class="row" v-if="activities.length > 0">
-        <div class="col-xs-12">
-          <div v-for="(activities_list, card_name) in groupBy(activities, 'card')" class="panel" style="margin-bottom: 5px;" >
-            <div class="panel-heading" style="padding: 5px 10px;">
-              <h5>{{card_name}}</h5>
-            </div>
-            <div class="panel-body">
-              <div class="nav-tabs-custom ">
-                <table class="table table-responsive table-hover">
-                  <tbody>
-                    <tr
-                      is="activity-item"
-                      v-for="item in activities_list"
-                      :item="item"
-                      :time_zone="timeZone"
-                      :key="item.id"
-                      :class="itemClass(item)"
-                      v-on:done="doneTask(item)"
-                      v-on:card-show="cardShow(item.cardId)"
-                      ></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" v-if="activities.length == 0">
-        <div class="col-xs-12">
-          <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-12"><h3>Cards assigned to me</h3></div>
-      </div>
-
-      <div class="row" v-if="cards.length > 0">
-        <div class="col-xs-12">
-
-          <div v-for="(card_list, board_name) in card_items" class="panel" style="margin-bottom: 5px;">
-            <div class="panel-heading"  style="padding: 5px 10px;">
-              <h4>{{board_name}}</h4>
-            </div>
-            <div class="panel-body">
-              <div class="nav-tabs-custom ">
-                <table class="table table-responsive table-hover">
-                  <tbody>
-                    <tr
-                      is="card-item"
-                      v-for="card in card_list"
-                      :item="card"
-                      :key="card.id"
-                      ></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" v-if="cards.length == 0">
-        <div class="col-xs-12">
-          <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
-        </div>
-      </div>
-    </section>
-  </div>
-</template>
-
 <script>
   import {Socket, Presence} from 'phoenix';
   import InlineEdit from '../shared/inline-common-edit.vue';
   import CardShow from '../cards/show.vue';
   import ActivityItem from './item.vue';
-  import CardItem from './card-item.vue';
 
   export default {
     data() {
@@ -100,31 +16,16 @@
         activitiesToday: [],
         socket: null,
         channel: null,
-        userId: null,
-        cards: [],
+        userId: null
       };
-    },
-    computed: {
-      card_items() {
-        return this.groupBy(this.cards, 'board');
-      }
     },
     components: {
       'inline-edit': InlineEdit,
       'modal': VueStrap.modal,
       'card-show': CardShow,
-      'activity-item': ActivityItem,
-      'card-item': CardItem
+      'activity-item': ActivityItem
     },
     methods: {
-      groupBy(list, prop) {
-        return list.reduce(function(groups, item) {
-          let val = item[prop].name;
-          groups[val] = groups[val] || [];
-          groups[val].push(item);
-          return groups;
-        }, {});
-      },
       doneTask(task) {
         this.deleteItem(this.activities, task.id);
       },
@@ -144,14 +45,9 @@
 
       },
       initConn() {
-        let activityUrl = '/api/v2/company/' + Vue.currentUser.companyId + '/activity';
-        this.$http.get(activityUrl, { params: { userId: Vue.currentUser.userId }}).then(resp => {
+        let url = '/api/v2/company/' + Vue.currentUser.companyId + '/activity';
+        this.$http.get(url, { params: { userId: Vue.currentUser.userId }}).then(resp => {
           this.activities = resp.data.activities;
-        });
-
-        let cardUrl = '/api/v2/company/' + Vue.currentUser.companyId + '/card';
-        this.$http.get(cardUrl, { params: { userId: Vue.currentUser.userId }}).then(resp => {
-          this.cards = resp.data.data;
         });
 
         this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});

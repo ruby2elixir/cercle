@@ -41,10 +41,9 @@ Vue.filter('formatDate', function(value) {
   }
 });
 
-Vue.filter('formatDateTime', function(value, format) {
-  let dateFormat = format || 'MM/DD/YYYY hh:mm a';
+Vue.filter('formatDateTime', function(value) {
   if (value) {
-    return moment(String(value) + 'Z').format(dateFormat);
+    return moment(String(value) + 'Z').format('MM/DD/YYYY hh:mm a');
   }
 });
 

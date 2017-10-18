@@ -4,7 +4,7 @@ defmodule CercleApi.Activity do
 
   @derive {Poison.Encoder, only: [
               :id, :title, :is_done, :due_date,
-              :company_id, :user_id, :card_id, :user, :card
+              :company_id, :user_id, :card_id, :user
             ]}
 
   schema "activities" do

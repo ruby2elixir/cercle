@@ -3,8 +3,11 @@
   <td style="width:30px;">
     <img :src="letterUrl" style="border-radius:14px;" />
   </td>
+  <td style="width:150px;">
+    <a v-on:click.stop="$emit('card-show')" href='#' style="color: #565656;"> {{item.card && item.card.name}} </a>
+  </td>
   <td style="font-size:16px;">
-  <a v-on:click.stop="$emit('card-show')" style="color: #565656;"> <span style=""> {{item.title || ('Task#' + item.id) }}</span> </a><br />
+  <a v-on:click.stop="$emit('card-show')" style="color: #565656;"> <span style=""> {{item.title}}</span> </a><br />
   </td>
   <td style="width:150px;">
     {{item.dueDateWithCurrentTimezone| moment(timeFormat) }}
