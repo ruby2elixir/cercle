@@ -37,15 +37,7 @@ defmodule CercleApi.RegistrationController do
         case Repo.insert(changeset) do
           {:ok, user} ->
             Company.add_user_to_company(user, company)
-            changeset = Board.changeset(%Board{}, %{name: "Deals", company_id: company.id})
-            board = Repo.insert!(changeset)
-            steps = ["New Lead", "Interested in", "Proposition sent"]
-            Enum.each [0, 1, 2], fn (index) ->
-              boardcol_params = %{:board_id => board.id, :order => index, :name => Enum.at(steps, index)}
-              changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
-              CercleApi.Repo.insert!(changeset)
-            end
-
+            
             conn
             |> Guardian.Plug.sign_in(user)
             |> configure_session(renew: true)
