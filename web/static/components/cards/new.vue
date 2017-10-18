@@ -1,8 +1,9 @@
 <template>
   <div class="new-card-form" v-on:keydown.enter="saveData">
     <div class="form-group">
-      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control card-name" ref="name" />
-      <span class='error' v-show="errors.name" v-for="msg in errors.name">{{msg}}</span>
+      <input type="text" title="Name of the Card" v-model="name" placeholder="Name of the Card" class="form-control card-name" ref="name" v-if="type === 0" />
+
+      <add-contact @select-contact="selectContact" ref='addContact' v-if="type === 1" />
     </div>
 
     <div class="form-group">
@@ -13,10 +14,7 @@
         <option v-for="col in columns" :value="col.id">{{ col.name }}</option>
       </select>
     </div>
-    <i>Include a contact into the card (optional)</i>
-    <Br />
-    <Br />
-    <add-contact @select-contact="selectContact" ref='addContact' />
+    
 
 
     <div class="form-group">
@@ -29,7 +27,7 @@
 <script>
   import AddContact from './add-contact.vue';
   export default {
-    props: ['userId', 'companyId', 'boardId', 'columns'],
+    props: ['userId', 'companyId', 'boardId', 'columns', 'type'],
     data: function() {
       return {
         name: null,

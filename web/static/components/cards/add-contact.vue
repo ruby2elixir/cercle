@@ -6,7 +6,7 @@
                 :on-search="searchContacts"
                 :options="searchedContacts"
                 :taggable="true"
-                placeholder="Full Name"
+                placeholder="Full Name of the Contact"
                 label="name"><span slot="no-options"></span></v-select>
     </div>
     <div class="form-group">

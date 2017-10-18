@@ -183,7 +183,8 @@ export default {
             'board-id': this.board.id,
             'columns': this.board.boardColumns,
             'user-id': Vue.currentUser.userId,
-            'company-id': this.board.companyId
+            'company-id': this.board.companyId,
+            'type': this.board.typeOfCard
           }
         });
     },
