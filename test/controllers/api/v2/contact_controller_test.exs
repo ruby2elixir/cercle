@@ -4,7 +4,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
   @valid_attrs %{first_name: "John", last_name: "Doe"}
   @invalid_attrs %{}
-  alias CercleApi.{Board, Contact, TimelineEvent, Card, Activity, CardAttachment}
+  alias CercleApi.{Board, BoardColumn, Contact, TimelineEvent, Card, Activity, CardAttachment}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -180,7 +180,10 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     changeset = Board.changeset(%Board{}, %{name: "Board2", company_id: state[:company].id, user_id: state[:user].id})
     board = Repo.insert!(changeset)
 
-    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id, name: "Test Card"})
+    changeset = BoardColumn.changeset(%BoardColumn{}, %{name: "Step1", order: "1", board_id: board.id})
+    board_column = Repo.insert!(changeset)
+
+    changeset = Card.changeset(%Card{}, %{contact_ids: [contact.id], user_id: state[:user].id, company_id: state[:company].id, board_id: board.id, board_column_id: board_column.id, name: "Test Card"})
     card = Repo.insert!(changeset)
 
     changeset = TimelineEvent.changeset(%TimelineEvent{}, %{card_id: card.id, contact_id: contact.id, user_id: state[:user].id, company_id: state[:company].id, event_name: "test", content: "test"})
