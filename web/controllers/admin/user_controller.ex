@@ -37,8 +37,7 @@ defmodule CercleApi.Admin.UserController do
   def edit(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
     changeset = User.changeset(user)
-    companies = Enum.map(Repo.all(Company), fn {k, v} -> {k.title, v.id} end)
-    render(conn, "edit.html", user: user, changeset: changeset, companies: companies)
+    render(conn, "edit.html", user: user, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
