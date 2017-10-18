@@ -49,7 +49,7 @@ defmodule CercleApi.Admin.UserController do
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: admin_user_path(conn, :show, user))
       {:error, changeset} ->
-        render(conn, "edit.html", user: user, changeset: changeset, companies: companies)
+        render(conn, "edit.html", user: user, changeset: changeset)
     end
   end
 end
