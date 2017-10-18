@@ -11,12 +11,6 @@
     <strong>User name:</strong>
     <%= @user.user_name %>
   </li>
-
-  <li>
-    <strong>User Details:</strong>
-    <%= @user.emails %>
-  </li>
-
 </ul>
 
 <%= link "Edit", to: admin_user_path(@conn, :edit, @user) %>
