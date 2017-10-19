@@ -6,7 +6,7 @@
       </a>
     </td>
 
-    <td style="width:150px;" class="text-right">{{columnName}}</td>
+    <td style="width:150px;" class="text-left">{{columnName}}</td>
   </tr>
 </template>
 
