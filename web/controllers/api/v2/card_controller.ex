@@ -41,6 +41,7 @@ defmodule CercleApi.APIV2.CardController do
     cards_query = from c in Card,
       where: c.company_id == ^company.id,
       where: c.user_id == ^user_id,
+      where: c.status == 0,
       order_by: [desc: c.inserted_at],
       preload: [:board_column, board: [:board_columns]]
     cards = CercleApi.Repo.all(cards_query)

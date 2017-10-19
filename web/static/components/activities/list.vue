@@ -3,7 +3,13 @@
     <!-- Main content -->
     <section class="content">
 
-      <div class="row">
+      <div class="row" v-if="emptyList">
+        <div class="col-xs-12">
+          <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
+        </div>
+      </div>
+
+      <div class="row" v-if="!emptyList">
         <div class="col-xs-12">
           <h3>Tasks with due date</h3>
         </div>
@@ -37,13 +43,13 @@
         </div>
       </div>
 
-      <div class="row" v-if="activities.length == 0">
+      <div class="row" v-if="!emptyList && activities.length == 0">
         <div class="col-xs-12">
           <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" v-if="!emptyList">
         <div class="col-xs-12"><h3>Cards assigned to me</h3></div>
       </div>
 
@@ -73,7 +79,7 @@
         </div>
       </div>
 
-      <div class="row" v-if="cards.length == 0">
+      <div class="row" v-if="!emptyList && cards.length == 0">
         <div class="col-xs-12">
           <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
         </div>
@@ -106,6 +112,9 @@
       };
     },
     computed: {
+      emptyList() {
+        return this.cards.length === 0 && this.activities.length === 0;
+      },
       cardItems() {
         return this.groupBy(this.cards, 'board');
       }
