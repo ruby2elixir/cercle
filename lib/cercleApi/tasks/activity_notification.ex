@@ -20,7 +20,7 @@ defmodule CercleApi.Tasks.ActivityNotification do
          false <- is_nil(target), false <- is_nil(target.user),
            true <- target.user.notification  do
       mail = %Mailman.Email{
-        subject: "Start Notification",
+        subject: "#{target_name(target)} is due now",
         from: "referral@cercle.co", to: [target.user.login],
         html: email_html(target, item, "start")
       }
@@ -37,7 +37,7 @@ defmodule CercleApi.Tasks.ActivityNotification do
          false <- is_nil(target), false <- is_nil(target.user),
            true <- target.user.notification do
       mail = %Mailman.Email{
-        subject: "PreStart Notification",
+        subject: "#{target_name(target)} is due soon",
         from: "referral@cercle.co", to: [target.user.login],
         html: email_html(target, item, "prestart")
       }
