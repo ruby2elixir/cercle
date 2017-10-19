@@ -102,6 +102,9 @@ Object.defineProperty(Vue.prototype, '$notification', {
   }
 });
 
+import lodash from 'lodash';
+Object.defineProperty(Vue.prototype, '$_', { value: lodash });
+
 const GlobalModalWindow = new Vue();
 Object.defineProperty(Vue.prototype, '$glmodal', {
   get() {
