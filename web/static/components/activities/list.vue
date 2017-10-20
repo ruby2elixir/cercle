@@ -116,7 +116,10 @@
         return this.cards.length === 0 && this.activities.length === 0;
       },
       cardItems() {
-        return this.groupBy(this.cards, 'board');
+        return this.groupBy(
+          this.$_.orderBy(
+            this.cards, (t) => { return t.boardColumn.order; }, ['asc']
+          ), 'board');
       }
     },
     components: {
