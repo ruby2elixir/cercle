@@ -39,12 +39,17 @@ defmodule CercleApi.APIV2.CardController do
     company = current_company(conn, current_user)
 
     cards_query = from c in Card,
+      join: b in assoc(c, :board),
+      where: b.archived == false,
       where: c.company_id == ^company.id,
       where: c.user_id == ^user_id,
       where: c.status == 0,
       order_by: [desc: c.inserted_at],
       preload: [:board_column, board: [:board_columns]]
-    cards = CercleApi.Repo.all(cards_query)
+
+    cards = cards_query
+    |> CercleApi.Repo.all
+    |> Card.preload_main_contact
 
     render(conn, "index.json", cards: cards)
   end

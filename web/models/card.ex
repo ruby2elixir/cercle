@@ -85,6 +85,18 @@ defmodule CercleApi.Card do
     ]
   end
 
+  def friendly_name(card) do
+    case String.trim(to_string(card.name)) do
+      "" ->
+        if card.main_contact do
+          CercleApi.Contact.full_name(card.main_contact)
+        else
+          ""
+        end
+      _ -> card.name
+    end
+  end
+
   def preload_main_contact(cards) when is_list(cards) do
     Enum.map(cards, &preload_main_contact(&1))
   end

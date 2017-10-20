@@ -52,7 +52,8 @@ defmodule CercleApi.APIV2.CardView do
       contact_ids: card.contact_ids,
       user_id: card.user_id,
       board: card.board,
-      board_column: card.board_column
+      board_column: card.board_column,
+      contact: card.main_contact
     }
   end
 
