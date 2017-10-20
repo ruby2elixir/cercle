@@ -2,7 +2,7 @@
   <tr>
     <td>
       <a v-on:click.stop="$emit('card-show')" style="color: #565656;">
-        <span class="card-name">{{item.name}}</span>
+        <span class="card-name">{{cardName}}</span>
       </a>
     </td>
 
@@ -19,6 +19,13 @@
       }
     },
     computed: {
+      cardName() {
+        if (this.$_.isEmpty(this.item.name)) {
+          return this.$_.get(this.item, ['contact', 'name']);
+        } else {
+          return this.item.name;
+        }
+      },
       columnName() {
         return this.item.boardColumn && this.item.boardColumn.name;
       }
@@ -30,7 +37,7 @@
       'el-checkbox': ElementUi.Checkbox
     }
   };
-  </script>
+</script>
 <style lang="sass">
 
-</style>
+  </style>

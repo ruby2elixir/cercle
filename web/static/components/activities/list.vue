@@ -118,7 +118,7 @@
       cardItems() {
         return this.groupBy(
           this.$_.orderBy(
-            this.cards, (t) => { return t.boardColumn.order; }, ['asc']
+            this.cards, (t) => { return this.$_.get(t, ['boardColumn', 'order']); }, ['asc']
           ), 'board');
       }
     },
