@@ -143,7 +143,6 @@ defmodule CercleApi.Router do
     resources "/timeline_events", TimelineEventController
     resources "/organizations", OrganizationController
 
-    post "email/webhook", EmailController, :webhook
     resources "/email", EmailController
   end
 

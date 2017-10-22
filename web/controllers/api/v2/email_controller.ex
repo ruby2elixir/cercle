@@ -4,20 +4,22 @@ defmodule CercleApi.APIV2.EmailController do
   use Timex
   alias CercleApi.{Email, Repo}
 
-  plug CercleApi.Plug.EnsureAuthenticated when not action in [:webhook]
-  plug :token_authenticate when action in [:webhook]
+  plug CercleApi.Plug.EnsureAuthenticated when not action in [:create]
+  plug :token_authenticate when action in [:create]
 
-  defp token_authenticate(conn, params) do
-    if conn.params["token"] == Application.get_env(:inbound_hook, :token) do
+  defp token_authenticate(conn, _params) do
+    postmark_token = Application.get_env(:inbound_hook, :token)
+
+    case {conn.params["source"], conn.params["token"]} do
+    {"postmark", postmark_token} ->
       conn
-    else
-      conn
-      |> send_resp(403, "Not allowed")
-      |> halt()
+    _ ->
+      CercleApi.Plug.EnsureAuthenticated.call(conn, conn.params)
     end
   end
 
-  def webhook(conn, _params) do
+  def create(conn, %{"source" => "postmark"}) do
+    _params = conn.params
     date = _params["Date"]
     |> Timex.parse!("%a, %d %b %Y %T %z", :strftime)
     |> Ecto.DateTime.cast!

@@ -1,4 +1,8 @@
 defmodule CercleApi.Email do
+  @moduledoc """
+  Inbound email history
+  """
+
   use CercleApi.Web, :model
 
   schema "emails" do
