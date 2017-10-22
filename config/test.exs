@@ -56,3 +56,6 @@ config :wallaby,
     headless: true
   ],
   screenshot_on_failure: true
+
+config :inbound_hook,
+  token: "test123"
