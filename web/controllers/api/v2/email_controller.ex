@@ -11,9 +11,9 @@ defmodule CercleApi.APIV2.EmailController do
     case conn.params["source"] do
     "postmark" ->
       company = Repo.get(Company, conn.params["company_id"])
-      api_token = Company.get_or_set_api_token(company)
+      email_api_token = Company.get_or_set_email_api_token(company)
 
-      if conn.params["token"] == api_token do 
+      if conn.params["token"] == email_api_token do 
         conn
       else
         conn
@@ -51,11 +51,11 @@ defmodule CercleApi.APIV2.EmailController do
     end
   end
 
-  def index(conn, %{"from_email" => from_email}) do
+  def index(conn, %{"email" => email}) do
     company = current_company(conn)
     query = from p in Email,
       where: p.company_id == ^company.id,
-      where: ilike(p.from_email, ^from_email) or ilike(p.to_email, ^from_email),
+      where: ilike(p.from_email, ^email) or ilike(p.to_email, ^email),
       order_by: [desc: p.inserted_at]
 
     emails = query

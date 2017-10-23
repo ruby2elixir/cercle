@@ -15,7 +15,7 @@ defmodule CercleApi.APIV2.EmailControllerTest do
   end
 
   test "create/2 create email with valid inbound data", state do
-    conn = post state[:conn], "/api/v2/company/#{state[:company].id}/email?token=#{Company.get_or_set_api_token(state[:company])}&source=postmark", %{"MessageID" => "123",
+    conn = post state[:conn], "/api/v2/company/#{state[:company].id}/email?token=#{Company.get_or_set_email_api_token(state[:company])}&source=postmark", %{"MessageID" => "123",
       "From" => "abc@xyz.com",
       "To" => "xyz@abc.com",
       "Subject" => "Test subject",

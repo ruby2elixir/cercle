@@ -37,9 +37,25 @@ export default {
   components: {
     'contact-details': ContactDetails
   },
+  watch: {
+    contact() {
+      this.fetchEmails();
+    }
+  },
   methods: {
     renderText(html) {
       return '';
+    },
+
+    fetchEmails() {
+      if(this.contact.email) {
+        let url = '/api/v2/company/' + Vue.currentUser.companyId + '/email?email=' + this.contact.email;
+        this.$http.get(url).then(resp => {
+          this.emails = resp.data.data;
+        });
+      } else {
+        this.emails = [];
+      }
     },
 
     showEmail(email) {
@@ -53,10 +69,7 @@ export default {
     }
   },
   mounted() {
-    let url = '/api/v2/company/' + Vue.currentUser.companyId + '/email?from_email=' + this.contact.email;
-    this.$http.get(url).then(resp => {
-      this.emails = resp.data.data;
-    });
+    this.fetchEmails();
   }
 };
 </script>
