@@ -120,6 +120,11 @@ Object.defineProperty(Vue.prototype, '$glAttachmentPreview', {
 
 Vue.mixin( {
   methods: {
+    toUserTz: function(value) {
+      if (value) {
+        return moment(String(value) + 'Z').toDate();
+      };
+    },
     camelCaseKeys: function(o){
       var newO, origKey, newKey, value;
       if (o instanceof Array) {
