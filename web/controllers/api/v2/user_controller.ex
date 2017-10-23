@@ -10,13 +10,8 @@ defmodule CercleApi.APIV2.UserController do
   def index(conn, _params) do
     current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn)
-    query = from u in User,
-      where: u.company_id == ^company.id,
-      order_by: [desc: u.updated_at]
-
-    users = query
-    |> Repo.all
-
+    users = CercleApi.User.company_users(company)
+    
     render(conn, "index.json", users: users)
   end
 

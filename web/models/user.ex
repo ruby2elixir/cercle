@@ -6,7 +6,7 @@ defmodule CercleApi.User do
 
   use CercleApi.Web, :model
   use Arc.Ecto.Schema
-
+  alias CercleApi.{Repo, UserCompany}
   @derive {Poison.Encoder, only: [
               :id, :user_name, :profile_image
             ]}
@@ -70,6 +70,14 @@ defmodule CercleApi.User do
     end
   end
 
+  def company_users(company) do
+    Repo.all(
+      from c in __MODULE__,
+      join: p in assoc(c, :companies),
+      where: p.id == ^company.id
+    )
+  end
+
   defp generate_encrypted_password(current_changeset) do
     case current_changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
@@ -79,6 +87,8 @@ defmodule CercleApi.User do
     end
   end
 end
+
+
 
 defimpl Poison.Encoder, for: CercleApi.User do
   def encode(model, options) do
