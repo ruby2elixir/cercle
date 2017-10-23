@@ -13,7 +13,12 @@
       <div class='modal-body'>
         <div class="row">
           <div class="col-md-5">
-            <select-member class="inline-mode" v-model="uid" @change="userChanged" :users="users" :inline="true" :disableUnselect="true" />
+            <select-member class="inline-mode"
+                           v-model="uid"
+                           @change="userChanged"
+                           :users="users"
+                           :inline="true"
+                           :disableUnselect="true" />
           </div>
 
           <div class="col-md-7">
@@ -49,7 +54,7 @@
       return {
         editMode: false,
         uid: this.userId || parseInt(Vue.currentUser.userId),
-        dt: this.date
+        dt: this.toUserTz(this.date)
       };
     },
     watch: {
@@ -57,7 +62,7 @@
         this.uid = this.userId;
       },
       date() {
-        this.dt = this.date;
+        this.dt = this.toUserTz(this.date);
       }
     },
     components: {
