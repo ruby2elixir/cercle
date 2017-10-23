@@ -19,10 +19,14 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
   def create(conn, %{"timeline_event" => timeline_event_params}) do
     current_user = CercleApi.Plug.current_user(conn)
+    company = current_company(conn)
 
-    changeset = current_user
-    |> build_assoc(:timeline_event)
-    |> TimelineEvent.changeset(timeline_event_params)
+    timeline_event_params = timeline_event_params
+    |> Map.put("user_id", current_user.id)
+
+    changeset = company
+      |> Ecto.build_assoc(:timeline_events)
+      |> TimelineEvent.changeset(timeline_event_params)
 
     case Repo.insert(changeset) do
       {:ok, timeline_event} ->

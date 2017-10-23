@@ -17,6 +17,7 @@ defmodule CercleApi.Company do
     has_many :contacts, CercleApi.Contact
     has_many :organizations, CercleApi.Organization
     has_many :cards, CercleApi.Card
+    has_many :timeline_events, CercleApi.TimelineEvent
     has_many :boards, CercleApi.Board
     field :data_fields, :map
     timestamps

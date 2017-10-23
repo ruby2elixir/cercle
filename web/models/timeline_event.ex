@@ -28,7 +28,7 @@ defmodule CercleApi.TimelineEvent do
           :content, :event_name, :card_id, :user_id,
           :company_id, :metadata, :contact_id
         ])
-    |> validate_required([:content, :event_name, :card_id])
+    |> validate_required([:content, :event_name, :card_id, :company_id, :user_id])
   end
 
   def recent(board, limit \\ 10) do
