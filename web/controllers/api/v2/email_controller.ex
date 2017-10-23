@@ -55,7 +55,7 @@ defmodule CercleApi.APIV2.EmailController do
     company = current_company(conn)
     query = from p in Email,
       where: p.company_id == ^company.id,
-      where: ilike(p.from_email, ^from_email),
+      where: ilike(p.from_email, ^from_email) or ilike(p.to_email, ^from_email),
       order_by: [desc: p.inserted_at]
 
     emails = query
