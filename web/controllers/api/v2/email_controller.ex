@@ -2,17 +2,24 @@ defmodule CercleApi.APIV2.EmailController do
   require Logger
   use CercleApi.Web, :controller
   use Timex
-  alias CercleApi.{Email, Repo}
+  alias CercleApi.{Email, Repo, Company}
 
   plug CercleApi.Plug.EnsureAuthenticated when not action in [:create]
   plug :token_authenticate when action in [:create]
 
   defp token_authenticate(conn, _params) do
-    postmark_token = Application.get_env(:inbound_hook, :token)
+    case conn.params["source"] do
+    "postmark" ->
+      company = Repo.get(Company, conn.params["company_id"])
+      api_token = Company.get_or_set_api_token(company)
 
-    case {conn.params["source"], conn.params["token"]} do
-    {"postmark", postmark_token} ->
-      conn
+      if conn.params["token"] == api_token do 
+        conn
+      else
+        conn
+        |> send_resp(401, "Unauthenticated")
+        |> halt()
+      end
     _ ->
       CercleApi.Plug.EnsureAuthenticated.call(conn, conn.params)
     end
