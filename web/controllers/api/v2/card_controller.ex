@@ -28,10 +28,19 @@ defmodule CercleApi.APIV2.CardController do
   end
 
   def index(conn, %{"board_column_id" => board_column_id}) do
-    board_column = Repo.get!(BoardColumn, board_column_id)
-    |> Repo.preload([:cards])
+    current_user = CercleApi.Plug.current_user(conn)
+    company = current_company(conn, current_user)
+    
+    cards_query = from c in Card,
+      where: c.company_id == ^company.id,
+      where: c.board_column_id == ^board_column_id,
+      where: c.status == 0,
+      order_by: [desc: c.inserted_at]
 
-    render(conn, "cards_with_main_contact.json", cards: board_column.cards)
+    cards = cards_query
+    |> CercleApi.Repo.all
+
+    render(conn, "cards_with_main_contact.json", cards: cards)
   end
 
   def index(conn, %{"user_id" => user_id}) do
