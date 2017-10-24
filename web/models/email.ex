@@ -10,9 +10,12 @@ defmodule CercleApi.Email do
     field :uid, :string
     field :subject, :string
     field :from_email, :string
-    field :to_email, :string
+    field :to, {:array, :string}
+    field :cc, {:array, :string}
+    field :bcc, {:array, :string}
     field :body, :string
     field :date, Ecto.DateTime
+    field :meta, :map
 
     timestamps()
   end
@@ -22,8 +25,8 @@ defmodule CercleApi.Email do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:uid, :company_id, :subject, :from_email, :to_email, :body, :date])
-    |> validate_required([:uid, :company_id, :subject, :from_email, :to_email, :body, :date])
+    |> cast(params, [:uid, :company_id, :subject, :from_email, :to, :cc, :bcc, :meta, :body, :date])
+    |> validate_required([:uid, :company_id, :subject, :from_email, :to, :meta, :body, :date])
     |> unique_constraint(:uid)
   end
 end

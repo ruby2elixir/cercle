@@ -17,8 +17,11 @@ defmodule CercleApi.APIV2.EmailView do
       date: email.date,
       company_id: email.company_id,
       from_email: email.from_email,
-      to_email: email.to_email,
-      body: email.body
+      to: email.to,
+      cc: email.cc,
+      bcc: email.bcc,
+      body: email.body,
+      meta: email.meta
     }
   end
 end

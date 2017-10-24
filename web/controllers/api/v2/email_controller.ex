@@ -25,13 +25,35 @@ defmodule CercleApi.APIV2.EmailController do
     end
   end
 
+  def extract_emails([]) do
+    []
+  end
+
+  def extract_emails([t]) do
+    [t["Email"]]
+  end
+
+  def extract_emails([h | t]) do
+    [h["Email"] | extract_emails(t)]
+  end
+
   def create(conn, %{"source" => "postmark"}) do
     _params = conn.params
     date = _params["Date"]
     |> Timex.parse!("%a, %d %b %Y %T %z", :strftime)
     |> Ecto.DateTime.cast!
 
-    email_params = %{"uid" => _params["MessageID"], "from_email" => _params["From"], "to_email" => _params["To"], "subject" => _params["Subject"], "body" => _params["HtmlBody"], "date" => date, "company_id" => _params["company_id"]}
+    to_emails = extract_emails(_params["ToFull"])
+    cc_emails = extract_emails(_params["CcFull"])
+    bcc_emails = extract_emails(_params["BccFull"])
+    meta = %{
+      "FromFull" => _params["FromFull"],
+      "ToFull" => _params["ToFull"],
+      "CcFull" => _params["CcFull"],
+      "BccFull" => _params["BccFull"]
+    }
+
+    email_params = %{"uid" => _params["MessageID"], "from_email" => _params["From"], "to" => to_emails, "cc" => cc_emails, "bcc" => bcc_emails, "subject" => _params["Subject"], "body" => _params["HtmlBody"], "date" => date, "company_id" => _params["company_id"], "meta" => meta}
 
     email = Repo.get_by(Email, uid: email_params["uid"])
 
@@ -52,10 +74,11 @@ defmodule CercleApi.APIV2.EmailController do
   end
 
   def index(conn, %{"email" => email}) do
+    email = "mailbox+SampleHash@inbound.postmarkapp.com"
     company = current_company(conn)
     query = from p in Email,
       where: p.company_id == ^company.id,
-      where: ilike(p.from_email, ^email) or ilike(p.to_email, ^email),
+      where: ilike(p.from_email, ^email) or fragment("? = ANY (?)", ^email, p.to),
       order_by: [desc: p.inserted_at]
 
     emails = query
