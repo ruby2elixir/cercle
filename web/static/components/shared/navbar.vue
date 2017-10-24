@@ -5,6 +5,7 @@
     <li class="tasks-menu">
       <a href="http://get.cercle.co/help"  aria-expanded="false">
         <i class="fa fa-phone"></i> 
+        &nbsp;
         Support
       </a>
     </li>
