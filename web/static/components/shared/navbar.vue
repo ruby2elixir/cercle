@@ -2,6 +2,12 @@
   <ul class="nav navbar-nav user-navbar">
     <!-- Messages: style can be found in dropdown.less-->
     <!-- User Account Menu -->
+    <li class="tasks-menu">
+      <a href="http://get.cercle.co/help"  aria-expanded="false">
+        <i class="fa fa-phone"></i> 
+        Support
+      </a>
+    </li>
     <li class="dropdown user user-menu">
       <!-- Menu Toggle Button -->
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
