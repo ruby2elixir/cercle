@@ -12,20 +12,17 @@
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
 import 'phoenix_html';
-import 'jquery-ui';
+
 import moment from 'moment';
 
 // Import local files
 //
 // Local files can be imported directly using relative
 // paths './socket' or full ones 'web/static/js/socket'.
-import 'bootstrap-datepicker';
 
 import socket from './socket';
-import { Activity } from './activity';
 import inlineEdit from './inline_edit';
 import contactAdd from './contact_add';
-import contactLive from './contact_live';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
@@ -49,12 +46,8 @@ Vue.filter('formatDateTime', function(value, format) {
 });
 
 export var App = {
-  activityInit: function(){
-    Activity.start();
-  },
-  contactSocketInit: function(contactId){
-    contactLive.init(socket, contactId );
-  }
+  activityInit: function(){  },
+  contactSocketInit: function(contactId){  }
 };
 
 import elementLang from 'element-ui/lib/locale/lang/en';
@@ -186,6 +179,7 @@ if (document.querySelector('meta[name="guardian_token"]')) {
   });
 }
 
+// Vue apps
 if ($('#user-navbar').length > 0) {
   new Vue({
     el: '#user-navbar',
@@ -301,7 +295,7 @@ if ($('#webhooks-app').length > 0) {
     }
   });
 }
-
+// end - Vue apps
 
 $('#toggle-activity-panel').on('click', function(){
   $('.control-sidebar-light').toggleClass('open');
