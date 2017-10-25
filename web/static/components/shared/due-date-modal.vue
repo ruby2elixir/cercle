@@ -2,7 +2,7 @@
   <span>
     <span v-on:click="showModal" class="date-display">
       <slot>
-        <span v-if="v">{{v|formatDateTime}}</span>
+        <span v-if="v">{{value|formatDateTime}}</span>
         <span v-else>Add due date</span>
       </slot>
     </span>
@@ -44,12 +44,12 @@
     data() {
       return {
         editMode: false,
-        v: this.value
+        v: this.toUserTz(this.value)
       };
     },
     watch: {
       value() {
-        this.v = this.value;
+        this.v = this.toUserTz(this.value);
       }
     },
     components: {
