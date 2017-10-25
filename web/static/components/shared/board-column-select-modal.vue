@@ -1,13 +1,13 @@
 <template>
   <span v-on-click-outside='cancel'>
     <span v-on:click="showModal" class='current-value-display'>
-      {{ currentBoard().name }} - {{ currentColumn().name }}
+      {{ board.name }} - {{ column.name }}
     </span>
 
     <div v-show="editMode" class='input-modal'>
       <div class='modal-header clearfix'>
         Change Board/Column
-        <a class='close pull-right' v-on:click='cancel'>×</a>
+        <a class='close pull-right' @click='cancel'>×</a>
       </div>
 
       <div class='modal-body'>
@@ -20,7 +20,11 @@
         <div class="form-group">
           <label>Column</label>
           <select v-model="cId" ref="column-input">
-            <option v-for="column in selectedBoard().boardColumns" :value.number="column.id">{{column.name}}</option>
+            <option
+              v-for="column in selectedBoard().boardColumns"
+              :value.number="column.id">
+              {{column.name}}
+            </option>
           </select>
         </div>
         <div>
@@ -51,34 +55,25 @@ export default {
       this.cId = this.boardColumnId;
     }
   },
+  computed: {
+    board() {
+      return this.boardById(this.boardId) || { name: '--', boardColumns: [] };
+    },
+    column() {
+      return this.$_.find(
+        this.board.boardColumns, {id: this.boardColumnId}
+      ) || { name: '--' };
+    }
+  },
   methods: {
     boardById(id) {
-      for(var i=0; i<this.boards.length; i++) {
-        if(id === this.boards[i].id)
-          return this.boards[i];
-      }
-    },
-    currentBoard() {
-      return this.boardById(this.boardId) || {name: '--', boardColumns: []};
-    },
-    currentColumn() {
-      let cb = this.currentBoard();
-      for(var i=0; i<cb.boardColumns.length; i++) {
-        if(this.boardColumnId === cb.boardColumns[i].id)
-          return cb.boardColumns[i];
-      }
-
-      return {name: '--'};
+      return this.$_.find(this.boards, {id: id});
     },
     selectedBoard() {
       return this.boardById(this.bId) || {boardColumns: []};
     },
-    boardChange() {
-      this.cId = null;
-    },
-    showModal() {
-      this.editMode = true;
-    },
+    boardChange() {  this.cId = null;  },
+    showModal() { this.editMode = true; },
     save() {
       this.$emit('input', {boardId: this.bId, boardColumnId: this.cId});
       this.editMode = false;
