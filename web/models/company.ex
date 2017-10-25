@@ -10,6 +10,7 @@ defmodule CercleApi.Company do
   schema "companies" do
     field :title, :string
     field :logo_image, CercleApi.CompanyLogoImage.Type
+    field :email_api_token, :string
 
     has_many :user_companies, CercleApi.UserCompany
     has_many :users, through: [:user_companies, :user]
@@ -32,9 +33,19 @@ defmodule CercleApi.Company do
 
   def changeset(model, params \\ :invalid) do
     model
-    |> cast(params, [:title])
+    |> cast(params, [:title, :email_api_token])
     |> cast_attachments(params, [:logo_image])
     |> validate_required([:title])
+  end
+
+  def get_or_set_email_api_token(company) do
+    token = company.email_api_token
+    if is_nil(token) do 
+      token = Ecto.UUID.generate
+      cs = changeset(company, %{"email_api_token": token})
+      Repo.update(cs)
+    end
+    token
   end
 
   def add_user_to_company(user, company) do

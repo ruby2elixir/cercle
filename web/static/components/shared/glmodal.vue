@@ -23,6 +23,7 @@ import ContactShow from '../contacts/show.vue';
 import CardShow from '../cards/show.vue';
 import NewContact from '../contacts/new.vue';
 import NewCard from '../cards/new.vue';
+import EmailShow from '../emails/show.vue';
 export default {
   data() {
     return {
@@ -54,7 +55,8 @@ export default {
     'contact-show': ContactShow,
     'card-show': CardShow,
     'new-contact-form': NewContact,
-    'new-card-form': NewCard
+    'new-card-form': NewCard,
+    'email-show': EmailShow
   },
   mounted() {
     let vm = this;
