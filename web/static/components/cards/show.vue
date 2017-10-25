@@ -7,7 +7,15 @@
           <div class="card-title-input-block">
             <inline-text-edit v-model="card.name"
                               v-on:input="updateCard"
-                              placeholder=""></inline-text-edit>
+                              placeholder="">
+            </inline-text-edit>
+            <small>
+            <board-column-select-modal
+              :boardId="card.boardId"
+              :boardColumnId="card.boardColumnId"
+              @input="updateCardBoard"
+              />
+            </small>
           </div>
         </div>
 
@@ -170,6 +178,7 @@
   import SelectMember from '../shared/select-member.vue';
   import ContactDetails from '../contacts/contact-details.vue';
   import DueDateModal from '../shared/due-date-modal.vue';
+  import BoardColumnSelectModal from '../shared/board-column-select-modal.vue';
 
   export default {
     props: ['cardId'],
@@ -251,7 +260,8 @@
       'add-contact': AddContact,
       'select-member': SelectMember,
       'contact-details': ContactDetails,
-      'due-date-modal': DueDateModal
+      'due-date-modal': DueDateModal,
+      'board-column-select-modal': BoardColumnSelectModal
     },
     methods: {
       showAttachmentPreview(attachment) {
@@ -394,7 +404,11 @@
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/'+this.cardId+'/attachments/' + attachId;
         this.$http.delete(url, {  });
       },
-
+      updateCardBoard(data) {
+        this.card.boardColumnId = data.boardColumnId;
+        this.card.boardId = data.boardId;
+        this.updateCard();
+      },
       updateCard() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/card/' + this.cardId;
         let cardParams = this.card;
@@ -494,6 +508,10 @@
           if (_payload.card) {
             this.card = _payload.card;
             this.cardContacts = _payload.cardContacts;
+          }
+          if (_payload.board) {
+            this.board = _payload.board;
+            this.boardColumns = _payload.board_columns;
           }
         });
 
