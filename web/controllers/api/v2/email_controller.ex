@@ -11,7 +11,7 @@ defmodule CercleApi.APIV2.EmailController do
     case conn.params["source"] do
     "postmark" ->
       company = Repo.get(Company, conn.params["company_id"])
-      email_api_token = Company.get_or_set_email_api_token(company)
+      email_api_token = Company.set_email_api_token(company)
 
       if conn.params["token"] == email_api_token do 
         conn

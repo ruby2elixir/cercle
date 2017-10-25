@@ -21,7 +21,7 @@
       <div class="box box-primary">
         <div class="box-body">
           <div class="row">
-            <div class="col-md-12" style="font-size:20px;">
+            <div class="col-md-12" style="">
               <h4>Integration</h4>
            	    Cercle CRM is fully compatible with <a href="http://www.zapier.com">Zapier</a>.
                 <Br />
@@ -30,8 +30,14 @@
                 You can also use this API KEY to use the Cercle API:
                 <%= if Guardian.Plug.current_token(@conn) do %>
                 <Br />
-              <textarea style="width:800px;height:400px; word-wrap:break-word;"><%= Guardian.Plug.current_token(@conn) %></textarea>
+              <textarea style="width:800px;height:100px; word-wrap:break-word;"><%= Guardian.Plug.current_token(@conn) %></textarea>
               <%=end%>
+              <Br />
+              <Br />
+              API Endpoint to keep a copy of all your emails with Postmark:
+              <textarea style="width:800px;height:100px; word-wrap:break-word;">https://www.cercle.co/api/v2/company/<%=@company.id%>/email?token=<%=@email_api_token%>&source=postmark
+              </textarea>
+
             </div>
           </div>
         </div>

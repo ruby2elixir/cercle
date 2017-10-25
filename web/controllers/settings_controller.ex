@@ -58,9 +58,10 @@ defmodule CercleApi.SettingsController do
   def api_key(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
     company = current_company(conn)
+    email_api_token = Company.set_email_api_token(company)
     conn
     |> put_layout("adminlte.html")
-    |> render "api_key.html", company: company
+    |> render "api_key.html", company: company, email_api_token: email_api_token
   end
 
   def team_invitation(conn, %{"user" => %{"email" => ""}}) do

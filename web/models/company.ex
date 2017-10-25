@@ -38,7 +38,7 @@ defmodule CercleApi.Company do
     |> validate_required([:title])
   end
 
-  def get_or_set_email_api_token(company) do
+  def set_email_api_token(company) do
     token = company.email_api_token
     if is_nil(token) do 
       token = Ecto.UUID.generate
