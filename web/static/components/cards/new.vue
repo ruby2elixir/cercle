@@ -5,7 +5,7 @@
       <span class='error' v-show="errors.name" v-for="msg in errors.name">{{msg}}</span>
     </div>
 
-    <div class="form-group" v-show="defaultBoardId==null">
+    <div class="form-group">
       <label>Board</label>
     </div>
     <div class="form-group">
@@ -34,7 +34,7 @@
 <script>
   import AddContact from './add-contact.vue';
   export default {
-    props: ['userId', 'companyId', 'boards', 'defaultBoardId'],
+    props: ['userId', 'companyId', 'defaultBoardId'],
     data: function() {
       return {
         name: null,
@@ -42,6 +42,7 @@
         columnId: null,
         columns: [],
         boardId: this.defaultBoardId,
+        boards: [],
         existingContactId: false,
         searchedContacts: [],
         contact: {
@@ -71,6 +72,12 @@
         };
         this.errors = {};
       },
+      loadBoards: function() {
+        let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/board/';
+        this.$http.get(url).then(resp => {
+          this.boards = resp.data.data;
+        });
+      },
       loadColumns: function() {
         let board = this.boards.filter( (b)  => {
           return b.id === parseInt(this.boardId);
@@ -94,7 +101,11 @@
             description: this.description
           }
         }).then(
-          resp => { this.$emit('close'); this.reset(); },
+          resp => {
+            if(this.defaultBoardId !== this.boardId)
+              window.location.href = '/company/' + Vue.currentUser.companyId + '/board/9';
+            this.$emit('close'); this.reset();
+          },
           resp => { this.errors = resp.body.errors; }
         );
       },
@@ -137,6 +148,7 @@
       }
     },
     mounted: function() {
+      this.loadBoards();
       this.loadColumns();
       this.$on('onOpen', function(options){
         this.$refs.name.focus();

@@ -183,8 +183,7 @@ export default {
             'board_id': this.board.id,
             'default-board-id': this.board.id,
             'user-id': Vue.currentUser.userId,
-            'company-id': this.board.companyId,
-            boards: [this.board]
+            'company-id': this.board.companyId
           }
         });
     },
