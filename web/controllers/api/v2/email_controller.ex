@@ -80,7 +80,6 @@ defmodule CercleApi.APIV2.EmailController do
   end
 
   def index(conn, %{"email" => email}) do
-    email = "mailbox+SampleHash@inbound.postmarkapp.com"
     company = current_company(conn)
     query = from p in Email,
       where: p.company_id == ^company.id,
