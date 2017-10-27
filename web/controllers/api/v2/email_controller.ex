@@ -31,6 +31,8 @@ defmodule CercleApi.APIV2.EmailController do
 
   defp parse_date(date) do
     date
+    |> String.replace(~r/\(\w+\)/, "")
+    |> String.trim
     |> Timex.parse!("%a, %d %b %Y %T %z", :strftime)
     |> Ecto.DateTime.cast!
   rescue

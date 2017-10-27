@@ -44,7 +44,7 @@ defmodule CercleApi.APIV2.EmailControllerTest do
         "To" => "xyz@abc.com",
         "Subject" => "Test subject",
         "HtmlBody" => "Test body",
-        "Date" => "Sun, 22 Oct 2017 00:12:41" }
+        "Date" => "Thu, 26 Oct 2017 16:32:02 -0400 (EDT)" }
 
     assert text_response(conn, 200) == "OK"
 
