@@ -13,7 +13,7 @@ defmodule CercleApi.APIV2.EmailController do
       company = Repo.get(Company, conn.params["company_id"])
       email_api_token = Company.set_email_api_token(company)
 
-      if conn.params["token"] == email_api_token do 
+      if conn.params["token"] == email_api_token do
         conn
       else
         conn
@@ -25,23 +25,21 @@ defmodule CercleApi.APIV2.EmailController do
     end
   end
 
-  def extract_emails([]) do
-    []
-  end
+  def extract_emails(emails) when is_nil(emails) when emails == [], do: []
+  def extract_emails([t]), do: [t["Email"]]
+  def extract_emails([h | t]), do: [h["Email"] | extract_emails(t)]
 
-  def extract_emails([t]) do
-    [t["Email"]]
-  end
-
-  def extract_emails([h | t]) do
-    [h["Email"] | extract_emails(t)]
+  defp parse_date(date) do
+    date
+    |> Timex.parse!("%a, %d %b %Y %T %z", :strftime)
+    |> Ecto.DateTime.cast!
+  rescue
+    _ -> Ecto.DateTime.cast!(Timex.now)
   end
 
   def create(conn, %{"source" => "postmark"}) do
     _params = conn.params
-    date = _params["Date"]
-    |> Timex.parse!("%a, %d %b %Y %T %z", :strftime)
-    |> Ecto.DateTime.cast!
+    date = parse_date(_params["Date"])
 
     to_emails = extract_emails(_params["ToFull"])
     cc_emails = extract_emails(_params["CcFull"])
@@ -53,7 +51,12 @@ defmodule CercleApi.APIV2.EmailController do
       "BccFull" => _params["BccFull"]
     }
 
-    email_params = %{"uid" => _params["MessageID"], "from_email" => _params["From"], "to" => to_emails, "cc" => cc_emails, "bcc" => bcc_emails, "subject" => _params["Subject"], "body" => _params["HtmlBody"], "date" => date, "company_id" => _params["company_id"], "meta" => meta}
+    email_params = %{
+      "uid" => _params["MessageID"], "from_email" => _params["From"],
+      "to" => to_emails, "cc" => cc_emails, "bcc" => bcc_emails,
+      "subject" => _params["Subject"], "body" => _params["HtmlBody"],
+      "date" => date, "company_id" => _params["company_id"], "meta" => meta
+    }
 
     email = Repo.get_by(Email, uid: email_params["uid"])
 

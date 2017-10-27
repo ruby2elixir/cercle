@@ -35,4 +35,18 @@ defmodule CercleApi.APIV2.EmailControllerTest do
 
     assert text_response(conn, 401) == "Unauthenticated"
   end
+
+  test "create/2 create email - bad date", state do
+    conn = post state[:conn],
+      "/api/v2/company/#{state[:company].id}/email?token=#{Company.set_email_api_token(state[:company])}&source=postmark",
+      %{"MessageID" => "123",
+        "From" => "abc@xyz.com",
+        "To" => "xyz@abc.com",
+        "Subject" => "Test subject",
+        "HtmlBody" => "Test body",
+        "Date" => "Sun, 22 Oct 2017 00:12:41" }
+
+    assert text_response(conn, 200) == "OK"
+
+  end
 end
