@@ -9,7 +9,7 @@
     <div class="row" v-if="emails.length">
       <div class="col-md-12">
         <h4>Emails</h4>
-        <table class="table table-striped">
+        <table class="table table-striped" v-if="showList === true">
           <tbody>
             <tr v-for="email in emails" @click="showEmail(email)">
               <td :title="email.fromEmail">{{ email.fromEmail | truncate(25) }}</td>
@@ -19,6 +19,14 @@
             </tr>
           </tbody>
         </table>
+        <div class="email-show" v-if="showList === false">
+          <p @click="showList = true"><span style="color:navy;cursor:pointer;">< Back to the List</span></p>
+          <p>From: {{ currentEmail.fromEmail }}</p>
+          <p>To: {{ currentEmail.to[0] }}</p>
+          <p>Date: {{ currentEmail.date }}</p>
+          <p>Subject: {{ currentEmail.subject }}</p>
+          <p v-html="currentEmail.body"></p>
+        </div>
       </div>
     </div>
   </div>
@@ -31,7 +39,9 @@ export default {
   props: ['contact'],
   data() {
     return {
-      emails: []
+      emails: [],
+      showList: true,
+      currentEmail: null
     };
   },
   components: {
@@ -59,13 +69,8 @@ export default {
     },
 
     showEmail(email) {
-      this.$glmodal.$emit(
-        'open',
-        {
-          view: 'email-show', class: 'email-modal',
-          data: { 'email': email }
-        }
-      );
+      this.currentEmail = email;
+      this.showList = false;
     }
   },
   mounted() {
