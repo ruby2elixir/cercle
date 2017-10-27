@@ -24,7 +24,7 @@
           <p>From: {{ currentEmail.fromEmail }}</p>
           <p>To: {{ currentEmail.to[0] }}</p>
           <p>Date: {{ currentEmail.date }}</p>
-          <p>Subject: {{ currentEmail.subject }}</p>
+          <p><b>Subject: {{ currentEmail.subject }}</b></p>
           <p v-html="currentEmail.body"></p>
         </div>
       </div>
