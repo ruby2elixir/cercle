@@ -17,6 +17,7 @@ defmodule CercleApi.APIV2.BoardController do
 
     query = from p in Board,
       where: p.company_id == ^company.id,
+      where: p.archived == false,
       order_by: [desc: p.updated_at],
       preload: [:board_columns]
 
