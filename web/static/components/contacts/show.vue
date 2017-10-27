@@ -15,7 +15,7 @@
               <td :title="email.fromEmail">{{ email.fromEmail | truncate(25) }}</td>
               <td>{{ email.subject }}</td>
               <td>{{ renderText(email.body) }}</td>
-              <td>{{ email.date|formatDate }}</td>
+              <td>{{ email.date|formatDateTime }}</td>
             </tr>
           </tbody>
         </table>

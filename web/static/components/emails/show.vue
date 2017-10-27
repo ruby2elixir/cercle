@@ -1,7 +1,8 @@
 <template>
   <div class="email-show">
-    <p>From: {{ email.from_email }}</p>
-    <p>To: {{ email.to_email }}</p>
+    <p>From: {{ email.fromEmail }}</p>
+    <p>To: {{ email.to[0] }}</p>
+    <p>Date: {{ email.date }}</p>
     <p>Subject: {{ email.subject }}</p>
 
     <p v-html="email.body"></p>
