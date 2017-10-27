@@ -57,7 +57,8 @@ defmodule CercleApi.APIV2.EmailController do
       "uid" => _params["MessageID"], "from_email" => _params["From"],
       "to" => to_emails, "cc" => cc_emails, "bcc" => bcc_emails,
       "subject" => _params["Subject"], "body" => _params["HtmlBody"],
-      "date" => date, "company_id" => _params["company_id"], "meta" => meta
+      "body_text" => _params["TextBody"], "date" => date,
+      "company_id" => _params["company_id"], "meta" => meta
     }
 
     email = Repo.get_by(Email, uid: email_params["uid"])

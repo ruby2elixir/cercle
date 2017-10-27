@@ -3,7 +3,7 @@ defmodule CercleApi.EmailTest do
 
   alias CercleApi.Email
 
-  @valid_attrs %{body: "some content", company_id: 42, date: %{day: 17, hour: 14, min: 0, month: 4, sec: 0, year: 2010}, uid: "some content", from_email: "some content", subject: "some content", to_email: "some content"}
+  @valid_attrs %{meta: %{test: "ok"}, body: "some content", body_text: "some content", company_id: 42, date: %{day: 17, hour: 14, min: 0, month: 4, sec: 0, year: 2010}, uid: "some content", from_email: "some content", subject: "some content", to: ["some content"]}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
