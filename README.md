@@ -6,6 +6,20 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 [Try Cercle Today. Click here: http://www.cercle.co/register](http://www.cercle.co/register)
 
+## Create Boards
+
+You can create People Board or Project Board.
+
+- In People Board, you can track your deals,
+your clients, your marketing automation.
+
+- You can also create Project Board to track your
+tasks, your projects.
+
+## Connect with Zapier
+
+You can use Zapier to do Marketing Automation. Move a People Card into a new column, then it triggers an email sequence for example.
+
 ## Why Cercle?
 - visual like Trello
 - simple to manage your contacts
