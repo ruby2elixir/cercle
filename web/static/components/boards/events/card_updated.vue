@@ -13,7 +13,7 @@ export default {
     updatedCardMsg(meta) {
       let h = ['updated '];
       if (this.item.cardName) {
-        h.push(this.item.cardName + ' on ');
+        h.push( '<u>' + this.item.cardName + '</u> on ');
       }
       h.push(this.boardName(meta));
       h.push(this.diff());

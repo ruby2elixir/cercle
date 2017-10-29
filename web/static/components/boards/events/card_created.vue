@@ -1,6 +1,6 @@
 <template>
   <event :item="item" v-on:clickByEvent="$emit('clickByEvent')">
-    added {{item.cardName}} 
+    added <u>{{item.cardName}}</u>
     to {{toName}}
   </event>
 
