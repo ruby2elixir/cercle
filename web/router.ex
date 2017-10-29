@@ -108,7 +108,8 @@ defmodule CercleApi.Router do
 
     post "/register", UserController, :create
     post "/login", SessionController, :create
-    resources "/organizations", OrganizationController
+    resources "/companies", CompanyController
+    
   end
 
   scope "/api/v2/company/:company_id", CercleApi.APIV2 do
@@ -120,7 +121,7 @@ defmodule CercleApi.Router do
     put "/contact/:id/utags", ContactController, :utags
     delete "/contact/multiple/delete", ContactController, :multiple_delete
 
-    resources "/companies", CompanyController
+    resources "/organizations", OrganizationController
 
     resources "/card", CardController do
       resources "/attachments", CardAttachmentController,

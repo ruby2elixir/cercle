@@ -4,7 +4,7 @@ defmodule CercleApi.APIV2.ContactController do
   use Timex
 
   alias CercleApi.{Repo, Contact, Tag, ContactTag, TimelineEvent, Card,
-                   CardService, ContactService}
+                   CardService}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -52,7 +52,6 @@ defmodule CercleApi.APIV2.ContactController do
           [:organization, :tags, company: [:users, boards: [:board_columns]]]
         )
         |> Contact.preload_cards
-        ContactService.insert(contact)
         conn
         |> put_status(:created)
         |> render("show.json", contact: contact)
@@ -103,7 +102,6 @@ defmodule CercleApi.APIV2.ContactController do
               contact: contact,
               organization: (contact.organization || %{})})
 
-        ContactService.update(contact)
         render(conn, "show.json", contact: contact)
       {:error, changeset} ->
         conn
@@ -224,6 +222,5 @@ defmodule CercleApi.APIV2.ContactController do
     end
 
     Repo.delete!(contact)
-    ContactService.delete(contact)
   end
 end
