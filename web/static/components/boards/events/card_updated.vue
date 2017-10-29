@@ -15,7 +15,7 @@ export default {
       if (this.item.cardName) {
         h.push(this.item.cardName + ' on ');
       }
-      h.push('<a href="' + this.item.boardId + '">'+this.boardName(meta)+'</a>');
+      h.push(this.boardName(meta));
       h.push(this.diff());
       return h.join('');
     },
