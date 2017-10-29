@@ -4,7 +4,7 @@ defmodule CercleApi.CardService do
   """
 
   use CercleApi.Web, :model
-  alias CercleApi.{Repo, Card, Board, Contact, WebhookSubscription, TimelineEvent}
+  alias CercleApi.{Repo, Card, Board, Contact, TimelineEvent}
 
   def payload_data(card) do
     board = Repo.get(Board, card.board_id)
@@ -55,13 +55,6 @@ defmodule CercleApi.CardService do
 
   end
 
-  def get_subscriptions(user_id, event) do
-    query = from p in WebhookSubscription,
-      where: p.user_id == ^user_id,
-      where: p.event == ^event
-    webhook_subscriptions = query
-    |> Repo.all
-  end
 
   def insert(user, card) do
     event = "card.created"
@@ -92,11 +85,7 @@ defmodule CercleApi.CardService do
     |> Repo.preload([board_columns: Board.preload_query])
     |> CercleApi.BoardNotificationService.update_notification
 
-    if !is_nil(card.user_id) do
-      for webhook <- get_subscriptions(card.user_id, event) do
-        HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
-      end
-    end
+
   end
 
   def update(user, card, previous_card \\ %{}) do
@@ -135,11 +124,7 @@ defmodule CercleApi.CardService do
     |> Repo.preload([board_columns: Board.preload_query])
     |> CercleApi.BoardNotificationService.update_notification
 
-    if !is_nil(card.user_id) do
-      for webhook <- get_subscriptions(card.user_id, event) do
-        HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
-      end
-    end
+
   end
 
   def delete(card) do
@@ -150,8 +135,7 @@ defmodule CercleApi.CardService do
       data: payload_data(card)
     }
     CercleApi.ActivityService.delete("card", card.id)
-    for webhook <- get_subscriptions(card.user_id, event) do
-      HTTPoison.post(webhook.url, Poison.encode!(payload), [{"Content-Type", "application/json"}])
-    end
+
+
   end
 end

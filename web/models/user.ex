@@ -29,7 +29,6 @@ defmodule CercleApi.User do
     has_many :activities, CercleApi.Activity, on_delete: :delete_all
     has_many :timeline_event, CercleApi.TimelineEvent
     has_many :cards, CercleApi.Card
-    has_many :webhook_subscriptions, CercleApi.WebhookSubscription
 
     has_many :tokens, ExOauth2Provider.OauthAccessTokens.OauthAccessToken, foreign_key: :resource_owner_id
   end

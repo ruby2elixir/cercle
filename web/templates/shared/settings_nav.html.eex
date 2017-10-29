@@ -10,6 +10,5 @@
   </li>
   
   <li class="<%= assigns[:active] && (@active == :integration) && "active" %>"><a href="/company/<%= @conn.assigns[:current_company].id %>/settings/api_key"><i class="fa fa-edit"></i>Integration</a></li>
-  <li class="<%= assigns[:active] && (@active == :webhook) && "webhook" %>"><a href="/company/<%= @conn.assigns[:current_company].id %>/settings/webhooks"><i class="fa fa-edit"></i>Webhook</a></li>
   <li><a href="/company/<%= @conn.assigns[:current_company].id %>/import"><i class="fa fa-edit"></i>Import</a></li>
 </ul>

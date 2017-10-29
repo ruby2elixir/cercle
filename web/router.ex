@@ -100,7 +100,6 @@ defmodule CercleApi.Router do
     post "/settings/team_invitation", SettingsController, :team_invitation
     get "/settings/tags_edit", SettingsController, :tags_edit
     get "/settings/api_key", SettingsController, :api_key
-    get "/settings/webhooks", SettingsController, :webhooks
 
   end
 
@@ -109,18 +108,19 @@ defmodule CercleApi.Router do
 
     post "/register", UserController, :create
     post "/login", SessionController, :create
-    resources "/companies", CompanyController
     resources "/organizations", OrganizationController
-    resources "/webhooks", WebhookSubscriptionController
   end
 
   scope "/api/v2/company/:company_id", CercleApi.APIV2 do
     pipe_through [:api, :api_auth]
-    post "/contact/export", ContactExportController, :export
     resources "/contact", ContactController
+
+    post "/contact/export", ContactExportController, :export
     put "/contact/:id/update_tags", ContactController, :update_tags
     put "/contact/:id/utags", ContactController, :utags
     delete "/contact/multiple/delete", ContactController, :multiple_delete
+
+    resources "/companies", CompanyController
 
     resources "/card", CardController do
       resources "/attachments", CardAttachmentController,
@@ -141,7 +141,6 @@ defmodule CercleApi.Router do
     post "/bulk_tag_or_untag_contacts", BulkController, :bulk_tag_or_untag_contacts
     get "/user", UserController, :index
     resources "/timeline_events", TimelineEventController
-    resources "/organizations", OrganizationController
 
     resources "/email", EmailController
   end
