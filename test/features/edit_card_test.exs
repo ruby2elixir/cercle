@@ -66,7 +66,7 @@ defmodule CercleApi.EditCardTest do
 
     refresh_card = Repo.get(Card, card.id)
     assert Timex.format!(refresh_card.due_date, "%F %T", :strftime) ==
-      Timex.format!(Timex.today, "%F 21:00:00", :strftime)
+      Timex.format!(Timex.today, "%F 22:00:00", :strftime)
   end
 
   defp visit_to_card(session, url) do

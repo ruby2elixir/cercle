@@ -34,6 +34,6 @@ defmodule CercleApi.AddTaskToCardTest do
     |> assert_has(css("body.async-ready"))
     task = Repo.get_by(Activity, card_id: card.id)
     assert Timex.format!(task.due_date, "%F %T", :strftime) ==
-      Timex.format!(Timex.today, "%F 18:00:00", :strftime)
+      Timex.format!(Timex.today, "%F 19:00:00", :strftime)
   end
 end

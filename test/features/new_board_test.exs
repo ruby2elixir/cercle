@@ -12,6 +12,6 @@ defmodule CercleApi.NewBoardTest do
     |> fill_in(css(".board_name"), with: "Test Board")
     |> click(button("CREATE"))
     |> visit("/company/#{user_company.id}/board")
-    |> assert_has(css("#board-list-app", text: "Test Board"))
+    |> assert_has(css(".board-list-app", text: "Test Board"))
   end
 end
