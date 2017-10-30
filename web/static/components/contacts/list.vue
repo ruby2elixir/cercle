@@ -6,7 +6,7 @@
 
       <div class="row">
         <div class="col-xs-6">
-          <form class="navbar-form" role="search" v-on:submit.prevent>
+          <form  style="max-width:300px;" role="search" v-on:submit.prevent>
             <div class="input-group add-on">
               <input class="form-control" placeholder="Search" name="q" type="text" v-model="searchTerm" />
               <div class="input-group-btn">
