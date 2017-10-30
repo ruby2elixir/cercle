@@ -10,11 +10,10 @@ Easy to keep track of your sales, partnerships, support tickets, onboarding clie
 
 You can create People Board or Project Board.
 
-- In People Board, you can track your deals,
+- With People Board, you can track your deals,
 your clients, your marketing automation.
 
-- You can also create Project Board to track your
-tasks, your projects.
+- With Project Board, you can track your tasks, your projects.
 
 ## Connect with Zapier
 
