@@ -1,4 +1,1 @@
-<board
-  id="board-app"
-  board_id="<%= Poison.encode!(@board.id) %>"
-  ></board>
+<router-view id="boards-app"></router-view>

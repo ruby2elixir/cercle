@@ -22,7 +22,9 @@ defmodule CercleApi.APIV2.CardViewTest do
       contact_ids: card.contact_ids,
       user_id: card.user_id,
       board: board,
+      board_id: board.id,
       board_column: board_column,
+      board_column_id: board_column.id,
       contact: nil
     }
 

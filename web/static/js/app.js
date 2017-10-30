@@ -28,7 +28,8 @@ import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
 import { directive as onClickOutside } from 'vue-on-click-outside';
 import linkify from 'vue-linkify';
-
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
 Vue.directive('linkified', linkify);
 Vue.directive('on-click-outside', onClickOutside);
 
@@ -81,6 +82,10 @@ Vue.http.interceptors.push((request, next) => {
 
 import ContactList from '../components/contacts/list.vue';
 import Board from '../components/boards/board.vue';
+import BoardSidebar from '../components/boards/board-sidebar.vue';
+import ToggleBoardSidebar from '../components/boards/board-sidebar-toggle.vue';
+import BoardNew from '../components/boards/new.vue';
+import BoardList from '../components/boards/list.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
 import ArchiveBoard from '../components/boards/archive.vue';
@@ -205,6 +210,38 @@ if ($('#contacts-app').length > 0) {
   });
 }
 
+if ($('#boards-app').length > 0) {
+  const routes = [
+    //{ path: '/company/:company_id/board/new', component: BoardNew },
+    { path: '/company/:company_id/board', component: BoardList },
+    {
+      path: '/company/:company_id/board/:board_id',
+      components: {
+        default: Board,
+        'board-sidebar': BoardSidebar,
+        'board-sidebar-toggle': ToggleBoardSidebar
+      },
+      props: {
+        default: true,
+        'board-sidebar': true,
+        'board-sidebar-toggle': false
+      }
+    }
+  ];
+  const router = new VueRouter({
+    mode: 'history',
+    routes: routes
+  });
+  new Vue({
+    router: router,
+    mounted() {
+      window.addEventListener('keyup', (event) => {
+        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
+      });
+    }
+  }).$mount('.main-app');
+}
+
 if ($('#board-app').length > 0) {
   new Vue({
     el: '#board-app',
@@ -299,30 +336,6 @@ if ($('#webhooks-app').length > 0) {
   });
 }
 // end - Vue apps
-
-$('#toggle-activity-panel').on('click', function(){
-  $('.control-sidebar-light').toggleClass('open');
-  $(this).hide();
-});
-
-$('#close-sidebar').on('click', function(){
-  $('.control-sidebar-light').toggleClass('open');
-  $('#toggle-activity-panel').show();
-});
-
-$('.show-archived-boards').on('click', function(e){
-  e.preventDefault();
-  $('.board-archived-true').show();
-  $(this).hide();
-  $('.hide-archived-boards').show();
-});
-
-$('.hide-archived-boards').on('click', function(e){
-  e.preventDefault();
-  $('.board-archived-true').hide();
-  $(this).hide();
-  $('.show-archived-boards').show();
-});
 
 // Login page
 if ($('#session_time_zone').length > 0) {

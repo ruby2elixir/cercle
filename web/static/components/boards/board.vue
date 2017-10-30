@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='board-page'>
     <section class="content-header clearfix">
       <h2 class="">
         <inline-edit v-model="board.name" v-on:input="updateBoard" placeholder="Board Name" class='board-name'></inline-edit>
@@ -102,6 +102,11 @@ export default {
       newColumn: {},
       channel: null
     };
+  },
+  beforeRouteEnter (to, from, next) {
+    document.querySelector('.content-wrapper').classList.add('board');
+    document.querySelector('.wrapper').classList.add('wrapper_board');
+    next();
   },
   components: {
     'inline-edit': InlineEdit,
@@ -234,6 +239,7 @@ export default {
       });
     },
     buildApiUrl(path) { return '/api/v2/company/' + Vue.currentUser.companyId + path; }
+
   },
   computed: {
     boardUrl() {
@@ -253,7 +259,7 @@ export default {
     padding-bottom: 1px !important;
     a {     color: #333; }
     }
-  #board-app {
+  .board-page {
     .column {
       .list-group {
         min-height: 25px;
