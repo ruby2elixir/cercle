@@ -66,6 +66,10 @@ body {
     overflow: hidden !important;
 }
 
+.wrapper_board .container {
+  width: 100%;
+  padding: 0px;
+}
 body, form, ul, table {
   margin-top: 0px;
   margin-bottom: 0px;

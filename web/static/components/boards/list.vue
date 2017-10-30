@@ -26,13 +26,13 @@
 </template>
 <script>
   export default {
-  props: [],
-  data() {
-  return {
-  boards: [],
-  archived: false
-  };
-  },
+    props: [],
+    data() {
+      return {
+        boards: [],
+        archived: false
+      };
+    },
     beforeRouteEnter (to, from, next) {
       document.querySelector('.content-wrapper').classList.remove('board');
       document.querySelector('.wrapper').classList.remove('wrapper_board');
@@ -57,20 +57,20 @@
           return !board.archived;
         }
       },
-  loadBoards() {
-    let url = '/api/v2/company/' + Vue.currentUser.companyId + '/board';
-    let params = {};
-    if (this.archived) {
-      params['archived'] = true;
+      loadBoards() {
+        let url = '/api/v2/company/' + Vue.currentUser.companyId + '/board';
+        let params = {};
+        if (this.archived) {
+          params['archived'] = true;
+        }
+        this.$http.get(url, {params: params}).then(resp => {
+          this.boards = resp.data.data;
+        });
+      }
+    },
+    mounted() {
+      this.loadBoards();
     }
-    this.$http.get(url, {params: params}).then(resp => {
-      this.boards = resp.data.data;
-    });
-  }
-  },
-  mounted() {
-  this.loadBoards();
-  }
   };
 </script>
 <style lang="sass">

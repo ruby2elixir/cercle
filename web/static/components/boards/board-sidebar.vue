@@ -32,9 +32,9 @@
   import BoardRecentActivities from './recent_timeline_events.vue';
   export default {
     props: ['board_id'],
-  data() {
-  return {};
-  },
+    data() {
+      return {};
+    },
     components: {
       'archive-board': ArchiveBoard,
       'activities': BoardRecentActivities
@@ -49,6 +49,8 @@
       close() {
         let elem = document.querySelector('.control-sidebar-light');
         elem.classList.toggle('open');
+        let menu = document.querySelector('.board-sidebar-toogle');
+        menu.classList.toggle('open');
       }
     }
   };
