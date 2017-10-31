@@ -17,7 +17,7 @@
             </a>
           </div>
           <div id="archive-board">
-            <archive-board board-id="board_id" archived="false" />
+            <archive-board :board-id="board_id" archived="false" />
           </div>
 
           <div id="recent-activities-app">
