@@ -30,6 +30,7 @@ defmodule CercleApi.APIV2.BoardView do
       name: board.name,
       type_of_card: board.type_of_card,
       company_id: board.company_id,
+      archived: board.archived,
       board_columns: render_many(
         board.board_columns,
         CercleApi.APIV2.BoardColumnView,
