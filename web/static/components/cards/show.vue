@@ -580,6 +580,7 @@
             this.activeContactIndex = 0;
           });
         }
+        this.leaveChannel();
         this.cardChannel = this.socket.channel(channelTopic, {});
         this.subscribe();
         this.cardChannel.join()
