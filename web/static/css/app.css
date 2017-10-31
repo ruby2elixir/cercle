@@ -66,7 +66,7 @@ body {
     overflow: hidden !important;
 }
 
-.wrapper_board .main-app .container {
+.wrapper_board .main-app.board-app .container {
   width: 100%;
   padding: 0px;
 }
