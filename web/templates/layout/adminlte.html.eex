@@ -103,7 +103,7 @@
             <%= render @view_module, @view_template, assigns %>
           </div><!-- /.container -->
         <%end%>
-        <router-view name="board-sidebar"></router-view>
+        <router-view name="board-sidebar" ref="boardSidebar"></router-view>
       </div><!-- /.content-wrapper -->
 
 

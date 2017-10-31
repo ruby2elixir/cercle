@@ -17,7 +17,7 @@
             </a>
           </div>
           <div id="archive-board">
-            <archive-board :board-id="board_id" archived="false" />
+            <archive-board :board-id="board_id" :archived="boardStatus" />
           </div>
 
           <div id="recent-activities-app">
@@ -32,8 +32,10 @@
   import BoardRecentActivities from './recent_timeline_events.vue';
   export default {
     props: ['board_id'],
-    data() {
-      return {};
+    data: function() {
+      return {
+        boardStatus: false
+      };
     },
     components: {
       'archive-board': ArchiveBoard,
@@ -46,6 +48,10 @@
       }
     },
     methods: {
+      setBoardStatus(status) {
+        this.boardStatus = status;
+      },
+
       close() {
         let elem = document.querySelector('.control-sidebar-light');
         elem.classList.toggle('open');

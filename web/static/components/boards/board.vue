@@ -235,6 +235,7 @@ export default {
     },
     initComponent() {
       this.$http.get(this.boardUrl).then(resp => {
+        this.$parent.$refs.boardSidebar.setBoardStatus(resp.data.data.archived);
         this.board = resp.data.data;
       });
     },

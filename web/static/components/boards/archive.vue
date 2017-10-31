@@ -17,8 +17,8 @@
 
 <template>
   <div>
-    <a v-show="archived == 'false'" class="archive" @click="archive">Archive board</a>
-    <a v-show="archived == 'true'" class="unarchive" @click="unarchive">Restore board</a>
+    <a v-if="!archived" class="archive" @click="archive">Archive board</a>
+    <a v-if="archived" class="unarchive" @click="unarchive">Restore board</a>
   </div>
 </template>
 
@@ -28,6 +28,7 @@ export default {
   props: ['boardId', 'archived'],
   data: function() {
     return {
+
     };
   },
   methods: {
@@ -48,5 +49,6 @@ export default {
       }
     }
   }
+
 };
 </script>
