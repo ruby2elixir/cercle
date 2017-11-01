@@ -123,7 +123,7 @@ $(function() {
     if ((jsonData['contact']['full_name'] || jsonData['contact']['first_name'] && jsonData['contact']['last_name']) && jsonData['organization']['name']){
       $(this).text('Processing..').addClass('disabled');
       $.ajax({
-        url: '/view_uploaded_data',
+        url: '/company/'+ companyId +'/view_uploaded_data',
         type: 'POST',
         dataType: 'json',
         headers: {
@@ -169,7 +169,7 @@ $(function() {
     if(uploadType){
       // contact-import
       $.ajax({
-        url: '/create_nested_data',
+        url: '/company/'+ companyId +'/create_nested_data',
         method: 'POST',
         headers: {
           'Authorization': 'Bearer '+jwtToken,

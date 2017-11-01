@@ -20,7 +20,7 @@
 <div class="upload-outer-box" id="sec-1">
 	<div class="upload-dashed-box">
 		<div class="upload-info-box">
-		  <form id="fileupload" action="/import_data" method="POST" enctype="multipart/form-data">
+		  <form id="fileupload" action="<%=front_import_path(@conn, :import_data, @conn.assigns[:current_company].id)%>" method="POST" enctype="multipart/form-data">
 		    <div class="row fileupload-buttonbar">
 		      <div class="col-md-12">
 		        <span class="btn btn-success fileinput-button">
@@ -66,7 +66,7 @@
 </div>
 <div id="action-btns-step1">
 	<%=link "Next", to: "" , class: "btn btn-success pull-right disabled", id: "move-to-step2", style: "margin-left:5px"%>
-	<%=link "Cancel Import", to: "/contact", class: "cancel-import btn btn-danger pull-right"%>
+	<%=link "Cancel Import", to: front_contact_path(@conn, :index, @conn.assigns[:current_company].id), class: "cancel-import btn btn-danger pull-right"%>
 </div>
 <div class="upload-outer-box hidden" id="sec-2">
 	<div class="mapping-info">
@@ -146,6 +146,7 @@
   var contact = {};
   var organization ={};
   var jsonData = {};
+  var companyId = <%=@conn.assigns[:current_company].id%>;
 
   function allowDrop(ev) {
   ev.preventDefault();
