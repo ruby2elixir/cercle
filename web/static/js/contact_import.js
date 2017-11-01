@@ -184,7 +184,7 @@ $(function() {
           $('#final-progress .progress-bar').toggleClass('hidden');
           $('.content-wrapper .container').prepend('<p class="alert alert-success" role="alert" style="border-radius:0px;">'+result.message+'</p>');
           $('#move-to-final').text('Finished').addClass('disabled');
-          window.location = '/contact';
+          window.location = '/company/'+companyId+'/contact';
         },
         error: function(error) {
           $('#final-progress .progress-bar').toggleClass('hidden');
