@@ -13,12 +13,17 @@
         <%= hidden_input f, :company_id %>
         
         <Br />
-        <div style="font-size:19px;margin-bottom:10px;">Type of board
-        </div>
-        <div style="font-size:15px;line-height: 30px;">
-        <%= radio_button(f, :type_of_card, "0") %>&nbsp;&nbsp;Project Board (to track tasks and manage projects)
+         <div class="row" style="font-size:17px;line-height: 30px;">
+          <div class="col-sm-3">
+        <%= radio_button(f, :type_of_card, "0") %>&nbsp;&nbsp;Project Board
         <br />
-        <%= radio_button(f, :type_of_card, "1") %>&nbsp;&nbsp;People Board (to track business deals or manage clients)
+        <i>Track Tasks</i>
+        </div>
+        <div class="col-sm-9">
+        <%= radio_button(f, :type_of_card, "1") %>&nbsp;&nbsp;People Board
+        <br />
+        <i>Track People, Clients, Prospects, Deals</i>
+      </div>
         </div>
         <Br />
          </div>
