@@ -93,7 +93,6 @@ import NotificationApp from '../components/shared/notification.vue';
 import GlModalWindow from '../components/shared/glmodal.vue';
 import GlAttachmentPreview from '../components/shared/glpreview.vue';
 import UserNavBar from '../components/shared/navbar.vue';
-import WebhooksApp from '../components/shared/webhooks.vue';
 
 Vue.use(require('vue-autosize'));
 const NotificationBus = new Vue();
@@ -323,15 +322,6 @@ if ($('#global-attachment-preview').length > 0) {
       window.addEventListener('keyup', (event) => {
         if (event.keyCode === 27) { this.$emit('esc-keyup'); }
       });
-    }
-  });
-}
-
-if ($('#webhooks-app').length > 0) {
-  new Vue({
-    el: '#webhooks-app',
-    components: {
-      'webhooks': WebhooksApp
     }
   });
 }
