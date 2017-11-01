@@ -1,8 +1,5 @@
 <template>
  <tr>
-  <td style="width:30px;">
-    <img :src="letterUrl" style="border-radius:14px;" />
-  </td>
   <td style="font-size:16px;">
     <a v-on:click.stop="$emit('card-show')" style="color: #565656;">
       <span class="activity-name"> {{item.title || ('Task#' + item.id) }}</span>

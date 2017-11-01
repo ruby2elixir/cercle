@@ -9,13 +9,13 @@
         </div>
       </div>
 
-      <div class="row" v-if="!emptyList">
+      <div class="row" v-if="activities.length > 0">
         <div class="col-xs-12">
           <h3>Tasks with due date</h3>
         </div>
       </div>
 
-      <div class="row activity-list" v-if="activities.length > 0">
+      <div class="row activity-list" >
         <div class="col-xs-12">
           <div v-for="(activities_list, card_name) in groupBy(activities, 'card')" class="panel">
             <div class="panel-heading">
@@ -43,17 +43,11 @@
         </div>
       </div>
 
-      <div class="row" v-if="!emptyList && activities.length == 0">
-        <div class="col-xs-12">
-          <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
-        </div>
-      </div>
-
-      <div class="row" v-if="!emptyList">
+      <div class="row" v-if="cards.length > 0">
         <div class="col-xs-12"><h3>Cards assigned to me</h3></div>
       </div>
 
-      <div class="row card-list" v-if="cards.length > 0">
+      <div class="row card-list" >
         <div class="col-xs-12">
 
           <div v-for="(card_list, board_name) in cardItems" class="panel">
@@ -76,12 +70,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="row" v-if="!emptyList && cards.length == 0">
-        <div class="col-xs-12">
-          <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
         </div>
       </div>
     </section>
