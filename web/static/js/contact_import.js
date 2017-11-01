@@ -1,6 +1,7 @@
 $(function() {
   /*global someFunction jsonData:true*/
   /*global someFunction uploadType:true*/
+  /*global someFunction companyId:true*/
 
   var tempFile='';
   var fileName='';
