@@ -1,5 +1,5 @@
 <template>
-  <a href="#" @click="toggleSidebar()" class="btn pull-right board-sidebar-toogle open">
+  <a @click="toggleSidebar()" class="btn pull-right board-sidebar-toogle open">
     <i class="fa fa-fw fa-ellipsis-h"></i>
     Show Menu
   </a>

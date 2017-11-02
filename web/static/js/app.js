@@ -269,29 +269,6 @@ if ($('#activities-app').length > 0) {
   });
 }
 
-if ($('#archive-board').length > 0) {
-  new Vue({
-    el: '#archive-board',
-    components: {
-      'archive-board': ArchiveBoard
-    }
-  });
-}
-
-if ($('#recent-activities-app').length > 0) {
-  new Vue({
-    el: '#recent-activities-app',
-    components: {
-      'activities': BoardRecentActivities
-    },
-    mounted() {
-      window.addEventListener('keyup', (event) => {
-        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
-      });
-    }
-  });
-}
-
 if ($('#notification-app').length > 0) {
   new Vue({
     el: '#notification-app',

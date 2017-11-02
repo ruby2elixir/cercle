@@ -16,13 +16,8 @@
               Edit Board
             </a>
           </div>
-          <div id="archive-board">
-            <archive-board :board-id="board_id" :archived="boardStatus" />
-          </div>
-
-          <div id="recent-activities-app">
-            <activities :board_id="board_id"/>
-          </div>
+          <div><archive-board :board-id="board_id" :archived="boardStatus" /></div>
+          <div><activities :board_id="board_id"/></div>
         </div>
       </aside>
 
