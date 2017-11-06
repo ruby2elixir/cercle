@@ -46,22 +46,26 @@
                          :key="card.id"
                          :column_id="col.id">
                       <div class="portlet-content">
-                        <div v-on:click.stop="cardShow(card.id)">
+                        <router-link :to="cardUrl(card)">
                           <span class='name'>
                             <div>
-                            <span v-if="card.mainContact">
-                              {{card.mainContact.name}}
-                              <span v-if="card.name" class="contact-name">
-                                - {{card.name}}
+                              <span v-if="card.mainContact">
+                                {{card.mainContact.name}}
+                                <span v-if="card.name" class="contact-name">
+                                  - {{card.name}}
+                                </span>
                               </span>
-                            </span>
-                            <span v-else>{{card.name}}</span>
+                              <span v-else>{{card.name}}</span>
                             </div>
-                            <img :src="card.user.profileImageUrl" class='profile-image' style="max-width:25px;max-height:30px;margin-top:10px;border-radius:4px;" :title="card.user.userName" v-if="card.user"  />
+                            <img :src="card.user.profileImageUrl"
+                                 class='profile-image'
+                                 style="max-width:25px;max-height:30px;margin-top:10px;border-radius:4px;"
+                                 :title="card.user.userName" v-if="card.user"  />
 
                           </span>
+                        </router-link>
+                        <div>
                         </div>
-                        <div></div>
 
                       </div>
                     </div>
@@ -106,7 +110,14 @@ export default {
   beforeRouteEnter (to, from, next) {
     document.querySelector('.content-wrapper').classList.add('board');
     document.querySelector('.wrapper').classList.add('wrapper_board');
-    next();
+    next(vm => {
+      if (to.name === 'cardPage') { vm.cardShow(to.params.cardId); }
+    });
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'cardPage') { this.cardShow(to.params.cardId); }
+    }
   },
   components: {
     'inline-edit': InlineEdit,
@@ -118,6 +129,9 @@ export default {
     'dropdown': VueStrap.dropdown
   },
   methods: {
+    cardUrl(card) {
+      return '/company/' + Vue.currentUser.companyId + '/board/' + this.board.id + '/card/' + card.id;
+    },
     addColumn() {
       if (this.newColumn.name && this.newColumn.name !== '') {
         let url = this.buildApiUrl('/board_column');

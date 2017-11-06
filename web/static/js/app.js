@@ -93,6 +93,7 @@ import NotificationApp from '../components/shared/notification.vue';
 import GlModalWindow from '../components/shared/glmodal.vue';
 import GlAttachmentPreview from '../components/shared/glpreview.vue';
 import UserNavBar from '../components/shared/navbar.vue';
+import CardPage from '../components/cards/show.vue';
 
 Vue.use(require('vue-autosize'));
 const NotificationBus = new Vue();
@@ -211,7 +212,6 @@ if ($('#contacts-app').length > 0) {
 
 if ($('#boards-app').length > 0) {
   const routes = [
-    //{ path: '/company/:company_id/board/new', component: BoardNew },
     { path: '/company/:company_id/board', component: BoardList },
     {
       path: '/company/:company_id/board/:board_id',
@@ -224,6 +224,21 @@ if ($('#boards-app').length > 0) {
         default: true,
         'board-sidebar': true,
         'board-sidebar-toggle': false
+      }
+    },
+    {
+      path: '/company/:companyId/board/:board_id/card/:cardId',
+      name: 'cardPage',
+      components: {
+        default: Board,
+        'board-sidebar': BoardSidebar,
+        'board-sidebar-toggle': ToggleBoardSidebar
+      },
+      props: {
+        default: true,
+        'board-sidebar': true,
+        'board-sidebar-toggle': false
+
       }
     }
   ];
@@ -239,20 +254,6 @@ if ($('#boards-app').length > 0) {
       });
     }
   }).$mount('.main-app');
-}
-
-if ($('#board-app').length > 0) {
-  new Vue({
-    el: '#board-app',
-    components: {
-      'board': Board
-    },
-    mounted() {
-      window.addEventListener('keyup', (event) => {
-        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
-      });
-    }
-  });
 }
 
 if ($('#activities-app').length > 0) {
