@@ -73,7 +73,9 @@ defmodule CercleApi.Router do
 
   scope "/company/:company_id", CercleApi, as: :front do
     pipe_through [:browser, :browser_auth, :require_login]
-    resources "/board", BoardController
+    resources "/board", BoardController do
+      resources "/card", CardController, only: [:show]
+    end
     get "/contact", ContactController, :index
     get "/contact/new", ContactController, :new
     get "/contact/:id", ContactController, :show
@@ -109,7 +111,7 @@ defmodule CercleApi.Router do
     post "/register", UserController, :create
     post "/login", SessionController, :create
     resources "/companies", CompanyController
-    
+
   end
 
   scope "/api/v2/company/:company_id", CercleApi.APIV2 do
