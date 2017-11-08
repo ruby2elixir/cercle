@@ -48,8 +48,14 @@ You can use Zapier to do Marketing Automation. Move a People Card into a new col
 
 ## Changelog
 
+### V1.2.2 - October 2017
+- Email API for Contact
+- People Board & Project Board
+- Company Association
+- Minor Bug Fixes
+- Improvement of the test suite
+
 ### V1.2 - September 2017
-#### New Features
 - Multi Company (User can switch between several companies)
 - URL are now clickable in description
 - Minor Bug Fixes
