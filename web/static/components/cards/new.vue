@@ -14,7 +14,7 @@
         <option v-for="col in columns" :value="col.id">{{ col.name }}</option>
       </select>
     </div>
-    
+
 
 
     <div class="form-group">
@@ -58,7 +58,9 @@
           phone: ''
         };
         this.errors = {};
-        this.$refs.addContact.$emit('reset');
+        if (this.$refs.addContact) {
+          this.$refs.addContact.$emit('reset');
+        }
       },
 
       saveCard: function(contactIds = []){
@@ -116,12 +118,12 @@
       }
     },
     mounted: function() {
-      console.log(this);
-      this.$on('onOpen', function(options){
-        this.$refs.name.focus();
+      let vm = this;
+      vm.$on('onOpen', function(options){
+        vm.$refs.name.focus();
       });
-      this.$on('onClose', function(options){
-        this.reset();
+      vm.$on('onClose', function(options){
+        vm.reset();
       });
     }
   };

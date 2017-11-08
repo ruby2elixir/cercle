@@ -38,8 +38,11 @@ export default {
     close() {
       let vm = this;
       vm.open = false;
+      vm.$glmodal.$emit('onCloseModal');
       Vue.nextTick(function(){
-        vm.$refs.view.$emit('onClose');
+        if (vm.$refs.view) {
+          vm.$refs.view.$emit('onClose');
+        }
       });
     }
 

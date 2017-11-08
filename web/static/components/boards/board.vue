@@ -114,9 +114,15 @@ export default {
       if (to.name === 'cardPage') { vm.cardShow(to.params.cardId); }
     });
   },
+  beforeRouteLeave (to, from, next) {
+    document.querySelector('.content-wrapper').classList.remove('board');
+    document.querySelector('.wrapper').classList.remove('wrapper_board');
+    next();
+  },
   watch: {
     '$route' (to, from) {
       if (to.name === 'cardPage') { this.cardShow(to.params.cardId); }
+      if (from.name === 'cardPage') { this.$glmodal.$emit('close'); }
     }
   },
   components: {
@@ -264,6 +270,13 @@ export default {
   mounted() {
     this.initComponent();
     this.initChannel();
+    let vm = this;
+    vm.$glmodal.$on('onCloseModal', function() {
+      vm.$router.push({
+        path: `/company/${vm.board.companyId}/board/${vm.board_id}`
+      });
+    });
+
   }
 };
   </script>
