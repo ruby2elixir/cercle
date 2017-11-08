@@ -40,6 +40,8 @@ export default {
   methods: {
     clickByEvent(event) {
       if (event.cardId) {
+        let cardUrl = '/company/' + Vue.currentUser.companyId + '/board/' + this.board_id + '/card/' + event.cardId;
+        this.$router.push(cardUrl)
         this.$glmodal.$emit(
           'open', {
             view: 'card-show', class: 'card-modal', data: { 'cardId': event.cardId }
