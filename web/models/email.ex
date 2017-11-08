@@ -27,7 +27,7 @@ defmodule CercleApi.Email do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:uid, :company_id, :subject, :from_email, :to, :cc, :bcc, :meta, :body, :body_text, :date])
-    |> validate_required([:uid, :company_id, :subject, :from_email, :to, :meta, :date])
+    |> validate_required([:uid, :company_id, :from_email, :to, :meta, :date])
     |> unique_constraint(:uid)
   end
 end
