@@ -1,6 +1,6 @@
 <template>
   <li>
-    <a href="#" @click="$emit('clickByEvent')">
+    <a href="#" @click.stop.prevent="$emit('clickByEvent')">
       <img :src="item.profileImageUrl" style="max-width:30px;border-radius:30px;float:left;" />
       <div class="menu-info" style="margin-left:45px;">
        <h4 class="control-sidebar-subheading" style="font-size:16px;">
