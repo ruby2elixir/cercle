@@ -42,9 +42,10 @@ defmodule CercleApi.ContactController do
       )
 
     end
+
     conn
     |> put_layout("adminlte.html")
-    |> render("index.html", leads_pending: leads_pending , company: company)
+    |> render("index.html", leads_pending: leads_pending , company: company, page: :contacts)
   end
 
   def new(conn, _params) do

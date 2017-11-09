@@ -5,8 +5,19 @@ defmodule CercleApi.LayoutView do
     cond do
       conn.assigns[:contact] ->
         "contact"
-      conn.assigns[:board] ->
-        "board"
+      true ->
+        ""
+    end
+  end
+
+  def container_css_class(conn) do
+    cond do
+      conn.assigns[:contact] ->
+        "container"
+      conn.assigns[:page] == :contacts ->
+        "container"
+      conn.assigns[:page] == :activities ->
+        "container"
       true ->
         ""
     end

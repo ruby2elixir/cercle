@@ -12,7 +12,11 @@ defmodule CercleApi.ActivityController do
 
     conn
       |> put_layout("adminlte.html")
-      |> render("index.html", company: company, current_user_id: current_user_id, current_user_time_zone: current_user_time_zone)
+      |> render("index.html", company: company,
+    current_user_id: current_user_id,
+    current_user_time_zone: current_user_time_zone,
+    page: :activities
+    )
   end
 
 end
