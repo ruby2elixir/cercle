@@ -41,7 +41,7 @@
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav async-ready">
     <notification id="notification-app"></notification>
-    <div class="wrapper wrapper_<%= wrapper_css_class @conn %>">
+    <div class="wrapper">
 
       <header class="main-header">
 
@@ -90,19 +90,13 @@
       </header>
 
       <!-- Full Width Column -->
-      <div class="main-app content-wrapper <%= wrapper_css_class @conn %>">
+      <div class="main-app content-wrapper <%= wrapper_css_class @conn %>" v-bind:class="[classWrapper]">
         <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
 
         <router-view name="board-sidebar-toggle"></router-view>
-        <%= if assigns[:no_container] do %>
-        <%= render @view_module, @view_template, assigns %>
-        <%= end %>
-
-        <%= if !assigns[:no_container] do %>
-          <div class="container">
+          <div v-bind:class="[classContainer]" class="<%= container_css_class @conn %>">
             <%= render @view_module, @view_template, assigns %>
           </div><!-- /.container -->
-        <%end%>
         <router-view name="board-sidebar" ref="boardSidebar"></router-view>
       </div><!-- /.content-wrapper -->
 

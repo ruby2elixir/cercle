@@ -17,7 +17,7 @@ defmodule CercleApi.ArchiveCardTest do
     |> assert_has(css("body.async-ready"))
     |> click(button("ARCHIVE"))
     |> assert_has(css("body.async-ready"))
-    |> click(css("button.close"))
+    |> click(css(".card-modal button.close"))
     |> assert_has(css("body.async-ready"))
     |> refute_has(css("#board_columns", text: "Test Card"))
   end

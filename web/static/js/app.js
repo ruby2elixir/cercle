@@ -212,9 +212,11 @@ if ($('#contacts-app').length > 0) {
 
 if ($('#boards-app').length > 0) {
   const routes = [
-    { path: '/company/:company_id/board', component: BoardList },
+    { path: '/company/:company_id/board', component: BoardList,
+      meta: { classContainer: 'container boards-page', classWrapper: ' ' } },
     {
       path: '/company/:company_id/board/:board_id',
+      meta: { classContainer: 'board-page', classWrapper: 'wrapper_board board' },
       components: {
         default: Board,
         'board-sidebar': BoardSidebar,
@@ -229,6 +231,7 @@ if ($('#boards-app').length > 0) {
     {
       path: '/company/:companyId/board/:board_id/card/:cardId',
       name: 'cardPage',
+      meta: { classContainer: 'board-page card-page', classWrapper: 'wrapper_board board' },
       components: {
         default: Board,
         'board-sidebar': BoardSidebar,
@@ -248,6 +251,12 @@ if ($('#boards-app').length > 0) {
   });
   new Vue({
     router: router,
+    computed: {
+      classContainer() {
+        return this.$route.meta.classContainer;
+      },
+      classWrapper () { return this.$route.meta.classWrapper; }
+    },
     mounted() {
       window.addEventListener('keyup', (event) => {
         if (event.keyCode === 27) { this.$emit('esc-keyup'); }

@@ -108,15 +108,11 @@ export default {
     };
   },
   beforeRouteEnter (to, from, next) {
-    document.querySelector('.content-wrapper').classList.add('board');
-    document.querySelector('.wrapper').classList.add('wrapper_board');
     next(vm => {
       if (to.name === 'cardPage') { vm.cardShow(to.params.cardId); }
     });
   },
   beforeRouteLeave (to, from, next) {
-    document.querySelector('.content-wrapper').classList.remove('board');
-    document.querySelector('.wrapper').classList.remove('wrapper_board');
     next();
   },
   watch: {

@@ -33,12 +33,6 @@
         archived: false
       };
     },
-    beforeRouteEnter (to, from, next) {
-      document.querySelector('.content-wrapper').classList.remove('board');
-      document.querySelector('.content-wrapper').classList.add('board-app');
-      document.querySelector('.wrapper').classList.remove('wrapper_board');
-      next();
-    },
     watch: {
       archived() {
         this.loadBoards();
