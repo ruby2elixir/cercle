@@ -196,27 +196,29 @@ if ($('#user-navbar').length > 0) {
     }
   });
 }
-if ($('#contacts-app').length > 0) {
-  new Vue({
-    el: '#contacts-app',
-    components: {
-      'contact-list' : ContactList
-    },
-    mounted() {
-      window.addEventListener('keyup', (event) => {
-        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
-      });
-    }
-  });
-}
 
 if ($('#boards-app').length > 0) {
   const routes = [
     { path: '/company/:company_id/board', component: BoardList,
       meta: { classContainer: 'container boards-page', classWrapper: ' ' } },
     {
+      path: '/company/:company_id/contact',
+      component: ContactList,
+      meta: { classContainer: 'container contacts-page', classWrapper: ' ' },
+      props: true
+    },
+
+    {
+      path: '/company/:company_id/activity',
+      component: Activities,
+      meta: { classContainer: 'container activities-page', classWrapper: ' ' },
+      props: true
+    },
+
+    {
       path: '/company/:company_id/board/:board_id',
-      meta: { classContainer: 'board-page', classWrapper: 'wrapper_board board' },
+      meta: { classContainer: 'board-page', classWrapper: 'wrapper_board board',
+        classPageWrapper: 'wrapper_board' },
       components: {
         default: Board,
         'board-sidebar': BoardSidebar,
@@ -231,7 +233,8 @@ if ($('#boards-app').length > 0) {
     {
       path: '/company/:companyId/board/:board_id/card/:cardId',
       name: 'cardPage',
-      meta: { classContainer: 'board-page card-page', classWrapper: 'wrapper_board board' },
+      meta: { classContainer: 'board-page card-page',
+        classWrapper: 'wrapper_board board', classPageWrapper: 'wrapper_board' },
       components: {
         default: Board,
         'board-sidebar': BoardSidebar,
@@ -252,9 +255,8 @@ if ($('#boards-app').length > 0) {
   new Vue({
     router: router,
     computed: {
-      classContainer() {
-        return this.$route.meta.classContainer;
-      },
+      classPageWrapper() { return this.$route.meta.classPageWrapper; },
+      classContainer() { return this.$route.meta.classContainer;  },
       classWrapper () { return this.$route.meta.classWrapper; }
     },
     mounted() {
@@ -263,20 +265,6 @@ if ($('#boards-app').length > 0) {
       });
     }
   }).$mount('.main-app');
-}
-
-if ($('#activities-app').length > 0) {
-  new Vue({
-    el: '#activities-app',
-    components: {
-      'activities': Activities
-    },
-    mounted() {
-      window.addEventListener('keyup', (event) => {
-        if (event.keyCode === 27) { this.$emit('esc-keyup'); }
-      });
-    }
-  });
 }
 
 if ($('#notification-app').length > 0) {

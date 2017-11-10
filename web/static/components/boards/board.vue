@@ -113,6 +113,7 @@ export default {
     });
   },
   beforeRouteLeave (to, from, next) {
+    this.$glmodal.$off('onCloseModal');
     next();
   },
   watch: {
@@ -228,6 +229,13 @@ export default {
         });
     },
     cardShow(cardId) {
+      let vm = this;
+      vm.$glmodal.$off('onCloseModal');
+      vm.$glmodal.$once('onCloseModal', function() {
+        vm.$router.push({
+          path: `/company/${vm.board.companyId}/board/${vm.board_id}`
+        });
+      });
       this.$glmodal.$emit(
         'open', {
           view: 'card-show', class: 'card-modal', data: { 'cardId': cardId }
@@ -266,12 +274,7 @@ export default {
   mounted() {
     this.initComponent();
     this.initChannel();
-    let vm = this;
-    vm.$glmodal.$on('onCloseModal', function() {
-      vm.$router.push({
-        path: `/company/${vm.board.companyId}/board/${vm.board_id}`
-      });
-    });
+
 
   }
 };
