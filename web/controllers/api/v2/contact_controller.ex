@@ -34,6 +34,37 @@ defmodule CercleApi.APIV2.ContactController do
     render(conn, "index.json", contacts: contacts)
   end
 
+  def show(conn, %{"user_id" => user_id, "company_id" => company_id}) do
+    query = from contact in Contact,
+      where: contact.user_id == ^user_id and contact.company_id == ^company_id,
+      order_by: [desc: contact.id]
+    contacts = query
+    |> Contact.preload_data
+    |> Repo.all
+    |> Contact.preload_cards
+    render(conn, "index.json", contacts: contacts)
+  end
+
+  def show(conn, %{"id" => id}) do
+    contact = Contact
+    |> Contact.preload_data
+    |> Repo.get(id)
+    |> Contact.preload_cards
+
+    render(conn, "full_contact.json", contact: contact)
+  end
+
+  def create(conn, %{"update_or_create" => "true", "contact" => contact_params}) do
+    with email <- contact_params["email"], false <- is_nil(email),
+         contact <- Repo.one(
+           from c in Contact, where: c.email == ^email,
+           order_by: [desc: c.id], limit: 1), false <- is_nil(contact) do
+      update(conn, %{"id" => contact.id, "contact" => contact_params})
+    else
+      _ -> create(conn, %{"contact" => contact_params})
+    end
+  end
+
   def create(conn, %{"contact" => contact_params}) do
     user = CercleApi.Plug.current_user(conn)
     company = current_company(conn)
@@ -60,26 +91,6 @@ defmodule CercleApi.APIV2.ContactController do
         |> put_status(:unprocessable_entity)
         |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
     end
-  end
-
-  def show(conn, %{"user_id" => user_id, "company_id" => company_id}) do
-    query = from contact in Contact,
-      where: contact.user_id == ^user_id and contact.company_id == ^company_id,
-      order_by: [desc: contact.id]
-    contacts = query
-    |> Contact.preload_data
-    |> Repo.all
-    |> Contact.preload_cards
-    render(conn, "index.json", contacts: contacts)
-  end
-
-  def show(conn, %{"id" => id}) do
-    contact = Contact
-    |> Contact.preload_data
-    |> Repo.get(id)
-    |> Contact.preload_cards
-
-    render(conn, "full_contact.json", contact: contact)
   end
 
   def update(conn, %{"id" => id, "contact" => contact_params}) do

@@ -3,8 +3,7 @@ defmodule CercleApi.APIV2.ContactControllerTest do
   import CercleApi.Factory
 
   @valid_attrs %{first_name: "John", last_name: "Doe"}
-  @invalid_attrs %{}
-  alias CercleApi.{Board, BoardColumn, Contact, TimelineEvent, Card, Activity, CardAttachment}
+  alias CercleApi.{Board, BoardColumn, Contact, TimelineEvent, Card, CardAttachment}
 
   setup %{conn: conn} do
     user = insert(:user)
@@ -51,6 +50,40 @@ defmodule CercleApi.APIV2.ContactControllerTest do
     assert json_response(conn, 201)["data"]["id"]
     assert json_response(conn, 201)["data"]["first_name"]
     assert json_response(conn, 201)["data"]["last_name"]
+  end
+
+  test "create contact with update_or_create mode", %{conn: conn} = state do
+    response = conn
+    |> post("/api/v2/company/#{state[:company].id}/contact", contact: %{email: "contact@test.com", name: "John Doe"})
+    |> json_response(201)
+    assert response["data"]["id"]
+    assert response["data"]["email"] == "contact@test.com"
+    assert response["data"]["name"] == "John Doe"
+    assert Repo.aggregate(Contact, :count, :id) == 1
+
+    response = conn
+    |> post("/api/v2/company/#{state[:company].id}/contact", contact: %{email: "contact@test.com", name: "S John Doe"})
+    |> json_response(201)
+    assert response["data"]["id"]
+    assert response["data"]["email"] == "contact@test.com"
+    assert response["data"]["name"] == "S John Doe"
+    assert Repo.aggregate(Contact, :count, :id) == 2
+
+    response = conn
+    |> post("/api/v2/company/#{state[:company].id}/contact", update_or_create: "true",
+    contact: %{email: "contact@test.com", name: "Little John Doe"})
+    |> json_response(200)
+    assert response["data"]["email"] == "contact@test.com"
+    assert response["data"]["name"] == "Little John Doe"
+    assert Repo.aggregate(Contact, :count, :id) == 2
+
+    response = conn
+    |> post("/api/v2/company/#{state[:company].id}/contact", update_or_create: "false",
+    contact: %{email: "contact@test.com", name: "Little John Doe"})
+    |> json_response(201)
+    assert response["data"]["email"] == "contact@test.com"
+    assert response["data"]["name"] == "Little John Doe"
+    assert Repo.aggregate(Contact, :count, :id) == 3
   end
 
   test "try to update authorized contact with valid params", state do
