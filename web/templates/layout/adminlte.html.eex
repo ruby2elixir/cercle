@@ -41,66 +41,23 @@
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav async-ready">
     <notification id="notification-app"></notification>
-    <div class="wrapper">
+
+    <div class="wrapper main-app ":class="[classPageWrapper]">
 
       <header class="main-header">
-
-        <nav class="navbar navbar-static-top" style="background-color:black;">
-          <div class="container">
-            <div class="navbar-header">
-              <a href="/" class="navbar-brand">
-                <img src="/images/logo_cercle2.png" style="width:56px;position:relative;top:-14px;left:10px;">
-              </a>
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-                <i class="fa fa-bars"></i>
-              </button>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-
-              <ul class="nav navbar-nav">
-                <%= if assigns[:current_company] do %>
-                <li>
-                  <a href="/company/<%= assigns[:current_company].id %>/activity">
-                    <!--
-                        <span class="label label-primary">4</span>
-                        -->
-                    Inbox
-                  </a>
-                </li>
-                <li><a href="/company/<%= assigns[:current_company].id %>/board">Boards</a></li>
-                <li><a href="/company/<%= assigns[:current_company].id %>/contact">People</a></li>
-                <li>
-                  <%end%>
-              </ul>
-
-            </div><!-- /.navbar-collapse -->
-
-            <!-- Navbar Right Menu -->
-            <div class="navbar-custom-menu" id="user-navbar">
-              <navbar
-                :user="<%= Poison.encode! @conn.assigns[:current_user] %>"
-                :company="<%= Poison.encode! @conn.assigns[:current_company] %>"
-                :companies="<%= Poison.encode!(CercleApi.Company.user_companies(@conn.assigns[:current_user])) %>"
-                />
-            </div><!-- /.navbar-custom-menu -->
-          </div><!-- /.container-fluid -->
-        </nav>
+        <%= render CercleApi.SharedView, "navbar.html", conn: @conn%>
       </header>
 
       <!-- Full Width Column -->
-      <div class="main-app content-wrapper <%= wrapper_css_class @conn %>" v-bind:class="[classWrapper]">
+      <div class="content-wrapper <%= wrapper_css_class @conn %>" :class="[classWrapper]">
         <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
 
         <router-view name="board-sidebar-toggle"></router-view>
-          <div v-bind:class="[classContainer]" class="<%= container_css_class @conn %>">
+          <div :class="[classContainer]" class="<%= container_css_class @conn %>">
             <%= render @view_module, @view_template, assigns %>
           </div><!-- /.container -->
         <router-view name="board-sidebar" ref="boardSidebar"></router-view>
       </div><!-- /.content-wrapper -->
-
-
 
 
     </div><!-- ./wrapper -->

@@ -14,10 +14,6 @@ defmodule CercleApi.LayoutView do
     cond do
       conn.assigns[:contact] ->
         "container"
-      conn.assigns[:page] == :contacts ->
-        "container"
-      conn.assigns[:page] == :activities ->
-        "container"
       true ->
         ""
     end

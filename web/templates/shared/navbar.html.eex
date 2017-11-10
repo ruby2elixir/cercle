@@ -1,0 +1,43 @@
+<nav class="navbar navbar-static-top" style="background-color:black;">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand">
+        <img src="/images/logo_cercle2.png" style="width:56px;position:relative;top:-14px;left:10px;">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+
+      <ul class="nav navbar-nav">
+        <%= if @conn.assigns[:current_company] do %>
+        <li>
+          <router-link to="/company/<%= @conn.assigns[:current_company].id %>/activity">
+            <!--
+                <span class="label label-primary">4</span>
+                -->
+            Inbox
+          </router-link>
+        </li>
+        <li><router-link to="/company/<%= @conn.assigns[:current_company].id %>/board">Boards</a></router-link>
+        <li>
+          <router-link to="/company/<%= @conn.assigns[:current_company].id %>/contact">People</router-link>
+        </li>
+        <%end%>
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+
+    <!-- Navbar Right Menu -->
+    <div class="navbar-custom-menu" id="user-navbar">
+      <navbar
+        :user="<%= Poison.encode! @conn.assigns[:current_user] %>"
+        :company="<%= Poison.encode! @conn.assigns[:current_company] %>"
+        :companies="<%= Poison.encode!(CercleApi.Company.user_companies(@conn.assigns[:current_user])) %>"
+        />
+    </div><!-- /.navbar-custom-menu -->
+  </div><!-- /.container-fluid -->
+</nav>
