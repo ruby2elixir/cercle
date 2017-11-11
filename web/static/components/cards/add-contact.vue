@@ -1,13 +1,7 @@
 <template>
   <div class="add-contact">
     <div class="form-group">
-      <v-select :debounce="250"
-                :on-change="selectContact"
-                :on-search="searchContacts"
-                :options="searchedContacts"
-                :taggable="true"
-                placeholder="Full Name of the Contact"
-                label="name"><span slot="no-options"></span></v-select>
+      <contact-autocomplete @change="selectContact" />
     </div>
     <div class="form-group">
       <input type="email"
@@ -29,6 +23,7 @@
 </template>
 
 <script>
+  import ContactAutocomplete from '../shared/contact-autocomplete.vue';
   export default {
     props: [],
     data: function() {
@@ -44,7 +39,8 @@
       };
     },
     components: {
-      'v-select': vSelect.VueSelect
+      'v-select': vSelect.VueSelect,
+      'contact-autocomplete': ContactAutocomplete
     },
     methods: {
       reset: function() {
@@ -52,24 +48,10 @@
         this.searchedContacts = [];
         this.isExistingContact = false;
       },
-      selectContact(con) {
-        if(con && con.id) {
-          this.isExistingContact = true;
-          this.contact.id = con.id;
-          this.contact.name = con.name;
-          this.contact.firstName = con.firstName;
-          this.contact.lastName = con.lastName;
-          this.contact.email = con.email;
-          this.contact.phone = con.phone;
-        } else {
-          this.isExistingContact = false;
-          this.contact.id = null;
-          this.contact.firstName = null;
-          this.contact.lastName = null;
-          this.contact.name = con.name || con;
-          this.contact.email = null;
-          this.contact.phone = null;
-        }
+
+      selectContact(data) {
+        this.isExistingContact = !data.newContact;
+        this.contact = data.contact;
 
         this.$emit('select-contact', {
           isExistingContact: this.isExistingContact,
