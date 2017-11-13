@@ -108,6 +108,7 @@ export default {
     };
   },
   beforeRouteEnter (to, from, next) {
+    document.querySelector('.main-header').scrollIntoView(true);
     next(vm => {
       if (to.name === 'cardPage') { vm.cardShow(to.params.cardId); }
     });

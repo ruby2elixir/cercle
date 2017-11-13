@@ -10,7 +10,8 @@
             <div class="input-group add-on">
               <input class="form-control" placeholder="Search" name="q" type="text" v-model="searchTerm" />
               <div class="input-group-btn">
-                <button class="btn btn-default" type="submit" v-on:click.stop.prevent="searchContacts"><i class="glyphicon glyphicon-search"></i></button>
+                <button class="btn btn-default" type="submit" v-on:click.stop.prevent="searchContacts">
+                  <i class="glyphicon glyphicon-search"></i></button>
               </div>
             </div>
           </form>
@@ -18,9 +19,15 @@
 
         <div class="col-xs-6">
           <div class="btn-group pull-right" role="group">
-            <button v-if="contactList.length > 0" type="button" class="btn btn-danger" @click="deleteSelectContacts">Delete contacts</button>
-            <button v-if="contactList.length > 0" type="button" class="btn btn-default" @click="exportSelectContacts">Export contacts</button>
-            <a :href="'/company/' + company_id + '/contact/new'" class="pull-right btn btn-primary">+ Add a Contact</a>
+            <button v-if="contactList.length > 0" type="button" class="btn btn-danger" @click="deleteSelectContacts">
+              Delete contacts
+            </button>
+            <button v-if="contactList.length > 0" type="button" class="btn btn-default" @click="exportSelectContacts">
+              Export contacts
+            </button>
+            <router-link :to="'/company/' + company_id + '/contact/new'" class="pull-right btn btn-primary">
+              + Add a Contact
+            </router-link>
           </div>
         </div>
       </div>
