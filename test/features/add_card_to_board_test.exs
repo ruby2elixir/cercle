@@ -36,7 +36,7 @@ defmodule CercleApi.AddCardToBoardTest do
     |> find(css(".add-contact"), fn(contact_form) ->
       contact_form
       |> fill_in(css("input[type='search']"), with: "John")
-      |> click(css(".dropdown-menu a", text: "John Doe" ))
+      |> click(css(".search-list li", text: "John Doe" ))
     end)
     |> find(css(".new-card-form"), fn(form) -> click(form, button("Save")) end)
     |> assert_has(css("body.async-ready"))
@@ -66,7 +66,7 @@ defmodule CercleApi.AddCardToBoardTest do
     |> visit("/company/#{company.id}/board/#{board.id}")
     |> click(css(".add-card"))
     |> fill_in(css("input[type='search']"), with: "New contact")
-    |> click(css(".dropdown-menu a", text: "New contact" ))
+    |> click(css(".search-list li", text: "New contact" ))
     |> fill_in(css("input[type=email]"), with: "abc@xyz.com")
     |> fill_in(css("input[type=phone]"), with: "123456789")
     |> click(css(".new-card-form .btn-link", text: "Cancel" ))
