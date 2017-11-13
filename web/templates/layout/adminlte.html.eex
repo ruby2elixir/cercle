@@ -39,7 +39,7 @@
     <% end %>
   </head>
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
-  <body class="hold-transition skin-blue layout-top-nav async-ready">
+  <body class="hold-transition skin-blue layout-top-nav async-ready" style="height: 100vh;">
     <notification id="notification-app"></notification>
 
     <div class="wrapper main-app ":class="[classPageWrapper]">

@@ -7,20 +7,30 @@
     <div class='board-form-container' style="min-height:800px;">
       <div class='board-form-content'>
         <div style="margin-bottom:10px;">
-          <input type="text">
+          <input v-model="boardName" type="text"
+                 placeholder="Name of the board"
+                 style="padding:5px;width:200px;"
+                 class="board_name" >
+        </div>
+
+        <br />
+
+        <div class="row" style="font-size:17px;line-height: 30px;">
+          <div class="col-sm-3">
+            <el-radio v-model="typeOfCard" label="0" >&nbsp;&nbsp;Project Board</el-radio>
+            <br />
+            <i>Track Tasks</i>
+          </div>
+          <div class="col-sm-9">
+            <el-radio v-model="typeOfCard" label="1" >&nbsp;&nbsp;People Board</el-radio>
+            <br />
+            <i>Track People, Clients, Prospects, Deals</i>
+          </div>
         </div>
 
         <Br />
-        <div style="font-size:19px;margin-bottom:10px;">Type of board
-        </div>
-        <div style="font-size:15px;line-height: 30px;">
-          <%= radio_button(f, :type_of_card, "0") %>&nbsp;&nbsp;Project Board (to track tasks and manage projects)
-          <br />
-          <%= radio_button(f, :type_of_card, "1") %>&nbsp;&nbsp;People Board (to track business deals or manage clients)
-        </div>
-        <Br />
       </div>
-      <button class="btn btn-primary" >CREATE</button>
+      <button class="btn btn-primary" @click="createBoard" >CREATE</button>
     </div>
   </div>
 </div>
@@ -28,10 +38,29 @@
 </template>
 <script>
   export default {
+    props: ['companyId'],
     data() {
-      return {};
+      return {
+        boardName: '',
+        typeOfCard: '0'
+      };
+    },
+    components: {
+      'el-radio': ElementUi.Radio
+    },
+    methods: {
+      createBoard() {
+        let vm = this;
+        let url ='/api/v2/company/' + this.companyId + '/board';
+        let boardsUrl = '/company/' + this.companyId + '/board';
+        this.$http.post(url, {
+          board: { name: this.boardName, typeOfCard: this.typeOfCard }
+        }).then( resp => {
+          this.$router.push(boardsUrl);
+        });
+      }
     }
   };
-  </script>
+</script>
 <style lang="sass">
 </style>

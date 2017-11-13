@@ -11,7 +11,7 @@
         >
         {{board.name}}
       </router-link>
-        <a :href="newBoardUrl()" class="col-md-3 col-sm-6 col-xs-12 add-board"> + Add a board</a>
+      <router-link :to="newBoardUrl()" class="col-md-3 col-sm-6 col-xs-12 add-board"> + Add a board</router-link>
     </div>
     <div class="boards-actions">
       <span v-if="!archived" @click="archived = true">

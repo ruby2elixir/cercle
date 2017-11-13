@@ -21,8 +21,6 @@ import moment from 'moment';
 // paths './socket' or full ones 'web/static/js/socket'.
 
 import socket from './socket';
-import inlineEdit from './inline_edit';
-import contactAdd from './contact_add';
 import contactImport from './contact_import';
 import blueimpFileUpload from './blueimp_file_upload';
 import tagEdit from './tag_edit';
@@ -81,6 +79,7 @@ Vue.http.interceptors.push((request, next) => {
 });
 
 import ContactList from '../components/contacts/list.vue';
+import ContactSingleNew from '../components/contacts/single_new.vue';
 import Board from '../components/boards/board.vue';
 import BoardSidebar from '../components/boards/board-sidebar.vue';
 import ToggleBoardSidebar from '../components/boards/board-sidebar-toggle.vue';
@@ -197,14 +196,28 @@ if ($('#user-navbar').length > 0) {
   });
 }
 
-if ($('#boards-app').length > 0) {
+if ($('.main-app').length > 0) {
   const routes = [
-    { path: '/company/:company_id/board', component: BoardList,
-      meta: { classContainer: 'container boards-page', classWrapper: ' ' } },
+    {
+      path: '/company/:company_id/board', component: BoardList,
+      meta: { classContainer: 'container boards-page', classWrapper: ' ' }
+    },
+    {
+      path: '/company/:companyId/board/new', component: BoardNew,
+      meta: { classContainer: 'container boards-page', classWrapper: ' ' },
+      props: true
+    },
     {
       path: '/company/:company_id/contact',
       component: ContactList,
       meta: { classContainer: 'container contacts-page', classWrapper: ' ' },
+      props: true
+    },
+
+    {
+      path: '/company/:companyId/contact/new',
+      component: ContactSingleNew,
+      meta: { classContainer: 'container contacts-page', classWrapper: ' ', classPageWrapper: '' },
       props: true
     },
 
@@ -217,7 +230,9 @@ if ($('#boards-app').length > 0) {
 
     {
       path: '/company/:company_id/board/:board_id',
-      meta: { classContainer: 'board-page', classWrapper: 'wrapper_board board',
+      meta: {
+        classContainer: '',
+        classWrapper: 'board',
         classPageWrapper: 'wrapper_board' },
       components: {
         default: Board,
