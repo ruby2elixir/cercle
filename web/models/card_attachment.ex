@@ -27,8 +27,8 @@ defmodule CercleApi.CardAttachment do
   def json_data(card_attachment) do
     data = %{
       id: card_attachment.id,
-      inserted_at: card_attachment.id,
-      card_id: card_attachment.inserted_at,
+      inserted_at: card_attachment.inserted_at,
+      card_id: card_attachment.card_id,
       file_name: card_attachment.attachment.file_name,
       ext_file: Path.extname(card_attachment.attachment.file_name),
       attachment_url: CardAttachmentFile.url({card_attachment.attachment, card_attachment})
