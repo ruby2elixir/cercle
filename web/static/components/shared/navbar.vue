@@ -3,7 +3,7 @@
     <!-- Messages: style can be found in dropdown.less-->
     <!-- User Account Menu -->
     <li class="tasks-menu">
-      <a href="http://get.cercle.co/help"  aria-expanded="false">
+      <a href="http://get.cercle.co/help"  aria-expanded="false" target="_blank">
         <i class="fa fa-phone"></i> 
         &nbsp;
         Support
