@@ -105,14 +105,16 @@
             </div>
             <div class="info">
               <div>{{attach.file_name}}</div>
-              <div>Added {{attach.insertedAt | moment('MMM DD [at] h:m A')}}</div>
+              <div>Added {{attach.insertedAt | formatDateTime('MMM DD [at] h:m A') }}</div>
               <div class="attach-action">
-               <a :href="attach.attachmentUrl" target="_blank" style="font-weight: 700;display: inline-block;padding: 0 3px 3px;margin-right: 7px;color: grey;text-decoration: underline;">
-                <i class="fa fa-download" aria-hidden="true"></i>
-                Download</a>
+                <a :href="attach.attachmentUrl" target="_blank">
+                  <i class="fa fa-download" aria-hidden="true"></i>
+                  Download
+                </a>
                <button class="btn btn-link" v-on:click.stop="deleteAttachment(attach.id)">
-               <i class="fa fa-times" aria-hidden="true"></i>
-                Delete</button>
+                 <i class="fa fa-times" aria-hidden="true"></i>
+                 Delete
+               </button>
               </div>
             </div>
           </div>
@@ -598,6 +600,16 @@
   .card-show {
     padding: 20px;
     background-color: #edf0f5;
+    .attachments {
+      .attach-action {
+        font-weight: 700;
+        display: inline-block;
+        padding: 0 3px 3px;
+        margin-right: 7px;
+        color: grey;
+        text-decoration: underline;
+      }
+    }
     .upload-btn {
       height: 34px;
       font-weight:normal;
