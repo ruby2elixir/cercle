@@ -84,6 +84,7 @@ import Board from '../components/boards/board.vue';
 import BoardSidebar from '../components/boards/board-sidebar.vue';
 import ToggleBoardSidebar from '../components/boards/board-sidebar-toggle.vue';
 import BoardNew from '../components/boards/new.vue';
+import BoardEdit from '../components/boards/edit.vue';
 import BoardList from '../components/boards/list.vue';
 import Activities from '../components/activities/list.vue';
 import BoardRecentActivities from '../components/boards/recent_timeline_events.vue';
@@ -204,6 +205,11 @@ if ($('.main-app').length > 0) {
     },
     {
       path: '/company/:companyId/board/new', component: BoardNew,
+      meta: { classContainer: 'container boards-page', classWrapper: ' ' },
+      props: true
+    },
+    {
+      path: '/company/:companyId/board/:boardId/edit', component: BoardEdit,
       meta: { classContainer: 'container boards-page', classWrapper: ' ' },
       props: true
     },
