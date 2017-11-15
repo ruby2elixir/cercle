@@ -220,18 +220,19 @@ if ($('.main-app').length > 0) {
       props: true
     },
 
-    {
-      path: '/company/:company_id/contact/:contactId',
-      component: ContactList,
-      name: 'contactPage',
-      meta: { classContainer: 'container contacts-page', classWrapper: ' ' },
-      props: true
-    },
 
     {
       path: '/company/:companyId/contact/new',
       component: ContactSingleNew,
       meta: { classContainer: 'container contacts-page', classWrapper: ' ', classPageWrapper: '' },
+      props: true
+    },
+
+    {
+      path: '/company/:company_id/contact/:contactId',
+      component: ContactList,
+      name: 'contactPage',
+      meta: { classContainer: 'container contacts-page', classWrapper: ' ' },
       props: true
     },
 
