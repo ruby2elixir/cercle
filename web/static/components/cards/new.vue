@@ -120,7 +120,9 @@
     mounted: function() {
       let vm = this;
       vm.$on('onOpen', function(options){
-        vm.$refs.name.focus();
+        if (!this.$refs.addContact) {
+          vm.$refs.name.focus();
+        }
       });
       vm.$on('onClose', function(options){
         vm.reset();
