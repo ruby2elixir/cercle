@@ -69,6 +69,14 @@
         </markdown-text-edit>
       </div>
     </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <a v-bind:href="callContact(contact.phone)" class="btn btn-default" v-if="contact.phone">Call</a>&nbsp;&nbsp;
+        <a v-bind:href="contactUrl(contact)" class="btn btn-default">Email History</a>&nbsp;&nbsp;
+        <a v-bind:href="contactWebsiteUrl(contact.organization.website)" class="btn btn-default" target="_blank" v-if="contact.organization">Visit Website</a>
+
+      </div>
+    </div>
   </div>
 </template>
 
@@ -94,6 +102,15 @@
         this.contact.firstName = data.firstName;
         this.contact.lastName = data.lastName;
         this.updateContact();
+      },
+      contactUrl(contact) {
+        return '/company/' + Vue.currentUser.companyId + '/contact/' + contact.id;
+      },
+      contactWebsiteUrl(website) {
+        return 'http://' + website;
+      },
+      callContact(phone) {
+        return 'tel:' + phone;
       },
       updateContact() {
         let url = '/api/v2/company/'+ Vue.currentUser.companyId +'/contact/' + this.contact.id;
