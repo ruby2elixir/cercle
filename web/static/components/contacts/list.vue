@@ -145,7 +145,7 @@
         if (to.name === 'contactPage') {
           this.getContactAndOpen(to.params.contactId);
         }
-        if (from.name === 'contatcPage') { this.$glmodal.$emit('close'); }
+        if (from.name === 'contactPage') { this.$glmodal.$emit('close'); }
       }
     },
 
