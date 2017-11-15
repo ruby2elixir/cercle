@@ -157,10 +157,10 @@
 
     methods: {
       getContactAndOpen(contactId) {
-        let vm = this
+        let vm = this;
         let contact = vm.$_.find(
           vm.contacts, {id: vm.$_.toInteger(contactId)}
-        )
+        );
         if (contact === undefined) {
           let url = '/api/v2/company/' + vm.company_id + '/contact/' + contactId;
           vm.$http.get(url).then(resp => { vm.contactShow(resp.data.contact); });
