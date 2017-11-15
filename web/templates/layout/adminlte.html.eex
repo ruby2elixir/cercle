@@ -49,11 +49,11 @@
       </header>
 
       <!-- Full Width Column -->
-      <div class="content-wrapper <%= wrapper_css_class @conn %>" :class="[classWrapper]">
+      <div class="content-wrapper" :class="[classWrapper]">
         <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
 
         <router-view name="board-sidebar-toggle"></router-view>
-          <div :class="[classContainer]" class="<%= container_css_class @conn %>">
+          <div :class="[classContainer]">
             <%= render @view_module, @view_template, assigns %>
           </div><!-- /.container -->
         <router-view name="board-sidebar" ref="boardSidebar"></router-view>

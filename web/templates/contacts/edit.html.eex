@@ -1,5 +1,0 @@
-<div style="max-width:800px;margin: 0px auto;">
-<div id="contact-app-edit">
-  <contact-app-edit contact_id="<%= Poison.encode!(@contact.id) %>" />
-</div>
-</div>

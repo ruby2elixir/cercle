@@ -48,7 +48,7 @@
                   <tbody>
                     <tr>
                       <th  style="width:30px;">
-                     <el-checkbox @change="handleCheckAllChange"></el-checkbox>
+                        <el-checkbox @change="handleCheckAllChange"></el-checkbox>
                       </th>
                       <th>Name</th>
                       <th>Job Title</th>
@@ -65,18 +65,40 @@
                            <el-checkbox :label="contact.id" :key="contact.id" ></el-checkbox>
                          </el-checkbox-group>
                       </td>
-                      <td v-on:click="contactShow(contact)">
-                        {{contact.firstName}} {{contact.lastName}}
+                      <td>
+                        <router-link :to="contactUrl(contact)" class="contact-link">
+                          {{contact.firstName}} {{contact.lastName}}
+                        </router-link>
                       </td>
-                      <td v-on:click="contactShow(contact)">{{contact.jobTitle}}</td>
-                      <td v-on:click="contactShow(contact)">{{contact.organization && contact.organization.name}}</td>
-                      <td v-on:click="contactShow(contact)">{{contact.email}}</td>
-                      <td v-on:click="contactShow(contact)">{{contact.phone}}</td>
-                      <td  v-on:click="contactShow(contact)" style="width:220px;">
-                        <span v-for="tag in contact.tags">{{tag.name}} </span>
+                      <td>
+                        <router-link :to="contactUrl(contact)" class="contact-link">
+                          {{contact.jobTitle}}
+                        </router-link>
                       </td>
-                      <td v-on:click="contactShow(contact)"  style="width:120px;">
-                        <span style="color:grey;font-size:14px;">{{contact.updatedAt | moment("from")}}</span>
+                      <td>
+                        <router-link :to="contactUrl(contact)" class="contact-link">
+                          {{contact.organization && contact.organization.name}}
+                        </router-link>
+                      </td>
+                      <td>
+                        <router-link :to="contactUrl(contact)" class="contact-link">
+                          {{contact.email}}
+                        </router-link>
+                      </td>
+                      <td>
+                        <router-link :to="contactUrl(contact)" class="contact-link">
+                          {{contact.phone}}
+                        </router-link>
+                      </td>
+                      <td style="width:220px;">
+                        <router-link :to="contactUrl(contact)" class="contact-link">
+                          <span v-for="tag in contact.tags">{{tag.name}} </span>
+                        </router-link>
+                      </td>
+                      <td style="width:120px;">
+                        <router-link :to="contactUrl(contact)" class="contact-link">
+                          <span style="color:grey;font-size:14px;">{{contact.updatedAt | moment("from")}}</span>
+                        </router-link>
                       </td>
                     </tr>
                   </tbody>
@@ -106,11 +128,27 @@
         searchTerm: ''
       };
     },
-    watch: {
-      contactList() {
 
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        if (to.name === 'contactPage') {
+          vm.getContactAndOpen(to.params.contactId);
+        }
+      });
+    },
+    beforeRouteLeave (to, from, next) {
+      this.$glmodal.$off('onCloseModal');
+      next();
+    },
+    watch: {
+      '$route' (to, from) {
+        if (to.name === 'contactPage') {
+          this.getContactAndOpen(to.params.contactId);
+        }
+        if (from.name === 'contatcPage') { this.$glmodal.$emit('close'); }
       }
     },
+
     components: {
       'modal': VueStrap.modal,
       'el-checkbox': ElementUi.Checkbox,
@@ -118,6 +156,21 @@
     },
 
     methods: {
+      getContactAndOpen(contactId) {
+        let vm = this
+        let contact = vm.$_.find(
+          vm.contacts, {id: vm.$_.toInteger(contactId)}
+        )
+        if (contact === undefined) {
+          let url = '/api/v2/company/' + vm.company_id + '/contact/' + contactId;
+          vm.$http.get(url).then(resp => { vm.contactShow(resp.data.contact); });
+        } else {
+          vm.contactShow(contact);
+        }
+      },
+      contactUrl(contact) {
+        return '/company/' + Vue.currentUser.companyId + '/contact/' + contact.id;
+      },
       deleteSelectContacts() {
         if(confirm('Are you sure do to delete selected contacts?')) {
           let url = '/api/v2/company/' + this.company_id + '/contact/multiple/delete';
@@ -133,19 +186,19 @@
       exportSelectContacts() {
         let url = '/api/v2/company/' + this.company_id + '/contact/export';
         this.$http.post(url, { contactIds: this.contactList })
-              .then(resp => {
-                let headers = resp.headers;
-                let contentDisposition = headers.get('Content-Disposition') || '';
-                let filename = contentDisposition.split('filename=')[1];
-                filename = filename.replace(/"/g,'');
+          .then(resp => {
+            let headers = resp.headers;
+            let contentDisposition = headers.get('Content-Disposition') || '';
+            let filename = contentDisposition.split('filename=')[1];
+            filename = filename.replace(/"/g,'');
 
-                let blob = new Blob([resp.data],{type:headers['content-type']});
-                let link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.target = '_self';
-                link.download = filename;
-                link.click();
-              });
+            let blob = new Blob([resp.data],{type:headers['content-type']});
+            let link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.target = '_self';
+            link.download = filename;
+            link.click();
+          });
       },
       handleCheckAllChange(event) {
         if (event.target.checked) {
@@ -162,6 +215,14 @@
         this.loadContacts(params);
       },
       contactShow(contact) {
+        let vm = this;
+        vm.$glmodal.$off('onCloseModal');
+        vm.$glmodal.$once('onCloseModal', function() {
+          vm.$router.push({
+            path: `/company/${vm.company_id}/contact`
+          });
+        });
+
         this.$glmodal.$emit(
           'open',
           {
@@ -196,6 +257,11 @@
 
 </script>
 <style lang="sass">
+  .contact-link {
+  color: black;
+  &:hover { color: black;
+  }
+  }
   .el-checkbox__label { display: none }
   .contact-modal {
   .modal-header {
