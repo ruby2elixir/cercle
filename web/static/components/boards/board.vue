@@ -4,7 +4,7 @@
       <h2 class="">
         <inline-edit v-model="board.name" v-on:input="updateBoard" placeholder="Board Name" class='board-name'></inline-edit>
       </h2>
-      <button class='btn btn-default' @click="newCard()">
+      <button class='btn btn-default' @click="newCard()" v-if="board.boardColumns.length > 0">
         <span class="add-card">+ Add card</span>
       </button>
     </section>
