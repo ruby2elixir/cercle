@@ -26,7 +26,7 @@
   <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
   <body class="hold-transition skin-blue layout-top-nav">
     <notification id="notification-app"></notification>
-    <div class="wrapper wrapper_<%= wrapper_css_class @conn %>">
+    <div class="wrapper wrapper_">
 
       <header class="main-header">
 
@@ -92,7 +92,7 @@
         </nav>
       </header>
       <!-- Full Width Column -->
-      <div class="content-wrapper <%= wrapper_css_class @conn %>">
+      <div class="content-wrapper">
         <%= render CercleApi.SharedView, "flashes.html", conn: @conn %>
 
         <%= if show_board_menu?(@conn) do %>
