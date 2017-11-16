@@ -24,6 +24,18 @@ defmodule CercleApi.Tasks.ActivityNotificationTest do
     na = insert(:notification, target_type: "activity", target_id: activity.id,
       delivery_time: Timex.shift(Timex.now(), minutes: -10))
 
+    assert CercleApi.Tasks.ActivityNotification.email_html(
+      card1, n1, "prestart"
+    ) =~ ~r/<a href="\/company\/#{card1.company_id}\/board\/#{card1.board_id}\/card\/#{card1.id}">link to the card<\/a>/
+
+    assert CercleApi.Tasks.ActivityNotification.email_html(
+      card1, n1, "start"
+    ) =~ ~r/<a href="\/company\/#{card1.company_id}\/board\/#{card1.board_id}\/card\/#{card1.id}">link to the card<\/a>/
+
+    assert CercleApi.Tasks.ActivityNotification.email_html(
+      activity, na, "prestart"
+    ) =~ ~r/<a href="\/company\/#{activity.card.company_id}\/board\/#{activity.card.board_id}\/card\/#{activity.card.id}">link to the card<\/a>/
+
 
     CercleApi.Tasks.ActivityNotification.run
     assert Repo.get(Notification, n1.id).sent
