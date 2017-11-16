@@ -13,7 +13,7 @@
         Hi, <%= @receiver %>
         <br>
           <%= @name %> is due at <%= @due_date %>
-          <a href="<%=Application.get_env(:cercleApi, :site_url)%>/contact/<%= @contact_id %>">link to the card</a>
+          <a href="<%= @url %>">link to the card</a>
       </td>
     </tr>
     <tr>

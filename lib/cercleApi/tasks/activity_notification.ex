@@ -8,7 +8,6 @@ defmodule CercleApi.Tasks.ActivityNotification do
   alias CercleApi.{Repo, Activity, Card, Notification, Mailer}
 
   def run do
-    IO.puts "run ActivityNotification"
     Enum.each(
       get_items(),
       fn (item) -> send_email(item) end
@@ -55,9 +54,16 @@ defmodule CercleApi.Tasks.ActivityNotification do
       receiver: target.user.user_name,
       due_date: Timex.format!(target.due_date, "{0M}/{0D}/{YYYY} {h24}:{m}"),
       contact_id: contact_id(target),
-      name: target_name(target)
+      name: target_name(target),
+      url: target_url(target)
     )
   end
+
+  def target_url(%CercleApi.Card{} = card) do
+    "#{Application.get_env(:cercleApi, :site_url)}/company/#{card.company_id}/board/#{card.board_id}/card/#{card.id}"
+  end
+
+  def target_url(%CercleApi.Activity{} = activity), do: target_url(activity.card)
 
   def target_name(%CercleApi.Card{} = card) do
     with card <- Repo.preload(card, [:board, :board_column]) do
