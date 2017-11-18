@@ -82,7 +82,7 @@
       border-right: 1px solid lightgray;
       border-bottom: 1px solid lightgray;
       min-width: 200px;
-      min-height: 200px;
+      min-height: 250px;
       position: absolute;
       left: 0;
       right: 0;
