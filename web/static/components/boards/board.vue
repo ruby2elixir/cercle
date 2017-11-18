@@ -23,7 +23,7 @@
                   class='board-column-name textarea-inline-editable'>
                 </inline-text-edit>
 
-                <el-dropdown>
+                <el-dropdown v-if="canDeleteColumn(col)">
                   <span class="el-dropdown-link fa fa-ellipsis-h"></span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>
@@ -133,6 +133,9 @@ export default {
     'dropdown': VueStrap.dropdown
   },
   methods: {
+    canDeleteColumn(column) {
+      return !(column.cards && column.cards.length > 0 );
+    },
     cardUrl(card) {
       return '/company/' + Vue.currentUser.companyId + '/board/' + this.board.id + '/card/' + card.id;
     },
@@ -156,6 +159,8 @@ export default {
             return item.id === parseInt(column.id);
           });
           if (itemIndex !== -1){ this.board.boardColumns.splice(itemIndex, 1); }
+        }, error => {
+          this.$notification.$emit('alert', { msg: error.body.reason, type: 'danger' });
         });
       }
     },
