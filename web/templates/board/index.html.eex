@@ -1,1 +1,1 @@
-<router-view id="boards-app"></router-view>
+<router-view  class='router-view'></router-view>

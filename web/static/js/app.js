@@ -200,7 +200,9 @@ if ($('#user-navbar').length > 0) {
 if ($('.main-app').length > 0) {
   const routes = [
     {
-      path: '/company/:company_id/board', component: BoardList,
+      path: '/company/:company_id/board',
+      component: BoardList,
+      name: 'boards',
       meta: { classContainer: 'container boards-page', classWrapper: ' ' }
     },
     {
@@ -215,6 +217,7 @@ if ($('.main-app').length > 0) {
     },
     {
       path: '/company/:company_id/contact',
+      name: 'contacts',
       component: ContactList,
       meta: { classContainer: 'container contacts-page', classWrapper: ' ' },
       props: true
@@ -239,6 +242,7 @@ if ($('.main-app').length > 0) {
     {
       path: '/company/:company_id/activity',
       component: Activities,
+      name: 'activities',
       meta: { classContainer: 'container activities-page', classWrapper: ' ' },
       props: true
     },
@@ -282,11 +286,18 @@ if ($('.main-app').length > 0) {
     mode: 'history',
     routes: routes
   });
+
+  router.beforeEach((to, from, next) => {
+    let menuLinks = ['contacts', 'boards', 'activities'];
+    if (!document.querySelector('.router-view') && lodash.includes(menuLinks, to.name)) {
+      window.location.href = to.path;
+    } else { next(); }
+  });
   new Vue({
     router: router,
     computed: {
-      classPageWrapper() { return this.$route.meta.classPageWrapper; },
-      classContainer() { return this.$route.meta.classContainer;  },
+      classPageWrapper() { return this.$route.meta.classPageWrapper;  },
+      classContainer() { return this.$route.meta.classContainer || 'container';  },
       classWrapper () { return this.$route.meta.classWrapper; }
     },
     mounted() {
