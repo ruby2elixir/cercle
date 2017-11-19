@@ -83,22 +83,36 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   def delete(conn, %{"id" => id}) do
     board_column = Repo.get!(BoardColumn, id)
-    board_id = board_column.board_id
-    board_order = board_column.order
-    # reorder columns with greater order
-    from(c in BoardColumn,
-      where: c.board_id == ^board_id,
-      where: c.order > ^board_order,
-      update: [set: [order: fragment("? - 1", c.order)]])
-    |> Repo.update_all([])
+    column_query = from(p in BoardColumn,
+      left_join: c in assoc(p, :cards),
+      select: {p, count(c.id)}, group_by: p.id,
+      where: p.id == ^id)
+    case Repo.one(column_query) do
+      {board_column, cards_count} when cards_count == 0 ->
+        board_id = board_column.board_id
+        board_order = board_column.order
+        # reorder columns with greater order
+        from(c in BoardColumn,
+          where: c.board_id == ^board_id,
+          where: c.order > ^board_order,
+          update: [set: [order: fragment("? - 1", c.order)]])
+          |> Repo.update_all([])
 
-    Repo.delete!(board_column)
+        Repo.delete!(board_column)
 
-    Board
-    |> Repo.get(board_column.board_id)
-    |> Repo.preload([board_columns: Board.preload_query])
-    |> CercleApi.BoardNotificationService.update_notification
-    json conn, %{status: 200}
+        Board
+        |> Repo.get(board_column.board_id)
+        |> Repo.preload([board_columns: Board.preload_query])
+        |> CercleApi.BoardNotificationService.update_notification
+
+        json conn, %{status: 200}
+
+      _ ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json %{reason: "column don't be removed while the column has cards"}
+    end
+
   end
 
   def reorder_cards(conn, %{"board_column_id" => id, "card_ids" => card_ids}) do

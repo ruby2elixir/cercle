@@ -45,6 +45,7 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
+
   test "try to delete authorized board column for board", state do
     changeset = BoardColumn.changeset(%BoardColumn{}, %{name: "Step1", order: "1", board_id: state[:board].id})
     board_column = Repo.insert!(changeset)
@@ -60,4 +61,12 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
     assert json_response(conn, 403)["error"] == "You are not authorized for this action!"
   end
 
+  test "try to delete column with cards", %{board: board} = state do
+    board_column= insert(:board_column, board: board)
+    insert(:card, board_column: board_column, board: board)
+    conn = state[:conn]
+    |> delete "/api/v2/company/#{state[:company].id}/board_column/#{board_column.id}"
+    assert json_response(conn, 422)
+    assert Repo.get(BoardColumn, board_column.id)
+  end
 end

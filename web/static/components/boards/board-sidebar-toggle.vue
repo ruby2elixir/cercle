@@ -22,7 +22,7 @@
     margin-top:20px;
     position: absolute;
     right: 0px;
-    z-index: 9999;
+    z-index: 8888;
     display: none;
     &.open {
       display: inline-block;
