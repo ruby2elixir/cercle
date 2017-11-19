@@ -61,6 +61,7 @@ defmodule CercleApi.AddCardToBoardTest do
     session: session, user: user, company: company} do
     board = CercleApi.Factory.insert(:board, type_of_card: 1,
       name: "Test Board", company: company)
+    CercleApi.Factory.insert(:board_column, board: board)
     session
     |> sign_in(user.login, "1234")
     |> visit("/company/#{company.id}/board/#{board.id}")
