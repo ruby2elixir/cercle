@@ -250,7 +250,7 @@ if ($('.main-app').length > 0) {
     {
       path: '/company/:company_id/board/:board_id',
       meta: {
-        classContainer: '',
+        classContainer: ' ',
         classWrapper: 'board',
         classPageWrapper: 'wrapper_board' },
       components: {
@@ -267,8 +267,10 @@ if ($('.main-app').length > 0) {
     {
       path: '/company/:companyId/board/:board_id/card/:cardId',
       name: 'cardPage',
-      meta: { classContainer: 'board-page card-page',
-        classWrapper: 'wrapper_board board', classPageWrapper: 'wrapper_board' },
+      meta: {
+        classContainer: 'board-page card-page',
+        classWrapper: 'wrapper_board board',
+        classPageWrapper: 'wrapper_board' },
       components: {
         default: Board,
         'board-sidebar': BoardSidebar,
