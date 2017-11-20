@@ -11,7 +11,7 @@ defmodule CercleApi.APIV2.ContactView do
 
   def render("full_contact.json", %{contact: contact}) do
     %{
-      contact: contact,
+      contact: render_one(contact, __MODULE__, "contact.json"),
       company: contact.company,
       company_users: contact.company.users,
       tags: contact.tags,

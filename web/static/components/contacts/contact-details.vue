@@ -46,7 +46,11 @@
         <br />
         <span class="attribute-value organization-name">
           <organization-select :organization="contact.organization" @change="changeOrganization">
-            <input-modal v-model="contact.organization.name" v-on:input="updateOrganization"  placeholder="Click to add" label="Company name" v-if="contact.organization" />
+            <input-modal v-model="contact.organization.name"
+                         v-on:input="updateOrganization"
+                         placeholder="Click to add"
+                         label="Company name"
+                         v-if="contact.organization" />
             <a @click="removeOrganization" class="remove-organization">×</a>
           </organization-select>
         </span>

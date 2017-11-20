@@ -45,8 +45,7 @@
                          v-for="card in col.cards"
                          :key="card.id"
                          :column_id="col.id">
-                      <div class="portlet-content">
-                        <router-link :to="cardUrl(card)">
+                        <router-link :to="cardUrl(card)" tag='div' class='portlet-content'>
                           <span class='name'>
                             <div>
                               <span v-if="card.mainContact">
@@ -64,10 +63,6 @@
 
                           </span>
                         </router-link>
-                        <div>
-                        </div>
-
-                      </div>
                     </div>
                   </transition-group>
                 </vue-draggable>
