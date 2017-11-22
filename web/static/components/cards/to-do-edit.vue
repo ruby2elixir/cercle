@@ -24,7 +24,7 @@
               v-on:remove="removeTask(task)"
               placeholder="Title" />
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3" :class="{'strike-through': task.isDone}">
             <todo-assignment :userId="task.userId"
                              @change="assignment => {updateAssignment(task, assignment)}"
                              :users="companyUsers"
@@ -162,7 +162,7 @@
     cursor: pointer;
   }
 
-  .strike-through {
+  .strike-through .readonly-text {
     text-decoration: line-through;
     color: #999;
   }
