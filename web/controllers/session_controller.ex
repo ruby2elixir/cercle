@@ -29,7 +29,6 @@ defmodule CercleApi.SessionController do
         path = get_session(conn, :redirect_url) || front_board_path(conn, :index, company)
 
         conn
-        |> put_flash(:info, "Welcome back!")
         |> Guardian.Plug.sign_in(user)
         |> redirect(to:  path)
 
