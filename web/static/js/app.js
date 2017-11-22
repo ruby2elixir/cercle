@@ -105,6 +105,7 @@ Object.defineProperty(Vue.prototype, '$notification', {
 
 import lodash from 'lodash';
 Object.defineProperty(Vue.prototype, '$_', { value: lodash });
+Object.defineProperty(Vue.prototype, '$isTouch', { value: 'ontouchstart' in window });
 
 const GlobalModalWindow = new Vue();
 Object.defineProperty(Vue.prototype, '$glmodal', {

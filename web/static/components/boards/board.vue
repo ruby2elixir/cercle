@@ -12,7 +12,9 @@
     <!-- Main content -->
     <div id="columns-container" class="columns-container">
       <div id="board_columns">
-        <vue-draggable v-model="board.boardColumns" element="span" @end="onEndMoveBoardColumn">
+        <vue-draggable v-model="board.boardColumns"
+                       :options="columnsOptions"
+                       element="span" @end="onEndMoveBoardColumn">
           <transition-group name="flip-list"  class="list-group">
             <div class="column_master" v-for="col in board.boardColumns" :key="col.id">
               <div class="column_title" style="position:relative;">
@@ -37,7 +39,7 @@
               <div class="column" :data-id="col.id">
                 <vue-draggable
                   v-model="col.cards"
-                  :options="{group:'cards'}"
+                  :options="columnOptions"
                   @change="onEndMoveCard(col, $event)"
                   element="div">
                   <transition-group name="flip-list"  class="list-group">
@@ -268,6 +270,20 @@ export default {
 
   },
   computed: {
+    columnsOptions() {
+      if (this.$isTouch) {
+        return {disabled: true, sort: false};
+      } else {
+        return { };
+      }
+    },
+    columnOptions() {
+      if (this.$isTouch) {
+        return {group:'cards', disabled: true, sort: false};
+      } else {
+        return {group:'cards'};
+      }
+    },
     boardUrl() {
       return this.buildApiUrl('/board/' + this.board_id);
     }

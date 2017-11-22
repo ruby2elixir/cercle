@@ -1,6 +1,6 @@
 <template>
   <div v-on-click-outside='cancel'>
-    <div v-on:click="setEditMode" v-show="!editMode" v-linkified v-html="v || placeholder">
+    <div class="readonly-text" v-on:click="setEditMode" v-show="!editMode" v-linkified v-html="v || placeholder">
     </div>
 
     <div v-show="editMode">
@@ -36,7 +36,7 @@ export default {
     }
   },
   methods: {
-    setEditMode: function(event) {
+    setEditMode(event) {
       if(event.target.className.match(/\blinkified\b/))
         return;
 
@@ -46,11 +46,11 @@ export default {
         vue.$refs.input.focus();
       });
     },
-    save: function() {
+    save() {
       this.$emit('input', this.v);
       this.editMode = false;
     },
-    cancel: function() {
+    cancel() {
       this.v = this.value;
       this.editMode = false;
     },
