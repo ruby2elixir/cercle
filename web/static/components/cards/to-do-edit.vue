@@ -35,7 +35,7 @@
                   <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.userName" />
                 </span>
               </div>
-              <div class="todo-assigment-placeholder-text" v-else>Add due date</div>
+              <div class="todo-assigment-placeholder-text" v-else>+ due date</div>
             </todo-assignment>
           </div>
         </div>
