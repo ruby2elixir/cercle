@@ -9,7 +9,7 @@ defmodule CercleApi.BoardColumn do
     field :name, :string
     field :order, :integer
     belongs_to :board, CercleApi.Board
-    has_many :cards, CercleApi.Card
+    has_many :cards, CercleApi.Card, on_delete: :delete_all
     timestamps
   end
 
