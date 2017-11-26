@@ -1,6 +1,6 @@
 <template>
   <div class='board-page'>
-    <section class="content-header clearfix">
+    <section class="content-header clearfix" style="padding:0px;">
       <h2 class="">
         <inline-edit v-model="board.name" v-on:input="updateBoard" placeholder="Board Name" class='board-name'></inline-edit>
       </h2>
