@@ -4,9 +4,9 @@
     <!-- User Account Menu -->
     <li class="tasks-menu">
       <a href="https://intercom.help/cercle"  aria-expanded="false" target="_blank">
-        <i class="fa fa-phone"></i> 
+        <i class="fa fa-question-circle"></i> 
         &nbsp;
-        Support
+        Help
       </a>
     </li>
     <li class="dropdown user user-menu">
