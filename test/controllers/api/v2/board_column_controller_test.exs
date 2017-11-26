@@ -69,4 +69,13 @@ defmodule CercleApi.APIV2.BoardColumnControllerTest do
     assert json_response(conn, 422)
     assert Repo.get(BoardColumn, board_column.id)
   end
+
+  test "try to delete column with archived cards", %{board: board} = state do
+    board_column= insert(:board_column, board: board)
+    insert(:card, board_column: board_column, board: board, status: 1)
+    conn = state[:conn]
+    |> delete "/api/v2/company/#{state[:company].id}/board_column/#{board_column.id}"
+    assert json_response(conn, 200)
+    refute Repo.get(BoardColumn, board_column.id)
+  end
 end
