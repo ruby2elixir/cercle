@@ -49,11 +49,13 @@ defmodule CercleApi.User do
     |> unique_constraint(:login)
   end
 
-  def registration_changeset(model, params) do model
+  def registration_changeset(model, params) do
+    model
     |> changeset(params)
     |> cast(params, [:password])
     |> validate_length(:password, min: 6, max: 100)
     |> generate_encrypted_password()
+    |> generate_user_name()
   end
 
   def update_changeset(model, params) do
@@ -83,6 +85,25 @@ defmodule CercleApi.User do
         put_change(current_changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(password))
       _ ->
         current_changeset
+    end
+  end
+
+  defp generate_user_name(changeset) do
+    with username <- get_field(changeset, :user_name),
+         true <- is_nil(username) do
+      put_change(changeset, :user_name, generate_uniq_username)
+    else
+      _ ->
+        changeset
+    end
+  end
+
+  defp generate_uniq_username do
+    with username <- "user-#{Base.encode16(:crypto.strong_rand_bytes(3))}",
+         true <- is_nil(Repo.get_by(__MODULE__, user_name: username)) do
+      username
+    else
+      _ -> generate_uniq_username
     end
   end
 end

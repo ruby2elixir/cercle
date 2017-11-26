@@ -35,13 +35,14 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   def create(conn, %{"board_column" => board_column_params}) do
     user = CercleApi.Plug.current_user(conn)
-    company = current_company(conn)
-    board = Repo.get(Board, board_column_params["board_id"])
-    if board do
-      if board.company_id == company.id do
-        board = Repo.get(Board, board_column_params["board_id"]) |> Repo.preload(:board_columns)
-        boardcol_params = Map.put(board_column_params, "order", Enum.count(board.board_columns))
+    company_id = current_company(conn).id
+
+    case Repo.get(Board, board_column_params["board_id"]) do
+      %{company_id: board_company_id} = board when board_company_id == company_id  ->
+        column_counts = Repo.aggregate(assoc(board, :board_columns), :count, :id)
+        boardcol_params = Map.put(board_column_params, "order", column_counts)
         changeset = BoardColumn.changeset(%BoardColumn{}, boardcol_params)
+
         case Repo.insert(changeset) do
           {:ok, board_column} ->
             Board
@@ -54,11 +55,11 @@ defmodule CercleApi.APIV2.BoardColumnController do
             |> put_status(:unprocessable_entity)
             |> render(CercleApi.ChangesetView, "error.json", changeset: changeset)
         end
-      else
+      nil ->
+        json conn, %{status: 404, error: "Resource not found!"}
+      _  ->
         json conn, %{status: 403, error: "You are not authorized for this action!"}
-      end
-    else
-      json conn, %{status: 404, error: "Resource not found!"}
+
     end
   end
 
@@ -81,10 +82,13 @@ defmodule CercleApi.APIV2.BoardColumnController do
     end
   end
 
+  @doc """
+  Delete board column.
+  column will deleted only if the column without open cards
+  """
   def delete(conn, %{"id" => id}) do
-    board_column = Repo.get!(BoardColumn, id)
     column_query = from(p in BoardColumn,
-      left_join: c in assoc(p, :cards),
+      left_join: c in Card, on: c.board_column_id == p.id and c.status == 0,
       select: {p, count(c.id)}, group_by: p.id,
       where: p.id == ^id)
     case Repo.one(column_query) do
@@ -92,12 +96,16 @@ defmodule CercleApi.APIV2.BoardColumnController do
         board_id = board_column.board_id
         board_order = board_column.order
         # reorder columns with greater order
-        from(c in BoardColumn,
+        reorder_query = from(c in BoardColumn,
           where: c.board_id == ^board_id,
           where: c.order > ^board_order,
           update: [set: [order: fragment("? - 1", c.order)]])
-          |> Repo.update_all([])
+        Repo.update_all(reorder_query , [])
 
+        board_column
+        |> assoc(:cards)
+        |> Repo.all
+        |> Enum.each(&(Repo.delete(&1)))
         Repo.delete!(board_column)
 
         Board
