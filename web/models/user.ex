@@ -47,6 +47,7 @@ defmodule CercleApi.User do
     |> cast_attachments(params, [:profile_image])
     |> validate_required([:login])
     |> unique_constraint(:login)
+
   end
 
   def registration_changeset(model, params) do
@@ -56,6 +57,8 @@ defmodule CercleApi.User do
     |> validate_length(:password, min: 6, max: 100)
     |> generate_encrypted_password()
     |> generate_user_name()
+    |> validate_required([:user_name])
+    |> unique_constraint(:user_name)
   end
 
   def update_changeset(model, params) do
@@ -69,6 +72,14 @@ defmodule CercleApi.User do
       model
       |> changeset(params)
     end
+  end
+
+  def update_user_name(model) do
+    model
+    |> changeset(%{})
+    |> generate_user_name()
+    |> validate_required([:user_name])
+    |> unique_constraint(:user_name)
   end
 
   def company_users(company) do
