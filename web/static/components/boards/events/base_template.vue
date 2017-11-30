@@ -5,7 +5,7 @@
       <div class="menu-info" style="margin-left:45px;">
        <h4 class="control-sidebar-subheading" style="font-size:16px;">
          <span style="font-weight:600;">
-           {{item.userName}}
+           {{item.fullName}}
          </span>
          <slot></slot>
          <br />

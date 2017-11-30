@@ -58,7 +58,7 @@
                     <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="user-image" alt="User Image">
                     <%= end %>
                     <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                    <span class="hidden-xs"><%= @conn.assigns[:current_user].user_name %></span>
+                    <span class="hidden-xs"><%= @conn.assigns[:current_user].full_name %></span>
                   </a>
 
                   <ul class="dropdown-menu">
@@ -68,9 +68,9 @@
                       <img src="<%= CercleApi.UserProfileImage.url({@conn.assigns[:current_user].profile_image, @conn.assigns[:current_user]}, :small) %>" class="img-circle" alt="User Image">
                       <%= end %>
                       <p style="color:#FFFFFF;">
-                        <%= @conn.assigns[:current_user].user_name %>
+                        <%= @conn.assigns[:current_user].full_name %>
                         <small style="color:#FFFFFF;">
-                          (<%= @conn.assigns[:current_user].name %>)
+                          (<%= @conn.assigns[:current_user].username %>)
                         </small>
                       </p>
                     </li>

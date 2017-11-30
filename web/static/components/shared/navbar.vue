@@ -16,7 +16,7 @@
         <img v-if="user.profile_image_url" :src="user.profile_image_url" class="user-image">
         <img v-else class="user-image" src="/images/pp_2.png">
         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-        <span class="hidden-xs">{{user.user_name}} (<span class="current-company">{{company.title}}</span>)</span>
+        <span class="hidden-xs">{{user.full_name}} (<span class="current-company">{{company.title}}</span>)</span>
       </a>
 
       <ul class="dropdown-menu">
@@ -25,7 +25,7 @@
           <img v-if="user.profile_image_url" :src="user.profile_image_url" class="img-circle">
           <img v-else class="img-circle" src="/images/pp_2.png">
           <p>
-            {{user.user_name}}
+            {{user.full_name}}
             <small>
               Company: {{company.title}}
             </small>

@@ -21,9 +21,9 @@ defmodule CercleApi.Factory do
   def user_factory do
     %User{
       login: sequence(:login, &"email-#{&1}@foo.com"),
-      name: "name",
+      username: sequence(:username, &"name-#{&1}"),
       password: "supersecret",
-      user_name: "test"
+      full_name: "test"
     }
   end
 

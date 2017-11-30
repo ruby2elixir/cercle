@@ -35,10 +35,10 @@ defmodule CercleApi.APIV2.TimelineEventView do
       profile_url = CercleApi.UserProfileImage.url({
         timeline_event.user.profile_image, timeline_event.user}, :small
       )
-      user_name = timeline_event.user.user_name
+      full_name = timeline_event.user.full_name
     else
       profile_url = ""
-      user_name = ""
+      full_name = ""
     end
 
     %{
@@ -49,7 +49,7 @@ defmodule CercleApi.APIV2.TimelineEventView do
       card_name: timeline_event.card.name,
       contact_id: timeline_event.contact_id,
       content: timeline_event.content,
-      user_name: user_name,
+      full_name: full_name,
       main_contact_name: main_contact_name(timeline_event),
       created_at: timeline_event.inserted_at,
       metadata: timeline_event.metadata

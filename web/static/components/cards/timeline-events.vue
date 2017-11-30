@@ -8,7 +8,7 @@
       <div class="message-block">
         <div style="padding:5px;font-size:15px;padding-bottom:15px;">
           <span class="username" style="">
-            {{ event.user && event.user.userName }}
+            {{ event.user && event.user.fullName }}
           </span>
           <span class="description"> {{event.eventName}} </span>
         </div>

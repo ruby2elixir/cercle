@@ -93,7 +93,7 @@ defmodule CercleApi.SettingsController do
 
   defp invitation_email(sender, receiver_email, company, encoded_values) do
     %Mailman.Email{
-      subject: sender.user_name <> " invited to join " <> company.title,
+      subject: sender.full_name <> " invited to join " <> company.title,
       from: "referral@cercle.co",
       to: [receiver_email],
       html: Phoenix.View.render_to_string(

@@ -1218,8 +1218,8 @@ td[class=mobileHide], td[class~=mobileHide], td[class=tableOption], table[class=
               <tr>
                 <td class="eHeaderLogo" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;height: 48px;text-align: left;font-size: 0 !important;font-weight: bold;"><a href="#" style="padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;color: #ff9826;height: 48px;text-align: left;font-size: 18px;font-weight: bold;line-height: 0;"><img class="imageFix" src="http://www.cercle.co/images/logo_email.png" width="200" height="48" alt="Appcercle" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;height: auto;width: auto;line-height: 100%;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;display: block;vertical-align: top;"></a></td>
                 <!-- end .eHeaderLogo-->
-                
-                <!-- end .eHeaderOptions--> 
+
+                <!-- end .eHeaderOptions-->
               </tr>
             </table></td>
           <td class="eHeader_stretch" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;min-width: 16px;background-color: #ffffff;border-bottom: 1px solid #ebebeb;">&nbsp;</td>
@@ -1233,8 +1233,8 @@ td[class=mobileHide], td[class~=mobileHide], td[class=tableOption], table[class=
                       <td style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 14px;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;"><img src="<%= CercleApi.UserProfileImage.url({@user.profile_image, @user}, :small) %>" width="64" height="64" alt="Your Profile Picture" style="margin-top: 0;margin-left: auto;margin-right: auto;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;height: auto;width: auto;line-height: 100%;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border-radius:64px;"></td>
                     </tr>
                   </table>
-                  <p style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 24px;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;text-align: center;font-size: 12px;line-height: 19px;color: #898989;"><a href="#" style="padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;color: #ff9826;font-size: 14px;"><span style="text-decoration: none;color: #ff9826;font-weight: bold;"><%=@user.user_name%></span></a><br>
-                    @<%=@user.name%></p></td>
+                  <p style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 24px;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;text-align: center;font-size: 12px;line-height: 19px;color: #898989;"><a href="#" style="padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;color: #ff9826;font-size: 14px;"><span style="text-decoration: none;color: #ff9826;font-weight: bold;"><%=@user.full_name%></span></a><br>
+                    @<%=@user.username%></p></td>
                 <td align="left" valign="top" class="emptyCell messageArrow" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 16px;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;line-height: 0 !important;font-size: 0 !important;"><table class="bubble" width="16" border="0" cellspacing="0" cellpadding="0" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;border-collapse: collapse;border-spacing: 0;">
                     <tr>
                       <td style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;background-color: #fafafa;"><img src="http://www.cercle.co/images/bubble_left.png" alt="" width="16" height="26" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;height: auto;width: auto;line-height: 100%;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;"></td>
@@ -1248,23 +1248,23 @@ td[class=mobileHide], td[class~=mobileHide], td[class=tableOption], table[class=
                     </tr>
                     <tr>
                       <td class="emptyCell" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;background-color: #fafafa;line-height: 0 !important;font-size: 0 !important;">&nbsp;</td>
-                      <td class="bubbleContent" align="left" valign="middle" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 12px;padding-bottom: 0;padding-left: 12px;padding-right: 12px;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;background-color: #fafafa;"><p style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 24px;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;font-size: 14px;line-height: 22px;text-align: left;color: #242424;"><%=@user.user_name%> commented on <%=@card.name%><Br /><Br />
-                        
-                        
+                      <td class="bubbleContent" align="left" valign="middle" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 12px;padding-bottom: 0;padding-left: 12px;padding-right: 12px;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;background-color: #fafafa;"><p style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 24px;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;font-size: 14px;line-height: 22px;text-align: left;color: #242424;"><%=@user.full_name%> commented on <%=@card.name%><Br /><Br />
+
+
                         "<%=@comment%>"</p>
                       </td>
                       <td class="emptyCell" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;background-color: #fafafa;line-height: 0 !important;font-size: 0 !important;">&nbsp;</td>
                     </tr>
-                    
+
                   </table></td>
               </tr>
             </table>
-            
+
             <!-- end .messageSection -->
-            
+
             </td>
           <td class="eBody_stretch" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;min-width: 16px;background-color: #ffffff;">&nbsp;</td>
-          <!-- end .eBody--> 
+          <!-- end .eBody-->
         </tr>
         <tr>
           <td class="eBody_stretch" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;min-width: 16px;background-color: #ffffff;">&nbsp;</td>
@@ -1298,7 +1298,7 @@ td[class=mobileHide], td[class~=mobileHide], td[class=tableOption], table[class=
               </tr>
             </tbody></table></td>
           <td style="margin-top:0;margin-left:0;margin-right:0;margin-bottom:0;padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;border-collapse:collapse;border-spacing:0;font-family:Arial,Helvetica,sans-serif;min-width:16px;background-color:#ffffff">&nbsp;</td>
-           
+
         </tr>
         <tr>
           <td class="eFooter_stretch" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;min-width: 16px;">&nbsp;</td>
@@ -1307,9 +1307,9 @@ td[class=mobileHide], td[class~=mobileHide], td[class=tableOption], table[class=
           <td class="eFooter_stretch" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;min-width: 16px;">&nbsp;</td>
         </tr>
       </table>
-      
+
       <!-- end .eBox --></td>
-    <!-- end .emailBodyCell --> 
+    <!-- end .emailBodyCell -->
   </tr>
 </table>
 <!-- end #emailBody -->

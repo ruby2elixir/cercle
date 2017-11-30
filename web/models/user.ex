@@ -8,18 +8,18 @@ defmodule CercleApi.User do
   use Arc.Ecto.Schema
   alias CercleApi.{Repo, UserCompany}
   @derive {Poison.Encoder, only: [
-              :id, :user_name, :profile_image
+              :id, :full_name, :profile_image
             ]}
 
   schema "users" do
-    field :user_name, :string #is full rname
+    field :full_name, :string #is full rname
     field :password, :string, virtual: true
     field :password_hash, :string
     field :password_reset_code, :string
     field :notification, :boolean
     field :login, :string
     field :profile_image, CercleApi.UserProfileImage.Type
-    field :name, :string #is username
+    field :username, :string #is username
     field :time_zone, :string, default: "America/New_York"
     timestamps
 
@@ -42,8 +42,8 @@ defmodule CercleApi.User do
   def changeset(model, params \\ :invalid) do
     model
     |> cast(params, [
-          :login, :user_name, :password_reset_code,
-          :name, :time_zone, :notification])
+          :login, :full_name, :password_reset_code,
+          :username, :time_zone, :notification])
     |> cast_attachments(params, [:profile_image])
     |> validate_required([:login])
     |> unique_constraint(:login)
@@ -56,9 +56,9 @@ defmodule CercleApi.User do
     |> cast(params, [:password])
     |> validate_length(:password, min: 6, max: 100)
     |> generate_encrypted_password()
-    |> generate_user_name()
-    |> validate_required([:user_name])
-    |> unique_constraint(:user_name)
+    |> generate_username()
+    |> validate_required([:username])
+    |> unique_constraint(:username)
   end
 
   def update_changeset(model, params) do
@@ -71,15 +71,17 @@ defmodule CercleApi.User do
     else
       model
       |> changeset(params)
+      |> validate_required([:username])
+      |> unique_constraint(:username)
     end
   end
 
   def update_user_name(model) do
     model
     |> changeset(%{})
-    |> generate_user_name()
-    |> validate_required([:user_name])
-    |> unique_constraint(:user_name)
+    |> generate_username()
+    |> validate_required([:username])
+    |> unique_constraint(:username)
   end
 
   def company_users(company) do
@@ -99,19 +101,16 @@ defmodule CercleApi.User do
     end
   end
 
-  defp generate_user_name(changeset) do
-    with username <- get_field(changeset, :user_name),
-         true <- is_nil(username) do
-      put_change(changeset, :user_name, generate_uniq_username)
-    else
-      _ ->
-        changeset
+  defp generate_username(changeset) do
+    case String.trim(to_string(get_field(changeset, :username))) do
+      "" -> put_change(changeset, :username, generate_uniq_username)
+      _ -> changeset
     end
   end
 
   defp generate_uniq_username do
     with username <- "user-#{Base.encode16(:crypto.strong_rand_bytes(3))}",
-         true <- is_nil(Repo.get_by(__MODULE__, user_name: username)) do
+         true <- is_nil(Repo.get_by(__MODULE__, username: username)) do
       username
     else
       _ -> generate_uniq_username
@@ -124,7 +123,7 @@ end
 defimpl Poison.Encoder, for: CercleApi.User do
   def encode(model, options) do
     model
-    |> Map.take([:id, :user_name, :name, :profile_image])
+    |> Map.take([:id, :full_name, :name, :profile_image])
     |> Map.put(:profile_image_url, CercleApi.UserProfileImage.url({model.profile_image, model}, :small))
     |> Poison.Encoder.encode(options)
   end
