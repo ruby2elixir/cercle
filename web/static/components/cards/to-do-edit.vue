@@ -32,7 +32,7 @@
               <div v-if="task.user" :class="{'strike-through': task.isDone, 'text-right': true}">
                 <span>
                   {{ task.dueDate|formatDate }}
-                  <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.userName" />
+                  <img :src="task.user.profileImageUrl" class="profile-image" :title="task.user.fullName" />
                 </span>
               </div>
               <div class="todo-assigment-placeholder-text" v-else>+ due date</div>
@@ -88,8 +88,8 @@
     methods: {
       shortUserName(user) {
         let shortName = '';
-        if (user.userName) {
-          shortName = user.userName.toUpperCase().slice(0, 2);
+        if (user.fullName) {
+          shortName = user.fullName.toUpperCase().slice(0, 2);
         }
         return shortName;
       },

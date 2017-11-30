@@ -72,7 +72,7 @@
     <script>
       window.intercomSettings = {
       app_id: "mkbrkdwj",
-      name: "<%=@conn.assigns[:current_user].user_name%>", // Full name
+      name: "<%=@conn.assigns[:current_user].full_name%>", // Full name
       email: "<%=@conn.assigns[:current_user].login%>" // Email address
       };
     </script>

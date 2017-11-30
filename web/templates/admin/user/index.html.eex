@@ -20,7 +20,7 @@
   <tbody>
 <%= for user <- @users do %>
     <tr>
-      <td><%= user.user_name %></td>
+      <td><%= user.full_name %></td>
       <td><%= user.login %></td>
       <td class="text-right">
         <%= link "Edit", to: admin_user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %>

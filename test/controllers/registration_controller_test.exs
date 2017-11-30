@@ -2,7 +2,7 @@ defmodule CercleApi.RegistrationControllerTest do
   use CercleApi.ConnCase
   alias CercleApi.{ Repo, User }
   @valid_attrs %{
-    user: %{user_name: "test-user", login: "test@test.com", password: "123456"},
+    user: %{full_name: "test-user", login: "test@test.com", password: "123456"},
     company: %{ title: "TestCompany" }
   }
   test "GET /register", %{conn: conn} do
@@ -14,7 +14,7 @@ defmodule CercleApi.RegistrationControllerTest do
       conn = post(conn, "/register", @valid_attrs)
       assert redirected_to(conn) =~ ~r/company\/\d+\/board/
       user = Repo.get_by(User, login: "test@test.com")
-      assert user.user_name
+      assert user.full_name
     end
   end
 end

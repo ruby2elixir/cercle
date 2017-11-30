@@ -36,15 +36,15 @@
              <div class="box-body">
                <!-- text input -->
                 <div class="form-group">
-                  <%= label f, :user_name, "Full Name", class: "control-label" %>
-                  <%= text_input f, :user_name, class: "form-control" %>
-                  <%= error_tag f, :user_name %>
+                  <%= label f, :full_name, "Full Name", class: "control-label" %>
+                  <%= text_input f, :full_name, class: "form-control" %>
+                  <%= error_tag f, :full_name %>
                 </div>
                <br />
                 <div class="form-group">
-                  <%= label f, :name, "Username", class: "control-label" %>
-                  <%= text_input f, :name, class: "form-control" %>
-                  <%= error_tag f, :name %>
+                  <%= label f, :username, "Username", class: "control-label" %>
+                  <%= text_input f, :username, class: "form-control" %>
+                  <%= error_tag f, :username %>
                 </div>
                 <br />
 

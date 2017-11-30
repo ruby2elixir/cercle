@@ -3,8 +3,8 @@
     <span v-on:click="showModal" v-if="!inline" :class="buttonClass">
       <slot>
         <span v-if="currentMember">
-          <img :src="currentMember.profileImageUrl" class='profile-image' :title="currentMember.userName" />
-          <span v-if="!displayShort">{{currentMember.userName}}</span>
+          <img :src="currentMember.profileImageUrl" class='profile-image' :title="currentMember.fullName" />
+          <span v-if="!displayShort">{{currentMember.fullName}}</span>
         </span>
         <span v-else>{{ placeholder }}</span>
       </slot>
@@ -20,7 +20,7 @@
         <ul class='users-list'>
           <li :class='memberClass(user)' v-for="user in users" @click="toggleMemberSelection(user)">
             <img :src="user.profileImageUrl" class='profile-image' />
-            {{ user.userName }}
+            {{ user.fullName }}
             <i class="fa fa-check" v-if="user.id == v" />
           </li>
         </ul>

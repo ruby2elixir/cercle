@@ -43,15 +43,15 @@ defmodule CercleApi.APIV2.TimelineEventController do
         comment = timeline_event_params["content"]
         parts = String.split(comment, " ")
 
-        Enum.each parts, fn x ->
-          Enum.each users, fn u ->
-            if x == ("@" <> to_string(u.name)) do
-              CercleApi.Mailer.deliver(
-                notification_email(u.login, timeline_event_reload.card, true, comment, company, current_user , u)
-              )
-            end
-          end
-        end
+        users
+        |> Enum.filter(&(Enum.member?(parts, "@#{&1.username}")))
+        |> Enum.each(fn u ->
+          CercleApi.Mailer.deliver(
+            notification_email(
+              u.login, timeline_event_reload.card, true, comment,
+              company, current_user, u)
+          )
+        end)
 
         conn
         |> put_status(:created)
@@ -66,7 +66,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
   def notification_email(emailTo, card, status, comment, company, user, user2) do
       %Mailman.Email{
-        subject: user.user_name <> " commented on " <> card.name,
+        subject: user.full_name <> " commented on " <> card.name,
         from: "referral@cercle.co",
         to: [emailTo],
         html: Phoenix.View.render_to_string(CercleApi.EmailView,

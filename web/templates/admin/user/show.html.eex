@@ -4,7 +4,7 @@
     <%= @user.login %>
   </li>
   <li>
-    <%= @user.user_name %>
+    <%= @user.full_name %>
   </li>
 </ul>
 <%= link "Edit", to: admin_user_path(@conn, :edit, @user) %> | 

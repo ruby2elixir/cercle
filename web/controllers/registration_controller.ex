@@ -45,7 +45,7 @@ defmodule CercleApi.RegistrationController do
           {:error, changeset} ->
             conn
             |> render(:new, changeset: changeset,
-            user_name: registration_params["user_name"],
+            full_name: registration_params["user_name"],
             company_id: company.id,
             company_title: company.title,
             user_login: registration_params["login"])
@@ -53,7 +53,7 @@ defmodule CercleApi.RegistrationController do
       else
         conn
         |> render(:new, changeset: %{user_changeset | action: :insert},
-        user_name: registration_params["user_name"],
+        full_name: registration_params["user_name"],
         company_id: company_params["id"],
         company_title: company_params["title"],
         user_login: registration_params["login"])
@@ -62,7 +62,7 @@ defmodule CercleApi.RegistrationController do
     else
       conn
       |> render(:new, changeset: %{company_changeset | action: :insert},
-      user_name: registration_params["user_name"],
+      full_name: registration_params["user_name"],
       company_id: company_params["id"],
       company_title: company_params["title"],
       user_login: registration_params["login"])

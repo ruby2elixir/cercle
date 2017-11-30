@@ -51,7 +51,7 @@ defmodule CercleApi.Tasks.ActivityNotification do
     Phoenix.View.render_to_string(
       CercleApi.EmailView, "#{event_type}_#{item.target_type}.html",
       target: target,
-      receiver: target.user.user_name,
+      receiver: target.user.full_name,
       due_date: Timex.format!(target.due_date, "{0M}/{0D}/{YYYY} {h24}:{m}"),
       contact_id: contact_id(target),
       name: target_name(target),

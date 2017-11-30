@@ -61,7 +61,7 @@
                             <img :src="card.user.profileImageUrl"
                                  class='profile-image'
                                  style="max-width:25px;max-height:30px;margin-top:10px;border-radius:4px;"
-                                 :title="card.user.userName" v-if="card.user"  />
+                                 :title="card.user.fullName" v-if="card.user"  />
 
                           </span>
                         </router-link>

@@ -11,9 +11,9 @@ defmodule CercleApi.APIV2.UserView do
 
   def render("user.json", %{user: user}) do
     %{id: user.id,
-      user_name: user.user_name,
+      full_name: user.full_name,
       login: user.login,
       created_at: user.inserted_at,
-      name: user.name}
+      name: user.username}
   end
 end
