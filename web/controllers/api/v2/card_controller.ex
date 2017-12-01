@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.CardController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.{Card, Contact, Company, Organization, User, Board, CardService, BoardColumn}
+  alias CercleApi.{Card, Contact, Board, CardService}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -17,12 +17,11 @@ defmodule CercleApi.APIV2.CardController do
     current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn, current_user)
     contact = Repo.get_by!(Contact, id: contact_id, company_id: company.id)
-
-    if archived == "true" do
-      cards = Contact.all_cards(contact)
-    else
-      cards = Contact.involved_in_cards(contact)
-    end
+    cards =
+      case archived do
+        "true" ->  Contact.all_cards(contact)
+        _ -> Contact.involved_in_cards(contact)
+      end
 
     render(conn, "index.json", cards: cards)
   end
@@ -30,7 +29,7 @@ defmodule CercleApi.APIV2.CardController do
   def index(conn, %{"board_column_id" => board_column_id}) do
     current_user = CercleApi.Plug.current_user(conn)
     company = current_company(conn, current_user)
-    
+
     cards_query = from c in Card,
       where: c.company_id == ^company.id,
       where: c.board_column_id == ^board_column_id,

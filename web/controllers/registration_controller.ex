@@ -1,7 +1,7 @@
 defmodule CercleApi.RegistrationController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User, Company, Board, BoardColumn, UserCompany}
+  alias CercleApi.{User, Company}
 
   def new(conn, _params) do
     changeset = User.changeset(%CercleApi.User{})
@@ -37,7 +37,7 @@ defmodule CercleApi.RegistrationController do
         case Repo.insert(changeset) do
           {:ok, user} ->
             Company.add_user_to_company(user, company)
-            
+
             conn
             |> Guardian.Plug.sign_in(user)
             |> configure_session(renew: true)

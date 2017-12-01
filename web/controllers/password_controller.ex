@@ -29,7 +29,7 @@ defmodule CercleApi.PasswordController do
           conn
           |> put_flash(:info, "Password reset link has been sent to your email address.")
           |> redirect(to: session_path(conn, :new))
-        {:error, changeset} ->
+        {:error, _changeset} ->
           conn
           |> put_flash(:error, "Unable to generate password reset code")
           |> redirect(to: "/")
@@ -61,11 +61,11 @@ defmodule CercleApi.PasswordController do
       changeset = User.registration_changeset(user, %{password: password, password_reset_code: ""})
 
       case Repo.update(changeset) do
-        {:ok, user} ->
+        {:ok, _user} ->
           conn
           |> put_flash(:info, "Password updated, please login")
           |> redirect(to: session_path(conn, :new))
-        {:error, changeset} ->
+        {:error, _changeset} ->
           conn
           |> put_flash(:error, "Unable to update password")
           |> redirect(to: "/")

@@ -2,7 +2,7 @@ defmodule CercleApi.ContactController do
   use CercleApi.Web, :controller
   use Timex
 
-  alias CercleApi.{Contact, Organization, TimelineEvent, Activity, Company, ContactTag, Tag, Board, BoardColumn, Card}
+  alias CercleApi.{Contact, TimelineEvent, ContactTag, Tag, Board, BoardColumn}
 
   require Logger
 
@@ -11,7 +11,7 @@ defmodule CercleApi.ContactController do
   not_found_handler: {CercleApi.Helpers, :handle_not_found}
 
   def index(conn, params) do
-    user = Guardian.Plug.current_resource(conn)
+    Guardian.Plug.current_resource(conn)
     company = conn
     |> current_company
     |> Repo.preload([:users])
@@ -49,7 +49,7 @@ defmodule CercleApi.ContactController do
   end
 
   def new(conn, _params) do
-    user = Guardian.Plug.current_resource(conn)
+    Guardian.Plug.current_resource(conn)
     company = conn
     |> current_company
     |> Repo.preload([:users])
@@ -68,7 +68,7 @@ defmodule CercleApi.ContactController do
   end
 
   def show(conn, params) do
-    user = Guardian.Plug.current_resource(conn)
+    Guardian.Plug.current_resource(conn)
     company = conn
     |> current_company
     |> Repo.preload([:users])

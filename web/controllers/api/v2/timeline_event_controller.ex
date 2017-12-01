@@ -1,6 +1,6 @@
 defmodule CercleApi.APIV2.TimelineEventController do
   use CercleApi.Web, :controller
-  alias CercleApi.{TimelineEvent, User, Contact, Board, Repo}
+  alias CercleApi.{TimelineEvent, Repo}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -10,8 +10,8 @@ defmodule CercleApi.APIV2.TimelineEventController do
 
   plug :scrub_params, "timeline_event" when action in [:create, :update]
 
-  def index(conn, params) do
-    current_user = CercleApi.Plug.current_user(conn)
+  def index(conn, _params) do
+    CercleApi.Plug.current_user(conn)
     te = Repo.preload(Repo.all(TimelineEvent), [:user])
 
     render(conn, "index.json", timeline_events: te)
@@ -37,7 +37,7 @@ defmodule CercleApi.APIV2.TimelineEventController do
         ### THE CODE BELOW IS USELESS, WE NEED TO GET THE IDs OF THE USER WILL NOTIFIY INSTEAD OF PARSING THE CONTENT OF THE TEXTAREA
         company = conn
         |> current_company
-        |> Repo.preload [:users]
+        |> Repo.preload([:users])
         users = company.users
 
         comment = timeline_event_params["content"]

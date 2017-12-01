@@ -1,6 +1,6 @@
 defmodule CercleApi.APIV2.OrganizationController do
   use CercleApi.Web, :controller
-  alias CercleApi.{Organization, Contact, Company, User}
+  alias CercleApi.{Organization, Contact, User}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -12,7 +12,7 @@ defmodule CercleApi.APIV2.OrganizationController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, %{"user_id" => user_id}) do
-    user = Repo.get(User, user_id)
+    Repo.get(User, user_id)
     company = current_company(conn)
 
     organizations = Organization
@@ -41,7 +41,7 @@ defmodule CercleApi.APIV2.OrganizationController do
   end
 
   def create(conn, %{"organization" => organization_params}) do
-    user = CercleApi.Plug.current_user(conn)
+    CercleApi.Plug.current_user(conn)
     company = current_company(conn)
 
     changeset = company
@@ -60,15 +60,14 @@ defmodule CercleApi.APIV2.OrganizationController do
     end
   end
 
-  def show(conn, _params) do
-    id = _params["id"]
+  def show(conn, %{"id" => id}) do
     organization = Repo.get!(Organization, id)
     render(conn, "show.json", organization: organization)
   end
 
   def update(conn, %{"id" => id, "organization" => organization_params} = params) do
     organization = Repo.get!(Organization, id)
-    contact_id = params |> Dict.get("contact_id")
+    contact_id = params["contact_id"]
 
     if organization_params["data"] do
       new_data = Map.merge(organization.data , organization_params["data"])

@@ -28,8 +28,7 @@ defmodule CercleApi.APIV2.CompanyController do
     end
   end
 
-  def show(conn, _params) do
-    id = _params["id"]
+  def show(conn, %{"id" => id}) do
     company = Repo.get!(Company, id)
     render(conn, "show.json", company: company)
   end

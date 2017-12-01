@@ -2,8 +2,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
 
   require Logger
   use CercleApi.Web, :controller
-  alias CercleApi.{Board, BoardColumn, Contact, Company, Organization, User}
-  alias CercleApi.Card
+  alias CercleApi.{Board, BoardColumn, Card}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -14,10 +13,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, params) do
-    current_user = CercleApi.Plug.current_user(conn)
-    company = current_company(conn)
-
-    if String.strip(params["board_id"]) != "" do
+    if String.trim(params["board_id"]) != "" do
       board = Repo.get(Board, params["board_id"])
       board_id = board.id
       query = from p in BoardColumn,
@@ -34,7 +30,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
   end
 
   def create(conn, %{"board_column" => board_column_params}) do
-    user = CercleApi.Plug.current_user(conn)
+    CercleApi.Plug.current_user(conn)
     company_id = current_company(conn).id
 
     case Repo.get(Board, board_column_params["board_id"]) do
@@ -118,7 +114,7 @@ defmodule CercleApi.APIV2.BoardColumnController do
       _ ->
         conn
         |> put_status(:unprocessable_entity)
-        |> json %{reason: "column don't be removed while the column has cards"}
+        |> json(%{reason: "column don't be removed while the column has cards"})
     end
 
   end

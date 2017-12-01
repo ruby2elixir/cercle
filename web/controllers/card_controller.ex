@@ -1,7 +1,7 @@
 defmodule CercleApi.CardController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User, Card, Board, Company}
+  alias CercleApi.Card
 
   require Logger
 
@@ -17,7 +17,7 @@ defmodule CercleApi.CardController do
 
     conn
       |> put_layout("adminlte.html")
-      |> render "show.html",  company: company, card: card, no_container: true
+      |> render("show.html",  company: company, card: card, no_container: true)
   end
 
 end

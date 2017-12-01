@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.BoardController do
 
   require Logger
   use CercleApi.Web, :controller
-  alias CercleApi.{ Board, Card, BoardColumn, Company }
+  alias CercleApi.{Board, BoardColumn}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser
@@ -12,13 +12,14 @@ defmodule CercleApi.APIV2.BoardController do
   not_found_handler: {CercleApi.Helpers, :handle_json_not_found}
 
   def index(conn, params) do
-    current_user = CercleApi.Plug.current_user(conn)
+    CercleApi.Plug.current_user(conn)
     company = current_company(conn)
-    if params["archived"] && params["archived"] == "true" do
-      archived = Ecto.Query.dynamic([p], p.archived == false or p.archived == true)
-    else
-      archived = Ecto.Query.dynamic([p], p.archived == false)
-    end
+    archived =
+      case params["archived"] do
+        "true" ->
+          Ecto.Query.dynamic([p], p.archived == false or p.archived == true)
+        _ -> Ecto.Query.dynamic([p], p.archived == false)
+      end
 
     query = from p in Board,
       where: p.company_id == ^company.id,
@@ -31,7 +32,7 @@ defmodule CercleApi.APIV2.BoardController do
   end
 
   def show(conn, %{"id" => id}) do
-    current_user = CercleApi.Plug.current_user(conn)
+    CercleApi.Plug.current_user(conn)
     company = current_company(conn)
     board_query = from(p in Board,
       where: p.company_id == ^company.id,
@@ -45,7 +46,7 @@ defmodule CercleApi.APIV2.BoardController do
   end
 
   def create(conn, %{"board" => board_params}) do
-    user = CercleApi.Plug.current_user(conn)
+    CercleApi.Plug.current_user(conn)
     company = current_company(conn)
 
     changeset = company

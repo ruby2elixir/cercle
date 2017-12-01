@@ -1,7 +1,7 @@
 defmodule CercleApi.Settings.ProfileController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.{User, Company, Tag}
+  alias CercleApi.User
 
   def edit(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
@@ -19,7 +19,7 @@ defmodule CercleApi.Settings.ProfileController do
     company = current_company(conn)
 
     case Repo.update(changeset) do
-      {:ok, user} ->
+      {:ok, _user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: front_edit_profile_path(conn, :edit, company))
