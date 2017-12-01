@@ -45,7 +45,7 @@
                       <img src="<%= CercleApi.UserProfileImage.url({u.profile_image, u}, :small) %>" class="user-image" alt="User Image" style="width:34px;border-radius:128px;">
                     </<td>
                     <td><%=u.full_name%><br /><%=u.login%></td>
-                    <td><%=u.name%></td>
+                    <td><%=u.username%></td>
                     <td>
                       <%= if @conn.assigns[:current_user].id != u.id do %>
                         <%= link "Remove", to: "/company/#{@company.id}/settings/remove_team_member/#{u.id}", method: :delete, "data-confirm": "Are you sure?" %>
