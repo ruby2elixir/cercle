@@ -2,7 +2,7 @@ defmodule CercleApi.APIV2.CardAttachmentController do
   require Logger
   use CercleApi.Web, :controller
 
-  alias CercleApi.{Card, CardAttachment, CardAttachmentFile, User}
+  alias CercleApi.{Card, CardAttachment, CardAttachmentFile}
 
   plug CercleApi.Plug.EnsureAuthenticated
   plug CercleApi.Plug.CurrentUser

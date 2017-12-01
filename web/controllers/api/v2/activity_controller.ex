@@ -81,7 +81,7 @@ defmodule CercleApi.APIV2.ActivityController do
     changeset = Activity.changeset(activity, activity_params)
 
     case Repo.update(changeset) do
-      {:ok, activity} ->
+      {:ok, _activity} ->
         activity = Activity
         |> Repo.get!(id)
         |> Repo.preload([:user, :card])

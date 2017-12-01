@@ -8,7 +8,7 @@ defmodule CercleApi.APIV2.TagController do
   plug CercleApi.Plug.EnsureAuthenticated
 
   def index(conn, params) do
-    user = CercleApi.Plug.current_user(conn)
+    CercleApi.Plug.current_user(conn)
     company = current_company(conn)
 
     q = Map.get(params, "q")
@@ -24,8 +24,8 @@ defmodule CercleApi.APIV2.TagController do
     render(conn, "index.json", tags: tags)
   end
 
-  def create(conn, %{"id" => id, "name" => tag_name}) do
-  	user = CercleApi.Plug.current_user(conn)
+  def create(conn, %{"id" => _id, "name" => tag_name}) do
+    CercleApi.Plug.current_user(conn)
     company = current_company(conn)
 
     tag = Repo.get_by(Tag, name: tag_name, company_id: company.d) ||

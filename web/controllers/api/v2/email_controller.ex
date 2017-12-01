@@ -40,25 +40,25 @@ defmodule CercleApi.APIV2.EmailController do
   end
 
   def create(conn, %{"source" => "postmark"}) do
-    _params = conn.params
-    date = parse_date(_params["Date"])
+    raw_params = conn.params
+    date = parse_date(raw_params["Date"])
 
-    to_emails = extract_emails(_params["ToFull"])
-    cc_emails = extract_emails(_params["CcFull"])
-    bcc_emails = extract_emails(_params["BccFull"])
+    to_emails = extract_emails(raw_params["ToFull"])
+    cc_emails = extract_emails(raw_params["CcFull"])
+    bcc_emails = extract_emails(raw_params["BccFull"])
     meta = %{
-      "FromFull" => _params["FromFull"],
-      "ToFull" => _params["ToFull"],
-      "CcFull" => _params["CcFull"],
-      "BccFull" => _params["BccFull"]
+      "FromFull" => raw_params["FromFull"],
+      "ToFull" => raw_params["ToFull"],
+      "CcFull" => raw_params["CcFull"],
+      "BccFull" => raw_params["BccFull"]
     }
 
     email_params = %{
-      "uid" => _params["MessageID"], "from_email" => _params["From"],
+      "uid" => raw_params["MessageID"], "from_email" => raw_params["From"],
       "to" => to_emails, "cc" => cc_emails, "bcc" => bcc_emails,
-      "subject" => _params["Subject"], "body" => _params["HtmlBody"],
-      "body_text" => _params["TextBody"], "date" => date,
-      "company_id" => _params["company_id"], "meta" => meta
+      "subject" => raw_params["Subject"], "body" => raw_params["HtmlBody"],
+      "body_text" => raw_params["TextBody"], "date" => date,
+      "company_id" => raw_params["company_id"], "meta" => meta
     }
 
     email = Repo.get_by(Email, uid: email_params["uid"])
@@ -71,10 +71,8 @@ defmodule CercleApi.APIV2.EmailController do
     else
       changeset = Email.changeset(%Email{}, email_params)
       case Repo.insert(changeset) do
-        {:ok, email} ->
-          text conn, "OK"
-        {:error, changeset} ->
-          raise "Error: #{inspect(changeset)}"
+        {:ok, _email} -> text conn, "OK"
+        {:error, changeset} -> raise "Error: #{inspect(changeset)}"
       end
     end
   end
