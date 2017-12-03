@@ -23,12 +23,13 @@
 
           <div class="col-md-7">
             <inline-datetime-picker
-             v-on:change="dateChanged"
-             v-model="dt"
-             type="datetime"
-             :editable="false"
-             size="mini"
-             placeholder="Select date and time" />
+              v-model="dt"
+              type="datetime"
+              :editable="false"
+              size="mini"
+              placeholder="Select date and time"
+              ref="taskDueDatePicker"
+              />
           </div>
         </div>
       </div>
@@ -58,12 +59,8 @@
       };
     },
     watch: {
-      userId() {
-        this.uid = this.userId;
-      },
-      date() {
-        this.dt = this.toUserTz(this.date);
-      }
+      userId() { this.uid = this.userId;  },
+      date() { this.dt = this.toUserTz(this.date); }
     },
     components: {
       'el-date-picker': ElementUi.DatePicker,
@@ -73,6 +70,8 @@
     methods: {
       showModal: function() {
         this.editMode = true;
+        this.dt = this.dt || new Date();
+        this.$refs.taskDueDatePicker.displayCalendar();
       },
       cancel: function() {
         this.editMode = false;
@@ -80,18 +79,17 @@
       userChanged(value) {
         this.uid = value;
       },
-      dateChanged(value) {
-      },
       save() {
         // Following hack is required because, inline datetime picker doesnt emit instantly when date is picked
         let datetimeInputs = $('.el-picker-panel__body input', this.$el);
         let datetime = datetimeInputs[0].value + ' ' + datetimeInputs[1].value;
 
+        this.uid = this.uid || parseInt(Vue.currentUser.userId);
         this.$emit('change', {userId: this.uid, dueDate: datetime});
         this.editMode = false;
       },
       remove() {
-        this.uid = '';
+        this.uid = null;
         this.dt = '';
         this.$emit('change', {userId: this.uid, dueDate: this.dt});
         this.editMode = false;

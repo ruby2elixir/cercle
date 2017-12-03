@@ -15,13 +15,14 @@
 
       <div class='modal-body'>
         <inline-datetime-picker
-         v-model="v"
-         type="datetime"
-         :editable="false"
-         :min_date="new Date()"
-         size="mini"
-         format="yyyy-MM-dd HH:mm"
-         :clearable="true" />
+          v-model="v"
+          type="datetime"
+          :editable="false"
+          :min_date="new Date()"
+          size="mini"
+          format="yyyy-MM-dd HH:mm"
+          :clearable="true"
+          ref="DueDatePicker"/>
       </div>
 
       <div class="row input-modal-footer">
@@ -58,6 +59,8 @@
     methods: {
       showModal: function() {
         this.editMode = true;
+        this.v = this.v || new Date();
+        this.$refs.DueDatePicker.displayCalendar();
       },
       closeModal() {
         this.editMode = false;

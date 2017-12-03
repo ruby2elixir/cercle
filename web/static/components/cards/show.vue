@@ -84,7 +84,7 @@
             :events="uploadEvents"
             ref="attachment"
             class="btn btn-default btn-block"
-            >
+            > UPLOAD FILE
           </file-upload>
         </div>
         <button type="button" v-show="card.status === 0" class="btn btn-default btn-block" v-on:click="archiveCard">ARCHIVE</button>

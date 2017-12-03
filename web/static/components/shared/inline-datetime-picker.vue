@@ -3,11 +3,11 @@
     <el-date-picker
      v-on:input="onChange"
      v-model="v"
-     :type="type"
+     :type="pickerType"
      :editable="false"
-     :size="size"
+     :size="pickerSize"
      :appendToBody="false"
-     :placeholder="placeholder"
+     :placeholder="pickerPlaceholder"
      ref="dateTimePicker" />
   </div>
 </template>
@@ -17,7 +17,10 @@
     props: ['value', 'size', 'placeholder', 'type'],
     data() {
       return {
-        v: this.value
+        v: this.value,
+        pickerType: this.type,
+        pickerSize: this.size,
+        pickerPlaceholder: this.placeholder
       };
     },
     watch: {
@@ -29,12 +32,8 @@
       'el-date-picker': ElementUi.DatePicker
     },
     methods: {
-      onChange(value) {
-        this.$emit('change', value);
-      }
-    },
-    mounted() {
-      this.$refs.dateTimePicker.showPicker();
+      onChange(value) {  this.$emit('change', value);   },
+      displayCalendar() { this.$refs.dateTimePicker.pickerVisible = true; }
     }
   };
 </script>
