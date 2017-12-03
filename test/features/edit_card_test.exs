@@ -56,7 +56,7 @@ defmodule CercleApi.EditCardTest do
     |> assert_has(css("body.async-ready"))
     |> find(css(".due-date-modal"), fn(modal) ->
       modal
-      |> click(css("td", text: "Today"))
+      |> click(css("td.today"))
       |> click(css("[placeholder='Select time']"))
       |> fill_in(css("[placeholder='Select time']"), with: "23:00:00")
       |> click(button("Save"))
