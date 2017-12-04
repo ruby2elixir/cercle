@@ -47,8 +47,8 @@
                           class="user-image" alt="User Image"
                           style="width:34px;border-radius:128px;" />
                     </<td>
-                    <td><%= u.full_name %><br /><%= u.login %></td>
-                    <td><%= u.username %></td>
+                    <td><%=u.full_name%><br /><%=u.login%></td>
+                    <td><%=u.username%></td>
                     <td>
                       <%= if @conn.assigns[:current_user].id != u.id do %>
                       <%= link "Remove",
