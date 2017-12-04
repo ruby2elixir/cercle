@@ -26,14 +26,28 @@ defmodule CercleApi.AddTaskToCardTest do
     |> click(css(".todo-assigment-placeholder-text"))
     |> find(css(".input-modal.assignment-modal"), fn(modal) ->
       modal
-      |> click(css("td", text: "Today"))
+      |> click(css("td.today"))
       |> click(css("[placeholder='Select time']"))
       |> fill_in(css("[placeholder='Select time']"), with: "20:00:00")
       |> click(button("Save"))
     end)
     |> assert_has(css("body.async-ready"))
+    |> click(css(".task.row > .col-md-3"))
+    |> find(css(".input-modal.assignment-modal"), fn(modal) ->
+      modal
+      |> click(button("Remove"))
+    end)
+    |> assert_has(css("body.async-ready"))
+    |> click(css(".todo-assigment-placeholder-text"))
+    |> find(css(".input-modal.assignment-modal"), fn(modal) ->
+      modal
+      |> click(css("td.today"))
+      |> click(css("[placeholder='Select time']"))
+      |> fill_in(css("[placeholder='Select time']"), with: "21:00:00")
+      |> click(button("Save"))
+    end)
     task = Repo.get_by(Activity, card_id: card.id)
     assert Timex.format!(task.due_date, "%F %T", :strftime) ==
-      Timex.format!(Timex.today, "%F 19:00:00", :strftime)
+      Timex.format!(Timex.today, "%F 20:00:00", :strftime)
   end
 end
