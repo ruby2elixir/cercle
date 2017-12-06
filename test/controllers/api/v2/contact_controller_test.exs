@@ -36,7 +36,8 @@ defmodule CercleApi.APIV2.ContactControllerTest do
 
 
     assert response == render_json(
-      CercleApi.APIV2.ContactView, "index.json", contacts: contacts
+      CercleApi.APIV2.ContactView, "index.json", contacts: contacts,
+      total_entries: 2, page_size: 15
     )
   end
 

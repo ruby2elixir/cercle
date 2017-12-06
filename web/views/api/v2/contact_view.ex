@@ -1,6 +1,13 @@
 defmodule CercleApi.APIV2.ContactView do
   use CercleApi.Web, :view
 
+  def render("index.json", %{contacts: contacts, total_entries: total} = page) do
+    %{
+      data: render_many(contacts, __MODULE__, "contact.json"),
+      meta: %{total_entries: total, page_size: page[:page_size]}
+    }
+  end
+
   def render("index.json", %{contacts: contacts}) do
     %{data: render_many(contacts, __MODULE__, "contact.json")}
   end

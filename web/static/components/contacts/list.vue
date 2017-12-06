@@ -41,68 +41,78 @@
 
             <!-- /.box-header -->
             <div class="nav-tabs-custom ">
-
               <div class="list">
 
-                <table class="table table-bordered">
-                  <tbody>
-                    <tr>
-                      <th  style="width:30px;">
-                        <el-checkbox @change="handleCheckAllChange"></el-checkbox>
-                      </th>
-                      <th>Name</th>
-                      <th>Job Title</th>
-                      <th>Organization</th>
-                      <th>Email</th>
-                      <th>Phone</th>
-                      <th>Tags</th>
-                      <th>Last Updated</th>
-                    </tr>
+                <el-table :data="contacts" style="width: 100%"
+                          border
+                          :stripe="true"
+                          size="mini"
+                          @selection-change="handleSelectRow"
+                          :row-class-name="rowClassName">
+                  <el-table-column prop="id" size="mini" type="selection"
+                                   :class-name="'row-contact'"
+                                   width=40>
+                  </el-table-column>
+                  <el-table-column label="Name">
+                    <template slot-scope="scope">
+                      <router-link :to="contactUrl(scope.row)" class="contact-link">
+                        {{scope.row.firstName}} {{scope.row.lastName}}
+                      </router-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Job Title">
+                    <template slot-scope="scope">
+                      <router-link :to="contactUrl(scope.row)" class="contact-link">
+                          {{scope.row.jobTitle}}
+                        </router-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Organization">
+                    <template slot-scope="scope">
+                      <router-link :to="contactUrl(scope.row)" class="contact-link">
+                          {{scope.row.organization && scope.row.organization.name}}
+                        </router-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Email">
+                    <template slot-scope="scope">
+                      <router-link :to="contactUrl(scope.row)" class="contact-link">
+                        {{scope.row.email}}
+                      </router-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column  label="Phone">
+                    <template slot-scope="scope">
+                      <router-link :to="contactUrl(scope.row)" class="contact-link">
+                          {{scope.row.phone}}
+                        </router-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column width=80 label="Tags">
+                    <template slot-scope="scope">
+                      <router-link :to="contactUrl(scope.row)" class="contact-link">
+                        <span v-for="tag in scope.row.tags">{{tag.name}} </span>
+                      </router-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column width=120 label="Last Updated">
+                    <template slot-scope="scope">
+                      <router-link :to="contactUrl(scope.row)" class="contact-link">
+                        <span style="color:grey;font-size:14px;">{{scope.row.updatedAt | moment("from")}}</span>
+                      </router-link>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                  <el-pagination
+                    layout="prev, pager, next"
+                    background
+                    @current-change="handleChangePage"
+                    :total="totalContacts"
+                    :page-size="pageSize"
 
-                    <tr v-for="contact in contacts">
-                      <td v-bind:class="'contact-delete-' + contact.id">
-                         <el-checkbox-group v-model="contactList">
-                           <el-checkbox :label="contact.id" :key="contact.id" ></el-checkbox>
-                         </el-checkbox-group>
-                      </td>
-                      <td>
-                        <router-link :to="contactUrl(contact)" class="contact-link">
-                          {{contact.firstName}} {{contact.lastName}}
-                        </router-link>
-                      </td>
-                      <td>
-                        <router-link :to="contactUrl(contact)" class="contact-link">
-                          {{contact.jobTitle}}
-                        </router-link>
-                      </td>
-                      <td>
-                        <router-link :to="contactUrl(contact)" class="contact-link">
-                          {{contact.organization && contact.organization.name}}
-                        </router-link>
-                      </td>
-                      <td>
-                        <router-link :to="contactUrl(contact)" class="contact-link">
-                          {{contact.email}}
-                        </router-link>
-                      </td>
-                      <td>
-                        <router-link :to="contactUrl(contact)" class="contact-link">
-                          {{contact.phone}}
-                        </router-link>
-                      </td>
-                      <td style="width:220px;">
-                        <router-link :to="contactUrl(contact)" class="contact-link">
-                          <span v-for="tag in contact.tags">{{tag.name}} </span>
-                        </router-link>
-                      </td>
-                      <td style="width:120px;">
-                        <router-link :to="contactUrl(contact)" class="contact-link">
-                          <span style="color:grey;font-size:14px;">{{contact.updatedAt | moment("from")}}</span>
-                        </router-link>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                    >
+                  </el-pagination>
+
               </div>
 
             </div><!-- /.box-body -->
@@ -125,7 +135,9 @@
         contacts: [],
         socket: null,
         channel: null,
-        searchTerm: ''
+        searchTerm: '',
+        totalContacts: 0,
+        pageSize: 15
       };
     },
 
@@ -156,6 +168,12 @@
     },
 
     methods: {
+      rowClassName(item) {
+        return 'contact-row-'+ item.row.id;
+      },
+      handleChangePage(page) {
+        this.loadContacts({page: page});
+      },
       getContactAndOpen(contactId) {
         let vm = this;
         let contact = vm.$_.find(
@@ -174,8 +192,9 @@
       deleteSelectContacts() {
         if(confirm('Are you sure do to delete selected contacts?')) {
           let url = '/api/v2/company/' + this.company_id + '/contact/multiple/delete';
+          let contactIds = this.$_.map(this.contactList, 'id')
           this.$http.delete(
-            url, {body: {contactIds: this.contactList}}
+            url, {body: {contactIds: contactIds}}
           ).then(resp => {
             this.contactList = [];
             this.loadContacts();
@@ -185,7 +204,8 @@
       },
       exportSelectContacts() {
         let url = '/api/v2/company/' + this.company_id + '/contact/export';
-        this.$http.post(url, { contactIds: this.contactList })
+        let contactIds = this.$_.map(this.contactList, 'id')
+        this.$http.post(url, { contactIds: contactIds })
           .then(resp => {
             let headers = resp.headers;
             let contentDisposition = headers.get('Content-Disposition') || '';
@@ -200,12 +220,8 @@
             link.click();
           });
       },
-      handleCheckAllChange(event) {
-        if (event.target.checked) {
-          this.contactList = this.contacts.map((f) => f.id);
-        } else {
-          this.contactList = [];
-        }
+      handleSelectRow(selectedContacts) {
+        this.contactList = selectedContacts;
       },
       searchContacts() {
         let params = {};
@@ -236,6 +252,8 @@
         let params = opts || {};
         this.$http.get(url, { params: params }).then(resp => {
           this.contacts = resp.data.data;
+          this.totalContacts = resp.data.meta.totalEntries;
+          this.pageSize = resp.data.meta.pageSize;
         });
 
       },

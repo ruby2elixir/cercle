@@ -18,7 +18,7 @@ defmodule CercleApi.RemoveContactsTest do
     |> sign_in(user.login, "1234")
     |> visit("/company/#{company.id}/contact/")
     |> execute_script(accept_confirm_script)
-    |> click(css("td.contact-delete-#{c1.id} label"))
+    |> click(css("tr.contact-row-#{c1.id} label.el-checkbox"))
     |> assert_has(css("button", text: "Delete contacts"))
     |> click(button("Delete contacts"))
     |> assert_has(css("body.async-ready"))

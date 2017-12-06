@@ -27,7 +27,7 @@ defmodule CercleApi.Mixfile do
      applications: [
        :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
        :gettext, :phoenix_ecto, :postgrex, :ex_aws, :hackney, :httpoison, :tzdata,
-       :csv, :ex_csv, :uuid, :arc_ecto, :rollbax, :iconv
+       :csv, :ex_csv, :uuid, :arc_ecto, :rollbax, :iconv, :scrivener_ecto
      ]
     ]
   end
@@ -71,6 +71,8 @@ defmodule CercleApi.Mixfile do
      {:rummage_ecto, "~> 1.1.0"},
      {:rollbax, "~> 0.8.2"},
      {:ex_oauth2_provider, "~> 0.2.0"},
+     {:scrivener, "~> 2.4"},
+     {:scrivener_ecto, "~> 1.3"},
 
      # dev
      {:phoenix_live_reload, "~> 1.0", only: :dev},

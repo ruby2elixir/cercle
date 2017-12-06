@@ -18,20 +18,22 @@ defmodule CercleApi.APIV2.ContactController do
   def index(conn, params) do
     q = params["q"]
     company = current_company(conn)
+    preload_query = from(TimelineEvent, order_by: [desc: :inserted_at])
+
     query = from p in Contact,
       where: p.company_id == ^company.id,
       where: ilike(p.first_name, ^("%#{q}%")) or ilike(p.last_name, ^("%#{q}%")),
-      order_by: [desc: p.updated_at]
+      order_by: [desc: p.updated_at],
+      preload: [:organization, :tags, timeline_event: ^preload_query]
 
     contacts = query
-    |> Repo.all
-    |> Repo.preload(
-      [ :organization, :tags,
-        timeline_event: from(TimelineEvent, order_by: [desc: :inserted_at])
-      ]
-    )
+    |> Repo.paginate(page: params["page"], page_size: 15)
 
-    render(conn, "index.json", contacts: contacts)
+    render(conn, "index.json",
+      contacts: contacts,
+      total_entries: contacts.total_entries,
+      page_size: contacts.page_size
+    )
   end
 
   def show(conn, %{"user_id" => user_id, "company_id" => company_id}) do
