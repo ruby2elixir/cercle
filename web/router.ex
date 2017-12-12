@@ -89,7 +89,6 @@ defmodule CercleApi.Router do
     post "/create_nested_data", ImportController, :create_nested_data
 
     get "/settings/profile", Settings.ProfileController, :edit, as: :edit_profile
-    put "/settings/profile", Settings.ProfileController, :update
 
     scope "/settings", Settings, as: :settings do
       resources "/companies", CompanyController
@@ -112,6 +111,7 @@ defmodule CercleApi.Router do
     post "/login", SessionController, :create
     resources "/companies", CompanyController
 
+    resources "/profile", UserProfileController, only: [:show, :update], singleton: true
   end
 
   scope "/api/v2/company/:company_id", CercleApi.APIV2 do
