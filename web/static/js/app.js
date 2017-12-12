@@ -27,6 +27,7 @@ import tagEdit from './tag_edit';
 import { directive as onClickOutside } from 'vue-on-click-outside';
 import linkify from 'vue-linkify';
 import VueRouter from 'vue-router';
+
 Vue.use(VueRouter);
 Vue.directive('linkified', linkify);
 Vue.directive('on-click-outside', onClickOutside);
@@ -94,6 +95,7 @@ import GlModalWindow from '../components/shared/glmodal.vue';
 import GlAttachmentPreview from '../components/shared/glpreview.vue';
 import UserNavBar from '../components/shared/navbar.vue';
 import CardPage from '../components/cards/show.vue';
+import ProfileSettingsPage from '../components/settings/profile.vue';
 
 Vue.use(require('vue-autosize'));
 const NotificationBus = new Vue();
@@ -119,9 +121,10 @@ Object.defineProperty(Vue.prototype, '$glAttachmentPreview', {
     return GlobalAttachmentPreview;
   }
 });
-
+import {TimeZones} from './time_zones';
 Vue.mixin( {
   methods: {
+    listTimeZones() { return TimeZones; },
     toUserTz: function(value) {
       if (value) {
         return moment(String(value) + 'Z').toDate();
@@ -283,6 +286,13 @@ if ($('.main-app').length > 0) {
         'board-sidebar-toggle': false
 
       }
+    },
+    {
+      path: '/company/:companyId/settings/profile',
+      name: 'profilePage',
+      component: ProfileSettingsPage,
+      props: true
+
     }
   ];
   const router = new VueRouter({

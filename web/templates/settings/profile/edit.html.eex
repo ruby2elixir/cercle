@@ -14,95 +14,10 @@
          </div><!-- /. box -->
        </div><!-- /.col -->
 
-       <div class="col-md-9">
-         <!-- Horizontal Form -->
-         <!-- general form elements disabled -->
-         <div class="box box-primary">
-           <%= form_for @changeset, front_profile_path(@conn, :update, assigns[:current_company]), [multipart: true], fn f -> %>
-              <%= if f.errors != [] do %>
-                <div class="alert alert-danger">
-                  <p>Oops, something went wrong!<br> Please check the errors below:</p>
-                  <ul>
-                    <%= for {attr, message} <- f.errors do %>
-                        <li><%= humanize(attr) %> <%= translate_error(message) %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              <% end %>
+      <div class="col-md-9">
 
-             <div class="box-header with-border">
-               <h3 class="box-title">Profile</h3>
-             </div><!-- /.box-header -->
-             <div class="box-body">
-               <!-- text input -->
-                <div class="form-group">
-                  <%= label f, :full_name, "Full Name", class: "control-label" %>
-                  <%= text_input f, :full_name, class: "form-control" %>
-                  <%= error_tag f, :full_name %>
-                </div>
-               <br />
-                <div class="form-group">
-                  <%= label f, :username, "Username", class: "control-label" %>
-                  <%= text_input f, :username, class: "form-control" %>
-                  <%= error_tag f, :username %>
-                </div>
-                <br />
-
-                <div class="form-group">
-                  <%= checkbox f, :notification %>
-                  <%= label f, :notification, "Receive email notifications", class: "control-label" %>
-                </div>
-                <br />
-
-               <!-- text input -->
-                <div class="form-group">
-                  <%= label f, :login, "Email", class: "control-label" %>
-                  <%= email_input f, :login, class: "form-control" %>
-                  <%= error_tag f, :login %>
-                </div>
-
-               <br />
-
-                <div class="form-group">
-                  <%= label f, :password, "Password", class: "control-label" %>
-                  <%= text_input f, :password, class: "form-control" %>
-                  <%= error_tag f, :password %>
-                </div>
-                <br />
-
-                <div class="form-group">
-                  <%= label f, :time_zone, "Time Zone", class: "control-label" %>
-                  <%= select(f, :time_zone , load_timezones, prompt: "Choose your Time Zone", class: "form-control") %>
-                  <%= error_tag f, :time_zone %>
-                </div>
-                <br />
-
-                <div class="form-group">
-                  <div class='row'>
-                    <div class='col-md-10'>
-                      <%= label f, :profile_image, "Profile image", class: "control-label" %>
-                      <%= file_input f, :profile_image %>
-                      <%= error_tag f, :profile_image %>
-                    </div>
-                    <div class='col-md-2'>
-                      <%= if f.data.profile_image do %>
-                        <img src="<%= CercleApi.UserProfileImage.url({f.data.profile_image, f.data}, :small) %>" style="max-width: 100%;" />
-                      <% end %>
-                    </div>
-                  </div>
-                </div>
-               <br />
-
-             </div><!-- /.box-body -->
-             <div class="box-footer">
-                <%if @company do %>
-                  <a href="/companies/<%= @company.id %>/referrals" class="btn btn-default">Cancel</a>
-                <%end%>
-               <input type="submit" class="btn btn-primary pull-right" value="Save" />
-             </div>
-          <% end %>
-         </div><!-- /.box -->
-       </div>
+        <router-view></router-view>
+      </div>
   </div>
 
 </section><!-- /.content -->

@@ -192,7 +192,7 @@
       deleteSelectContacts() {
         if(confirm('Are you sure do to delete selected contacts?')) {
           let url = '/api/v2/company/' + this.company_id + '/contact/multiple/delete';
-          let contactIds = this.$_.map(this.contactList, 'id')
+          let contactIds = this.$_.map(this.contactList, 'id');
           this.$http.delete(
             url, {body: {contactIds: contactIds}}
           ).then(resp => {
@@ -204,7 +204,7 @@
       },
       exportSelectContacts() {
         let url = '/api/v2/company/' + this.company_id + '/contact/export';
-        let contactIds = this.$_.map(this.contactList, 'id')
+        let contactIds = this.$_.map(this.contactList, 'id');
         this.$http.post(url, { contactIds: contactIds })
           .then(resp => {
             let headers = resp.headers;
