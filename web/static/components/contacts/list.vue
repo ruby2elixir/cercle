@@ -137,7 +137,7 @@
         channel: null,
         searchTerm: '',
         totalContacts: 0,
-        pageSize: 15
+        pageSize: 50
       };
     },
 
