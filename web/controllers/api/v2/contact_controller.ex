@@ -27,7 +27,7 @@ defmodule CercleApi.APIV2.ContactController do
       preload: [:organization, :tags, timeline_event: ^preload_query]
 
     contacts = query
-    |> Repo.paginate(page: params["page"], page_size: 15)
+    |> Repo.paginate(page: params["page"], page_size: 50)
 
     render(conn, "index.json",
       contacts: contacts,
