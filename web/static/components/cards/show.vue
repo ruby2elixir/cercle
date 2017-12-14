@@ -81,9 +81,9 @@
             name="attachment"
             :post-action="'/api/v2/company/'+ currentCompanyId +'/card/' + card.id + '/attachments'"
             :headers="uploadHeaders"
-            :events="uploadEvents"
             ref="attachment"
             class="btn btn-default btn-block"
+            @input-file="inputAttachment"
             > UPLOAD FILE
           </file-upload>
         </div>
@@ -186,21 +186,6 @@
     props: ['cardId'],
     data() {
       return {
-        uploadEvents: {
-          add(file, component) {
-            component.active = true;
-          },
-          progress(file, component) {
-            let msg = 'Uploading ' + Math.ceil(file.progress) + '%';
-            this.$notification.$emit('alert', {'msg': msg});
-          },
-          after(file, component) {
-            this.$notification.$emit('alert', {'msg': 'Finished!'});
-          },
-          before(file, component) {
-            this.$notification.$emit('alert', {'msg': 'Start upload'});
-          }
-        },
         socket: null,
         attachment: {},
         attachments: [],
@@ -266,6 +251,40 @@
       'board-column-select-modal': BoardColumnSelectModal
     },
     methods: {
+      inputAttachment(newFile, oldFile) {
+
+        if (newFile && oldFile) {
+          // Update file
+
+          // Start upload
+          if (newFile.active !== oldFile.active) {
+            this.$notification.$emit('alert', {'msg': 'Start upload'});
+          }
+
+          // Upload progress
+          if (newFile.progress !== oldFile.progress) {
+            let msg = 'Uploading ' + Math.ceil(newFile.progress) + '%';
+            this.$notification.$emit('alert', {'msg': msg});
+          }
+
+          // Upload error
+          if (newFile.error !== oldFile.error) {
+            this.$notification.$emit('alert', {'msg': newFile.error, 'type': 'error'});
+          }
+
+          // Uploaded successfully
+          if (newFile.success !== oldFile.success) {
+             this.$notification.$emit('alert', {'msg': 'Finished!'});
+          }
+        }
+
+        // Automatic upload
+        if (Boolean(newFile) !== Boolean(oldFile) || oldFile.error !== newFile.error) {
+          if (!this.$refs.attachment.active) {
+            this.$refs.attachment.active = true
+          }
+        }
+      },
       showAttachmentPreview(attachment) {
         this.$glAttachmentPreview.$emit(
           'open', {
