@@ -81,7 +81,6 @@
             name="attachment"
             :post-action="'/api/v2/company/'+ currentCompanyId +'/card/' + card.id + '/attachments'"
             :headers="uploadHeaders"
-            :events="uploadEvents"
             ref="attachment"
             class="btn btn-default btn-block"
             @input-file="inputAttachment"
