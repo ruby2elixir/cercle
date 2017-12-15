@@ -23,7 +23,7 @@ defmodule CercleApi.InboxTest do
     |> sign_in(user.login, "1234")
     |> visit("/company/#{company.id}/activity")
     |> assert_has(css("body.async-ready"))
-    |> assert_has(css("h3", text: "Cards assigned to me"))
+    |> assert_has(css("h3", text: "Cards assigned to"))
     |> assert_has(css(".card-list .panel-heading", text: "Test Board 42"))
     |> assert_has(css("span.card-name", text: "Test Card 42"))
     |> assert_has(css("h3", text: "Tasks with due date"))

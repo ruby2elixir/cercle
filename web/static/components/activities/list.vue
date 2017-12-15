@@ -5,7 +5,9 @@
 
       <div class="row" v-if="emptyList">
         <div class="col-xs-12">
-          <p class="lead text-info"><strong>Nothing to do, go to the park!</strong></p>
+          <p class="lead text-info">
+            <strong>Nothing to do, go to the park!</strong>
+          </p>
         </div>
       </div>
 
@@ -43,8 +45,16 @@
         </div>
       </div>
 
-      <div class="row" v-if="cards.length > 0">
-        <div class="col-xs-12"><h3>Cards assigned to me</h3></div>
+      <div class="row">
+        <div class="col-xs-12">
+          <h3 class="pull-left">Cards assigned to</h3>
+          <label class="assigned-user pull-right">
+            <select-member
+              v-model.number="assignUserId"
+              :users="companyUsers"
+              @change="fetchCards"/>
+          </label>
+        </div>
       </div>
 
       <div class="row card-list" >
@@ -82,6 +92,7 @@
   import CardShow from '../cards/show.vue';
   import ActivityItem from './item.vue';
   import CardItem from './card-item.vue';
+  import SelectMember from '../shared/select-member.vue';
 
   export default {
     data() {
@@ -96,7 +107,9 @@
         socket: null,
         channel: null,
         userId: null,
-        cards: []
+        assignUserId: null,
+        cards: [],
+        companyUsers: []
       };
     },
     computed: {
@@ -115,9 +128,16 @@
       'modal': VueStrap.modal,
       'card-show': CardShow,
       'activity-item': ActivityItem,
-      'card-item': CardItem
+      'card-item': CardItem,
+      'select-member': SelectMember
     },
     methods: {
+      fetchCards(){
+        let cardUrl = '/api/v2/company/' + Vue.currentUser.companyId + '/card';
+        this.$http.get(cardUrl, { params: { userId:  this.assignUserId }}).then(resp => {
+          this.cards = resp.data.data;
+        });
+      },
       groupBy(list, prop) {
         return list.reduce(function(groups, item) {
           let val = item[prop].name;
@@ -149,12 +169,7 @@
         this.$http.get(activityUrl, { params: { userId: Vue.currentUser.userId }}).then(resp => {
           this.activities = resp.data.activities;
         });
-
-        let cardUrl = '/api/v2/company/' + Vue.currentUser.companyId + '/card';
-        this.$http.get(cardUrl, { params: { userId: Vue.currentUser.userId }}).then(resp => {
-          this.cards = resp.data.data;
-        });
-
+        this.fetchCards();
         this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
         this.socket.connect();
         this.channel = this.socket.channel('users:' + this.userId, {});
@@ -199,12 +214,24 @@
     mounted() {
       this.timeZone = Vue.currentUser.timeZone;
       this.userId = Vue.currentUser.userId;
+      this.assignUserId = Vue.currentUser.userId;
       this.initConn();
+      let url = '/api/v2/company/' + Vue.currentUser.companyId + '/company/users';
+      this.$http.get(url).then(resp => {
+        this.companyUsers = resp.data.users;
+      });
     }
   };
 </script>
 <style lang="sass">
   .inbox-list {
+    .assigned-user {
+      background-color: #dfe1e4;
+      padding: 4px 15px 4px 15px;
+      margin-top: 12px;
+      color: #333;
+      font-size: 14px;
+    }
     .activity-list {
       .panel {
         margin-bottom: 5px;
