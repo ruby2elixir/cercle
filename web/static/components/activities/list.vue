@@ -132,6 +132,12 @@
       'select-member': SelectMember
     },
     methods: {
+      fetchCompanyUsers() {
+        let url = '/api/v2/company/' + Vue.currentUser.companyId + '/company/users';
+        this.$http.get(url).then(resp => {
+          this.companyUsers = resp.data.users;
+        });
+      },
       fetchCards(){
         let cardUrl = '/api/v2/company/' + Vue.currentUser.companyId + '/card';
         this.$http.get(cardUrl, { params: { userId:  this.assignUserId }}).then(resp => {
@@ -170,6 +176,7 @@
           this.activities = resp.data.activities;
         });
         this.fetchCards();
+        this.fetchCompanyUsers();
         this.socket = new Socket('/socket', {params: { token: localStorage.getItem('auth_token') }});
         this.socket.connect();
         this.channel = this.socket.channel('users:' + this.userId, {});
@@ -216,10 +223,6 @@
       this.userId = Vue.currentUser.userId;
       this.assignUserId = Vue.currentUser.userId;
       this.initConn();
-      let url = '/api/v2/company/' + Vue.currentUser.companyId + '/company/users';
-      this.$http.get(url).then(resp => {
-        this.companyUsers = resp.data.users;
-      });
     }
   };
 </script>
