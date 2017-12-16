@@ -47,7 +47,7 @@
 
       <div class="row">
         <div class="col-xs-12">
-          <h3 class="pull-left">Cards assigned to</h3>
+          <h3 class="pull-left">Cards assigned</h3>
           <label class="assigned-user pull-right">
             <select-member
               v-model.number="assignUserId"
