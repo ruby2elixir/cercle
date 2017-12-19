@@ -17,40 +17,7 @@
     </div><!-- /.col -->
 
     <div class="col-md-9">
-      <!-- Horizontal Form -->
-      <!-- general form elements disabled -->
-      <div class="box box-primary">
-        <div class="box-header with-border">
-          <h3 class="box-title">Companies</h3>
-          <%= link "Add company", to: front_settings_company_path(@conn, :new, @conn.assigns[:current_company]), class: "btn btn-info btn-sm pull-right" %>
-        </div><!-- /.box-header -->
-        <div class="box-body">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Logo</th>
-              <th>Name</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= for company <- @companies do %>
-                <tr>
-                  <td>
-                    <img src="<%= CercleApi.CompanyLogoImage.url({company.logo_image, company}, :small) %>" style="max-width: 50px;" />
-                  </td>
-                  <td><%= company.title %></td>
-                  <td class="text-right">
-                    <%= link "Edit", to: front_settings_company_path(@conn, :edit, assigns[:current_company], company), class: "btn btn-default btn-sm" %>
-                  </td>
-                </tr>
-                <% end %>
-          </tbody>
-        </table>
-        </div>
-      </div><!-- /.box-body -->
-      <div class="box-footer">
-      </div><!-- /.box -->
+      <router-view></router-view>
     </div>
   </div>
 

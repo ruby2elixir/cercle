@@ -96,7 +96,11 @@ import GlAttachmentPreview from '../components/shared/glpreview.vue';
 import UserNavBar from '../components/shared/navbar.vue';
 import CardPage from '../components/cards/show.vue';
 import ProfileSettingsPage from '../components/settings/profile.vue';
-
+import SettingsApiKeyPage from '../components/settings/api_key.vue';
+import SettingsCompanies from '../components/settings/companies/list.vue';
+import SettingsNewCompany from '../components/settings/companies/new.vue';
+import SettingsEditCompany from '../components/settings/companies/edit.vue';
+import SettingsTeam from '../components/settings/team.vue';
 Vue.use(require('vue-autosize'));
 const NotificationBus = new Vue();
 Object.defineProperty(Vue.prototype, '$notification', {
@@ -284,7 +288,6 @@ if ($('.main-app').length > 0) {
         default: true,
         'board-sidebar': true,
         'board-sidebar-toggle': false
-
       }
     },
     {
@@ -292,7 +295,36 @@ if ($('.main-app').length > 0) {
       name: 'profilePage',
       component: ProfileSettingsPage,
       props: true
-
+    },
+    {
+      path: '/company/:companyId/settings/api_key',
+      name: 'settings-api-key',
+      component: SettingsApiKeyPage,
+      props: true
+    },
+    {
+      path: '/company/:companyId/settings/companies',
+      name: 'settings-companies',
+      component: SettingsCompanies,
+      props: true
+    },
+    {
+      path: '/company/:companyId/settings/companies/new',
+      name: 'settings-new-company',
+      component: SettingsNewCompany,
+      props: true
+    },
+    {
+      path: '/company/:companyId/settings/companies/:id/edit',
+      name: 'settings-edit-company',
+      component: SettingsEditCompany,
+      props: true
+    },
+    {
+      path: '/company/:companyId/settings/team_edit',
+      name: 'settings-team-edit',
+      component: SettingsTeam,
+      props: true
     }
   ];
   const router = new VueRouter({

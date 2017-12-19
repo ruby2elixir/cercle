@@ -42,14 +42,14 @@
         </el-form-item>
         <div class="row">
           <div class="col-md-10">
-          <input v-on:change="chooseImage" type="file" />
+            <input v-on:change="chooseImage" type="file" />
           </div>
           <div class="col-md-2">
-          <div v-if="previewImage">
-            <img :src="previewImage" width="75"  />
+            <div v-if="previewImage">
+              <img :src="previewImage" width="75"  />
+            </div>
           </div>
-          </div>
-        </div>
+         </div>
         </div>
         <div class="box-footer">
           <el-button type="primary" @click="save()" class="btn btn-primary pull-right">Save</el-button>

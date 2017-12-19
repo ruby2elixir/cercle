@@ -16,53 +16,7 @@
     </div><!-- /.col -->
 
     <div class="col-md-9">
-      <!-- Horizontal Form -->
-      <!-- general form elements disabled -->
-      <div class="box box-primary">
-        <div class="box-header with-border">
-          <h3 class="box-title">Team</h3>
-        </div><!-- /.box-header -->
-        <div class="box-body">
-          <div class="row">
-            <%= form_for @conn, front_settings_path(@conn, :team_invitation, assigns[:current_company]), [as: :user], fn f -> %>
-            <div class="col-md-9">
-              <div class="form-group">
-                <%= text_input f, :email, placeholder: "Type an email address", class: "form-control" %>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <%= submit "Invite", class: "btn btn-primary" %>
-            </div>
-            <%end%>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <h4>Members of <%= @company.title %></h4>
-           	  <table class="table table-bordered">
-             		<%= for u <- @company.users do %>
-          				  <tr>
-                      <td>
-                        <img
-                          src="<%= CercleApi.UserProfileImage.url({u.profile_image, u}, :small) %>"
-                          class="user-image" alt="User Image"
-                          style="width:34px;border-radius:128px;" />
-                    </<td>
-                    <td><%=u.full_name%><br /><%=u.login%></td>
-                    <td><%=u.username%></td>
-                    <td>
-                      <%= if @conn.assigns[:current_user].id != u.id do %>
-                      <%= link "Remove",
-                          to: "/company/#{@company.id}/settings/remove_team_member/#{u.id}",
-                          method: :delete, "data-confirm": "Are you sure?" %>
-                      <% end %>
-                    </td>
-                  </tr>
-                <%end%>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      <router-view></router-view>
     </div>
   </div>
 </section><!-- /.content -->

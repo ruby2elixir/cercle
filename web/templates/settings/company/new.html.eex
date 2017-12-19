@@ -13,55 +13,8 @@
            </div><!-- /.box-body -->
          </div><!-- /. box -->
        </div><!-- /.col -->
-       <div class="col-md-9">
-         <!-- Horizontal Form -->
-         <!-- general form elements disabled -->
-         <div class="box box-primary">
-           <%= form_for @changeset, front_settings_company_path(@conn, :create, assigns[:current_company]), [multipart: true], fn f -> %>
-              <%= if f.errors != [] do %>
-                <div class="alert alert-danger">
-                  <p>Oops, something went wrong!<br> Please check the errors below:</p>
-                  <ul>
-                    <%= for {attr, message} <- f.errors do %>
-                        <li><%= humanize(attr) %> <%= translate_error(message) %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              <% end %>
-             <div class="box-header with-border">
-               <h3 class="box-title">New Company</h3>
-             </div><!-- /.box-header -->
-             <div class="box-body">
-               <!-- text input -->
-                <div class="form-group">
-                  <%= label f, :title, "Company's Name", class: "control-label" %>
-                  <%= text_input f, :title, class: "form-control", placeholder: "ex: Google" %>
-                  <%= error_tag f, :title %>
-                </div>
-                <br />
-                  <div class="form-group">
-                    <div class='row'>
-                      <div class='col-md-10'>
-                        <%= label f, :logo_image, "Company logo", class: "control-label" %>
-                        <%= file_input f, :logo_image %>
-                        <%= error_tag f, :logo_image %>
-                      </div>
-                      <div class='col-md-2'>
-                        <%= if f.data.logo_image do %>
-                          <img src="<%= CercleApi.CompanyLogoImage.url({f.data.logo_image, f.data}, :small) %>" style="max-width: 100%;" />
-                        <% end %>
-                      </div>
-                    </div>
-                  </div>
-
-                 <br />
-                <br />
-             </div><!-- /.box-body -->
-             <div class="box-footer">
-               <input type="submit" class="btn btn-primary pull-right" value="Save" />
-             </div>
-          <% end %>
-         </div><!-- /.box -->
+      <div class="col-md-9">
+        <router-view></router-view>
        </div>
   </div>
 </section><!-- /.content -->
