@@ -1,8 +1,7 @@
 defmodule CercleApi.APIV2.CompanyController do
   use CercleApi.Web, :controller
 
-  alias CercleApi.Company
-
+  alias CercleApi.{Company, UserCompany}
   plug CercleApi.Plug.EnsureAuthenticated
 
   plug :scrub_params, "company" when action in [:create, :update]
@@ -14,9 +13,14 @@ defmodule CercleApi.APIV2.CompanyController do
   end
 
   def create(conn, %{"company" => company_params}) do
+    user = Guardian.Plug.current_resource(conn)
     changeset = Company.changeset(%Company{}, company_params)
     case Repo.insert(changeset) do
       {:ok, company} ->
+        %UserCompany{}
+        |> UserCompany.changeset(%{user_id: user.id, company_id: company.id})
+        |> Repo.insert
+
         conn
         |> put_status(:created)
         |> put_resp_header("location", company_path(conn, :show, company))

@@ -94,11 +94,8 @@ defmodule CercleApi.Router do
       resources "/companies", CompanyController
     end
     get "/settings/team_edit", SettingsController, :team_edit
-    delete "/settings/remove_team_member/:user_id", SettingsController, :remove_team_member
-    put "/settings/team_update", SettingsController, :team_update
     get "/settings/fields_edit", SettingsController, :fields_edit
     put "/settings/fields_update", SettingsController, :fields_update
-    post "/settings/team_invitation", SettingsController, :team_invitation
     get "/settings/tags_edit", SettingsController, :tags_edit
     get "/settings/api_key", SettingsController, :api_key
 
@@ -123,6 +120,10 @@ defmodule CercleApi.Router do
     put "/contact/:id/update_tags", ContactController, :update_tags
     put "/contact/:id/utags", ContactController, :utags
     delete "/contact/multiple/delete", ContactController, :multiple_delete
+    get "/settings/api_key", SettingsController, :api_keys
+
+    delete "/settings/team/:id", TeamController, :delete
+    post "/settings/team/invitation", TeamController, :invitation
 
     resources "/organizations", OrganizationController
     resources "/card", CardController do

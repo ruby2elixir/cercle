@@ -39,7 +39,7 @@ defmodule CercleApi.InboxTest do
   test "List Activity and Cards", %{session: session} do
     session
     |> assert_has(css("body.async-ready"))
-    |> assert_has(css("h3", text: "Cards assigned to"))
+    |> assert_has(css("h3", text: "Cards assigned"))
     |> assert_has(css(".card-list .panel-heading", text: "Test Board 42"))
     |> assert_has(css("span.card-name", text: "Test Card 42"))
     |> assert_has(css("h3", text: "Tasks with due date"))
@@ -49,7 +49,7 @@ defmodule CercleApi.InboxTest do
   test "Change assigned user", %{session: session} do
     session
     |> assert_has(css("body.async-ready"))
-    |> assert_has(css("h3", text: "Cards assigned to"))
+    |> assert_has(css("h3", text: "Cards assigned"))
     |> assert_has(css(".card-list .panel-heading", text: "Test Board 42"))
     |> assert_has(css("span.card-name", text: "Test Card 42"))
     |> assert_has(css("h3", text: "Tasks with due date"))

@@ -14,6 +14,8 @@ defmodule CercleApi.APIV2.UserView do
       full_name: user.full_name,
       login: user.login,
       created_at: user.inserted_at,
-      name: user.username}
+      name: user.username,
+      profile_image_url: CercleApi.UserProfileImage.url({user.profile_image, user}, :small)
+    }
   end
 end
